@@ -12,7 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class TeleprospectingController extends AbstractController
 {
     /**
-     * @Route("/teleprospecting", name="teleprospecting")
+     * @Route("/dashboard/teleprospecting", name="teleprospecting")
      */
     public function index(): Response
     {
@@ -22,7 +22,7 @@ class TeleprospectingController extends AbstractController
     }
 
     /**
-     * @Route("/teleprospecting/add", name="new_client")
+     * @Route("/dashboard/teleprospecting/add", name="new_client")
      */
     public function add(Request $request): Response
     {
@@ -41,7 +41,7 @@ class TeleprospectingController extends AbstractController
     }
 
     /**
-     * @Route("/teleprospecting/update/{id}", name="update_client")
+     * @Route("/dashboard/teleprospecting/update/{id}", name="update_client")
      */
     public function update(Request $request, $id): Response
     {
