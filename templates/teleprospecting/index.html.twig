@@ -14,13 +14,13 @@
                             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
                                 <li class="breadcrumb-item"><a href="#"><i class="fas fa-phone-volume"></i></a></li>
                                 <li class="breadcrumb-item"><a href="#">Téléprospection</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Liste des prospects</li>
+                                <li class="breadcrumb-item active" aria-current="page">Liste des contacts</li>
                             </ol>
                         </nav>
                     </div>
                     <div class="col-lg-6 col-5 text-right">
-                        <a href="{{ path('new_client') }}" class="btn btn-sm btn-neutral">New</a>
-                        <a href="#" class="btn btn-sm btn-neutral">Filters</a>
+                        <a href="{{ path('new_client') }}" class="btn btn-sm btn-neutral">Nouveau</a>
+                        {#<a href="#" class="btn btn-sm btn-neutral">Filters</a>#}
                     </div>
                 </div>
                 <!-- Card stats -->
@@ -127,7 +127,7 @@
             <div class="card-header border-0">
                 <div class="row">
                     <div class="col-md-9">
-                        <h3 class="mb-0">Prospects</h3>
+                        <h3 class="mb-0">Contacts</h3>
                     </div>
                     <div class="col-md-3">
                         <input type="text" class="form-control " placeholder="Recherche" id="contact-filter">
@@ -141,15 +141,18 @@
                     <tr>
                         <th scope="col">Prénom</th>
                         <th scope="col">Nom</th>
-                        <th scope="col">Email</th>
-                        <th scope="col">Société</th>
+                        {#<th scope="col">Email</th>#}
+                        {#<th scope="col">Société</th>#}
                         <th scope="col">Catégorie</th>
                         <th scope="col">Sous Contrat</th>
-                        <th scope="col">Adresse</th>
+                        <th scope="col">Etat</th>
+                        {#<th scope="col">Adresse</th>
                         <th scope="col">Code Postal</th>
                         <th scope="col">Pays</th>
                         <th scope="col">Numéro Domicile</th>
-                        <th scope="col">Numéro Mobile</th>
+                        <th scope="col">Numéro Mobile</th>#}
+                        <th scope="col">Traitement</th>
+                        <th scope="col">Consultation</th>
                         <th scope="col">Modification</th>
                         <th scope="col">Suppression</th>
                     </tr>
@@ -166,13 +169,13 @@
                             {{ client.lastName }}
                         </td>
 
-                        <td class="budget">
+                       {# <td class="budget">
                             {{ client.email }}
-                        </td>
+                        </td>#}
 
-                        <td class="budget">
+                        {#<td class="budget">
                             {{ client.companyName }}
-                        </td>
+                        </td>#}
 
                         <td class="budget">
                             {{ client.category }}
@@ -187,6 +190,25 @@
                         </td>
 
                         <td class="budget">
+                            {% if  client.status == 0 %}
+                            <span class="badge badge-dot mr-4">
+                                <i class="bg-info"></i>
+                                Non Traité
+                            </span>
+                            {% elseif client.status == 1 %}
+                                <span class="badge badge-dot mr-4">
+                                <i class="bg-warning"></i>
+                                 Appel non Qualifié
+                            </span>
+                            {% else %}
+                                <span class="badge badge-dot mr-4">
+                                <i class="bg-success"></i>
+                                Appel Qualifié
+                            </span>
+                            {% endif %}
+                        </td>
+
+                        {#<td class="budget">
                             {{ client.address }}
                         </td>
 
@@ -204,14 +226,22 @@
 
                         <td class="budget">
                             {{ client.mobileNumber }}
+                        </td>#}
+
+                        <td >
+                            <a href="{{ path('show_client', {'id': client.id}) }}"  class="badge badge-success" >Traiter Contact</a>
                         </td>
 
                         <td >
-                            <a href="{{ path('update_client', {'id': client.id}) }}"  class="badge badge-info" >Modifier</a>
+                            <a href="{{ path('show_client', {'id': client.id}) }}"  class="badge badge-default" >Consulter Fiche</a>
                         </td>
 
                         <td >
-                            <a href="{{ path('new_client') }}" data-href="/admin_resp/ingenieur/oussingenieurref/deleted" class="badge badge-danger" data-toggle="modal" data-target="#deleteModal">Supprimer</a>
+                            <a href="{{ path('update_client', {'id': client.id}) }}"  class="badge badge-info" >Modifier Contact</a>
+                        </td>
+
+                        <td >
+                            <a href="{{ path('new_client') }}" data-href="/admin_resp/ingenieur/oussingenieurref/deleted" class="badge badge-danger" data-toggle="modal" data-target="#deleteModal">Supprimer Contact</a>
                         </td>
 
                     </tr>

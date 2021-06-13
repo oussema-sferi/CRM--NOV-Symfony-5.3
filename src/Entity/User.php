@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -46,6 +48,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(type="string", length=255)
      */
     private $lastName;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Call::class, mappedBy="user")
+     */
+    private $calls;
+
+    public function __construct()
+    {
+        $this->calls = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -148,6 +160,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setLastName(string $lastName): self
     {
         $this->lastName = $lastName;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Call[]
+     */
+    public function getCalls(): Collection
+    {
+        return $this->calls;
+    }
+
+    public function addCall(Call $call): self
+    {
+        if (!$this->calls->contains($call)) {
+            $this->calls[] = $call;
+            $call->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCall(Call $call): self
+    {
+        if ($this->calls->removeElement($call)) {
+            // set the owning side to null (unless already changed)
+            if ($call->getUser() === $this) {
+                $call->setUser(null);
+            }
+        }
 
         return $this;
     }

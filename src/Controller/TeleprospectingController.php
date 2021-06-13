@@ -72,4 +72,19 @@ class TeleprospectingController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route("/dashboard/teleprospecting/show/{id}", name="show_client")
+     */
+    public function show(Request $request, $id): Response
+    {
+        $newClient = new Client();
+        $clientForm = $this->createForm(ClientFormType::class, $newClient);
+        $clientForm->handleRequest($request);
+        $clientToShow = $this->getDoctrine()->getRepository(Client::class)->find($id);
+        return $this->render('/teleprospecting/show.html.twig', [
+            'client_form' => $clientForm->createView(),
+            'client_to_show' => $clientToShow
+        ]);
+    }
+
 }

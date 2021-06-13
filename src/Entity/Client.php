@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ClientRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -71,6 +73,31 @@ class Client
      * @ORM\Column(type="boolean")
      */
     private $isUnderContract;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $status;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $createdAt;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $updatedAt;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Call::class, mappedBy="client")
+     */
+    private $calls;
+
+    public function __construct()
+    {
+        $this->calls = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -205,6 +232,72 @@ class Client
     public function setIsUnderContract(bool $isUnderContract): self
     {
         $this->isUnderContract = $isUnderContract;
+
+        return $this;
+    }
+
+    public function getStatus(): ?int
+    {
+        return $this->status;
+    }
+
+    public function setStatus(int $status): self
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Call[]
+     */
+    public function getCalls(): Collection
+    {
+        return $this->calls;
+    }
+
+    public function addCall(Call $call): self
+    {
+        if (!$this->calls->contains($call)) {
+            $this->calls[] = $call;
+            $call->setClient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCall(Call $call): self
+    {
+        if ($this->calls->removeElement($call)) {
+            // set the owning side to null (unless already changed)
+            if ($call->getClient() === $this) {
+                $call->setClient(null);
+            }
+        }
 
         return $this;
     }
