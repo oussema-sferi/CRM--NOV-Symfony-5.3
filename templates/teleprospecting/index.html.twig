@@ -19,7 +19,7 @@
                         </nav>
                     </div>
                     <div class="col-lg-6 col-5 text-right">
-                        <a href="{{ path('new_client') }}" class="btn btn-sm btn-neutral">Nouveau</a>
+                        <a href="{{ path('new_client') }}" class="btn btn-sm btn-success">Nouveau Contact</a>
                         {#<a href="#" class="btn btn-sm btn-neutral">Filters</a>#}
                     </div>
                 </div>
@@ -229,7 +229,7 @@
                         </td>#}
 
                         <td >
-                            <a href="{{ path('show_client', {'id': client.id}) }}"  class="badge badge-success" >Traiter Contact</a>
+                            <a href="{{ path('call_handle', {'id': client.id}) }}"  class="badge badge-success" >Traiter Contact</a>
                         </td>
 
                         <td >

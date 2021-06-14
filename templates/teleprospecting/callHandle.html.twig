@@ -14,7 +14,7 @@
                             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
                                 <li class="breadcrumb-item"><a href="#"><i class="fas fa-phone-volume"></i></a></li>
                                 <li class="breadcrumb-item"><a href="#">Téléprospection</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Edition Contact</li>
+                                <li class="breadcrumb-item active" aria-current="page">Traitement Contact</li>
                             </ol>
                         </nav>
                     </div>
@@ -123,7 +123,7 @@
             <div class="header pb-8 pt-5 pt-md-14">
                 <div class="container-fluid">
                     <div class="header-body" style="text-align: center">
-                        <h1 style="color: black">Editer Prospect</h1>
+                        <h1 style="color: black">Traitement Contact</h1>
                     </div>
                 </div>
             </div>
@@ -134,39 +134,82 @@
                 <div class="col-lg-6 col-md-8">
                     <div class="card bg-secondary border-0">
 
-                        <div class="card-body px-lg-5 py-lg-5">
+                        <div class="card-body px-lg-8 py-lg-1">
                             <div class="text-center text-muted mb-4">
                             </div>
-                            {{ form_start(client_form) }}
+                            {{ form_start(call_form) }}
+
+                            <div>
+                                <div>
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-username">Client</label>
+                                        <input type="text" id="input-username" class="form-control" value="{{ client.firstName ~ ' ' ~ client.lastName }}" disabled>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div>
+                                <div>
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-username">Etat Appel</label>
+                                        {{ form_widget(call_form.status, {'attr': {'class': 'form-control', 'placeholder':'Etat' }}) }}
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div>
+                                <div>
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-username">Date RDV</label>
+                                        <input type="datetime-local" id="input-datet" class="form-control">
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div>
 
                                     <div class="form-group">
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text" style="width:120px">Prénom</span>
-                                            </div>
-                                            {{ form_widget(client_form.firstName, {'attr': {'class': 'form-control', 'value': client_to_update.firstName }}) }}
-                                        </div>
+                                        <label class="form-control-label" for="input-username">Notes</label>
+                                        {#<input type="text" id="input-username" class="form-control" value="{{ client.firstName }}" disabled>#}
+                                        <textarea rows="4" class="form-control" resize="none"></textarea>
                                     </div>
 
-                                    <div class="form-group">
+
+                            </div>
+
+
+                                    {#<div class="form-group">
+                                        <label class="form-control-label" for="input-last-name">Client</label>
                                         <div class="input-group">
                                             <div class="input-group-prepend">
-                                                <span class="input-group-text" style="width:120px">Nom</span>
-                                            </div>
-                                            {{ form_widget(client_form.lastName, {'attr': {'class': 'form-control', 'value': client_to_update.lastName }}) }}
-                                        </div>
-                                    </div>
+                                                #}{#<span class="input-group-text" style="width:120px">Client</span>#}{#
 
-                                    <div class="form-group">
+                                            </div>
+                                            {{ form_widget(call_form.client, {'attr': {'class': 'form-control', 'value': client.firstName ~ client.lastName }}) }}
+                                        </div>
+                                    </div>#}
+
+                                   {# <div class="form-group">
                                         <div class="input-group">
                                             <div class="input-group-prepend">
-                                                <span class="input-group-text" style="width:120px">Société</span>
+                                                <span class="input-group-text" style="width:120px">Etat Appel</span>
                                             </div>
-                                            {{ form_widget(client_form.companyName, {'attr': {'class': 'form-control', 'value': client_to_update.companyName }}) }}
+                                            {{ form_widget(call_form.status, {'attr': {'class': 'form-control', 'placeholder':'Etat' }}) }}
                                         </div>
-                                    </div>
+                                    </div>#}
 
-                                    <div class="form-group">
+                                    {#<div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" style="width:120px">Notes</span>
+                                            </div>
+                                            {{ form_widget(call_form.notes, {'attr': {'class': 'form-control', 'placeholder':'Notes du Traitement' }}) }}
+                                        </div>
+                                    </div>#}
+
+                                    {#<div class="form-group">
                                         <div class="input-group">
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text" style="width:120px">Email</span>
@@ -236,13 +279,13 @@
                                     </div>
                                     {{ form_widget(client_form.isUnderContract, {'attr': {'class': 'form-control', 'value': client_to_update.isUnderContract }}) }}
                                 </div>
-                            </div>
+                            </div>#}
 
                             <div class="text-center">
                                 <button type="submit" class="btn btn-primary mt-4">Confirmer</button>
                             </div>
 
-                            {{ form_end(client_form)}}
+                            {{ form_end(call_form)}}
                         </div>
                     </div>
                 </div>

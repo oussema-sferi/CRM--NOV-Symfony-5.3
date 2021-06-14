@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Call;
 use App\Entity\Client;
+use App\Form\CallFormType;
 use App\Form\ClientFormType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -77,13 +79,25 @@ class TeleprospectingController extends AbstractController
      */
     public function show(Request $request, $id): Response
     {
-        $newClient = new Client();
-        $clientForm = $this->createForm(ClientFormType::class, $newClient);
-        $clientForm->handleRequest($request);
         $clientToShow = $this->getDoctrine()->getRepository(Client::class)->find($id);
         return $this->render('/teleprospecting/show.html.twig', [
-            'client_form' => $clientForm->createView(),
             'client_to_show' => $clientToShow
+        ]);
+    }
+
+    /**
+     * @Route("/dashboard/teleprospecting/call/{id}", name="call_handle")
+     */
+    public function callHandle(Request $request, $id): Response
+    {
+        $newCall = new Call();
+        $callForm = $this->createForm(CallFormType::class, $newCall);
+        $callForm->handleRequest($request);
+        $client = $this->getDoctrine()->getRepository(Client::class)->find($id);
+
+        return $this->render('/teleprospecting/callHandle.html.twig', [
+            'call_form' => $callForm->createView(),
+            'client' => $client
         ]);
     }
 
