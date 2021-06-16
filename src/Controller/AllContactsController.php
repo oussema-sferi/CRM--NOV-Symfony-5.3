@@ -127,13 +127,20 @@ class AllContactsController extends AbstractController
             $phoneNumber= strtolower($Row['H']);
             $mobileNumber= strtolower($Row['I']);
             $category= strtolower($Row['J']);
+            if(strtolower($Row['J']) === 'm') {
+                $category = 'médecin';
+            } elseif (strtolower($Row['J']) === 'v') {
+                $category = 'vétérinaire';
+            } else {
+                $category = 'chirurgien';
+            }
 
             if(strtolower($Row['K']) === 'non') {
                 $isUnderContract = false;
             } else {
                 $isUnderContract = true;
             }
-            
+
 
 
             $existingContact = $entityManager->getRepository(Client::class)->findOneBy(array('email' => $email));
@@ -160,7 +167,7 @@ class AllContactsController extends AbstractController
                 // here Doctrine checks all the fields of all fetched data and make a transaction to the database.
             }
         }
-        return $this->json('contacts saved', 200);
+        return $this->redirectToRoute('all_contacts');
 
     }
 

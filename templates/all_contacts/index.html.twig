@@ -18,16 +18,25 @@
                             </ol>
                         </nav>
                     </div>
-                    <div class="col-lg-6 col-5 text-right">
-                        <form action="{{ path('import_contacts') }}" method="post" enctype="multipart/form-data">
-                            <input id="excelcontactsfile" type="file" name="excelcontactsfile" class="btn btn-sm btn-info" value="Importer">
-                            <input type="submit">
-                        </form>
-                        {#<input href="{{ path('import_contacts') }}" type="file" accept=".csv" name="file" class="btn btn-sm btn-info" value="Importer"></input>#}
-                        {#<a href="{{ path('import_contacts') }}" class="btn btn-sm btn-info">Importer</a>#}
+                    <div id="initial-import" class="col-lg-6 col-5 text-right">
+                        <a id="import-button" class="btn btn-sm btn-info">Importer</a>
                         <a href="{{ path('new_contact') }}" class="btn btn-sm btn-success">Nouveau</a>
-                        {#<a href="#" class="btn btn-sm btn-neutral">Filters</a>#}
+                        {#<div class="raiscontainer" style="text-align: center"><label for="raison">Raison:</label><br><textarea id="raison" class="rais" name="raison" type = "text" style="height: 160px; resize: none; white-space: unset" required></textarea><a class="seconddel btn btn-danger btn-supprimer" data-toggle="tooltip" data-placement="top" data-href="/admin_resp/ingenieur/oussingenieurref/deleted" href="#modal_supp" onclick="return false" rel="modal:open" title="Supprimer Ingénieur" name="btnTicket" id="search" style="margin-top: 10px" disabled>Confirmer</a></div>
+                        <a href="#" class="btn btn-sm btn-neutral">Filters</a>#}
                     </div>
+
+                    <div id="import-block" class="col-lg-6 col-5 text-right" style="display: none">
+                        <form action="{{ path('import_contacts') }}" method="post" enctype="multipart/form-data">
+                                <input id="excelcontactsfile" type="file" name="excelcontactsfile" class="btn btn-sm btn-secondary" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" value="Importer">
+                                <input class="btn btn-sm btn-success" type="submit" value="Confirmer">
+                                <a id="retour-import" class="btn btn-sm btn-neutral">Retour</a>
+                        </form>
+
+                    </div>
+
+
+
+
                 </div>
                 <!-- Card stats -->
                 {#<div class="row">
@@ -293,4 +302,37 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block additionalJs %}
+    <script>
+        /*console.log('hi')*/
+        //Supprimer button append Raison
+        $('#import-button').click(function () {
+            $(this).parent().fadeOut(200)
+            $('#import-block').fadeIn(1000);
+            /*$(this).siblings().fadeOut(50);
+            $(this).parent().children(':first-child').fadeIn(1000)
+            console.log(baseRoot)*/
+        })
+
+        $('#retour-import').click(function () {
+            $(this).parent().parent().fadeOut(50)
+            $('#initial-import').fadeIn(1000);
+            /*$(this).siblings().fadeOut(50);
+            $(this).parent().children(':first-child').fadeIn(1000)
+            console.log(baseRoot)*/
+        })
+
+        // enable/disable submit button on keyup
+
+        /*$('.rais').keyup(function () {
+            if($(this).val() !== '') {
+                $(this).siblings('.seconddel').removeAttr('disabled')
+            } else {
+                $(this).siblings('.seconddel').attr('disabled', 'true')
+            }
+        })*/
+
+    </script>
 {% endblock %}
