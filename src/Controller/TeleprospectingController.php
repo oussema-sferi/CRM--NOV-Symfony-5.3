@@ -90,11 +90,22 @@ class TeleprospectingController extends AbstractController
      */
     public function callHandle(Request $request, $id): Response
     {
+        $loggedUser = $this->getUser();
+        /*dd($loggedUserId);*/
         $newCall = new Call();
         $callForm = $this->createForm(CallFormType::class, $newCall);
         $callForm->handleRequest($request);
         $client = $this->getDoctrine()->getRepository(Client::class)->find($id);
+        $manager = $this->getDoctrine()->getManager();
 
+        if($callForm->isSubmitted()) {
+            $newCall->setCreatedAt(new  \DateTime());
+            $newCall->setUser($loggedUser);
+            $newCall->setClient($client);
+            $manager->persist($newCall);
+            $manager->flush();
+            return $this->redirectToRoute('all_contacts');
+        }
         return $this->render('/teleprospecting/callHandle.html.twig', [
             'call_form' => $callForm->createView(),
             'client' => $client
