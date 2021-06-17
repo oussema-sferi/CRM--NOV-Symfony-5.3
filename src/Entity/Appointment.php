@@ -2,14 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\CallRepository;
+use App\Repository\AppointmentRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=CallRepository::class)
- * @ORM\Table(name="`call`")
+ * @ORM\Entity(repositoryClass=AppointmentRepository::class)
  */
-class Call
+class Appointment
 {
     /**
      * @ORM\Id
@@ -21,68 +20,67 @@ class Call
     /**
      * @ORM\Column(type="datetime")
      */
-    private $createdAt;
+    private $date;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="boolean")
      */
     private $status;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(type="text")
      */
-    private $callNotes;
+    private $appointmentNotes;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Client::class, inversedBy="calls")
+     * @ORM\OneToOne(targetEntity=Client::class, inversedBy="appointment", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $client;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="calls")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="appointments")
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;
-
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getDate(): ?\DateTimeInterface
     {
-        return $this->createdAt;
+        return $this->date;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setDate(\DateTimeInterface $date): self
     {
-        $this->createdAt = $createdAt;
+        $this->date = $date;
 
         return $this;
     }
 
-    public function getStatus(): ?int
+    public function getStatus(): ?bool
     {
         return $this->status;
     }
 
-    public function setStatus(int $status): self
+    public function setStatus(bool $status): self
     {
         $this->status = $status;
 
         return $this;
     }
 
-    public function getCallNotes(): ?string
+    public function getAppointmentNotes(): ?string
     {
-        return $this->callNotes;
+        return $this->appointmentNotes;
     }
 
-    public function setCallNotes(?string $callNotes): self
+    public function setAppointmentNotes(string $appointmentNotes): self
     {
-        $this->callNotes = $callNotes;
+        $this->appointmentNotes = $appointmentNotes;
 
         return $this;
     }
@@ -92,7 +90,7 @@ class Call
         return $this->client;
     }
 
-    public function setClient(?Client $client): self
+    public function setClient(Client $client): self
     {
         $this->client = $client;
 
@@ -110,6 +108,4 @@ class Call
 
         return $this;
     }
-
-
 }

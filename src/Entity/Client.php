@@ -45,7 +45,7 @@ class Client
     private $address;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="string", length=255)
      */
     private $postalCode;
 
@@ -55,12 +55,12 @@ class Client
     private $country;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $phoneNumber;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="string", length=255)
      */
     private $mobileNumber;
 
@@ -93,6 +93,11 @@ class Client
      * @ORM\OneToMany(targetEntity=Call::class, mappedBy="client")
      */
     private $calls;
+
+    /**
+     * @ORM\OneToOne(targetEntity=Appointment::class, mappedBy="client", cascade={"persist", "remove"})
+     */
+    private $appointment;
 
     public function __construct()
     {
@@ -164,12 +169,12 @@ class Client
         return $this;
     }
 
-    public function getPostalCode(): ?int
+    public function getPostalCode(): ?string
     {
         return $this->postalCode;
     }
 
-    public function setPostalCode(int $postalCode): self
+    public function setPostalCode(string $postalCode): self
     {
         $this->postalCode = $postalCode;
 
@@ -188,24 +193,24 @@ class Client
         return $this;
     }
 
-    public function getPhoneNumber(): ?int
+    public function getPhoneNumber(): ?string
     {
         return $this->phoneNumber;
     }
 
-    public function setPhoneNumber(?int $phoneNumber): self
+    public function setPhoneNumber(?string $phoneNumber): self
     {
         $this->phoneNumber = $phoneNumber;
 
         return $this;
     }
 
-    public function getMobileNumber(): ?int
+    public function getMobileNumber(): ?string
     {
         return $this->mobileNumber;
     }
 
-    public function setMobileNumber(int $mobileNumber): self
+    public function setMobileNumber(string $mobileNumber): self
     {
         $this->mobileNumber = $mobileNumber;
 
@@ -307,5 +312,22 @@ class Client
         return $this->firstName;
         // to show the id of the Category in the select
         // return $this->id;
+    }
+
+    public function getAppointment(): ?Appointment
+    {
+        return $this->appointment;
+    }
+
+    public function setAppointment(Appointment $appointment): self
+    {
+        // set the owning side of the relation if necessary
+        if ($appointment->getClient() !== $this) {
+            $appointment->setClient($this);
+        }
+
+        $this->appointment = $appointment;
+
+        return $this;
     }
 }
