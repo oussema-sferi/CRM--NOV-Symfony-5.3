@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Contacts{% endblock %}
+{% block title %}Gestion des contacts{% endblock %}
 
 {% block body %}
 
@@ -12,22 +12,22 @@
                         <h6 class="h2 text-white d-inline-block mb-0">CRM</h6>
                         <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
                             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
-                                <li class="breadcrumb-item"><a href="#"><i class="fas fa-address-book"></i></a></li>
+                                <li class="breadcrumb-item"><a href="#"><i class="fas fa-address-book text-black-50"></i></a></li>
                                 <li class="breadcrumb-item"><a href="#"></a>Gestion des contacts</li>
                                 <li class="breadcrumb-item active" aria-current="page">Liste des contacts</li>
                             </ol>
                         </nav>
                     </div>
                     <div id="initial-import" class="col-lg-6 col-5 text-right">
-                        <a id="import-button" class="btn btn-sm btn-info">Importer</a>
-                        <a href="{{ path('new_contact') }}" class="btn btn-sm btn-success">Nouveau</a>
+                        <a id="import-button" class="btn btn-sm btn-info">Importer une liste</a>
+                        <a href="{{ path('new_contact') }}" class="btn btn-sm btn-success">Nouveau contact</a>
                         {#<div class="raiscontainer" style="text-align: center"><label for="raison">Raison:</label><br><textarea id="raison" class="rais" name="raison" type = "text" style="height: 160px; resize: none; white-space: unset" required></textarea><a class="seconddel btn btn-danger btn-supprimer" data-toggle="tooltip" data-placement="top" data-href="/admin_resp/ingenieur/oussingenieurref/deleted" href="#modal_supp" onclick="return false" rel="modal:open" title="Supprimer Ingénieur" name="btnTicket" id="search" style="margin-top: 10px" disabled>Confirmer</a></div>
                         <a href="#" class="btn btn-sm btn-neutral">Filters</a>#}
                     </div>
 
                     <div id="import-block" class="col-lg-6 col-5 text-right" style="display: none">
                         <form action="{{ path('import_contacts') }}" method="post" enctype="multipart/form-data">
-                                <input id="excelcontactsfile" type="file" name="excelcontactsfile" class="btn btn-sm btn-secondary" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" value="Importer">
+                                <input id="excelcontactsfile" type="file" name="excelcontactsfile" class="btn btn-sm btn-secondary" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" value="Importer" required>
                                 <input class="btn btn-sm btn-success" type="submit" value="Confirmer">
                                 <a id="retour-import" class="btn btn-sm btn-neutral">Retour</a>
                         </form>
@@ -142,7 +142,7 @@
                     <div class="card-header border-0">
                         <div class="row">
                             <div class="col-md-9">
-                                <h3 class="mb-0">Contacts</h3>
+                                <h3 class="mb-0">Tous les contacts</h3>
                             </div>
                             <div class="col-md-3">
                                 <input type="text" class="form-control " placeholder="Recherche" id="contact-filter">
@@ -306,33 +306,18 @@
 
 {% block additionalJs %}
     <script>
-        /*console.log('hi')*/
-        //Supprimer button append Raison
+
+        //hide new contact block and show import block
         $('#import-button').click(function () {
             $(this).parent().fadeOut(200)
             $('#import-block').fadeIn(1000);
-            /*$(this).siblings().fadeOut(50);
-            $(this).parent().children(':first-child').fadeIn(1000)
-            console.log(baseRoot)*/
         })
 
+        //hide import block and show import block new contact block
         $('#retour-import').click(function () {
             $(this).parent().parent().fadeOut(50)
             $('#initial-import').fadeIn(1000);
-            /*$(this).siblings().fadeOut(50);
-            $(this).parent().children(':first-child').fadeIn(1000)
-            console.log(baseRoot)*/
         })
-
-        // enable/disable submit button on keyup
-
-        /*$('.rais').keyup(function () {
-            if($(this).val() !== '') {
-                $(this).siblings('.seconddel').removeAttr('disabled')
-            } else {
-                $(this).siblings('.seconddel').attr('disabled', 'true')
-            }
-        })*/
 
     </script>
 {% endblock %}

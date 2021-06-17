@@ -168,7 +168,6 @@ class AllContactsController extends AbstractController
             }
         }
         return $this->redirectToRoute('all_contacts');
-
     }
 
 }
