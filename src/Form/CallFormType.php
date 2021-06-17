@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Call;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -20,7 +21,12 @@ class CallFormType extends AbstractType
                     'Appel Qualifié' => 2
                 ],
             ])
-            /*->add('notes')*/
+            ->add('callNotes', TextareaType::class, [
+                    'attr' => [
+                        'rows' => 6,
+                        'resize' => 'none'
+                        ]
+            ])
             /*->add('client')*/
             /*->add('user')*/
         ;
