@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Call;
 use App\Entity\Client;
+use App\Entity\User;
 use App\Form\CallFormType;
 use App\Form\ClientFormType;
 use Symfony\Component\HttpFoundation\Request;
@@ -91,7 +92,9 @@ class TeleprospectingController extends AbstractController
     public function callHandle(Request $request, $id): Response
     {
         $loggedUser = $this->getUser();
-        /*dd($loggedUserId);*/
+        /*$loggedUserId = $this->getUser()->getUserIdentifier();
+        $usr = $this->getDoctrine()->getRepository(User::class)->findBy(['email' => $loggedUserId]);*/
+        /*dd($usr);*/
         $newCall = new Call();
         $callForm = $this->createForm(CallFormType::class, $newCall);
         $callForm->handleRequest($request);
@@ -104,7 +107,7 @@ class TeleprospectingController extends AbstractController
             $newCall->setClient($client);
             $manager->persist($newCall);
             $manager->flush();
-            return $this->redirectToRoute('all_contacts');
+            return $this->redirectToRoute('teleprospecting');
         }
         return $this->render('/teleprospecting/callHandle.html.twig', [
             'call_form' => $callForm->createView(),
