@@ -99,6 +99,21 @@ class Client
      */
     private $appointment;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Equipment::class, inversedBy="clients")
+     */
+    private $providedEquipment;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=GeographicArea::class, inversedBy="clients")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $geographicArea;
+
+
+    
+    
+
     public function __construct()
     {
         $this->calls = new ArrayCollection();
@@ -330,4 +345,36 @@ class Client
 
         return $this;
     }
+
+    public function getProvidedEquipment(): ?Equipment
+    {
+        return $this->providedEquipment;
+    }
+
+    public function setProvidedEquipment(?Equipment $providedEquipment): self
+    {
+        $this->providedEquipment = $providedEquipment;
+
+        return $this;
+    }
+
+    public function getGeographicArea(): ?GeographicArea
+    {
+        return $this->geographicArea;
+    }
+
+    public function setGeographicArea(?GeographicArea $geographicArea): self
+    {
+        $this->geographicArea = $geographicArea;
+
+        return $this;
+    }
+
+
+
+
+
+
+
+
 }

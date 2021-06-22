@@ -26,7 +26,12 @@ class Call
     /**
      * @ORM\Column(type="integer")
      */
-    private $status;
+    private $generalStatus;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $statusDetails;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -46,6 +51,8 @@ class Call
     private $user;
 
 
+
+
     public function getId(): ?int
     {
         return $this->id;
@@ -63,14 +70,14 @@ class Call
         return $this;
     }
 
-    public function getStatus(): ?int
+    public function getGeneralStatus(): ?int
     {
-        return $this->status;
+        return $this->generalStatus;
     }
 
-    public function setStatus(int $status): self
+    public function setGeneralStatus(int $generalStatus): self
     {
-        $this->status = $status;
+        $this->generalStatus = $generalStatus;
 
         return $this;
     }
@@ -107,6 +114,18 @@ class Call
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getStatusDetails(): ?int
+    {
+        return $this->statusDetails;
+    }
+
+    public function setStatusDetails(int $statusDetails): self
+    {
+        $this->statusDetails = $statusDetails;
 
         return $this;
     }

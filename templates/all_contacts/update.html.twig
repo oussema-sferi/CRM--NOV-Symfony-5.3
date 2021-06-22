@@ -196,6 +196,15 @@
                             <div class="form-group">
                                 <div class="input-group">
                                     <div class="input-group-prepend">
+                                        <span class="input-group-text" style="width:120px">Département</span>
+                                    </div>
+                                    {{ form_widget(client_form.geographicArea, {'attr': {'class': 'form-control', 'value': client_to_update.geographicArea }}) }}
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
                                         <span class="input-group-text" style="width:120px">Pays</span>
                                     </div>
                                     {{ form_widget(client_form.country, {'attr': {'class': 'form-control', 'value': client_to_update.country }}) }}
@@ -235,6 +244,15 @@
                                         <span class="input-group-text" style="width:120px">Sous Contrat</span>
                                     </div>
                                     {{ form_widget(client_form.isUnderContract, {'attr': {'class': 'form-control', 'value': client_to_update.isUnderContract }}) }}
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" style="width:120px">Equipement</span>
+                                    </div>
+                                    {{ form_widget(client_form.providedEquipment, {'attr': {'class': 'form-control', 'value': client_to_update.providedEquipment }}) }}
                                 </div>
                             </div>
 

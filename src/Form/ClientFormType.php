@@ -23,6 +23,8 @@ class ClientFormType extends AbstractType
             ->add('phoneNumber')
             ->add('mobileNumber')
             ->add('category')
+            ->add('providedEquipment')
+            ->add('geographicArea')
             ->add('isUnderContract', ChoiceType::class, [
                 'choices'  => [
                     'Non' => false,

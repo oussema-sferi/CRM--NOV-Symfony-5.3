@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Client;
+use App\Entity\Equipment;
+use App\Entity\GeographicArea;
 use App\Form\ClientFormType;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -33,6 +35,9 @@ class AllContactsController extends AbstractController
         $clientForm->handleRequest($request);
         $manager = $this->getDoctrine()->getManager();
         if($clientForm->isSubmitted()) {
+            $newClient->setStatus(0);
+            $newClient->setCreatedAt(new \DateTime());
+            $newClient->setUpdatedAt(new \DateTime());
             $manager->persist($newClient);
             $manager->flush();
             return $this->redirectToRoute('all_contacts');
@@ -64,6 +69,9 @@ class AllContactsController extends AbstractController
             $clientToUpdate->setMobileNumber($newClient->getMobileNumber());
             $clientToUpdate->setCategory($newClient->getCategory());
             $clientToUpdate->setIsUnderContract($newClient->getIsUnderContract());
+            $clientToUpdate->setProvidedEquipment($newClient->getProvidedEquipment());
+            $clientToUpdate->setGeographicArea($newClient->getGeographicArea());
+            $clientToUpdate->setUpdatedAt(new \DateTime());
             $manager->persist($clientToUpdate);
             $manager->flush();
             return $this->redirectToRoute('all_contacts');
@@ -141,6 +149,14 @@ class AllContactsController extends AbstractController
                 $isUnderContract = true;
             }
 
+            //
+
+            $providedEquipment = $this->getDoctrine()->getRepository(Equipment::class)->find($Row['L']);
+
+
+            $geographicArea = $this->getDoctrine()->getRepository(GeographicArea::class)->findOneBy(array('code' => $Row['M']));
+
+            /*dd($geographicArea);*/
 
 
             $existingContact = $entityManager->getRepository(Client::class)->findOneBy(array('email' => $email));
@@ -160,6 +176,8 @@ class AllContactsController extends AbstractController
                 $contact->setCategory($category);
                 $contact->setIsUnderContract($isUnderContract);
                 $contact->setStatus(0);
+                $contact->setProvidedEquipment($providedEquipment);
+                $contact->setGeographicArea($geographicArea);
                 $contact->setCreatedAt(new \DateTime());
                 $contact->setUpdatedAt(new \DateTime());
                 $entityManager->persist($contact);

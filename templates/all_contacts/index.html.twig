@@ -159,10 +159,12 @@
                                 <th scope="col">Email</th>
                                 <th scope="col">Société</th>
                                 <th scope="col">Catégorie</th>
+                                <th scope="col">Equipement</th>
                                 <th scope="col">Sous Contrat</th>
                                 <th scope="col">Statut</th>
                                 <th scope="col">Adresse</th>
                                 <th scope="col">Code Postal</th>
+                                <th scope="col">Département</th>
                                 <th scope="col">Pays</th>
                                 <th scope="col">Numéro Domicile</th>
                                 <th scope="col">Numéro Mobile</th>
@@ -194,6 +196,10 @@
 
                                     <td class="budget">
                                         {{ client.category }}
+                                    </td>
+
+                                    <td class="budget">
+                                        {{ client.providedEquipment.designation }}
                                     </td>
 
                                     <td class="budget">
@@ -229,6 +235,10 @@
 
                         <td class="budget">
                             {{ client.postalCode }}
+                        </td>
+
+                        <td class="budget">
+                            {{ client.geographicArea.designation }}
                         </td>
 
                         <td class="budget">
