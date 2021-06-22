@@ -64,4 +64,14 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         ;
     }
     */
+
+    public function findUsersByCommercialRole($role)
+    {
+        $qb = $this->createQueryBuilder('u');
+        $qb->select('u')
+            ->where('u.roles LIKE :roles')
+            ->setParameter('roles', '%"'.$role.'"%');
+
+        return $qb->getQuery()->getResult();
+    }
 }

@@ -15,10 +15,17 @@ class CallFormType extends AbstractType
     {
         $builder
             /*->add('createdAt')*/
-            ->add('status', ChoiceType::class, [
+            ->add('generalStatus', ChoiceType::class, [
                 'choices'  => [
                     'Appel non Qualifié' => 1,
                     'Appel Qualifié' => 2
+                ],
+            ])
+            ->add('statusDetails', ChoiceType::class, [
+                'choices'  => [
+                    'Ne répond pas' => 0,
+                    'Répondeur' => 1,
+                    'Barrage Secrétaire' => 2
                 ],
             ])
             ->add('callNotes', TextareaType::class, [

@@ -119,19 +119,14 @@
 
                                 <div class="col-lg-6">
                                     <div class="form-group">
-                                        <label class="form-control-label" for="input-last-name">Catégorie</label>
-                                        <input type="text" id="input-last-name" class="form-control" value="{{ client_to_show.category }}" disabled>
+                                        <label class="form-control-label" for="input-first-name">Email</label>
+                                        <input type="text" id="input-first-name" class="form-control" value="{{ client_to_show.email }}" disabled>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="row">
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        <label class="form-control-label" for="input-first-name">Email</label>
-                                        <input type="text" id="input-first-name" class="form-control" value="{{ client_to_show.email }}" disabled>
-                                    </div>
-                                </div>
+
 
                                 <div class="col-lg-6">
                                     <div class="form-group">
@@ -140,13 +135,22 @@
                                     </div>
                                 </div>
 
-                            </div>
-
-                            <div class="row">
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label class="form-control-label" for="input-last-name">Code Postal</label>
                                         <input type="text" id="input-last-name" class="form-control" value="{{ client_to_show.postalCode }}" disabled>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+
+
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-first-name">Département</label>
+                                        <input type="text" id="input-first-name" class="form-control" value="{{ client_to_show.geographicArea }}" disabled>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
@@ -155,6 +159,7 @@
                                         <input type="text" id="input-first-name" class="form-control" value="{{ client_to_show.country }}" disabled>
                                     </div>
                                 </div>
+
 
                             </div>
 
@@ -185,6 +190,22 @@
                         <!-- Address -->
                         <h6 class="heading-small text-muted mb-4">Données Utiles</h6>
                         <div class="pl-lg-4">
+
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-city">Catégorie</label>
+                                        <input type="text" id="input-city" class="form-control" value="{{ client_to_show.category }}" disabled>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-country">Equipement</label>
+                                        <input type="text" id="input-country" class="form-control" value="{{ client_to_show.providedEquipment }}" disabled>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="form-group">
