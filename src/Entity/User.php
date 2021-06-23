@@ -59,10 +59,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $appointments;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="commercials")
+     * @var User $teleprospector
+     */
+    private User $teleprospector;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="teleprospector")
+     * @var ArrayCollection<User> $commercials
+     */
+    private Collection $commercials;
+
     public function __construct()
     {
         $this->calls = new ArrayCollection();
         $this->appointments = new ArrayCollection();
+        $this->commercials = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -236,4 +249,39 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    /**
+     * @return User
+     */
+    public function getTeleprospector(): User
+    {
+        return $this->teleprospector;
+    }
+
+    /**
+     * @param User $teleprospector
+     */
+    public function setTeleprospector(User $teleprospector): void
+    {
+        $this->teleprospector = $teleprospector;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getCommercials()
+    {
+        return $this->commercials;
+    }
+
+    /**
+     * @param ArrayCollection $commercials
+     */
+    public function setCommercials($commercials): void
+    {
+        $this->commercials = $commercials;
+    }
+
+
+
 }

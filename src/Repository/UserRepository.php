@@ -74,4 +74,13 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
         return $qb->getQuery()->getResult();
     }
+
+    public function findAssignedUsersByCommercialRole($id)
+    {
+        $qb = $this->createQueryBuilder('u');
+        $qb->select('u')
+            ->join('u.teleprospector', 't')
+            ->where("t.id = $id");
+        return $qb->getQuery()->getResult();
+    }
 }
