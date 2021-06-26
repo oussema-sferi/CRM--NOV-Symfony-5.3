@@ -213,19 +213,19 @@
                                     <td class="budget">
                                         {% if  client.status == 0 %}
                                             <span class="badge badge-warning badge-lg">
-                                <i class="bg-info"></i>
-                                Non Traité
-                            </span>
+                                                <i class="bg-info"></i>
+                                                Non Traité
+                                            </span>
                                         {% elseif client.status == 1 %}
-                                            <span class="badge badge-dot mr-4">
-                                <i class="bg-warning"></i>
-                                 Appel non Qualifié
-                            </span>
+                                            <span class="badge badge-success badge-lg">
+                                                <i class="bg-warning"></i>
+                                                 En Cours de Traitement
+                                            </span>
                                         {% else %}
                                             <span class="badge badge-dot mr-4">
-                                <i class="bg-success"></i>
-                                Appel Qualifié
-                            </span>
+                                                <i class="bg-success"></i>
+                                                Traité
+                                            </span>
                                         {% endif %}
                                     </td>
 

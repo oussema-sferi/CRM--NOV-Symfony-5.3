@@ -142,7 +142,8 @@
                                 <tr>
                                     <th scope="col">Utilisateur</th>
                                     <th scope="col">Client</th>
-                                    <th scope="col">Etat</th>
+                                    <th scope="col">Statut</th>
+                                    <th scope="col">Détails</th>
                                     <th scope="col">Observations</th>
                                     <th scope="col">Date/Heure Appel</th>
                                 </tr>
@@ -160,7 +161,29 @@
                                         </td>
 
                                         <td class="budget">
-                                            {{ call.status }}
+                                            {% if  call.generalStatus == 1 %}
+                                                Appel non Qualifié
+                                            {% elseif call.generalStatus == 2 %}
+                                                Appel Qualifié
+                                            {% endif %}
+                                        </td>
+
+                                        <td class="budget">
+                                            {% if  call.statusDetails == 0 %}
+                                                Ne répond pas
+                                            {% elseif call.statusDetails == 1 %}
+                                                Répondeur
+                                            {% elseif call.statusDetails == 2 %}
+                                                Barrage Secrétaire
+                                            {% elseif call.statusDetails == 3 %}
+                                                Pas Intéressé
+                                            {% elseif call.statusDetails == 4 %}
+                                                A Rappeler
+                                            {% elseif call.statusDetails == 5 %}
+                                                RDV à prendre
+                                            {% elseif call.statusDetails == 6 %}
+                                                RDV fixé
+                                            {% endif %}
                                         </td>
 
                                         <td class="budget">

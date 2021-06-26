@@ -20,7 +20,12 @@ class Appointment
     /**
      * @ORM\Column(type="datetime")
      */
-    private $date;
+    private $start;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $end;
 
     /**
      * @ORM\Column(type="boolean")
@@ -49,14 +54,26 @@ class Appointment
         return $this->id;
     }
 
-    public function getDate(): ?\DateTimeInterface
+    public function getStart(): ?\DateTimeInterface
     {
-        return $this->date;
+        return $this->start;
     }
 
-    public function setDate(\DateTimeInterface $date): self
+    public function setStart(\DateTimeInterface $start): self
     {
-        $this->date = $date;
+        $this->start = $start;
+
+        return $this;
+    }
+
+    public function getEnd(): ?\DateTimeInterface
+    {
+        return $this->end;
+    }
+
+    public function setEnd(\DateTimeInterface $end): self
+    {
+        $this->end = $end;
 
         return $this;
     }

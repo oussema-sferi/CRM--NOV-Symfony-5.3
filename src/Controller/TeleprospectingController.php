@@ -105,6 +105,7 @@ class TeleprospectingController extends AbstractController
             $newCall->setCreatedAt(new  \DateTime());
             $newCall->setUser($loggedUser);
             $newCall->setClient($client);
+            $client->setStatus(1);
             $manager->persist($newCall);
             $manager->flush();
             return $this->redirectToRoute('teleprospecting');
