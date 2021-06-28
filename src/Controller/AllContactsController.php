@@ -114,9 +114,19 @@ class AllContactsController extends AbstractController
         } catch (FileException $e) {
             dd($e);
         }
-        $spreadsheet = IOFactory::load($fileFolder . $filePathName); // Here we are able to read from the excel file
+        $inputFileType = IOFactory::identify($fileFolder . $filePathName);
+        $reader = IOFactory::createReader($inputFileType);
+        /**  Advise the Reader that we only want to load cell data  **/
+        $reader->setReadDataOnly(true);
+        $reader->setInputEncoding('CP1252');
+
+        /*dd($reader);*/
+        /**  Load $inputFileName to a Spreadsheet Object  **/
+        $spreadsheet = $reader->load($fileFolder . $filePathName);
+        /*dd($spreadsheet);*/
+        /*$spreadsheet = IOFactory::load($fileFolder . $filePathName);*/ // Here we are able to read from the excel file
         $row = $spreadsheet->getActiveSheet()->removeRow(1); // I added this to be able to remove the first file line
-        $sheetData = $spreadsheet->getActiveSheet()->toArray(null, true, true, true); // here, the read data is turned into an array
+        $sheetData = $spreadsheet->getActiveSheet()-> toArray(null, true, true, true, true); // here, the read data is turned into an array
         /*dd($sheetData);*/
 
         //Save imported contacts in the database
@@ -125,23 +135,23 @@ class AllContactsController extends AbstractController
         foreach ($sheetData as $Row)
         {
 
-            $firstName = strtolower($Row['A']); // store the first_name on each iteration
-            $lastName = strtolower($Row['B']); // store the last_name on each iteration
-            $email= strtolower($Row['C']);     // store the email on each iteration
-            $companyName= strtolower($Row['D']);
-            $address= strtolower($Row['E']);
-            $postalCode= strtolower($Row['F']);
-            $country= strtolower($Row['G']);
-            $phoneNumber= strtolower($Row['H']);
-            $mobileNumber= strtolower($Row['I']);
-            $category= strtolower($Row['J']);
-            if(strtolower($Row['J']) === 'm') {
+            $firstName = $Row['A']; // store the first_name on each iteration
+            $lastName = $Row['B']; // store the last_name on each iteration
+            $email= $Row['C'];     // store the email on each iteration
+            $companyName= $Row['D'];
+            $address= $Row['E'];
+            $postalCode= $Row['F'];
+            $country= $Row['G'];
+            $phoneNumber= $Row['H'];
+            $mobileNumber= $Row['I'];
+            $category= $Row['J'];
+            /*if(strtolower($Row['J']) === 'm') {
                 $category = 'médecin';
             } elseif (strtolower($Row['J']) === 'v') {
                 $category = 'vétérinaire';
             } else {
                 $category = 'chirurgien';
-            }
+            }*/
 
             if(strtolower($Row['K']) === 'non') {
                 $isUnderContract = false;
@@ -160,6 +170,7 @@ class AllContactsController extends AbstractController
 
 
             $existingContact = $entityManager->getRepository(Client::class)->findOneBy(array('email' => $email));
+
                 // make sure that the user does not already exists in your db
             if (!$existingContact)
             {
@@ -183,6 +194,7 @@ class AllContactsController extends AbstractController
                 $entityManager->persist($contact);
                 $entityManager->flush();
                 // here Doctrine checks all the fields of all fetched data and make a transaction to the database.
+
             }
         }
         return $this->redirectToRoute('all_contacts');
