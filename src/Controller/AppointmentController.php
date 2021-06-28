@@ -34,15 +34,16 @@ class AppointmentController extends AbstractController
      */
     public function show(Request $request, $id, AppointmentRepository $appointment): Response
     {
-        $client = $this->getDoctrine()->getRepository(Client::class)->find($id);
+        $client = $this->getDoctrine()->getRepository(Client::class)->find(3);
+        $commercialUser = $this->getDoctrine()->getRepository(User::class)->find($id);
         /*dd($client);*/
-        $events = $appointment->findAll();
+        $events = $appointment->findBy(['user' => $id]);
         /*dd($events);*/
         $appointments = [];
         foreach ($events as $event) {
             $appointments[] = [
                 'id' => $event->getId(),
-                'title' => $client->getFirstName(),
+                'title' => $event->getClient()->getFirstName(),
                 'start' => $event->getStart()->format('Y-m-d H:i:s'),
                 'end' => $event->getEnd()->format('Y-m-d H:i:s'),
 
@@ -52,7 +53,7 @@ class AppointmentController extends AbstractController
         $data = json_encode($appointments);
         /*dd(compact('data'));*/
         $loggedUser = $this->getUser();
-        $calendarToShow = $this->getDoctrine()->getRepository(User::class)->find($id);
+
         $newAppointment = new Appointment();
         $appointmentForm = $this->createForm(AppointmentFormType::class, $newAppointment);
         $appointmentForm->handleRequest($request);
@@ -60,17 +61,20 @@ class AppointmentController extends AbstractController
         $manager = $this->getDoctrine()->getManager();
 
         if($appointmentForm->isSubmitted()) {
-            $newAppointment->setUser($loggedUser);
-            $newAppointment->setClient($client);
+            $newAppointment->setUser($commercialUser); //commercial
+            /*$newAppointment->setClient($client);*/
             $newAppointment->setStatus(0);
             $newAppointment->setAppointmentNotes('test');
+            ($newAppointment->getClient())->setStatus(1);
             $manager->persist($newAppointment);
             $manager->flush();
-            return $this->redirectToRoute('teleprospecting');
+            return $this->redirectToRoute('show_calendar', [
+                'id' => $id
+            ]);
         }
 
         return $this->render('/appointment/show_calendar.html.twig', [
-            'calendar_to_show' => $calendarToShow,
+            /*'calendar_to_show' => $calendarToShow,*/
             'data' => compact('data'),
             'appointment_form' => $appointmentForm->createView(),
         ]);

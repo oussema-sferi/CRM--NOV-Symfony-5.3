@@ -65,9 +65,9 @@
                             <div class="col-md-9">
                                 <h3 class="mb-0">RDV</h3>
                             </div>
-                            <div class="col-md-3">
+                            {#<div class="col-md-3">
                                 <input type="text" class="form-control " placeholder="Recherche" id="contact-filter">
-                            </div>
+                            </div>#}
                         </div>
                     </div>
 
@@ -85,22 +85,32 @@
 
                                         <div>
 
-
+                                            {#<div class="form-group">
+                                                <label for="example-datetime-local-input" class="form-control-label">Client</label>
+                                                <input class="form-control" type="datetime-local" id="example-datetime-local-input">
+                                            </div>#}
 
                                             {{ form_start(appointment_form) }}
 
                                             <div class="form-group">
-                                                <div class="input-group">
 
-                                                    {{ form_widget(appointment_form.start, {'attr': {'class': 'form-control' }}) }}
-                                                </div>
+                                                <label for="example-datetime-local-input" class="form-control-label">Client</label>
+                                                {{ form_widget(appointment_form.client, {'attr': {'class': 'form-control' }}) }}
+
                                             </div>
 
                                             <div class="form-group">
-                                                <div class="input-group">
+
+                                                <label for="example-datetime-local-input" class="form-control-label">Heure Début</label>
+                                                    {{ form_widget(appointment_form.start, {'attr': {'class': 'form-control' }}) }}
+
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="example-datetime-local-input" class="form-control-label">Heure Fin</label>
 
                                                     {{ form_widget(appointment_form.end, {'attr': {'class': 'form-control' }}) }}
-                                                </div>
+
                                             </div>
 
 
@@ -180,9 +190,11 @@
                             </ul>#}
                         </nav>
                     </div>
+
                 </div>
             </div>
         </div>
+    </div>
     </div>
 {% endblock %}
 
