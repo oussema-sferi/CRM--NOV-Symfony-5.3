@@ -34,7 +34,7 @@ class AppointmentController extends AbstractController
      */
     public function show(Request $request, $id, AppointmentRepository $appointment): Response
     {
-        $client = $this->getDoctrine()->getRepository(Client::class)->find(3);
+        /*$client = $this->getDoctrine()->getRepository(Client::class)->find(3);*/
         $commercialUser = $this->getDoctrine()->getRepository(User::class)->find($id);
         /*dd($client);*/
         $events = $appointment->findBy(['user' => $id]);
@@ -77,6 +77,7 @@ class AppointmentController extends AbstractController
             /*'calendar_to_show' => $calendarToShow,*/
             'data' => compact('data'),
             'appointment_form' => $appointmentForm->createView(),
+            'commercial_user' => $commercialUser
         ]);
     }
 
