@@ -43,7 +43,7 @@ class AppointmentController extends AbstractController
         foreach ($events as $event) {
             $appointments[] = [
                 'id' => $event->getId(),
-                'title' => $event->getClient()->getFirstName(),
+                'title' => $event->getClient()->getFirstName() . " " . $event->getClient()->getLastName(),
                 'start' => $event->getStart()->format('Y-m-d H:i:s'),
                 'end' => $event->getEnd()->format('Y-m-d H:i:s'),
 

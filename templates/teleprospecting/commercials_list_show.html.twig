@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Liste des RDV{% endblock %}
+{% block title %}Liste des commerciaux{% endblock %}
 
 {% block body %}
 
@@ -12,9 +12,9 @@
                         <h6 class="h2 text-white d-inline-block mb-0">CRM</h6>
                         <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
                             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
-                                <li class="breadcrumb-item"><a href="#"><i class="fas fa-chalkboard-teacher text-yellow"></i></a></li>
-                                <li class="breadcrumb-item"><a href="#">Service Commercial</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Liste des RDV</li>
+                                <li class="breadcrumb-item"><a href="#"><i class="fas fa-phone-volume text-orange"></i></a></li>
+                                <li class="breadcrumb-item"><a href="#">Service Téléprospection</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Liste des commerciaux</li>
                             </ol>
                         </nav>
                     </div>
@@ -127,7 +127,7 @@
                     <div class="card-header border-0">
                         <div class="row">
                             <div class="col-md-9">
-                                <h3 class="mb-0">Liste des RDV</h3>
+                                <h3 class="mb-0">Agents Commerciaux</h3>
                             </div>
                             <div class="col-md-3">
                                 <input type="text" class="form-control " placeholder="Recherche" id="contact-filter">
@@ -141,72 +141,49 @@
                             <tr>
                                 <th scope="col">Prénom</th>
                                 <th scope="col">Nom</th>
-
-                                <th scope="col">Société</th>
-                                <th scope="col">Catégorie</th>
-                                <th scope="col">Sous Contrat</th>
-                                <th scope="col">RDV: Date/Heure Début</th>
-                                <th scope="col">RDV: Date/Heure Fin</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Actions</th>
                                 {#<th scope="col">Consultation</th>
-                                <th scope="col">Modification</th>
-                                <th scope="col">Suppression</th>#}
+                        <th scope="col">Modification</th>
+                        <th scope="col">Suppression</th>#}
                             </tr>
                             </thead>
                             <tbody class="list">
 
-                            {% for commercial_appointment in commercial_appointments %}
+                                {% for commercial_agent in commercial_agents %}
                                 <tr>
                                     <td class="budget">
-                                        {{ commercial_appointment.client.firstName }}
+                                        {{ commercial_agent.firstName }}
                                     </td>
 
                                     <td class="budget">
-                                        {{ commercial_appointment.client.lastName }}
-                                    </td>
-
-
-                                    <td class="budget">
-                                        {{ commercial_appointment.client.companyName }}
+                                        {{ commercial_agent.lastName }}
                                     </td>
 
                                     <td class="budget">
-                                        {{ commercial_appointment.client.category }}
-                                    </td>
-
-                                    <td class="budget">
-                                        {% if  commercial_appointment.client.isUnderContract %}
-                                            Oui
-                                        {% else %}
-                                            Non
-                                        {% endif %}
+                                        {{ commercial_agent.email }}
                                     </td>
 
 
-                                    <td class="budget">
-                                        {{ commercial_appointment.start | date() }}
+                                    <td >
+                                        <a href="{{ path('show_calendar', {'id': commercial_agent.id}) }}"  class="badge badge-default" >Consulter Agenda</a>
                                     </td>
-
-                                    <td class="budget">
-                                        {{ commercial_appointment.end | date() }}
-                                    </td>
-
-
 
                                     {#<td >
-                                    <a href="{{ path('show_client', {'id': client.id}) }}"  class="badge badge-default" >Consulter Fiche</a>
-                                </td>
+                            <a href="{{ path('show_client', {'id': client.id}) }}"  class="badge badge-default" >Consulter Fiche</a>
+                        </td>
 
-                                <td >
-                                    <a href="{{ path('update_client', {'id': client.id}) }}"  class="badge badge-info" >Modifier Contact</a>
-                                </td>
+                        <td >
+                            <a href="{{ path('update_client', {'id': client.id}) }}"  class="badge badge-info" >Modifier Contact</a>
+                        </td>
 
-                                <td >
-                                    <a href="{{ path('new_client') }}" data-href="/admin_resp/ingenieur/oussingenieurref/deleted" class="badge badge-danger" data-toggle="modal" data-target="#deleteModal">Supprimer Contact</a>
-                                </td>#}
+                        <td >
+                            <a href="{{ path('new_client') }}" data-href="/admin_resp/ingenieur/oussingenieurref/deleted" class="badge badge-danger" data-toggle="modal" data-target="#deleteModal">Supprimer Contact</a>
+                        </td>#}
 
                                 </tr>
 
-                            {% endfor %}
+                        {% endfor %}
 
                             </tbody>
                         </table>

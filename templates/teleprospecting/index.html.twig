@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Service Téléprospection{% endblock %}
+{% block title %}Liste des prospects{% endblock %}
 
 {% block body %}
 
@@ -13,7 +13,7 @@
                         <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
                             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
                                 <li class="breadcrumb-item"><a href="#"><i class="fas fa-phone-volume text-orange"></i></a></li>
-                                <li class="breadcrumb-item"><a href="#">Téléprospection</a></li>
+                                <li class="breadcrumb-item"><a href="#">Service Téléprospection</a></li>
                                 <li class="breadcrumb-item active" aria-current="page">Liste des prospects</li>
                             </ol>
                         </nav>
@@ -229,7 +229,7 @@
                                 </td>
 
                                 <td >
-                                    <a href="{{ path('call_handle', {'id': client.id}) }}"  class="badge badge-success" >Traiter Fiche</a>
+                                    <a href="{{ path('call_handle', {'id': client.id}) }}"  class="badge badge-default" >Traiter Fiche</a>
                                 </td>
 
                                 {#<td >

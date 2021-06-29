@@ -116,4 +116,19 @@ class TeleprospectingController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route("/dashboard/teleprospecting/commercialslist", name="commercials_list")
+     */
+    public function showCommercialsList(): Response
+    {
+        $loggedUserId = $this->getUser()->getId();
+
+        /*$commercial_agents = $this->getDoctrine()->getRepository(User::class)->findUsersByCommercialRole("ROLE_COMMERCIAL");*/
+        $commercial_agents = $this->getDoctrine()->getRepository(User::class)->findAssignedUsersByCommercialRole($loggedUserId);
+        /*dd($commercial_agents);*/
+        return $this->render('teleprospecting/commercials_list_show.html.twig', [
+            'commercial_agents' => $commercial_agents,
+        ]);
+    }
+
 }
