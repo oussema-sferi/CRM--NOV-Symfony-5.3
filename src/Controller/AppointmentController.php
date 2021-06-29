@@ -32,7 +32,7 @@ class AppointmentController extends AbstractController
     /**
      * @Route("/dashboard/appointments/showcalendar/{id}", name="show_calendar")
      */
-    public function show(Request $request, $id, AppointmentRepository $appointment): Response
+    public function showCalendar(Request $request, $id, AppointmentRepository $appointment): Response
     {
         /*$client = $this->getDoctrine()->getRepository(Client::class)->find(3);*/
         $commercialUser = $this->getDoctrine()->getRepository(User::class)->find($id);

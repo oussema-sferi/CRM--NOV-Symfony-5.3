@@ -1,0 +1,131 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon agenda{% endblock %}
+
+{% block head %}
+
+    <style>
+        #calendar {
+            width: 80%;
+            margin: auto;
+        }
+    </style>
+
+{% endblock %}
+
+
+{% block body %}
+{#{{ dump(data['data']) }}#}
+{#<div id="calendar">
+    <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <p></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>#}
+
+    <div class="header bg-primary pb-6">
+        <div class="container-fluid">
+            <div class="header-body">
+                <div class="row align-items-center py-4">
+                    <div class="col-lg-6 col-7">
+                        <h6 class="h2 text-white d-inline-block mb-0">CRM</h6>
+                        <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+                            <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                                <li class="breadcrumb-item"><a href="#"><i class="fas fa-calendar-alt text-cyan"></i></a></li>
+                                <li class="breadcrumb-item"><a href="#">Service Commercial</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Mon Agenda</li>
+                            </ol>
+                        </nav>
+                    </div>
+                    <div class="col-lg-6 col-5 text-right">
+                        {#<a href="{{ path('new_client') }}" class="btn btn-sm btn-success">Nouveau prospect</a>#}
+                        {#<a href="#" class="btn btn-sm btn-neutral">Filters</a>#}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid mt--6">
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <!-- Card header -->
+                    <div class="card-header border-0">
+                        {#<div class="row">
+                            <div class="col-md-9">
+                                <h3 class="mb-0">Mon Agenda</h3>
+                            </div>
+                            #}{#<div class="col-md-3">
+                                <input type="text" class="form-control " placeholder="Recherche" id="contact-filter">
+                            </div>#}{#
+                        </div>#}
+                    </div>
+
+
+
+                    {#<div class="container mt--8 pb-5">#}
+                        <!-- Table -->
+
+
+
+                    <div id="calendar">
+                        <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-body">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        <p></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Light table -->
+
+                    <!-- Card footer -->
+                    <div class="card-footer py-4">
+                        <nav aria-label="...">
+
+                        </nav>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    {#</div>#}
+{% endblock %}
+
+{% block additionalJs %}
+
+    <script>
+        window.onload = () => {
+            let calendarElement = document.querySelector("#calendar");
+            let calendar = new FullCalendar.Calendar(calendarElement, {
+                initialView: "dayGridMonth",
+                locale: "fr",
+                timeZone: "Europe/Paris",
+                headerToolbar: {
+                    start: "prev,next today",
+                    center: "title",
+                    end: "dayGridMonth,timeGridWeek"
+                },
+                events: {{ data['data']|raw }}
+            })
+            calendar.render()
+        }
+    </script>
+
+{% endblock %}
