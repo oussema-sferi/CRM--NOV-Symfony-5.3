@@ -82,11 +82,17 @@
                                                 </a>
                                             </li>
                                             <li class="nav-item">
+                                                <a href="{{ path('availibility_check') }}" class="nav-link">
+                                                    <i class="ni fas fa-calendar-alt text-orange"></i>
+                                                    <span class="sidenav-normal"> Fixer un RDV </span>
+                                                </a>
+                                            </li>
+                                            {#<li class="nav-item">
                                                 <a href="{{ path('commercials_list') }}" class="nav-link">
                                                     <i class="ni fas fa-calendar-alt text-orange"></i>
                                                     <span class="sidenav-normal"> Agenda des Commerciaux </span>
                                                 </a>
-                                            </li>
+                                            </li>#}
                                         </ul>
                                     </div>
                                 </li>
@@ -105,9 +111,9 @@
                                                 </a>
                                             </li>
                                             <li class="nav-item">
-                                                <a href="{{ path('my_calendar') }}" class="nav-link">
+                                                <a href="{{ path('commercial_my_contacts') }}" class="nav-link">
                                                     <i class="ni fas fa-calendar-alt text-yellow"></i>
-                                                    <span class="sidenav-normal"> Mon Agenda </span>
+                                                    <span class="sidenav-normal"> Mes contacts </span>
                                                 </a>
                                             </li>
                                         </ul>
@@ -128,12 +134,12 @@
                                     </a>
                                 </li>
 
-                                {#<li class="nav-item">
+                                <li class="nav-item">
                         <a class="nav-link" href="{{ path('call') }}">
                             <i class="ni fas fa-calendar-alt text-purple"></i>
                             <span class="nav-link-text">Liste des Appels</span>
                         </a>
-                    </li>#}
+                    </li>
 
                                 {#<li class="nav-item">
                                     <a class="nav-link" href="{{ path('appointment') }}">
@@ -252,6 +258,13 @@
                 </h6>#}
                 <!-- Navigation -->
                 <ul class="navbar-nav mb-md-3">
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('appointment') }}">
+                            <i class="ni fas fa-calendar-alt text-cyan"></i>
+                            <span class="nav-link-text">Agenda</span>
+                        </a>
+                    </li>
 
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('home') }}">

@@ -47,4 +47,15 @@ class CommercialController extends AbstractController
         }
         return $this->redirectToRoute('commercial');
     }
+
+    /**
+     * @Route("/dashboard/commercial/mycontacts", name="commercial_my_contacts")
+     */
+    public function myContacts(AppointmentRepository $appointment): Response
+    {
+        $commercialContacts = $appointment->findAll();
+        return $this->render('commercial/my_contacts.html.twig', [
+            'commercial_appointments' => $commercialContacts,
+        ]);
+    }
 }

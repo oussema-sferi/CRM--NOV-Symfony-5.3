@@ -7,6 +7,7 @@ use App\Entity\Client;
 use App\Entity\User;
 use App\Form\AppointmentFormType;
 use App\Repository\AppointmentRepository;
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -60,9 +61,9 @@ class AppointmentController extends AbstractController
 
         $manager = $this->getDoctrine()->getManager();
 
-        if($appointmentForm->isSubmitted()) {
+        /*if($appointmentForm->isSubmitted()) {
             $newAppointment->setUser($commercialUser); //commercial
-            /*$newAppointment->setClient($client);*/
+
             $newAppointment->setStatus(0);
             $newAppointment->setAppointmentNotes('test');
             ($newAppointment->getClient())->setStatus(1);
@@ -71,7 +72,7 @@ class AppointmentController extends AbstractController
             return $this->redirectToRoute('show_calendar', [
                 'id' => $id
             ]);
-        }
+        }*/
 
         return $this->render('/appointment/show_calendar.html.twig', [
             /*'calendar_to_show' => $calendarToShow,*/
@@ -79,6 +80,74 @@ class AppointmentController extends AbstractController
             'appointment_form' => $appointmentForm->createView(),
             'commercial_user' => $commercialUser
         ]);
+    }
+
+    /**
+     * @Route("/dashboard/appointments/availibilitycheck/", name="availibility_check")
+     */
+    public function availabilityCheck(Request $request, AppointmentRepository $appointment): Response
+    {
+        $newAppointment = new Appointment();
+        $appointmentForm = $this->createForm(AppointmentFormType::class, $newAppointment);
+        $appointmentForm->handleRequest($request);
+        $manager = $this->getDoctrine()->getManager();
+        $clients = $this->getDoctrine()->getRepository(Client::class)->findBy(["status" => 1]);
+
+
+        if($appointmentForm->isSubmitted()) {
+            $startTime = $newAppointment->getStart()->format('Y-m-d H:i:s');
+            $endTime = $newAppointment->getEnd()->format('Y-m-d H:i:s');
+            /*dd($startTime);*/
+            $busyAppointmentsTime = $this->getDoctrine()->getRepository(Appointment::class)->getAppointmentsBetweenByDate($startTime, $endTime);
+            /*dd($busyAppointmentsTime);*/
+            if($busyAppointmentsTime) {
+                $busyCommercial = $busyAppointmentsTime[0]->getUser()->getId();
+                $freeCommercials = $this->getDoctrine()->getRepository(User::class)->findFreeCommercials($busyCommercial, "ROLE_COMMERCIAL");
+            } else {
+                $freeCommercials = $this->getDoctrine()->getRepository(User::class)->findUsersByCommercialRole("ROLE_COMMERCIAL");
+            }
+
+            /*dd($freeCommercials);*/
+            /*dd($clients);*/
+            return $this->render('/appointment/free_commercials_check.html.twig', [
+                /*'free_appointments' => $freeAppointmentsTime*/
+                'free_commercials' => $freeCommercials,
+                'clients' => $clients,
+                'start' => $startTime,
+                'end' => $endTime
+            ]);
+        }
+
+        return $this->render('/appointment/fix_appointment.html.twig', [
+            'appointment_form' => $appointmentForm->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/dashboard/appointments/fixappointment/", name="fix_appointment")
+     */
+    public function fixAppointment(Request $request): Response
+    {
+        $manager = $this->getDoctrine()->getManager();
+        if($request->isMethod('Post')) {
+            $client = $this->getDoctrine()->getRepository(Client::class)->find($request->request->get('client'));
+            $commercial = $this->getDoctrine()->getRepository(User::class)->find($request->request->get('commercial'));
+
+            $newAppointment = new Appointment();
+            $newAppointment->setStatus(0);
+            $newAppointment->setStart(new \DateTime($request->request->get('start')));
+            $newAppointment->setEnd(new \DateTime($request->request->get('end')));
+            $newAppointment->setClient($client);
+            $newAppointment->setUser($commercial);
+            $newAppointment->setAppointmentNotes($request->request->get('notes'));
+
+            $manager->persist($newAppointment);
+            $manager->flush();
+            return $this->redirectToRoute('show_calendar', [
+                'id' => $request->request->get('commercial'),
+            ]);
+        }
+
     }
 
 

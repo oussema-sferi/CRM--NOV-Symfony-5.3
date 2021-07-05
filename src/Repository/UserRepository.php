@@ -83,4 +83,15 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->where("t.id = $id");
         return $qb->getQuery()->getResult();
     }
+
+    public function findFreeCommercials($id, $role)
+    {
+        $qb = $this->createQueryBuilder('u');
+        $qb->select('u')
+            ->where('u.id != :userid')
+            ->andWhere('u.roles LIKE :roles')
+            ->setParameter('roles', '%"'.$role.'"%')
+            ->setParameter('userid', $id);
+        return $qb->getQuery()->getResult();
+    }
 }

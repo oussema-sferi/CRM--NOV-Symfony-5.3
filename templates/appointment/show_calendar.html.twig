@@ -73,76 +73,30 @@
 
 
 
-                    <div class="container mt--8 pb-5">
+
                         <!-- Table -->
-                        <div class="row justify-content-center">
+                       {# <div class="row justify-content-center">
                             <div class="col-lg-6 col-md-8">
-                                <div class="card bg-secondary border-0">
 
-                                    <div class="card-body px-lg-5 py-lg-5">
-                                        <div class="text-center text-muted mb-4">
-                                        </div>
-
-                                        <div>
-
-                                            {#<div class="form-group">
-                                                <label for="example-datetime-local-input" class="form-control-label">Client</label>
-                                                <input class="form-control" type="datetime-local" id="example-datetime-local-input">
-                                            </div>#}
-
-                                            {{ form_start(appointment_form) }}
-
-                                            <div class="form-group">
-
-                                                <label for="example-datetime-local-input" class="form-control-label">Client</label>
-                                                {{ form_widget(appointment_form.client, {'attr': {'class': 'form-control' }}) }}
-
-                                            </div>
-
-                                            <div class="form-group">
-
-                                                <label for="example-datetime-local-input" class="form-control-label">Heure Début</label>
-                                                    {{ form_widget(appointment_form.start, {'attr': {'class': 'form-control' }}) }}
-
-                                            </div>
-
-                                            <div class="form-group">
-                                                <label for="example-datetime-local-input" class="form-control-label">Heure Fin</label>
-
-                                                    {{ form_widget(appointment_form.end, {'attr': {'class': 'form-control' }}) }}
-
-                                            </div>
+                            </div>
+                        </div>#}
 
 
 
-
-                                            <div class="text-center">
-                                                <button type="submit" class="btn btn-primary mt-4">Confirmer</button>
-                                            </div>
-
-                                            {{ form_end(appointment_form)}}
+                        <div id="calendar">
+                            <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-body">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                            <p></p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-
-
-                    <div id="calendar">
-                        <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-body">
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                        <p></p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                     <!-- Light table -->
                     {#<div class="table-responsive">
                         <table class="table align-items-center table-flush">
@@ -191,7 +145,6 @@
                         </nav>
                     </div>
 
-                </div>
             </div>
         </div>
     </div>

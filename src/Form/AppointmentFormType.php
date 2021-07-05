@@ -23,13 +23,13 @@ class AppointmentFormType extends AbstractType
             ->add('end', DateTimeType::class, [
                 'date_widget' => 'single_text'
             ])
-            ->add('client', EntityType::class, [
+         /*   ->add('client', EntityType::class, [
                 'class' => Client::class,
                 'query_builder' => function (ClientRepository $client) {
                     return $client->createQueryBuilder('c')
                         ->where("c.status = 0");
                 }
-            ])
+            ])*/
             /*->add('end', DateTimeType::class, [
                 'date_widget' => 'single_text'
             ])*/

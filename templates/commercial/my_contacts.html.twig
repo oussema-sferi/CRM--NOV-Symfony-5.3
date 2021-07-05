@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Liste des RDV{% endblock %}
+{% block title %}Mes Contacts{% endblock %}
 
 {% block body %}
 
@@ -14,7 +14,7 @@
                             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
                                 <li class="breadcrumb-item"><a href="#"><i class="fas fa-chalkboard-teacher text-yellow"></i></a></li>
                                 <li class="breadcrumb-item"><a href="#">Service Commercial</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Liste des RDV</li>
+                                <li class="breadcrumb-item active" aria-current="page">Mes Contacts</li>
                             </ol>
                         </nav>
                     </div>
@@ -127,7 +127,7 @@
                     <div class="card-header border-0">
                         <div class="row">
                             <div class="col-md-9">
-                                <h3 class="mb-0">Liste des RDV</h3>
+                                <h3 class="mb-0">Liste de mes Contacts</h3>
                             </div>
                             <div class="col-md-3">
                                 <input type="text" class="form-control " placeholder="Recherche" id="contact-filter">
@@ -145,9 +145,7 @@
                                 <th scope="col">Société</th>
                                 <th scope="col">Catégorie</th>
                                 <th scope="col">Sous Contrat</th>
-                                <th scope="col">RDV: Date/Heure Début</th>
-                                <th scope="col">RDV: Date/Heure Fin</th>
-                                <th scope="col">Commercial Affecté</th>
+                                <th scope="col">Traitement</th>
                                 {#<th scope="col">Consultation</th>
                                 <th scope="col">Modification</th>
                                 <th scope="col">Suppression</th>#}
@@ -182,18 +180,11 @@
                                         {% endif %}
                                     </td>
 
-
-                                    <td class="budget">
-                                        {{ commercial_appointment.start | date() }}
+                                    <td >
+                                        <a href="{{ path('call_handle', {'id': commercial_appointment.client.id}) }}"  class="badge badge-default" >Traiter Fiche</a>
                                     </td>
 
-                                    <td class="budget">
-                                        {{ commercial_appointment.end | date() }}
-                                    </td>
 
-                                    <td class="budget">
-                                        {{ commercial_appointment.user.firstName ~ ' ' ~ commercial_appointment.user.lastName }}
-                                    </td>
 
 
 

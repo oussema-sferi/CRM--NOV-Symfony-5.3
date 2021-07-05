@@ -47,4 +47,28 @@ class AppointmentRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function getAppointmentsBetweenByDate($start, $end)
+    {
+
+        /*return $this->createQueryBuilder("a")
+            ->andWhere('a.start < :start AND a.end <= :start')
+            ->orWhere('a.start >= :end AND a.end > :end')
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
+            ->getQuery()
+            ->getResult();*/
+        return $this->createQueryBuilder("a")
+            ->andWhere('a.start <= :start AND a.end >= :start')
+            ->andWhere('a.start <= :end AND a.end >= :end')
+            ->orWhere('a.end >= :end AND a.start < :end')
+            ->orWhere('a.end > :start AND a.start <= :start')
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
+            ->getQuery()
+            ->getResult();
+
+        /*return $qb->getQuery()->getResult();*/
+
+    }
 }
