@@ -23,7 +23,7 @@ class AppointmentController extends AbstractController
         $loggedUserId = $this->getUser()->getId();
 
         /*$commercial_agents = $this->getDoctrine()->getRepository(User::class)->findUsersByCommercialRole("ROLE_COMMERCIAL");*/
-        $commercial_agents = $this->getDoctrine()->getRepository(User::class)->findAssignedUsersByCommercialRole($loggedUserId);
+        $commercial_agents = $this->getDoctrine()->getRepository(User::class)->findAssignedUsersByCommercialRole($loggedUserId, "ROLE_COMMERCIAL");
         /*dd($commercial_agents);*/
         return $this->render('appointment/index.html.twig', [
             'commercial_agents' => $commercial_agents,
@@ -87,6 +87,8 @@ class AppointmentController extends AbstractController
      */
     public function availabilityCheck(Request $request, AppointmentRepository $appointment): Response
     {
+        $loggedUserId = $this->getUser()->getId();
+        /*dd($loggedUserId);*/
         $newAppointment = new Appointment();
         $appointmentForm = $this->createForm(AppointmentFormType::class, $newAppointment);
         $appointmentForm->handleRequest($request);
@@ -102,9 +104,10 @@ class AppointmentController extends AbstractController
             /*dd($busyAppointmentsTime);*/
             if($busyAppointmentsTime) {
                 $busyCommercial = $busyAppointmentsTime[0]->getUser()->getId();
-                $freeCommercials = $this->getDoctrine()->getRepository(User::class)->findFreeCommercials($busyCommercial, "ROLE_COMMERCIAL");
+                $freeCommercials = $this->getDoctrine()->getRepository(User::class)->findFreeCommercials($busyCommercial, "ROLE_COMMERCIAL", $loggedUserId);
             } else {
-                $freeCommercials = $this->getDoctrine()->getRepository(User::class)->findUsersByCommercialRole("ROLE_COMMERCIAL");
+                $freeCommercials = $this->getDoctrine()->getRepository(User::class)->findAssignedUsersByCommercialRole($loggedUserId,"ROLE_COMMERCIAL");
+
             }
 
             /*dd($freeCommercials);*/

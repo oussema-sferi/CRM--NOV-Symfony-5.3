@@ -19,8 +19,10 @@ class TeleprospectingController extends AbstractController
      */
     public function index(): Response
     {
+        $clients = $this->getDoctrine()->getRepository(Client::class)->findAll();
+        /*dd($clients[0]->getCalls());*/
         return $this->render('teleprospecting/index.html.twig', [
-            'clients' => $this->getDoctrine()->getRepository(Client::class)->findAll(),
+            'clients' => $clients,
         ]);
     }
 

@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Nouveau RDV{% endblock %}
+{% block title %}Nouveau Utilisateur{% endblock %}
 
 {% block body %}
 
@@ -13,13 +13,13 @@
                         <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
                             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
                                 <li class="breadcrumb-item"><a href="#"><i class="fas fa-phone-volume"></i></a></li>
-                                <li class="breadcrumb-item"><a href="#">Gestion des RDV</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Fixer un RDV</li>
+                                <li class="breadcrumb-item"><a href="#">Utilisateurs & Rôles</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Nouveau Utilisateur</li>
                             </ol>
                         </nav>
                     </div>
                     <div class="col-lg-6 col-5 text-right">
-                        <a href="{{ path('teleprospecting') }}" class="btn btn-sm btn-neutral">Retour</a>
+                        <a href="{{ path('roles') }}" class="btn btn-sm btn-neutral">Retour</a>
                     </div>
                 </div>
                 <!-- Card stats -->
@@ -120,13 +120,13 @@
 
     <div class="container-fluid mt--8">
 
-        <div class="header pb-8 pt-5 pt-md-14">
-            <div class="container-fluid">
-                <div class="header-body" style="text-align: center">
-                    <h1 style="color: black"></h1>
+            <div class="header pb-8 pt-5 pt-md-14">
+                <div class="container-fluid">
+                    <div class="header-body" style="text-align: center">
+                        <h1 style="color: black"></h1>
+                    </div>
                 </div>
             </div>
-        </div>
 
         <div class="container mt--8 pb-5">
             <!-- Table -->
@@ -137,34 +137,60 @@
                         <div class="card-body px-lg-5 py-lg-5">
                             <div class="text-center text-muted mb-4">
                             </div>
-                            {{ form_start(appointment_form) }}
+                            {{ form_start(registrationForm) }}
 
-                            {#<div class="form-group">
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="ni ni-hat-3"></i></span>
+                                            </div>
+                                            {{ form_widget(registrationForm.firstName, {'attr': {'class': 'form-control', 'placeholder':'Prénom' }}) }}
+                                        </div>
+                                    </div>
 
-                                <label for="example-datetime-local-input" class="form-control-label">Client</label>
-                                {{ form_widget(appointment_form.client, {'attr': {'class': 'form-control' }}) }}
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="ni ni-hat-3"></i></span>
+                                            </div>
+                                            {{ form_widget(registrationForm.lastName, {'attr': {'class': 'form-control', 'placeholder':'Nom'}}) }}
+                                        </div>
+                                    </div>
 
-                            </div>#}
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="ni ni-hat-3"></i></span>
+                                            </div>
+                                            {{ form_widget(registrationForm.email, {'attr': {'class': 'form-control', 'placeholder':'Email'}}) }}
+                                        </div>
+                                    </div>
 
-                            <div class="form-group">
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="ni ni-hat-3"></i></span>
+                                            </div>
+                                            {{ form_widget(registrationForm.plainPassword, {'attr': {'class': 'form-control', 'placeholder':'Mot de Passe'}}) }}
+                                        </div>
+                                    </div>
 
-                                <label for="example-datetime-local-input" class="form-control-label">Heure Début</label>
-                                {{ form_widget(appointment_form.start) }}
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="ni ni-hat-3"></i></span>
+                                            </div>
+                                            {{ form_widget(registrationForm.roles, {'attr': {'class': 'form-control', 'placeholder':'Rôle'}}) }}
+                                        </div>
+                                    </div>
 
-                            </div>
 
-                            <div class="form-group">
-                                <label for="example-datetime-local-input" class="form-control-label">Heure Fin</label>
-
-                                {{ form_widget(appointment_form.end) }}
-
-                            </div>
 
                             <div class="text-center">
                                 <button type="submit" class="btn btn-success mt-4">Confirmer</button>
                             </div>
 
-                            {{ form_end(appointment_form)}}
+                            {{ form_end(registrationForm)}}
                         </div>
                     </div>
                 </div>

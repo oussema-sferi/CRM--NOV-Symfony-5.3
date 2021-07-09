@@ -5,6 +5,8 @@ namespace App\Form;
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -20,14 +22,14 @@ class RegistrationFormType extends AbstractType
             ->add('email')
             ->add('firstName')
             ->add('lastName')
-            ->add('agreeTerms', CheckboxType::class, [
+           /* ->add('agreeTerms', CheckboxType::class, [
                 'mapped' => false,
                 'constraints' => [
                     new IsTrue([
                         'message' => 'You should agree to our terms.',
                     ]),
                 ],
-            ])
+            ])*/
             ->add('plainPassword', PasswordType::class, [
                 // instead of being set onto the object directly,
                 // this is read and encoded in the controller
@@ -44,6 +46,18 @@ class RegistrationFormType extends AbstractType
                         'max' => 4096,
                     ]),
                 ],
+            ])
+            ->add('roles', CollectionType::class, [
+                'entry_type' => ChoiceType::class,
+                'entry_options' => [
+                    'label' => false,
+                    'choices' => [
+                        'Super Admin' => 'ROLE_SUPERADMIN',
+                        'Admin' => 'ROLE_ADMIN',
+                        'Agent Commercial' => 'ROLE_COMMERCIAL',
+                        'Téléprospecteur' => 'ROLE_TELEPRO'
+                    ]
+                ]
             ])
         ;
     }
