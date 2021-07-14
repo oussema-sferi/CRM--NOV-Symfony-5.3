@@ -30,7 +30,7 @@ class RegistrationFormType extends AbstractType
                     ]),
                 ],
             ])*/
-            ->add('plainPassword', PasswordType::class, [
+            /*->add('plainPassword', PasswordType::class, [
                 // instead of being set onto the object directly,
                 // this is read and encoded in the controller
                 'mapped' => false,
@@ -46,7 +46,7 @@ class RegistrationFormType extends AbstractType
                         'max' => 4096,
                     ]),
                 ],
-            ])
+            ])*/
             ->add('roles', CollectionType::class, [
                 'entry_type' => ChoiceType::class,
                 'entry_options' => [
@@ -54,11 +54,13 @@ class RegistrationFormType extends AbstractType
                     'choices' => [
                         'Super Admin' => 'ROLE_SUPERADMIN',
                         'Admin' => 'ROLE_ADMIN',
-                        'Agent Commercial' => 'ROLE_COMMERCIAL',
+                        'Commercial' => 'ROLE_COMMERCIAL',
                         'Téléprospecteur' => 'ROLE_TELEPRO'
                     ]
                 ]
             ])
+            ->add('password', PasswordType::class)
+            ->add('confirmPassword', PasswordType::class)
         ;
     }
 

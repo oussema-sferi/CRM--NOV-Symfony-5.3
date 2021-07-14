@@ -21,9 +21,18 @@ class AppointmentController extends AbstractController
     public function index(): Response
     {
         $loggedUserId = $this->getUser()->getId();
-
+        /*dd($this->getUser()->getRoles());*/
+        if(in_array("ROLE_SUPERADMIN", $this->getUser()->getRoles())) {
+            $commercial_agents = $this->getDoctrine()->getRepository(User::class)->findUsersByCommercialRole("ROLE_COMMERCIAL");
+        } elseif (in_array("ROLE_TELEPRO", $this->getUser()->getRoles())) {
+            $commercial_agents = $this->getDoctrine()->getRepository(User::class)->findAssignedUsersByCommercialRole($loggedUserId, "ROLE_COMMERCIAL");
+        } elseif (in_array("ROLE_COMMERCIAL", $this->getUser()->getRoles())) {
+            return $this->redirectToRoute("show_calendar", [
+                "id" => $loggedUserId
+            ]);
+        }
         /*$commercial_agents = $this->getDoctrine()->getRepository(User::class)->findUsersByCommercialRole("ROLE_COMMERCIAL");*/
-        $commercial_agents = $this->getDoctrine()->getRepository(User::class)->findAssignedUsersByCommercialRole($loggedUserId, "ROLE_COMMERCIAL");
+
         /*dd($commercial_agents);*/
         return $this->render('appointment/index.html.twig', [
             'commercial_agents' => $commercial_agents,

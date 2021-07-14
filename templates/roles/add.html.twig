@@ -171,7 +171,16 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text"><i class="ni ni-hat-3"></i></span>
                                             </div>
-                                            {{ form_widget(registrationForm.plainPassword, {'attr': {'class': 'form-control', 'placeholder':'Mot de Passe'}}) }}
+                                            {{ form_widget(registrationForm.password, {'attr': {'class': 'form-control', 'placeholder':'Mot de Passe'}}) }}
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="ni ni-hat-3"></i></span>
+                                            </div>
+                                            {{ form_widget(registrationForm.confirmPassword, {'attr': {'class': 'form-control', 'placeholder':'Confirmation Mot de Passe'}}) }}
                                         </div>
                                     </div>
 

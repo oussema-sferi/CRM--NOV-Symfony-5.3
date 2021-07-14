@@ -23,4 +23,41 @@ class RolesController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route("/dashboard/users/show/{id}", name="show_user")
+     */
+    public function show(Request $request, $id): Response
+    {
+        $userToShow = $this->getDoctrine()->getRepository(User::class)->find($id);
+        /*dd($userToShow);*/
+        return $this->render('/roles/show.html.twig', [
+            'user_to_show' => $userToShow
+        ]);
+    }
+
+    /**
+     * @Route("/dashboard/users/update/{id}", name="update_user")
+     */
+    public function update(Request $request, $id): Response
+    {
+        $newUser = new User();
+        $userForm = $this->createForm(UserFormType::class, $newUser);
+        $userForm->handleRequest($request);
+        $manager = $this->getDoctrine()->getManager();
+        $userToUpdate = $this->getDoctrine()->getRepository(User::class)->find($id);
+        if($userForm->isSubmitted()) {
+            /*dd($newUser->getRoles());*/
+            $userToUpdate->setFirstName($newUser->getFirstName());
+            $userToUpdate->setLastName($newUser->getLastName());
+            $userToUpdate->setRoles($newUser->getRoles());
+            $manager->persist($userToUpdate);
+            $manager->flush();
+            return $this->redirectToRoute('roles');
+        }
+        return $this->render('/roles/update.html.twig', [
+            'user_form' => $userForm->createView(),
+            'user_to_update' => $userToUpdate
+        ]);
+    }
+
 }
