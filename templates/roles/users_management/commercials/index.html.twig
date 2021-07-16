@@ -1,9 +1,8 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Liste des prospects{% endblock %}
+{% block title %}Utilisateurs & Roles{% endblock %}
 
 {% block body %}
-
     <div class="header bg-primary pb-6">
         <div class="container-fluid">
             <div class="header-body">
@@ -12,9 +11,10 @@
                         <h6 class="h2 text-white d-inline-block mb-0">CRM</h6>
                         <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
                             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
-                                <li class="breadcrumb-item"><a href="#"><i class="fas fa-phone-volume text-orange"></i></a></li>
-                                <li class="breadcrumb-item"><a href="#">Service Téléprospection</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Liste des prospects</li>
+                                <li class="breadcrumb-item"><a href="#"><i class="ni ni-single-02 text-black-50"></i></a></li>
+                                <li class="breadcrumb-item"><a href="#">Utilisateurs & Rôles</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Gestion des affectations</li>
+                                <li class="breadcrumb-item active" aria-current="page">Liste des commerciaux</li>
                             </ol>
                         </nav>
                     </div>
@@ -127,7 +127,7 @@
                     <div class="card-header border-0">
                         <div class="row">
                             <div class="col-md-9">
-                                <h3 class="mb-0">Prospects</h3>
+                                <h3 class="mb-0">Liste des commerciaux</h3>
                             </div>
                             <div class="col-md-3">
                                 <input type="text" class="form-control " placeholder="Recherche" id="contact-filter">
@@ -142,18 +142,9 @@
                                 <th scope="col">Prénom</th>
                                 <th scope="col">Nom</th>
                                 <th scope="col">Email</th>
-                                <th scope="col">Société</th>
-                                <th scope="col">Catégorie</th>
-                                <th scope="col">Sous Contrat</th>
-                                <th scope="col">Etat</th>
-                                {#<th scope="col">Appel</th>
-                                <th scope="col">Détails</th>#}
-                                <th scope="col">Adresse</th>
-                                <th scope="col">Code Postal</th>
-                                <th scope="col">Pays</th>
-                                <th scope="col">Numéro Domicile</th>
-                                <th scope="col">Numéro Mobile</th>
-                                <th scope="col">Traitement</th>
+                                <th scope="col">Rôle</th>
+                                <th scope="col">Départements</th>
+                                {#<th scope="col">Actions</th>#}
                                 {#<th scope="col">Consultation</th>
                                 <th scope="col">Modification</th>
                                 <th scope="col">Suppression</th>#}
@@ -161,80 +152,36 @@
                             </thead>
                             <tbody class="list">
 
-                            {% for client in clients %}
-                            <tr>
-                                <td class="budget">
-                                    {{ client.firstName }}
-                                </td>
+                                {% for user in users %}
+                                <tr>
+                                    <td class="budget">
+                                        {{ user.firstName }}
+                                    </td>
 
-                                <td class="budget">
-                                    {{ client.lastName }}
-                                </td>
+                                    <td class="budget">
+                                        {{ user.lastName }}
+                                    </td>
 
-                                <td class="budget">
-                                    {{ client.email }}
-                                </td>
+                                    <td class="budget">
+                                        {{ user.email }}
+                                    </td>
 
-                                <td class="budget">
-                                    {{ client.companyName }}
-                                </td>
+                                    <td class="budget">
+                                        {{ user.roles[0] }}
+                                    </td>
 
-                                <td class="budget">
-                                    {{ client.category }}
-                                </td>
+                                    <td >
+                                        <a href="{{ path('commercials_departments', {'id': user.id}) }}"  class="badge badge-default" >consulter / affecter</a>
+                                    </td>
 
-                                <td class="budget">
-                                    {% if  client.isUnderContract %}
-                                        Oui
-                                    {% else %}
-                                        Non
-                                        {% endif %}
-                                </td>
+                                    {#<td >
+                                        #}{#<a href="{{ path('show_contact', {'id': client.id}) }}"  class="badge badge-default" >Consulter Fiche</a>#}{#
+                                        <a href="{{ path('show_user', {'id': user.id}) }}"><i class="fas fa-search-plus text-blue"></i></a>&nbsp;&nbsp;
+                                        <a href="{{ path('update_user', {'id': user.id}) }}"><i class="fas fa-edit text-yellow"></i></a>&nbsp;&nbsp;
+                                        <a href="" data-toggle="modal" data-target="#deleteModal"><i class="fas fa-trash-alt text-red"></i></a>
 
-                                <td class="budget">
-                                    {% if  client.status == 0 %}
-                                    <span class="badge badge-warning badge-lg">
-                                        <i class="bg-info"></i>
-                                        Non Traité
-                                    </span>
-                                    {% elseif client.status == 1 %}
-                                        <span class="badge badge-success badge-lg">
-                                        <i class="bg-warning"></i>
-                                         En Cours de Traitement
-                                    </span>
-                                    {% else %}
-                                        <span class="badge badge-dot mr-4">
-                                        <i class="bg-success"></i>
-                                        Appel Qualifié
-                                    </span>
-                                    {% endif %}
-                                </td>
-
-                                <td class="budget">
-                                    {{ client.address }}
-                                </td>
-
-                                <td class="budget">
-                                    {{ client.postalCode }}
-                                </td>
-
-                                <td class="budget">
-                                    {{ client.country }}
-                                </td>
-
-                                <td class="budget">
-                                    {{ client.phoneNumber }}
-                                </td>
-
-                                <td class="budget">
-                                    {{ client.mobileNumber }}
-                                </td>
-
-                                <td >
-                                    <a href="{{ path('call_handle', {'id': client.id}) }}"  class="badge badge-default" >Traiter Fiche</a>
-                                </td>
-
-                                {#<td >
+                                    </td>#}
+                                    {#<td >
                                     <a href="{{ path('show_client', {'id': client.id}) }}"  class="badge badge-default" >Consulter Fiche</a>
                                 </td>
 
@@ -246,7 +193,7 @@
                                     <a href="{{ path('new_client') }}" data-href="/admin_resp/ingenieur/oussingenieurref/deleted" class="badge badge-danger" data-toggle="modal" data-target="#deleteModal">Supprimer Contact</a>
                                 </td>#}
 
-                            </tr>
+                                </tr>
 
                             {% endfor %}
 

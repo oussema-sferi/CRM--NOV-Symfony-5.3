@@ -1,0 +1,265 @@
+{% extends 'base.html.twig' %}
+
+{% block head %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">
+{% endblock %}
+
+{% block title %}Affectation des Téléprospecteurs{% endblock %}
+
+{% block body %}
+
+    <div class="header bg-primary pb-6">
+        <div class="container-fluid">
+            <div class="header-body">
+                <div class="row align-items-center py-4">
+                    <div class="col-lg-6 col-7">
+                        <h6 class="h2 text-white d-inline-block mb-0">CRM</h6>
+                        <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+                            <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                                <li class="breadcrumb-item"><a href="#"><i class="ni ni-single-02 text-black-50"></i></a></li>
+                                <li class="breadcrumb-item"><a href="#">Utilisateurs & Rôles</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Gestion des affectations</li>
+                                <li class="breadcrumb-item active" aria-current="page">Commerciaux Affectés</li>
+                            </ol>
+                        </nav>
+                    </div>
+                    <div class="col-lg-6 col-5 text-right">
+                        <a href="{{ path('telepro_listing') }}" class="btn btn-sm btn-neutral">Retour</a>
+                    </div>
+                </div>
+                <!-- Card stats -->
+                {#<div class="row">
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card card-stats">
+                            <!-- Card body -->
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Total traffic</h5>
+                                        <span class="h2 font-weight-bold mb-0">350,897</span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-gradient-red text-white rounded-circle shadow">
+                                            <i class="ni ni-active-40"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="mt-3 mb-0 text-sm">
+                                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
+                                    <span class="text-nowrap">Since last month</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card card-stats">
+                            <!-- Card body -->
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">New users</h5>
+                                        <span class="h2 font-weight-bold mb-0">2,356</span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-gradient-orange text-white rounded-circle shadow">
+                                            <i class="ni ni-chart-pie-35"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="mt-3 mb-0 text-sm">
+                                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
+                                    <span class="text-nowrap">Since last month</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card card-stats">
+                            <!-- Card body -->
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Sales</h5>
+                                        <span class="h2 font-weight-bold mb-0">924</span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-gradient-green text-white rounded-circle shadow">
+                                            <i class="ni ni-money-coins"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="mt-3 mb-0 text-sm">
+                                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
+                                    <span class="text-nowrap">Since last month</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card card-stats">
+                            <!-- Card body -->
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Performance</h5>
+                                        <span class="h2 font-weight-bold mb-0">49,65%</span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-gradient-info text-white rounded-circle shadow">
+                                            <i class="ni ni-chart-bar-32"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="mt-3 mb-0 text-sm">
+                                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
+                                    <span class="text-nowrap">Since last month</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>#}
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container-fluid mt--8">
+
+        <div class="header pb-8 pt-5 pt-md-14">
+            <div class="container-fluid">
+                <div class="header-body" style="text-align: center">
+                    <h1 style="color: black"></h1>
+                </div>
+            </div>
+        </div>
+
+        <div class="container mt--8 pb-5">
+            <!-- Table -->
+            <div class="row justify-content-center">
+                <div class="col-lg-6 col-md-8">
+                    <div class="card bg-secondary border-0">
+
+                        <div class="card-body px-lg-5 py-lg-5">
+                            <div class="text-center text-muted mb-4">
+                            </div>
+
+                            <form action="{{ path('telepro_commercials_assignment') }}" method="post">
+                                <div>
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-commercial">Téléprospecteur</label>
+                                        <input type="text" id="input-telepro" name="telepro" class="form-control" value="{{ telepro.firstName ~ ' ' ~ telepro.lastName }}" disabled>
+                                        <input type="text" id="hidden-telepro" name="teleproid" class="form-control" value="{{ telepro.id }}" hidden>
+                                        <input type="text" id="commercials" name="commercials" class="form-control" hidden>
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label class="form-control-label" for="department">Commerciaux Affectés</label><br>
+                                    <select id="commercial" name="commercial" multiple>
+
+                                            {% for commercial in all_commercials %}
+
+                                                             <option value="{{ commercial.id }}"
+                                                                     {% for assigned_commercial in assigned_commercials %}
+                                                                         {% if assigned_commercial.id == commercial.id %}
+                                                                             selected
+                                                                         {% endif %}
+                                                                     {% endfor %}
+                                                             >{{ commercial.firstName ~ ' ' ~ commercial.lastName }}</option>
+
+                                            {% endfor %}
+
+                                    </select>
+                                </div>
+
+
+                                <div class="text-center">
+                                    <button id="sub" type="submit" class="btn btn-success mt-4">Confirmer</button>
+                                </div>
+
+                            </form>
+
+                            {#{{ form_start(call_form) }}
+
+
+
+                            <div class="form-group">
+
+                                    <label class="form-control-label" for="input-username">Statut</label>
+                                    {{ form_widget(call_form.generalStatus, {'attr': {'class': 'form-control form-control-sm' }}) }}
+
+                            </div>
+
+                            <div class="form-group">
+
+                                <label class="form-control-label" for="input-username">Détails</label>
+                                {{ form_widget(call_form.statusDetails, {'attr': {'class': 'form-control form-control-sm' }}) }}
+
+                            </div>
+
+                            <div class="form-group">
+
+                                    <div>
+                                        <label class="form-control-label" for="input-username">Observations</label>
+                                    </div>
+
+                                    {{ form_widget(call_form.callNotes, {'attr': {'class': 'form-control', 'placeholder':"..." }}) }}
+
+                            </div>
+
+
+
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-success mt-4">Confirmer</button>
+                            </div>
+
+                            {{ form_end(call_form)}}#}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block additionalJs %}
+
+    {#<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
+    <script src="{{ asset('assets/js/plugins/jquery/dist/jquery.min.js') }}"></script>
+    <script>
+        $(document).ready(function () {
+            $('.selectpicker').selectpicker();
+        })
+    </script>#}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            let commercial = new SlimSelect({
+                select: '#commercial',
+                placeholder: 'Choisissez les commerciaux',
+                searchText: 'Aucun Résultat',
+                searchPlaceholder: 'Rechercher',
+                onChange: () => {
+
+                    $('#commercials').val($('#commercial').val());
+
+
+                }
+            })
+            /*department.setData([
+                { value: 'A', text: 'A', display: false },
+                { value: 'B', text: 'B' },
+                { value: 'C', text: 'C' }
+                ])*/
+
+            /*$('#sub').click(function(){
+                console.log(department.selected())
+
+            })*/
+
+
+        });
+    </script>
+
+{% endblock %}
+

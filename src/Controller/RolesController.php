@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\GeographicArea;
 use App\Entity\User;
 use App\Form\UserFormType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -57,6 +58,197 @@ class RolesController extends AbstractController
         return $this->render('/roles/update.html.twig', [
             'user_form' => $userForm->createView(),
             'user_to_update' => $userToUpdate
+        ]);
+    }
+
+    /**
+     * @Route("/dashboard/users/commercials", name="commercials_listing")
+     */
+    public function commercialsListing(): Response
+    {
+        $users = $this->getDoctrine()->getRepository(User::class)->findUsersByCommercialRole("ROLE_COMMERCIAL");
+
+        /*dd($users);*/
+        return $this->render('roles/users_management/commercials/index.html.twig', [
+            'users' => $users,
+        ]);
+    }
+
+    /**
+     * @Route("/dashboard/users/telepro", name="telepro_listing")
+     */
+    public function teleproListing(): Response
+    {
+        $users = $this->getDoctrine()->getRepository(User::class)->findUsersByCommercialRole("ROLE_TELEPRO");
+        /*dd($users);*/
+        return $this->render('roles/users_management/telepro/index.html.twig', [
+            'users' => $users,
+        ]);
+    }
+
+    /**
+     * @Route("/dashboard/users/commercials/{id}/departments", name="commercials_departments")
+     */
+    public function commercialsDepartments($id): Response
+    {
+        $commercial = $this->getDoctrine()->getRepository(User::class)->find($id);
+        $departments = $this->getDoctrine()->getRepository(GeographicArea::class)->findAll();
+        /*dd($users);*/
+        return $this->render('roles/users_management/commercials/departments_assignment.html.twig', [
+            'commercial' => $commercial,
+            'departments' => $departments
+        ]);
+    }
+
+    /**
+     * @Route("/dashboard/users/commercials/departments/assignment", name="commercials_departments_assignment")
+     */
+    public function commercialsDepartmentsAssignment(Request $request): Response
+    {
+        $departments = [];
+        $manager = $this->getDoctrine()->getManager();
+        if($request->isMethod('Post')) {
+
+            $commercialId = $request->request->get('commercialid');
+            $myString = $request->request->get('departments');
+            $departmentsArray = explode(',', $myString);
+            $commercial = $this->getDoctrine()->getRepository(User::class)->find($commercialId);
+            $existingDepartments = $commercial->getGeographicAreas();
+            if($existingDepartments) {
+                foreach ($existingDepartments as $existingDepartment) {
+                    $commercial->removeGeographicArea($existingDepartment);
+                }
+            }
+            if($departmentsArray) {
+                foreach ($departmentsArray as $department) {
+                    if($department) {
+                        $commercial->addGeographicArea($this->getDoctrine()->getRepository(GeographicArea::class)->find($department));
+                    }
+
+                }
+            }
+
+            $manager->persist($commercial);
+            $manager->flush();
+        }
+        return $this->redirectToRoute('commercials_departments', [
+            "id" => $commercialId
+        ]);
+    }
+
+    /**
+     * @Route("/dashboard/users/telepro/{id}/departments", name="telepro_departments")
+     */
+    public function teleproDepartments($id): Response
+    {
+        $telepro = $this->getDoctrine()->getRepository(User::class)->find($id);
+        $departments = $this->getDoctrine()->getRepository(GeographicArea::class)->findAll();
+        /*dd($users);*/
+        return $this->render('roles/users_management/telepro/departments_assignment.html.twig', [
+            'telepro' => $telepro,
+            'departments' => $departments
+        ]);
+    }
+
+    /**
+     * @Route("/dashboard/users/telepro/departments/assignment", name="telepro_departments_assignment")
+     */
+    public function teleproDepartmentsAssignment(Request $request): Response
+    {
+        $departments = [];
+        $manager = $this->getDoctrine()->getManager();
+        if($request->isMethod('Post')) {
+
+            $teleproId = $request->request->get('teleproid');
+            $myString = $request->request->get('departments');
+            $departmentsArray = explode(',', $myString);
+            $telepro = $this->getDoctrine()->getRepository(User::class)->find($teleproId);
+            $existingDepartments = $telepro->getGeographicAreas();
+            if($existingDepartments) {
+                foreach ($existingDepartments as $existingDepartment) {
+                    $telepro->removeGeographicArea($existingDepartment);
+                }
+            }
+            if($departmentsArray) {
+                foreach ($departmentsArray as $department) {
+                    if($department) {
+                        $geographicArea = $this->getDoctrine()->getRepository(GeographicArea::class)->find($department);
+                        $telepro->addGeographicArea($this->getDoctrine()->getRepository(GeographicArea::class)->find($department));
+                        if($geographicArea->getUsers()) {
+                            foreach ($geographicArea->getUsers() as $user) {
+                                if($user !== $telepro) {
+                                    $commercial = $this->getDoctrine()->getRepository(User::class)->find($user->getId());
+                                    $commercial->setTeleprospector($telepro);
+                                }
+
+                            }
+
+                        }
+                    }
+
+                }
+            }
+            $manager->persist($telepro);
+            $manager->flush();
+
+
+        }
+        return $this->redirectToRoute('telepro_departments', [
+            "id" => $teleproId
+        ]);
+    }
+
+    /**
+     * @Route("/dashboard/users/telepro/{id}/commercials", name="telepro_commercials")
+     */
+    public function teleproCommercials($id): Response
+    {
+        $telepro = $this->getDoctrine()->getRepository(User::class)->find($id);
+        $allCommercials = $this->getDoctrine()->getRepository(User::class)->findUsersByCommercialRole("ROLE_COMMERCIAL");
+        $assignedCommercials = $this->getDoctrine()->getRepository(User::class)->findAssignedUsersByCommercialRole($id, "ROLE_COMMERCIAL");
+        /*dd($users);*/
+        return $this->render('roles/users_management/telepro/commercials_assignment.html.twig', [
+            'telepro' => $telepro,
+            'assigned_commercials' => $assignedCommercials,
+            'all_commercials' => $allCommercials
+        ]);
+    }
+
+    /**
+     * @Route("/dashboard/users/telepro/commercials/assignment", name="telepro_commercials_assignment")
+     */
+    public function teleproCommercialsAssignment(Request $request): Response
+    {
+        $commercials = [];
+        $manager = $this->getDoctrine()->getManager();
+        if($request->isMethod('Post')) {
+
+            $teleproId = $request->request->get('teleproid');
+            $myString = $request->request->get('commercials');
+            $commercialsArray = explode(',', $myString);
+            $telepro = $this->getDoctrine()->getRepository(User::class)->find($teleproId);
+            $existingCommercials = $telepro->getCommercials();
+            if($existingCommercials) {
+                foreach ($existingCommercials as $existingCommercial) {
+                    $telepro->removeCommercial($existingCommercial);
+                }
+            }
+            if($commercialsArray) {
+                foreach ($commercialsArray as $commercial) {
+                    if($commercial) {
+                        $commercialToAssign = $this->getDoctrine()->getRepository(User::class)->find($commercial);
+                        $commercialToAssign->setTeleprospector($telepro);
+                    }
+
+                }
+            }
+
+            $manager->persist($telepro);
+            $manager->flush();
+
+        }
+        return $this->redirectToRoute('telepro_commercials', [
+            "id" => $teleproId
         ]);
     }
 

@@ -77,11 +77,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private Collection $commercials;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=GeographicArea::class, inversedBy="users")
+     */
+    private $geographicAreas;
+
     public function __construct()
     {
         $this->calls = new ArrayCollection();
         $this->appointments = new ArrayCollection();
         $this->commercials = new ArrayCollection();
+        $this->geographicAreas = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -286,6 +292,37 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setCommercials($commercials): void
     {
         $this->commercials = $commercials;
+    }
+
+    public function removeCommercial(User $commercial): self
+    {
+        $this->commercials->removeElement($commercial);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|GeographicArea[]
+     */
+    public function getGeographicAreas(): Collection
+    {
+        return $this->geographicAreas;
+    }
+
+    public function addGeographicArea(GeographicArea $geographicArea): self
+    {
+        if (!$this->geographicAreas->contains($geographicArea)) {
+            $this->geographicAreas[] = $geographicArea;
+        }
+
+        return $this;
+    }
+
+    public function removeGeographicArea(GeographicArea $geographicArea): self
+    {
+        $this->geographicAreas->removeElement($geographicArea);
+
+        return $this;
     }
 
 

@@ -34,9 +34,15 @@ class GeographicArea
      */
     private $code;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=User::class, mappedBy="geographicAreas")
+     */
+    private $users;
+
     public function __construct()
     {
         $this->clients = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -103,5 +109,32 @@ class GeographicArea
         return $this->designation;
         // to show the id of the Category in the select
         // return $this->id;
+    }
+
+    /**
+     * @return Collection|User[]
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    public function addUser(User $user): self
+    {
+        if (!$this->users->contains($user)) {
+            $this->users[] = $user;
+            $user->addGeographicArea($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(User $user): self
+    {
+        if ($this->users->removeElement($user)) {
+            $user->removeGeographicArea($this);
+        }
+
+        return $this;
     }
 }
