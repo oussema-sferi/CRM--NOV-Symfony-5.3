@@ -19,7 +19,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => '4ea6a2b6b5089666efd4b57d154fa1cae786f720',
+    'reference' => '16714625abdc416dd2ed86f6cb435f9ad9d1e176',
     'name' => '__root__',
   ),
   'versions' => 
@@ -31,7 +31,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => '4ea6a2b6b5089666efd4b57d154fa1cae786f720',
+      'reference' => '16714625abdc416dd2ed86f6cb435f9ad9d1e176',
     ),
     'composer/package-versions-deprecated' => 
     array (
@@ -1430,6 +1430,15 @@ private static $installed = array (
       array (
       ),
       'reference' => '3bbcf262fceb3d8f48175302e6ba0ac96e3a5a11',
+    ),
+    'symfonycasts/reset-password-bundle' => 
+    array (
+      'pretty_version' => 'v1.9.1',
+      'version' => '1.9.1.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '775e847613737f55cf06c6a7457f4bcf8ce258e5',
     ),
     'theseer/tokenizer' => 
     array (

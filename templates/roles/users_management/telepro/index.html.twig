@@ -143,8 +143,8 @@
                                 <th scope="col">Nom</th>
                                 <th scope="col">Email</th>
                                 <th scope="col">Rôle</th>
-                                <th scope="col">Commerciaux Affectés</th>
                                 <th scope="col">Départements</th>
+                                <th scope="col">Commerciaux Affectés</th>
                                 {#<th scope="col">Actions</th>#}
                                 {#<th scope="col">Consultation</th>
                                 <th scope="col">Modification</th>
@@ -172,11 +172,11 @@
                                     </td>
 
                                     <td >
-                                        <a href="{{ path('telepro_commercials', {'id': user.id}) }}"  class="badge badge-default" >consulter / éditer</a>
+                                        <a href="{{ path('telepro_departments', {'id': user.id}) }}"  class="badge badge-default" >consulter / affecter</a>
                                     </td>
 
                                     <td >
-                                        <a href="{{ path('telepro_departments', {'id': user.id}) }}"  class="badge badge-default" >consulter / affecter</a>
+                                        <a href="{{ path('telepro_commercials', {'id': user.id}) }}"  class="badge badge-default" >consulter / éditer</a>
                                     </td>
 
                                     {#<td >

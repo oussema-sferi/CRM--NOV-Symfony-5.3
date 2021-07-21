@@ -8,7 +8,7 @@
     <meta name="author" content="Creative Tim">
     <title>NOVUUS CRM</title>
     <!-- Favicon -->
-    <link rel="icon" href="../assets/img/brand/favicon.png" type="image/png">
+    <link rel="icon" href="{{ asset('assets/img/brand/novuusfavicon.png') }}" type="image/png">
     <!-- Fonts -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">
     <!-- Icons -->
@@ -177,7 +177,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
                                     </div>
-                                    <input class="form-control" placeholder="Password" type="password" name="password" id="inputPassword" autocomplete="current-password" required>
+                                    <input class="form-control" placeholder="Mot de Passe" type="password" name="password" id="inputPassword" autocomplete="current-password" required>
 
                                 </div>
                             </div>
@@ -193,14 +193,14 @@
                         </form>
                     </div>
                 </div>
-                {#<div class="row mt-3">
+                <div class="row mt-3">
                     <div class="col-6">
-                        <a href="#" class="text-light"><small>Forgot password?</small></a>
+                        <a href="{{ path('app_forgot_password_request') }}" class="text-light"><small>Mot de Passe Oublié?</small></a>
                     </div>
-                    <div class="col-6 text-right">
+                    {#<div class="col-6 text-right">
                         <a href="#" class="text-light"><small>Create new account</small></a>
-                    </div>
-                </div>#}
+                    </div>#}
+                </div>
             </div>
         </div>
     </div>
@@ -252,9 +252,9 @@
             </div>
             <div class="col-xl-6">
                 <ul class="nav nav-footer justify-content-center justify-content-xl-end">
-                    <li class="nav-item">
+                    {#<li class="nav-item">
                         <a href="" class="nav-link" target="_blank">NOVUUS</a>
-                    </li>
+                    </li>#}
                     <li class="nav-item">
                         <a href="" class="nav-link" target="_blank">About Us</a>
                     </li>
