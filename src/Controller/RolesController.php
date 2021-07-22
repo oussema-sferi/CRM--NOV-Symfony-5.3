@@ -130,6 +130,11 @@ class RolesController extends AbstractController
 
             $manager->persist($commercial);
             $manager->flush();
+
+            $this->addFlash(
+                'notice_departments',
+                "Modifications enregistrées avec succès!"
+            );
         }
         return $this->redirectToRoute('commercials_departments', [
             "id" => $commercialId
@@ -190,7 +195,10 @@ class RolesController extends AbstractController
             }
             $manager->persist($telepro);
             $manager->flush();
-
+            $this->addFlash(
+                'notice_departments',
+                "Modifications enregistrées avec succès!"
+            );
 
         }
         return $this->redirectToRoute('telepro_departments', [

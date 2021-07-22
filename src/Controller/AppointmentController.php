@@ -26,11 +26,11 @@ class AppointmentController extends AbstractController
             $commercial_agents = $this->getDoctrine()->getRepository(User::class)->findUsersByCommercialRole("ROLE_COMMERCIAL");
         } elseif (in_array("ROLE_TELEPRO", $this->getUser()->getRoles())) {
             $commercial_agents = $this->getDoctrine()->getRepository(User::class)->findAssignedUsersByCommercialRole($loggedUserId, "ROLE_COMMERCIAL");
-        } elseif (in_array("ROLE_COMMERCIAL", $this->getUser()->getRoles())) {
+        } /*elseif (in_array("ROLE_COMMERCIAL", $this->getUser()->getRoles())) {
             return $this->redirectToRoute("show_calendar", [
                 "id" => $loggedUserId
             ]);
-        }
+        }*/
         /*$commercial_agents = $this->getDoctrine()->getRepository(User::class)->findUsersByCommercialRole("ROLE_COMMERCIAL");*/
 
         /*dd($commercial_agents);*/
@@ -38,6 +38,19 @@ class AppointmentController extends AbstractController
             'commercial_agents' => $commercial_agents,
         ]);
     }
+
+    /**
+     * @Route("/dashboard/mycalendar", name="show_my_calendar")
+     */
+    public function showMyCalendar(): Response
+    {
+        $loggedUserId = $this->getUser()->getId();
+        /*dd($this->getUser()->getRoles());*/
+            return $this->redirectToRoute("show_calendar", [
+                "id" => $loggedUserId
+            ]);
+    }
+
 
     /**
      * @Route("/dashboard/appointments/showcalendar/{id}", name="show_calendar")
