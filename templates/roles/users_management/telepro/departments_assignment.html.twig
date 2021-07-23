@@ -241,6 +241,7 @@
     </script>#}
     <script type="text/javascript">
         $(document).ready(function() {
+            $('#departments').val($('#department').val());
             let department = new SlimSelect({
                 select: '#department',
                 placeholder: 'Choisissez les départements',

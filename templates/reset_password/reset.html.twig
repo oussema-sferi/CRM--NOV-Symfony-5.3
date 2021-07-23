@@ -188,7 +188,7 @@
                     </div>#}
                     <div class="card-body px-lg-5 py-lg-5">
                         <div class="text-center text-muted mb-4">
-                            <small>Redéfinissez votre nouveau mot de passe</small>
+                            <small>Redéfinissez votre mot de passe</small>
                         </div>
                         {#<div>
                             <small>
@@ -202,6 +202,11 @@
 
                         {{ form_start(resetForm) }}
                         {{ form_row(resetForm.plainPassword) }}
+                        <div style="color: grey; font-size: small">
+                            <small>
+                                Le mot de passe doit contenir au moins 8 caractères, dont au moins, un en majuscule, un numéro et un caractère spécial.
+                            </small>
+                        </div>
                         <div class="text-center">
                             <button class="btn btn-success my-4">Confirmer</button>
                         </div>

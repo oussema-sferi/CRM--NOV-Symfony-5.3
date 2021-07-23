@@ -112,6 +112,7 @@ class RolesController extends AbstractController
             $commercialId = $request->request->get('commercialid');
             $myString = $request->request->get('departments');
             $departmentsArray = explode(',', $myString);
+            /*dd($departmentsArray);*/
             $commercial = $this->getDoctrine()->getRepository(User::class)->find($commercialId);
             $existingDepartments = $commercial->getGeographicAreas();
             if($existingDepartments) {
@@ -236,11 +237,13 @@ class RolesController extends AbstractController
             $commercialsArray = explode(',', $myString);
             $telepro = $this->getDoctrine()->getRepository(User::class)->find($teleproId);
             $existingCommercials = $telepro->getCommercials();
+
             if($existingCommercials) {
                 foreach ($existingCommercials as $existingCommercial) {
-                    $telepro->removeCommercial($existingCommercial);
+                    $existingCommercial->setTeleprospector(null);
                 }
             }
+            /*dd($existingCommercials);*/
             if($commercialsArray) {
                 foreach ($commercialsArray as $commercial) {
                     if($commercial) {
@@ -250,10 +253,12 @@ class RolesController extends AbstractController
 
                 }
             }
-
             $manager->persist($telepro);
             $manager->flush();
-
+            $this->addFlash(
+                'notice_commercials_assignment',
+                "Modifications enregistrées avec succès!"
+            );
         }
         return $this->redirectToRoute('telepro_commercials', [
             "id" => $teleproId

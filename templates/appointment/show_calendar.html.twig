@@ -165,7 +165,10 @@
                     center: "title",
                     end: "dayGridMonth,timeGridWeek"
                 },
-                events: {{ data['data']|raw }}
+                events: {{ data['data']|raw }},
+                dayClick: function() {
+                    alert("hi!");
+                }
             })
             calendar.render()
         }

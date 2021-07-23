@@ -173,6 +173,13 @@
                                     </select>
                                 </div>
 
+                                {% for message in app.flashes('notice_commercials_assignment') %}
+                                    <div style="color: green">
+                                        <small>
+                                            {{ message }}
+                                        </small>
+                                    </div>
+                                {% endfor %}
 
                                 <div class="text-center">
                                     <button id="sub" type="submit" class="btn btn-success mt-4">Confirmer</button>
@@ -234,6 +241,7 @@
     </script>#}
     <script type="text/javascript">
         $(document).ready(function() {
+            $('#commercials').val($('#commercial').val());
             let commercial = new SlimSelect({
                 select: '#commercial',
                 placeholder: 'Choisissez les commerciaux',

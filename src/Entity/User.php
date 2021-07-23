@@ -69,7 +69,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="commercials")
      * @var User $teleprospector
      */
-    private User $teleprospector;
+    private ?User $teleprospector=null;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="teleprospector")
@@ -265,7 +265,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @return User
      */
-    public function getTeleprospector(): User
+    public function getTeleprospector(): ?User
     {
         return $this->teleprospector;
     }
@@ -273,7 +273,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @param User $teleprospector
      */
-    public function setTeleprospector(User $teleprospector): void
+    public function setTeleprospector(?User $teleprospector): void
     {
         $this->teleprospector = $teleprospector;
     }
