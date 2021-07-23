@@ -7,6 +7,7 @@ use App\Entity\Client;
 use App\Entity\User;
 use App\Form\CallFormType;
 use App\Form\ClientFormType;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,9 +18,14 @@ class TeleprospectingController extends AbstractController
     /**
      * @Route("/dashboard/teleprospecting", name="teleprospecting")
      */
-    public function index(): Response
+    public function index(Request $request, PaginatorInterface $paginator): Response
     {
-        $clients = $this->getDoctrine()->getRepository(Client::class)->findAll();
+        $data = $this->getDoctrine()->getRepository(Client::class)->findAll();
+        $clients = $paginator->paginate(
+            $data,
+            $request->query->getInt('page', 1),
+            4
+        );
         /*dd($clients[0]->getCalls());*/
         return $this->render('teleprospecting/index.html.twig', [
             'clients' => $clients,

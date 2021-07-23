@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\AppointmentRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=AppointmentRepository::class)
@@ -19,11 +20,13 @@ class Appointment
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\DateTime()
      */
     private $start;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\DateTime()
      */
     private $end;
 

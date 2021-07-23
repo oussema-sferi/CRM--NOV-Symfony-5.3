@@ -4,11 +4,20 @@
         <ul class="pagination justify-content-end mb-0">
             {% if pageCount > 1 %}
                 <div class="pagination">
-                    {#{% if first is defined and current != first %}
-                        <span class="first">
+
+                    {% if first is defined and current != first %}
+
+                        <li class="page-item">
+                            <a class="page-link" rel="first" href="{{ path(route, query|merge({(pageParameterName): first})) }}">
+                                <i class="fas fa-angle-double-left"></i>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </li>
+
+                        {#<span class="first">
                             <a href="{{ path(route, query|merge({(pageParameterName): first})) }}">&lt;&lt;</a>
-                        </span>
-                    {% endif %}#}
+                        </span>#}
+                    {% endif %}
 
                     {% if previous is defined %}
 
@@ -58,11 +67,17 @@
                         </span>#}
                     {% endif %}
 
-                   {# {% if last is defined and current != last %}
-                        <span class="last">
+                    {% if last is defined and current != last %}
+                        <li class="page-item">
+                            <a class="page-link" rel="last" href="{{ path(route, query|merge({(pageParameterName): last})) }}">
+                                <i class="fas fa-angle-double-right"></i>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </li>
+                        {#<span class="last">
                             <a href="{{ path(route, query|merge({(pageParameterName): last})) }}">&gt;&gt;</a>
-                        </span>
-                    {% endif %}#}
+                        </span>#}
+                    {% endif %}
                 </div>
             {% endif %}
         </ul>

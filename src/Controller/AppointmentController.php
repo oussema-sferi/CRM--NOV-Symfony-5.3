@@ -119,28 +119,47 @@ class AppointmentController extends AbstractController
 
 
         if($appointmentForm->isSubmitted()) {
-            $startTime = $newAppointment->getStart()->format('Y-m-d H:i:s');
-            $endTime = $newAppointment->getEnd()->format('Y-m-d H:i:s');
-            /*dd($startTime);*/
-            $busyAppointmentsTime = $this->getDoctrine()->getRepository(Appointment::class)->getAppointmentsBetweenByDate($startTime, $endTime);
-            /*dd($busyAppointmentsTime);*/
-            if($busyAppointmentsTime) {
-                $busyCommercial = $busyAppointmentsTime[0]->getUser()->getId();
-                $freeCommercials = $this->getDoctrine()->getRepository(User::class)->findFreeCommercials($busyCommercial, "ROLE_COMMERCIAL", $loggedUserId);
-            } else {
-                $freeCommercials = $this->getDoctrine()->getRepository(User::class)->findAssignedUsersByCommercialRole($loggedUserId,"ROLE_COMMERCIAL");
+            // for validation -> appointment duration must be <= 3 hours
+            $validationStartTime = $newAppointment->getStart();
+            $validationEndTime = $newAppointment->getEnd();
+            $appointmentDuration = date_diff($validationEndTime,$validationStartTime);
+            if((($validationEndTime > $validationStartTime) && ($appointmentDuration->days === 0) && ($appointmentDuration->h <= 2)) ||
+                (($validationEndTime > $validationStartTime) && ($appointmentDuration->days === 0) && ($appointmentDuration->h === 3)
+                && ($appointmentDuration->i === 0) && ($appointmentDuration->s === 0))
+            ) {
+                /*dd('correeect');*/
+                $startTime = $newAppointment->getStart()->format('Y-m-d H:i:s');
+                $endTime = $newAppointment->getEnd()->format('Y-m-d H:i:s');
+                $busyAppointmentsTime = $this->getDoctrine()->getRepository(Appointment::class)->getAppointmentsBetweenByDate($startTime, $endTime);
+                /*dd($busyAppointmentsTime);*/
+                if($busyAppointmentsTime) {
+                    $busyCommercial = $busyAppointmentsTime[0]->getUser()->getId();
+                    $freeCommercials = $this->getDoctrine()->getRepository(User::class)->findFreeCommercials($busyCommercial, "ROLE_COMMERCIAL", $loggedUserId);
+                } else {
+                    $freeCommercials = $this->getDoctrine()->getRepository(User::class)->findAssignedUsersByCommercialRole($loggedUserId,"ROLE_COMMERCIAL");
+                }
+                /*dd($freeCommercials);*/
+                /*dd($clients);*/
+                return $this->render('/appointment/free_commercials_check.html.twig', [
+                    /*'free_appointments' => $freeAppointmentsTime*/
+                    'free_commercials' => $freeCommercials,
+                    'clients' => $clients,
+                    'start' => $startTime,
+                    'end' => $endTime
+                ]);
 
+
+            } else {
+                /*dd('nooooo');*/
+                $this->addFlash(
+                    'appointment_duration_warning',
+                    "Veuillez revérifier vos entrées!"
+                );
+                return $this->render('/appointment/fix_appointment.html.twig', [
+                    'appointment_form' => $appointmentForm->createView(),
+                ]);
             }
 
-            /*dd($freeCommercials);*/
-            /*dd($clients);*/
-            return $this->render('/appointment/free_commercials_check.html.twig', [
-                /*'free_appointments' => $freeAppointmentsTime*/
-                'free_commercials' => $freeCommercials,
-                'clients' => $clients,
-                'start' => $startTime,
-                'end' => $endTime
-            ]);
         }
 
         return $this->render('/appointment/fix_appointment.html.twig', [

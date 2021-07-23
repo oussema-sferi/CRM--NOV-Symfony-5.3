@@ -159,7 +159,14 @@
                                 {{ form_widget(appointment_form.end) }}
 
                             </div>
-
+                            <hr class="my-3">
+                            {% for message in app.flashes('appointment_duration_warning') %}
+                                <div style="color: red">
+                                    <small>
+                                        {{ message }}
+                                    </small>
+                                </div>
+                            {% endfor %}
                             <div class="text-center">
                                 <button type="submit" class="btn btn-success mt-4">Confirmer</button>
                             </div>
