@@ -6,6 +6,7 @@ use App\Entity\Client;
 use App\Entity\Equipment;
 use App\Entity\GeographicArea;
 use App\Form\ClientFormType;
+use Knp\Component\Pager\PaginatorInterface;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -18,10 +19,18 @@ class AllContactsController extends AbstractController
     /**
      * @Route("/dashboard/allcontacts", name="all_contacts")
      */
-    public function index(): Response
+    public function index(Request $request, PaginatorInterface $paginator): Response
     {
+        $data = $this->getDoctrine()->getRepository(Client::class)->findAll();
+
+        $clients = $paginator->paginate(
+            $data,
+            $request->query->getInt('page', 1),
+            2
+        );
+
         return $this->render('all_contacts/index.html.twig', [
-            'clients' => $this->getDoctrine()->getRepository(Client::class)->findAll(),
+            'clients' => $clients,
         ]);
     }
 
