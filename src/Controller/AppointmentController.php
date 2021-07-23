@@ -123,6 +123,15 @@ class AppointmentController extends AbstractController
             $validationStartTime = $newAppointment->getStart();
             $validationEndTime = $newAppointment->getEnd();
             $appointmentDuration = date_diff($validationEndTime,$validationStartTime);
+            if($validationEndTime < $validationStartTime) {
+                $this->addFlash(
+                    'appointment_duration_warning',
+                    "Veuillez revérifier vos entrées! L'heure de début doit être avant l'heure de fin!"
+                );
+                return $this->render('/appointment/fix_appointment.html.twig', [
+                    'appointment_form' => $appointmentForm->createView(),
+                ]);
+            }
             if((($validationEndTime > $validationStartTime) && ($appointmentDuration->days === 0) && ($appointmentDuration->h <= 2)) ||
                 (($validationEndTime > $validationStartTime) && ($appointmentDuration->days === 0) && ($appointmentDuration->h === 3)
                 && ($appointmentDuration->i === 0) && ($appointmentDuration->s === 0))
@@ -150,11 +159,20 @@ class AppointmentController extends AbstractController
 
 
             } else {
-                /*dd('nooooo');*/
-                $this->addFlash(
-                    'appointment_duration_warning',
-                    "Veuillez revérifier vos entrées!"
-                );
+                if(($appointmentDuration->days === 0) && ($appointmentDuration->h === 0)
+                    && ($appointmentDuration->i === 0) && ($appointmentDuration->s === 0)) {
+                    /*dd($appointmentDuration);*/
+                    $this->addFlash(
+                        'appointment_duration_warning',
+                        "Veuillez revérifier vos entrées! La durée du RDV doit pas être nulle!"
+                    );
+                } else {
+                    $this->addFlash(
+                        'appointment_duration_warning',
+                        "Veuillez revérifier vos entrées! La durée du RDV ne doit pas dépasser trois heures!"
+                    );
+                }
+
                 return $this->render('/appointment/fix_appointment.html.twig', [
                     'appointment_form' => $appointmentForm->createView(),
                 ]);
