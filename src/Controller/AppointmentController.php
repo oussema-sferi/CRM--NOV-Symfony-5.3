@@ -156,8 +156,6 @@ class AppointmentController extends AbstractController
                     'start' => $startTime,
                     'end' => $endTime
                 ]);
-
-
             } else {
                 if(($appointmentDuration->days === 0) && ($appointmentDuration->h === 0)
                     && ($appointmentDuration->i === 0) && ($appointmentDuration->s === 0)) {
@@ -172,7 +170,6 @@ class AppointmentController extends AbstractController
                         "Veuillez revérifier vos entrées! La durée du RDV ne doit pas dépasser trois heures!"
                     );
                 }
-
                 return $this->render('/appointment/fix_appointment.html.twig', [
                     'appointment_form' => $appointmentForm->createView(),
                 ]);

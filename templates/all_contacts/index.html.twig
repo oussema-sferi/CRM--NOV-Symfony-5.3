@@ -199,7 +199,10 @@
                                     </td>
 
                                     <td class="budget">
+                                        {% if client.providedEquipment %}
                                         {{ client.providedEquipment.designation }}
+                                        {% else %}
+                                        {% endif %}
                                     </td>
 
                                     <td class="budget">

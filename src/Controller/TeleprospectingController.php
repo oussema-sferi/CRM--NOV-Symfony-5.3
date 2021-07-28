@@ -24,9 +24,10 @@ class TeleprospectingController extends AbstractController
         $clients = $paginator->paginate(
             $data,
             $request->query->getInt('page', 1),
-            4
+            6
         );
         /*dd($clients[0]->getCalls());*/
+        /*dd($clients);*/
         return $this->render('teleprospecting/index.html.twig', [
             'clients' => $clients,
         ]);

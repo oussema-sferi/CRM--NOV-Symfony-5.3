@@ -125,14 +125,29 @@
                 <div class="card">
                     <!-- Card header -->
                     <div class="card-header border-0">
-                        <div class="row">
-                            <div class="col-md-9">
-                                <h3 class="mb-0">Prospects</h3>
-                            </div>
-                            <div class="col-md-3">
-                                <input type="text" class="form-control " placeholder="Recherche" id="contact-filter">
-                            </div>
-                        </div>
+                        <form action="{{ path('telepro_search_filters') }}" method="post">
+                            <div class="row">
+                                    <div class="col-8">
+                                        <h3 class="mb-0">Prospects</h3>
+                                    </div>
+                                    <div class="col-1">
+                                        <select id="filters" class="form-control" name="filters" required>
+                                            <option value="" disabled selected>Filtres</option>
+                                            <option value="lastName">Nom</option>
+                                            <option value="firstName">Prénom</option>
+                                            <option value="email">Email</option>
+                                            <option value="postalCode">Code Postal</option>
+                                            <option value="category">Catégorie</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-2">
+                                        <input type="text" class="form-control" placeholder="Mots Clés" id="search_keyword" name="search_keyword" required>
+                                    </div>
+                                    <div class="col-1" style="margin: auto auto">
+                                        <button class="btn btn-sm btn-success" type="submit">Rechercher</button>
+                                    </div>
+                             </div>
+                        </form>
                     </div>
                     <!-- Light table -->
                     <div class="table-responsive">

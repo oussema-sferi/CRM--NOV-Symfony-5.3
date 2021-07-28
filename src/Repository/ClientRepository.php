@@ -47,4 +47,14 @@ class ClientRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function findClientsByFilterAndKeyword($filter, $keyword)
+    {
+        $qb = $this->createQueryBuilder('c');
+        $qb->select('c')
+            ->where("c.$filter LIKE :keyword")
+            ->setParameter('keyword', '%'.$keyword.'%');
+
+        return $qb->getQuery()->getResult();
+    }
 }

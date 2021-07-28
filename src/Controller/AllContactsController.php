@@ -26,7 +26,7 @@ class AllContactsController extends AbstractController
         $clients = $paginator->paginate(
             $data,
             $request->query->getInt('page', 1),
-            2
+            1
         );
 
         return $this->render('all_contacts/index.html.twig', [
@@ -144,59 +144,54 @@ class AllContactsController extends AbstractController
         foreach ($sheetData as $Row)
         {
 
-            $firstName = $Row['A']; // store the first_name on each iteration
+            /*$firstName = $Row['A']; // store the first_name on each iteration*/
             $lastName = $Row['B']; // store the last_name on each iteration
-            $email= $Row['C'];     // store the email on each iteration
-            $companyName= $Row['D'];
-            $address= $Row['E'];
-            $postalCode= $Row['F'];
-            $country= $Row['G'];
-            $phoneNumber= $Row['H'];
-            $mobileNumber= $Row['I'];
-            $category= $Row['J'];
-            /*if(strtolower($Row['J']) === 'm') {
-                $category = 'médecin';
-            } elseif (strtolower($Row['J']) === 'v') {
-                $category = 'vétérinaire';
-            } else {
-                $category = 'chirurgien';
-            }*/
+            /*$email= $Row['C'];*/     // store the email on each iteration
+            /*$companyName= $Row['D'];*/
+            $address= $Row['C'];
+            $postalCode= $Row['E'];
+            /*$country= $Row['G'];*/
+            $phoneNumber= $Row['A'];
+          /*  $mobileNumber= $Row['I'];
+            $category= $Row['J'];*/
 
-            if(strtolower($Row['K']) === 'non') {
+            /*if(strtolower($Row['K']) === 'non') {
                 $isUnderContract = false;
             } else {
                 $isUnderContract = true;
-            }
+            }*/
 
             //
 
-            $providedEquipment = $this->getDoctrine()->getRepository(Equipment::class)->find($Row['L']);
+            /*$providedEquipment = $this->getDoctrine()->getRepository(Equipment::class)->find($Row['L']);*/
 
 
-            $geographicArea = $this->getDoctrine()->getRepository(GeographicArea::class)->findOneBy(array('code' => $Row['M']));
+            /*$geographicArea = $this->getDoctrine()->getRepository(GeographicArea::class)->findOneBy(array('code' => $Row['M']));*/
+            $geographicArea = $this->getDoctrine()->getRepository(GeographicArea::class)->findOneBy(array('code' => (int)substr('59621',0,2)));
 
             /*dd($geographicArea);*/
 
 
-            $existingContact = $entityManager->getRepository(Client::class)->findOneBy(array('email' => $email));
+            $existingContact = $entityManager->getRepository(Client::class)->findOneBy(array('lastName' => $lastName));
 
                 // make sure that the user does not already exists in your db
             if (!$existingContact)
             {
+
                 $contact = new Client();
-                $contact->setFirstName($firstName);
+                /*$contact->setFirstName($firstName);*/
                 $contact->setLastName($lastName);
-                $contact->setEmail($email);
-                $contact->setCompanyName($companyName);
+               /* $contact->setEmail($email);
+                $contact->setCompanyName($companyName);*/
                 $contact->setAddress($address);
                 $contact->setPostalCode($postalCode);
-                $contact->setCountry($country);
+                $contact->setCountry('France');
                 $contact->setPhoneNumber($phoneNumber);
-                $contact->setMobileNumber($mobileNumber);
-                $contact->setCategory($category);
-                $contact->setIsUnderContract($isUnderContract);
+               /* $contact->setMobileNumber($mobileNumber);
+                $contact->setCategory($category);*/
+                $contact->setIsUnderContract(false);
                 $contact->setStatus(0);
-                $contact->setProvidedEquipment($providedEquipment);
+                /*$contact->setProvidedEquipment($providedEquipment);*/
                 $contact->setGeographicArea($geographicArea);
                 $contact->setCreatedAt(new \DateTime());
                 $contact->setUpdatedAt(new \DateTime());
