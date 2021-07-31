@@ -8,10 +8,13 @@ use App\Entity\User;
 use App\Form\CallFormType;
 use App\Form\ClientFormType;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 class TeleprospectingController extends AbstractController
 {
@@ -20,12 +23,26 @@ class TeleprospectingController extends AbstractController
      */
     public function index(Request $request, PaginatorInterface $paginator): Response
     {
+
+        $session = $request->getSession();
         $data = $this->getDoctrine()->getRepository(Client::class)->findAll();
-        $clients = $paginator->paginate(
-            $data,
-            $request->query->getInt('page', 1),
-            6
+        $session->set('total_telepro',
+            count($data)
         );
+        if($session->get('pagination_value')) {
+            $clients = $paginator->paginate(
+                $data,
+                $request->query->getInt('page', 1),
+                $session->get('pagination_value')
+            );
+        } else {
+            $clients = $paginator->paginate(
+                $data,
+                $request->query->getInt('page', 1),
+                8
+            );
+        }
+
         /*dd($clients[0]->getCalls());*/
         /*dd($clients);*/
         return $this->render('teleprospecting/index.html.twig', [
@@ -138,6 +155,26 @@ class TeleprospectingController extends AbstractController
         return $this->render('teleprospecting/commercials_list_show.html.twig', [
             'commercial_agents' => $commercial_agents,
         ]);
+    }
+
+    /**
+     * @Route("/dashboard/teleprospecting/pagination", name="teleprospecting_pagination")
+     */
+    public function teleprospectingPagination(Request $request): Response
+    {
+        $session = $request->getSession();
+        if($request->isXmlHttpRequest()) {
+            $paginationValue = $request->get('paginationValue');
+            $session->set('pagination_value',
+                $paginationValue
+            );
+                /*$serializer = new Serializer([new ObjectNormalizer()]);
+                $result = $serializer->normalize($products,'json',['attributes' => ['id','name','price', 'quantityInStock']]);*/
+                return new JsonResponse(['message'=> 'Task Success!']);
+            } else {
+                return new JsonResponse(['message'=> 'Task Fails!']);
+            }
+        return new Response('use Ajax');
     }
 
 }

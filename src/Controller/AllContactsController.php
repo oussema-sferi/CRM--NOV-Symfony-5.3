@@ -21,12 +21,15 @@ class AllContactsController extends AbstractController
      */
     public function index(Request $request, PaginatorInterface $paginator): Response
     {
+        $session = $request->getSession();
         $data = $this->getDoctrine()->getRepository(Client::class)->findAll();
-
+        $session->set('total_contacts',
+            count($data)
+        );
         $clients = $paginator->paginate(
             $data,
             $request->query->getInt('page', 1),
-            1
+            5
         );
 
         return $this->render('all_contacts/index.html.twig', [
@@ -141,6 +144,8 @@ class AllContactsController extends AbstractController
         //Save imported contacts in the database
 
         $entityManager = $this->getDoctrine()->getManager();
+
+        $counter = 0;
         foreach ($sheetData as $Row)
         {
 
@@ -150,6 +155,7 @@ class AllContactsController extends AbstractController
             /*$companyName= $Row['D'];*/
             $address= $Row['C'];
             $postalCode= $Row['E'];
+            $city = $Row['D'];
             /*$country= $Row['G'];*/
             $phoneNumber= $Row['A'];
           /*  $mobileNumber= $Row['I'];
@@ -185,6 +191,7 @@ class AllContactsController extends AbstractController
                 $contact->setCompanyName($companyName);*/
                 $contact->setAddress($address);
                 $contact->setPostalCode($postalCode);
+                $contact->setCity($city);
                 $contact->setCountry('France');
                 $contact->setPhoneNumber($phoneNumber);
                /* $contact->setMobileNumber($mobileNumber);
@@ -198,9 +205,23 @@ class AllContactsController extends AbstractController
                 $entityManager->persist($contact);
                 $entityManager->flush();
                 // here Doctrine checks all the fields of all fetched data and make a transaction to the database.
-
+                $counter++;
             }
         }
+        /*dd($counter);*/
+
+        if($counter === 0) {
+            $this->addFlash(
+                'add_contacts_warning',
+                "Aucun contact n'a été ajouté!"
+            );
+        } else {
+            $this->addFlash(
+                'add_contacts_confirmation',
+                $counter . " Contacts ont été ajoutés avec succès!"
+            );
+        }
+
         return $this->redirectToRoute('all_contacts');
     }
 

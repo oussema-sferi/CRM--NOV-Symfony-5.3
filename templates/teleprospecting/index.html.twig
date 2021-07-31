@@ -3,7 +3,6 @@
 {% block title %}Liste des prospects{% endblock %}
 
 {% block body %}
-
     <div class="header bg-primary pb-6">
         <div class="container-fluid">
             <div class="header-body">
@@ -21,6 +20,12 @@
                     <div class="col-lg-6 col-5 text-right">
                         {#<a href="{{ path('new_client') }}" class="btn btn-sm btn-success">Nouveau prospect</a>#}
                         {#<a href="#" class="btn btn-sm btn-neutral">Filters</a>#}
+                        <label for="pagination" style="color: white; font-size: small">Entrées/page</label>
+                        <select name="pagination" id="pagination" class="form-control-sm">
+                            <option value="8" {% if app.session.get('pagination_value') == 8 %} selected {% endif %}>8</option>
+                            <option value="12" {% if app.session.get('pagination_value') == 12 %} selected {% endif %}>12</option>
+                            <option value="16" {% if app.session.get('pagination_value') == 16 %} selected {% endif %}>16</option>
+                        </select>
                     </div>
                 </div>
                 <!-- Card stats -->
@@ -128,7 +133,12 @@
                         <form action="{{ path('telepro_search_filters') }}" method="post">
                             <div class="row">
                                     <div class="col-8">
-                                        <h3 class="mb-0">Prospects</h3>
+                                        <h3 class="mb-0">Total: {{ app.session.get('total_telepro')}} Prospects</h3>
+                                        {#<select name="pagination" id="pagination" class="form-control-sm">
+                                            <option value="">10</option>
+                                            <option value="">20</option>
+                                            <option value="">30</option>
+                                        </select>#}
                                     </div>
                                     <div class="col-1">
                                         <select id="filters" class="form-control" name="filters" required>
@@ -165,6 +175,8 @@
                                 <th scope="col">Détails</th>#}
                                 <th scope="col">Adresse</th>
                                 <th scope="col">Code Postal</th>
+                                <th scope="col">Département</th>
+                                <th scope="col">Commune</th>
                                 <th scope="col">Pays</th>
                                 <th scope="col">Numéro Domicile</th>
                                 <th scope="col">Numéro Mobile</th>
@@ -234,6 +246,14 @@
                                 </td>
 
                                 <td class="budget">
+                                    {{ client.geographicArea.designation }}
+                                </td>
+
+                                <td class="budget">
+                                    {{ client.city }}
+                                </td>
+
+                                <td class="budget">
                                     {{ client.country }}
                                 </td>
 
@@ -268,6 +288,7 @@
                             </tbody>
                         </table>
                     </div>
+
                     <!-- Card footer -->
                     {{ knp_pagination_render(clients) }}
                     {#<div class="card-footer py-4">
@@ -299,4 +320,34 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block additionalJs %}
+    <script>
+
+        /*function paginationSelection() {
+            console.log(this.value)
+        }*/
+
+        /*let paginationValue = $('#pagination');*/
+
+        $('#pagination').change(function () {
+
+            $.ajax({
+                url:"{{ path('teleprospecting_pagination') }}",
+                method: "POST",
+                dataType: 'json',
+                data : { paginationValue: this.value },
+                success: (e) => {
+                    location.reload();
+                    /*this.val(this.value)*/
+                    /*$('#pagination').val();*/
+                },
+                error : (f) => {
+                    console.log(f);
+                }
+            })
+
+        })
+    </script>
 {% endblock %}

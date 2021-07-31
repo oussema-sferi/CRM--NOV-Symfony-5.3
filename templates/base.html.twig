@@ -658,9 +658,15 @@
                                 <div class="media-body  ml-2  d-none d-lg-block">
                                     <span class="mb-0 text-sm  font-weight-bold">
                                         {% if app.user %}
-                                            {{ app.user.email }}
+                                            {{ app.user.firstName ~ ' ' ~ app.user.lastName }}
                                         {% else %}
                                         Anonyme
+                                        {% endif %}
+                                    </span>
+                                    <br>
+                                    <span class="mb-0 text-sm font-weight-300">
+                                        {% if app.user %}
+                                        ({{ app.user.email }})
                                         {% endif %}
                                     </span>
                                 </div>
@@ -668,11 +674,12 @@
                         </a>
                         <div class="dropdown-menu  dropdown-menu-right ">
                             <div class="dropdown-header noti-title">
-                                <h6 class="text-overflow m-0">Welcome!</h6>
+                                <h6 class="text-overflow m-0">Bienvenue!</h6>
+                                {#<h6 class="text-overflow m-0">{{ app.user.email }}</h6>#}
                             </div>
                             <a href="#!" class="dropdown-item">
                                 <i class="ni ni-single-02"></i>
-                                <span>My profile</span>
+                                <span>Mon profil</span>
                             </a>
                             {#<a href="#!" class="dropdown-item">
                                 <i class="ni ni-settings-gear-65"></i>
@@ -689,7 +696,7 @@
                             <div class="dropdown-divider"></div>
                             <a href="{{ path('app_logout') }}" class="dropdown-item">
                                 <i class="ni ni-user-run"></i>
-                                <span>Logout</span>
+                                <span>Déconnexion</span>
                             </a>
                         </div>
                     </li>

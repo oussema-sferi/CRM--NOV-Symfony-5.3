@@ -142,7 +142,23 @@
                     <div class="card-header border-0">
                         <div class="row">
                             <div class="col-md-9">
-                                <h3 class="mb-0">Tous les contacts</h3>
+                                <h3 class="mb-0">Total: {{ app.session.get('total_contacts')}} Contacts</h3>
+                                <span>
+                                    {% for message in app.flashes('add_contacts_confirmation') %}
+                                        <div style="color: green">
+                                            <small>
+                                                {{ message }}
+                                            </small>
+                                        </div>
+                                    {% endfor %}
+                                    {% for message in app.flashes('add_contacts_warning') %}
+                                        <div style="color: red">
+                                            <small>
+                                                {{ message }}
+                                            </small>
+                                        </div>
+                                    {% endfor %}
+                                </span>
                             </div>
                             <div class="col-md-3">
                                 <input type="text" class="form-control " placeholder="Recherche" id="contact-filter">
@@ -165,6 +181,7 @@
                                 <th scope="col">Adresse</th>
                                 <th scope="col">Code Postal</th>
                                 <th scope="col">Département</th>
+                                <th scope="col">Commune</th>
                                 <th scope="col">Pays</th>
                                 <th scope="col">Numéro Domicile</th>
                                 <th scope="col">Numéro Mobile</th>
@@ -242,6 +259,10 @@
 
                         <td class="budget">
                             {{ client.geographicArea.designation }}
+                        </td>
+
+                        <td class="budget">
+                            {{ client.city }}
                         </td>
 
                         <td class="budget">

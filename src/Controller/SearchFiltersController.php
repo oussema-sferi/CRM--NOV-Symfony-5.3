@@ -37,7 +37,7 @@ class SearchFiltersController extends AbstractController
         $clients = $paginator->paginate(
             $data,
             $request->query->getInt('page', 1),
-            3
+            5
         );
             /*dd($data);*/
             return $this->render('teleprospecting/index.html.twig', [
