@@ -129,21 +129,41 @@
             <div class="col">
                 <div class="card">
                     <!-- Card header -->
-                    <form action="{{ path('telepro_search_filters') }}" method="post">
                     <div class="card-header border-0">
                         <div class="row">
-                            <div class="col-md-10">
-                                {% if not app.session.get('total_telepro_search_results') %}
+                            <div class="col-8">
                                 <h3 class="mb-0">Total: {{ app.session.get('total_telepro')}} Prospects</h3>
-                                {% else %}
-                                <h3 class="mb-0">Nombre de résultats: {{ app.session.get('total_telepro_search_results')}}</h3>
-                                {% endif %}
-                            </div>
-                            <div class="col-md-2">
-                                {#<input type="text" class="form-control " placeholder="Recherche" id="contact-filter">#}
-                                <button class="btn btn-sm btn-success" type="submit" style="margin-left: 30px">Appliquer les filtres</button>
+
                             </div>
                         </div>
+                        {#<form action="{{ path('telepro_search_filters') }}" method="post">
+                            <div class="row">
+                                    <div class="col-8">
+                                        <h3 class="mb-0">Total: {{ app.session.get('total_telepro')}} Prospects</h3>
+                                        <select name="pagination" id="pagination" class="form-control-sm">
+                                            <option value="">10</option>
+                                            <option value="">20</option>
+                                            <option value="">30</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-1">
+                                        <select id="filters" class="form-control" name="filters" required>
+                                            <option value="" disabled selected>Filtres</option>
+                                            <option value="lastName">Nom</option>
+                                            <option value="firstName">Prénom</option>
+                                            <option value="email">Email</option>
+                                            <option value="postalCode">Code Postal</option>
+                                            <option value="category">Catégorie</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-2">
+                                        <input type="text" class="form-control" placeholder="Mots Clés" id="search_keyword" name="search_keyword" required>
+                                    </div>
+                                    <div class="col-1" style="margin: auto auto">
+                                        <button class="btn btn-sm btn-success" type="submit">Rechercher</button>
+                                    </div>
+                             </div>
+                        </form>#}
                     </div>
                     <!-- Light table -->
                     <div class="table-responsive">
@@ -174,47 +194,47 @@
 
                                 <tr>
                                     <td>
-                                        <input id="firstName" name="firstName" class="test" type="text">
+                                        <input id="firstName" type="text">
                                     </td>
                                     <td>
-                                        <input id="lastName" name="lastName" class="test" type="text">
+                                        <input id="lastName" type="text">
                                     </td>
                                     <td>
-                                        <input id="email" name="email" class="test" type="text">
+                                        <input id="email" type="text">
                                     </td>
                                     <td>
-                                        <input id="companyName" name="companyName" class="test" type="text">
+                                        <input id="company" type="text">
                                     </td>
                                     <td>
-                                        <select id="category" name="category" class="form-control-sm">
+                                        <select name="" id="category" class="form-control-sm">
                                             <option value="" selected>--- Choisir ---</option>
-                                            <option value="Médecin">Médecin</option>
-                                            <option value="Vétérinaire">Vétérinaire</option>
-                                            <option value="Chirurgien">Chirurgien</option>
+                                            <option value="">Médecin</option>
+                                            <option value="">Vétérinaire</option>
+                                            <option value="">Chirurigien</option>
                                         </select>
                                     </td>
                                     <td>
-                                        <select id="isUnderContract" name="isUnderContract" class="form-control-sm">
+                                        <select name="" id="isUnderContract" class="form-control-sm">
                                             <option value="" selected>--- Choisir ---</option>
-                                            <option value="1">Oui</option>
-                                            <option value="0">Non</option>
+                                            <option value="">Oui</option>
+                                            <option value="">Non</option>
                                         </select>
                                     </td>
                                     <td>
-                                        <select id="status" name="status" class="form-control-sm">
+                                        <select name="" id="status" class="form-control-sm">
                                             <option value="" selected>--- Choisir ---</option>
-                                            <option value="0">Non traité</option>
-                                            <option value="1">En cours</option>
+                                            <option value="">Non traité</option>
+                                            <option value="">En cours</option>
                                         </select>
                                     </td>
                                     <td>
-                                        <input id="address" name="address" class="test" type="text">
+                                        <input id="address" type="text">
                                     </td>
                                     <td>
-                                        <input id="postalCode" name="postalCode" class="test" type="text">
+                                        <input id="postalCode" type="text">
                                     </td>
                                     <td>
-                                        <select id="geographicArea" name="geographicArea" class="form-control-sm">
+                                        <select name="" id="geographicArea" class="form-control-sm">
                                             <option value="" selected>--- Choisir ---</option>
                                             {% for geographic_area in geographic_areas %}
                                             <option value="{{ geographic_area.id }}">{{ geographic_area.designation }}</option>
@@ -222,16 +242,16 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <input id="city" name="city" class="test" class="test" type="text">
+                                        <input type="text">
                                     </td>
                                     <td>
-                                        <input id="country" name="country" class="test" type="text">
+                                        <input type="text">
                                     </td>
                                     <td>
-                                        <input id="phoneNumber" name="phoneNumber" class="test" type="text">
+                                        <input type="text">
                                     </td>
                                     <td>
-                                        <input id="mobileNumber" name="mobileNumber" class="test" type="text">
+                                        <input type="text">
                                     </td>
                                     <td></td>
 
@@ -242,106 +262,42 @@
                             <tbody class="list" id="teleproBody">
 
                             {% for client in clients %}
-                            <tr>
-                                <td class="budget">
-                                    {{ client.firstName }}
+                            <tr><td class="budget">
                                 </td>
-
                                 <td class="budget">
-                                    {{ client.lastName }}
                                 </td>
-
                                 <td class="budget">
-                                    {{ client.email }}
                                 </td>
-
                                 <td class="budget">
-                                    {{ client.companyName }}
                                 </td>
-
                                 <td class="budget">
-                                    {{ client.category }}
                                 </td>
-
                                 <td class="budget">
-                                    {% if  client.isUnderContract %}
-                                        Oui
-                                    {% else %}
-                                        Non
-                                        {% endif %}
                                 </td>
-
                                 <td class="budget">
-                                    {% if  client.status == 0 %}
-                                    <span class="badge badge-warning badge-lg">
-                                        <i class="bg-info"></i>
-                                        Non Traité
-                                    </span>
-                                    {% elseif client.status == 1 %}
-                                        <span class="badge badge-success badge-lg">
-                                        <i class="bg-warning"></i>
-                                         En Cours de Traitement
-                                    </span>
-                                    {% else %}
-                                        <span class="badge badge-dot mr-4">
-                                        <i class="bg-success"></i>
-                                        Appel Qualifié
-                                    </span>
-                                    {% endif %}
                                 </td>
-
                                 <td class="budget">
-                                    {{ client.address }}
                                 </td>
-
                                 <td class="budget">
-                                    {{ client.postalCode }}
                                 </td>
-
                                 <td class="budget">
-                                    {{ client.geographicArea.designation }}
                                 </td>
-
                                 <td class="budget">
-                                    {{ client.city }}
                                 </td>
-
                                 <td class="budget">
-                                    {{ client.country }}
                                 </td>
-
                                 <td class="budget">
-                                    {{ client.phoneNumber }}
                                 </td>
-
                                 <td class="budget">
-                                    {{ client.mobileNumber }}
                                 </td>
-
                                 <td >
-                                    <a href="{{ path('call_handle', {'id': client.id}) }}"  class="badge badge-default" >Traiter Fiche</a>
-                                </td>
-
-                                {#<td >
-                                    <a href="{{ path('show_client', {'id': client.id}) }}"  class="badge badge-default" >Consulter Fiche</a>
-                                </td>
-
-                                <td >
-                                    <a href="{{ path('update_client', {'id': client.id}) }}"  class="badge badge-info" >Modifier Contact</a>
-                                </td>
-
-                                <td >
-                                    <a href="{{ path('new_client') }}" data-href="/admin_resp/ingenieur/oussingenieurref/deleted" class="badge badge-danger" data-toggle="modal" data-target="#deleteModal">Supprimer Contact</a>
-                                </td>#}
-
-                            </tr>
+                                </td></tr>
 
                             {% endfor %}
 
                             </tbody>
                         </table>
                     </div>
-                    </form>
 
                     <!-- Card footer -->
                     {{ knp_pagination_render(clients) }}
@@ -395,67 +351,29 @@
 
         })
 
-        /*let inputsNumber = $('.test').length;*/
+        $('#lastName').keyup(function () {
 
-        /*$('.test').keyup(function () {
-            /!*let currentIndex = $('.test').index($(this));*!/
-            /!*console.log(this.value)*!/
-            /!*let newArray = $('.test');*!/
-            /!*newArray.splice(currentIndex,1);*!/
-            /!*let table = $('#teleproBody');*!/
-            /!*console.log(emptyInputsChecker(newArray))*!/
-           if(emptyInputsChecker(newArray) === 1) {
-               console.log('yeeeeeeeeees')
-               $.ajax({
-                   url:"",
-                   method: "POST",
-                   dataType: 'json',
-                   data : { filter: $(this).attr('id') ,keyword: this.value },
-                   success: (e) => {
+            /*console.log(this.value)*/
 
-                       /!*console.log(e);
-                       localStorage.setItem("my_results", JSON.stringify((e)));
+            $.ajax({
+                url:"{{ path('telepro_search_ajax') }}",
+                method: "POST",
+                dataType: 'json',
+                data : { keyword: this.value },
+                success: (e) => {
+                    /*console.log(this.value)*/
+                    console.log(e)
+                    let table = $('#teleproBody');
+                    table.empty();
+                    table.append(
 
-                       table.empty();
-                       e.forEach(client => {
-                           table.append(
-                               '<tr><td class="budget">' + 'test' + '</td><td class="budget">' + client.lastName + '</td> <td class="budget"> </td> <td class="budget"> </td> <td class="budget"> </td> <td class="budget"> </td> <td class="budget"> </td> <td class="budget"> </td> <td class="budget">' + client.postalCode + '</td> <td class="budget"> </td> <td class="budget"> </td> <td class="budget"> </td> <td class="budget"> </td> <td class="budget"> </td> <td > </td></tr>'
-                           )
-                       })
-*!/
-                       // then maybe we should save results in session for further use if other input is filled
-
-                   },
-                   error : (f) => {
-                      /!* console.log(f);*!/
-                   }
-               })
-
-           } else {
-               /!*console.log('nooooooo')*!/
-               /!*let existingResults = JSON.parse(localStorage.getItem("my_results"));
-               let actualKeyword = this.value;
-               table.empty();
-               console.log($(this).attr('id'))
-               console.log(this.value)
-               console.log(existingResults)*!/
-               //take the saved results from session
-           }
-
-
-        })*/
-
-        // Helper Function
-        /*function emptyInputsChecker(array) {
-            let counter = 0;
-            Array.prototype.forEach.call(array, element => {
-                if(element.value.length !== 0) {
-                    counter++;
+                    )
+                },
+                error : (f) => {
+                    console.log(f);
                 }
             })
-            return counter
-        }*/
 
-
+        })
     </script>
 {% endblock %}

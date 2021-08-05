@@ -57,6 +57,7 @@ class AppointmentController extends AbstractController
      */
     public function showCalendar(Request $request, $id, AppointmentRepository $appointment): Response
     {
+
         /*$client = $this->getDoctrine()->getRepository(Client::class)->find(3);*/
         $commercialUser = $this->getDoctrine()->getRepository(User::class)->find($id);
         /*dd($client);*/
@@ -95,6 +96,15 @@ class AppointmentController extends AbstractController
                 'id' => $id
             ]);
         }*/
+        /*dd($id);*/
+        if($this->getUser()->getId() === (int)$id) {
+            return $this->render('/appointment/show_my_calendar.html.twig', [
+                /*'calendar_to_show' => $calendarToShow,*/
+                'data' => compact('data'),
+                'appointment_form' => $appointmentForm->createView(),
+                'commercial_user' => $commercialUser
+            ]);
+        }
 
         return $this->render('/appointment/show_calendar.html.twig', [
             /*'calendar_to_show' => $calendarToShow,*/

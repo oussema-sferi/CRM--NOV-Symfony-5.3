@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Call;
 use App\Entity\Client;
+use App\Entity\GeographicArea;
 use App\Entity\User;
 use App\Form\CallFormType;
 use App\Form\ClientFormType;
@@ -26,9 +27,11 @@ class TeleprospectingController extends AbstractController
 
         $session = $request->getSession();
         $data = $this->getDoctrine()->getRepository(Client::class)->findAll();
+        $geographicAreas = $this->getDoctrine()->getRepository(GeographicArea::class)->findAll();
         $session->set('total_telepro',
             count($data)
         );
+        /*$session->remove('total_telepro_search_results');*/
         if($session->get('pagination_value')) {
             $clients = $paginator->paginate(
                 $data,
@@ -39,7 +42,7 @@ class TeleprospectingController extends AbstractController
             $clients = $paginator->paginate(
                 $data,
                 $request->query->getInt('page', 1),
-                8
+                10
             );
         }
 
@@ -47,6 +50,7 @@ class TeleprospectingController extends AbstractController
         /*dd($clients);*/
         return $this->render('teleprospecting/index.html.twig', [
             'clients' => $clients,
+            'geographic_areas'=> $geographicAreas
         ]);
     }
 

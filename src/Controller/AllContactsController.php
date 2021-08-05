@@ -29,7 +29,7 @@ class AllContactsController extends AbstractController
         $clients = $paginator->paginate(
             $data,
             $request->query->getInt('page', 1),
-            5
+            50
         );
 
         return $this->render('all_contacts/index.html.twig', [
@@ -145,7 +145,8 @@ class AllContactsController extends AbstractController
 
         $entityManager = $this->getDoctrine()->getManager();
 
-        $counter = 0;
+        $counterOfAdded = 0;
+        $counterOfNonAdded = 0;
         foreach ($sheetData as $Row)
         {
 
@@ -205,20 +206,30 @@ class AllContactsController extends AbstractController
                 $entityManager->persist($contact);
                 $entityManager->flush();
                 // here Doctrine checks all the fields of all fetched data and make a transaction to the database.
-                $counter++;
+                $counterOfAdded++;
+            } else {
+                $counterOfNonAdded++;
             }
         }
         /*dd($counter);*/
 
-        if($counter === 0) {
+        if($counterOfAdded === 0) {
             $this->addFlash(
                 'add_contacts_warning',
                 "Aucun contact n'a été ajouté!"
             );
+            $this->addFlash(
+                'add_contacts_confirmation2',
+                $counterOfNonAdded . " Doublons ont été détectés!"
+            );
         } else {
             $this->addFlash(
-                'add_contacts_confirmation',
-                $counter . " Contacts ont été ajoutés avec succès!"
+                'add_contacts_confirmation1',
+                $counterOfAdded . " Contacts ont été ajoutés avec succès!"
+            );
+            $this->addFlash(
+                'add_contacts_confirmation2',
+                $counterOfNonAdded . " Doublons ont été détectés!"
             );
         }
 

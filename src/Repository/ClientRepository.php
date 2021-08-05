@@ -14,6 +14,7 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ClientRepository extends ServiceEntityRepository
 {
+    public const GEOGRAPHIC_AREA = 'geographicArea';
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Client::class);
@@ -57,4 +58,58 @@ class ClientRepository extends ServiceEntityRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    public function fetchClientsbyFilters(array $filters): array
+    {
+        $builder = $this->createQueryBuilder('c');
+        $query = $builder->select('c')
+            ->join('c.geographicArea', 'g');
+        $counter = 0;
+        $filters = $this->_trimFilters($filters);
+        foreach ($this->_trimFilters($filters) as $key => $value) {
+            $statement = $key === self::GEOGRAPHIC_AREA ? " g.id = :$key" : "c.$key LIKE :$key";
+            if ($counter === 0) {
+                $query->where($statement);
+            }
+            else {
+                $query->andWhere($statement);
+            }
+            $counter ++;
+        }
+        $query->setParameters($filters);
+        return $query->getQuery()->getResult();
+    }
+
+    /**
+     * @param array<mixed> $filters
+     * @return array<string>
+    **/
+    private function _trimFilters(array $filters): array
+    {
+        /** @var array<string> $result **/
+        $result = [];
+        foreach ($filters as $key => $value) {
+            if (trim($value) !== "") {
+                if ($key !== self::GEOGRAPHIC_AREA) {
+                    $result[$key] = '%'.$value.'%';
+                }
+                else {
+                    $result[$key] = $value;
+                }
+
+            }
+    }
+        return $result;
+    }
+
+
+    /*public function findClientsByKeyword($keyword)
+    {
+        $qb = $this->createQueryBuilder('c');
+        $qb->select('c')
+            ->where("c.$filter LIKE :keyword")
+            ->setParameter('keyword', '%'.$keyword.'%');
+
+        return $qb->getQuery()->getResult();
+    }*/
 }

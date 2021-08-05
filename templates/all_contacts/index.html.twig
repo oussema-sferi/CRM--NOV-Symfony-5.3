@@ -21,6 +21,12 @@
                     <div id="initial-import" class="col-lg-6 col-5 text-right">
                         <a id="import-button" class="btn btn-sm btn-info">Importer une liste</a>
                         <a href="{{ path('new_contact') }}" class="btn btn-sm btn-success">Nouveau contact</a>
+                        <label for="pagination" style="color: white; font-size: small">Nb de résultats par page</label>
+                        <select name="pagination" id="pagination" class="form-control-sm">
+                            <option value="10" {% if app.session.get('pagination_value') == 10 %} selected {% endif %}>10</option>
+                            <option value="50" {% if app.session.get('pagination_value') == 50 %} selected {% endif %}>50</option>
+                            <option value="100" {% if app.session.get('pagination_value') == 100 %} selected {% endif %}>100</option>
+                        </select>
                         {#<div class="raiscontainer" style="text-align: center"><label for="raison">Raison:</label><br><textarea id="raison" class="rais" name="raison" type = "text" style="height: 160px; resize: none; white-space: unset" required></textarea><a class="seconddel btn btn-danger btn-supprimer" data-toggle="tooltip" data-placement="top" data-href="/admin_resp/ingenieur/oussingenieurref/deleted" href="#modal_supp" onclick="return false" rel="modal:open" title="Supprimer Ingénieur" name="btnTicket" id="search" style="margin-top: 10px" disabled>Confirmer</a></div>
                         <a href="#" class="btn btn-sm btn-neutral">Filters</a>#}
                     </div>
@@ -144,7 +150,7 @@
                             <div class="col-md-9">
                                 <h3 class="mb-0">Total: {{ app.session.get('total_contacts')}} Contacts</h3>
                                 <span>
-                                    {% for message in app.flashes('add_contacts_confirmation') %}
+                                    {% for message in app.flashes('add_contacts_confirmation1') %}
                                         <div style="color: green">
                                             <small>
                                                 {{ message }}
@@ -153,6 +159,15 @@
                                     {% endfor %}
                                     {% for message in app.flashes('add_contacts_warning') %}
                                         <div style="color: red">
+                                            <small>
+                                                {{ message }}
+                                            </small>
+                                        </div>
+                                    {% endfor %}
+                                </span>
+                                <span>
+                                    {% for message in app.flashes('add_contacts_confirmation2') %}
+                                        <div style="color: orangered">
                                             <small>
                                                 {{ message }}
                                             </small>
