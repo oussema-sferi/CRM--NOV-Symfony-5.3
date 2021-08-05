@@ -55,10 +55,17 @@ class SearchFiltersController extends AbstractController
             }
             $criterias = $session->get('criterias');
             $payload = $this->getDoctrine()->getRepository(Client::class)->fetchClientsbyFilters($criterias);
+            if(count($payload) === 0) {
+                $session->set('total_telepro_search_results',
+                    'nothing'
+                );
+            } else {
+                $session->set('total_telepro_search_results',
+                    count($payload)
+                );
+            }
             /*dd($payload);*/
-            $session->set('total_telepro_search_results',
-                count($payload)
-            );
+
 
         if($session->get('pagination_value')) {
             $clients = $paginator->paginate(

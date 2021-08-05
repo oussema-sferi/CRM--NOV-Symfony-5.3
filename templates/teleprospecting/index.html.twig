@@ -133,10 +133,12 @@
                     <div class="card-header border-0">
                         <div class="row">
                             <div class="col-md-10">
-                                {% if not app.session.get('total_telepro_search_results') %}
-                                <h3 class="mb-0">Total: {{ app.session.get('total_telepro')}} Prospects</h3>
+                                {% if app.session.get('total_telepro_search_results') and app.session.get('total_telepro_search_results') != "nothing" %}
+                                    <h3 class="mb-0">Nombre de résultats: {{ app.session.get('total_telepro_search_results')}}</h3>
+                                {% elseif app.session.get('total_telepro_search_results') and app.session.get('total_telepro_search_results') == "nothing" %}
+                                    <h3 class="mb-0" style="color: red">Aucun résultat correspondant à votre recherche!</h3>
                                 {% else %}
-                                <h3 class="mb-0">Nombre de résultats: {{ app.session.get('total_telepro_search_results')}}</h3>
+                                    <h3 class="mb-0">Total: {{ app.session.get('total_telepro')}} Prospects</h3>
                                 {% endif %}
                             </div>
                             <div class="col-md-2">

@@ -31,7 +31,7 @@ class TeleprospectingController extends AbstractController
         $session->set('total_telepro',
             count($data)
         );
-        /*$session->remove('total_telepro_search_results');*/
+        $session->remove('total_telepro_search_results');
         if($session->get('pagination_value')) {
             $clients = $paginator->paginate(
                 $data,
