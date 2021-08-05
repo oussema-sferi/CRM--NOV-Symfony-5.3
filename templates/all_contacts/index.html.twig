@@ -145,11 +145,25 @@
             <div class="col">
                 <div class="card">
                     <!-- Card header -->
+                    <form action="{{ path('all_contacts_search_filters') }}" method="post">
                     <div class="card-header border-0">
                         <div class="row">
-                            <div class="col-md-9">
-                                <h3 class="mb-0">Total: {{ app.session.get('total_contacts')}} Contacts</h3>
+                            <div class="col-md-10">
+                                {% if app.session.get('total_contacts_search_results') and app.session.get('total_contacts_search_results') != "nothing" %}
+                                    <h3 class="mb-0">Nombre de résultats: {{ app.session.get('total_contacts_search_results')}}</h3>
+                                {% elseif app.session.get('total_contacts_search_results') and app.session.get('total_contacts_search_results') == "nothing" %}
+                                    <h3 class="mb-0" style="color: red">Aucun résultat correspondant à votre recherche!</h3>
+                                {% else %}
+                                    <h3 class="mb-0">Total: {{ app.session.get('total_contacts')}} Contacts</h3>
+                                {% endif %}
                                 <span>
+                                    {% for message in app.flashes('import_file_type_error') %}
+                                        <div style="color: red">
+                                            <small>
+                                                {{ message }}
+                                            </small>
+                                        </div>
+                                    {% endfor %}
                                     {% for message in app.flashes('add_contacts_confirmation1') %}
                                         <div style="color: green">
                                             <small>
@@ -175,8 +189,9 @@
                                     {% endfor %}
                                 </span>
                             </div>
-                            <div class="col-md-3">
-                                <input type="text" class="form-control " placeholder="Recherche" id="contact-filter">
+                            <div class="col-md-2">
+                                {#<input type="text" class="form-control " placeholder="Recherche" id="contact-filter">#}
+                                <button class="btn btn-sm btn-success" type="submit" style="margin-left: 30px">Appliquer les filtres</button>
                             </div>
                         </div>
                     </div>
@@ -190,9 +205,9 @@
                                 <th scope="col">Email</th>
                                 <th scope="col">Société</th>
                                 <th scope="col">Catégorie</th>
-                                <th scope="col">Equipement</th>
+                                {#<th scope="col">Equipement</th>#}
                                 <th scope="col">Sous Contrat</th>
-                                <th scope="col">Statut</th>
+                                <th scope="col">Etat</th>
                                 <th scope="col">Adresse</th>
                                 <th scope="col">Code Postal</th>
                                 <th scope="col">Département</th>
@@ -205,6 +220,72 @@
                                 {#<th scope="col">Modification</th>
                                 <th scope="col">Suppression</th>#}
                             </tr>
+
+                            <tr>
+                                <td>
+                                    <input id="firstName" name="firstName" class="test" type="text">
+                                </td>
+                                <td>
+                                    <input id="lastName" name="lastName" class="test" type="text">
+                                </td>
+                                <td>
+                                    <input id="email" name="email" class="test" type="text">
+                                </td>
+                                <td>
+                                    <input id="companyName" name="companyName" class="test" type="text">
+                                </td>
+                                <td>
+                                    <select id="category" name="category" class="form-control-sm">
+                                        <option value="" selected>--- Choisir ---</option>
+                                        <option value="Médecin">Médecin</option>
+                                        <option value="Vétérinaire">Vétérinaire</option>
+                                        <option value="Chirurgien">Chirurgien</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select id="isUnderContract" name="isUnderContract" class="form-control-sm">
+                                        <option value="" selected>--- Choisir ---</option>
+                                        <option value="1">Oui</option>
+                                        <option value="0">Non</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select id="status" name="status" class="form-control-sm">
+                                        <option value="" selected>--- Choisir ---</option>
+                                        <option value="0">Non traité</option>
+                                        <option value="1">En cours</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input id="address" name="address" class="test" type="text">
+                                </td>
+                                <td>
+                                    <input id="postalCode" name="postalCode" class="test" type="text">
+                                </td>
+                                <td>
+                                    <select id="geographicArea" name="geographicArea" class="form-control-sm">
+                                        <option value="" selected>--- Choisir ---</option>
+                                        {% for geographic_area in geographic_areas %}
+                                            <option value="{{ geographic_area.id }}">{{ geographic_area.designation }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                                <td>
+                                    <input id="city" name="city" class="test" class="test" type="text">
+                                </td>
+                                <td>
+                                    <input id="country" name="country" class="test" type="text">
+                                </td>
+                                <td>
+                                    <input id="phoneNumber" name="phoneNumber" class="test" type="text">
+                                </td>
+                                <td>
+                                    <input id="mobileNumber" name="mobileNumber" class="test" type="text">
+                                </td>
+                                <td></td>
+
+                            </tr>
+
                             </thead>
                             <tbody class="list">
 
@@ -230,12 +311,12 @@
                                         {{ client.category }}
                                     </td>
 
-                                    <td class="budget">
+                                    {#<td class="budget">
                                         {% if client.providedEquipment %}
                                         {{ client.providedEquipment.designation }}
                                         {% else %}
                                         {% endif %}
-                                    </td>
+                                    </td>#}
 
                                     <td class="budget">
                                         {% if  client.isUnderContract %}
@@ -321,7 +402,7 @@
                             </tbody>
                         </table>
                     </div>
-
+                    </form>
                     <!-- Card footer -->
                     {{ knp_pagination_render(clients) }}
                     {#<div class="card-footer py-4">
@@ -360,6 +441,8 @@
 {% block additionalJs %}
     <script>
 
+        /*$(".test").css({position:'fixed'});*/
+
         //hide new contact block and show import block
         $('#import-button').click(function () {
             $(this).parent().fadeOut(200)
@@ -370,6 +453,23 @@
         $('#retour-import').click(function () {
             $(this).parent().parent().fadeOut(50)
             $('#initial-import').fadeIn(1000);
+        })
+
+        $('#pagination').change(function () {
+
+            $.ajax({
+                url:"{{ path('teleprospecting_pagination') }}",
+                method: "POST",
+                dataType: 'json',
+                data : { paginationValue: this.value },
+                success: (e) => {
+                    location.reload();
+                },
+                error : (f) => {
+                    console.log(f);
+                }
+            })
+
         })
 
     </script>
