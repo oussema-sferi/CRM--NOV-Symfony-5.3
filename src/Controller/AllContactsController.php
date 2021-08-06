@@ -156,8 +156,25 @@ class AllContactsController extends AbstractController
             /**  Load $inputFileName to a Spreadsheet Object  **/
             $spreadsheet = $reader->load($fileFolder . $filePathName);
             /*dd($spreadsheet);*/
+            //Check if the template of the uploaded excel file is correct
+            $activeSheet = $spreadsheet->getActiveSheet();
+            if(!($activeSheet->getCellByColumnAndRow(1,1)->getValue() === "Numéro de téléphone" &&
+                $activeSheet->getCellByColumnAndRow(2,1)->getValue() === "Nom du professionnel" &&
+                $activeSheet->getCellByColumnAndRow(3,1)->getValue() === "Adresse" &&
+                $activeSheet->getCellByColumnAndRow(4,1)->getValue() === "Commune" &&
+                $activeSheet->getCellByColumnAndRow(5,1)->getValue() === "Code Postal")
+            ) {
+                /*dd("yes");*/
+                $this->addFlash(
+                    'import_file_template_error',
+                    "Désolé! Ce fichier ne suit pas les normes du modèle!"
+                );
+                return $this->redirectToRoute('all_contacts');
+            }
+
             /*$spreadsheet = IOFactory::load($fileFolder . $filePathName);*/ // Here we are able to read from the excel file
             $row = $spreadsheet->getActiveSheet()->removeRow(1); // I added this to be able to remove the first file line
+
             $sheetData = $spreadsheet->getActiveSheet()-> toArray(null, true, true, true, true); // here, the read data is turned into an array
             /*dd($sheetData);*/
 

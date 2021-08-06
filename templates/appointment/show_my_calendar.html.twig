@@ -171,6 +171,9 @@
                 }
             })
             calendar.render()
+            calendar.on("dateClick", function (info) {
+                alert('clicked on ' + info.dateStr)
+            })
         }
     </script>
 

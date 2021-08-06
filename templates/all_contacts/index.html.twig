@@ -164,6 +164,13 @@
                                             </small>
                                         </div>
                                     {% endfor %}
+                                    {% for message in app.flashes('import_file_template_error') %}
+                                        <div style="color: red">
+                                            <small>
+                                                {{ message }}
+                                            </small>
+                                        </div>
+                                    {% endfor %}
                                     {% for message in app.flashes('add_contacts_confirmation1') %}
                                         <div style="color: green">
                                             <small>

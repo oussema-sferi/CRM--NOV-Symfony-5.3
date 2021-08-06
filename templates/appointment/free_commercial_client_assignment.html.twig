@@ -1,0 +1,212 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouveau RDV{% endblock %}
+
+{% block body %}
+
+    <div class="header bg-primary pb-6">
+        <div class="container-fluid">
+            <div class="header-body">
+                <div class="row align-items-center py-4">
+                    <div class="col-lg-6 col-7">
+                        <h6 class="h2 text-white d-inline-block mb-0">CRM</h6>
+                        <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+                            <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                                <li class="breadcrumb-item"><a href="#"><i class="fas fa-phone-volume"></i></a></li>
+                                <li class="breadcrumb-item"><a href="#">{{ commercial_user.firstName ~ ' ' ~ commercial_user.lastName }}</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Fixer un RDV</li>
+                            </ol>
+                        </nav>
+                    </div>
+                    <div class="col-lg-6 col-5 text-right">
+                        <a href="" class="btn btn-sm btn-neutral">Retour</a>
+                    </div>
+                </div>
+                <!-- Card stats -->
+                {#<div class="row">
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card card-stats">
+                            <!-- Card body -->
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Total traffic</h5>
+                                        <span class="h2 font-weight-bold mb-0">350,897</span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-gradient-red text-white rounded-circle shadow">
+                                            <i class="ni ni-active-40"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="mt-3 mb-0 text-sm">
+                                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
+                                    <span class="text-nowrap">Since last month</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card card-stats">
+                            <!-- Card body -->
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">New users</h5>
+                                        <span class="h2 font-weight-bold mb-0">2,356</span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-gradient-orange text-white rounded-circle shadow">
+                                            <i class="ni ni-chart-pie-35"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="mt-3 mb-0 text-sm">
+                                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
+                                    <span class="text-nowrap">Since last month</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card card-stats">
+                            <!-- Card body -->
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Sales</h5>
+                                        <span class="h2 font-weight-bold mb-0">924</span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-gradient-green text-white rounded-circle shadow">
+                                            <i class="ni ni-money-coins"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="mt-3 mb-0 text-sm">
+                                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
+                                    <span class="text-nowrap">Since last month</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card card-stats">
+                            <!-- Card body -->
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Performance</h5>
+                                        <span class="h2 font-weight-bold mb-0">49,65%</span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-gradient-info text-white rounded-circle shadow">
+                                            <i class="ni ni-chart-bar-32"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="mt-3 mb-0 text-sm">
+                                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
+                                    <span class="text-nowrap">Since last month</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>#}
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container-fluid mt--8">
+
+        <div class="header pb-8 pt-5 pt-md-14">
+            <div class="container-fluid">
+                <div class="header-body" style="text-align: center">
+                    <h1 style="color: black"></h1>
+                </div>
+            </div>
+        </div>
+
+        <div class="container mt--8 pb-5">
+            <!-- Table -->
+            <div class="row justify-content-center">
+                <div class="col-lg-6 col-md-8">
+                    <div class="card bg-secondary border-0">
+
+                        <div class="card-body px-lg-5 py-lg-5">
+                            <div class="text-center text-muted mb-4">
+                            </div>
+
+                            <form action="{{ path('test_fix_appointment') }}" method="post">
+
+                                <div class="form-group">
+
+                                    <label class="form-control-label" for="input-username">Sélectionnez le Client</label>
+                                    <select class="form-control form-control-sm" name="client">
+                                        {% for client in clients %}
+                                            <option value="{{ client.id }}">{{ client.firstName ~ ' ' ~ client.lastName }}</option>
+                                        {% endfor %}
+                                    </select>
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    <div>
+                                        <label class="form-control-label" for="notes">Observations</label>
+                                    </div>
+
+                                    <textarea class="form-control" name="notes" id="notes" cols="30" rows="6" placeholder="..." resize="none"></textarea>
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    {#<label class="form-control-label" for="input-username">Date/Heure Début</label>#}
+                                    <input class="form-control form-control-sm" type="hidden" value="{{ commercial_user.id }}" name="commercial">
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    {#<label class="form-control-label" for="input-username">Date/Heure Début</label>#}
+                                    <input class="form-control form-control-sm" type="hidden" value="{{ start }}" name="start">
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    {#<label class="form-control-label" for="end">Date/Heure Fin</label>#}
+                                    <input id="end" class="form-control form-control-sm" type="hidden" value="{{ end }}" name="end">
+
+                                </div>
+
+
+
+
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-success mt-4">Confirmer</button>
+                                </div>
+                            </form>
+                            {#<div class="form-group">
+
+                                <label for="example-datetime-local-input" class="form-control-label">Client</label>
+                                {{ form_widget(appointment_form.client, {'attr': {'class': 'form-control' }}) }}
+
+                            </div>#}
+
+
+
+                                {#{{ form_widget(call_form.generalStatus, {'attr': {'class': 'form-control form-control-sm' }}) }}#}
+
+
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -98,29 +98,6 @@ class SearchFiltersController extends AbstractController
      */
     public function allContactsSearchFilters(Request $request, PaginatorInterface $paginator): Response
     {
-        /*$session = $request->getSession();
-        if($request->isMethod('POST')) {
-            $searchKeyword = $request->request->get('search_keyword');
-            $searchFilter = $request->request->get('filters');
-            $session->set('filters',
-                $searchFilter
-            );
-            $session->set('search_keyword',
-                $searchKeyword
-            );
-
-        }
-        $searchKeywordSession = $session->get('search_keyword');
-        $searchFilterSession = $session->get('filters');
-        $data = $this->getDoctrine()->getRepository(Client::class)->findClientsByFilterAndKeyword($searchFilterSession,$searchKeywordSession);
-        $clients = $paginator->paginate(
-            $data,
-            $request->query->getInt('page', 1),
-            5
-        );
-            return $this->render('teleprospecting/index.html.twig', [
-                'clients' => $clients,
-            ]);*/
         //search without ajax
         $session = $request->getSession();
         $geographicAreas = $this->getDoctrine()->getRepository(GeographicArea::class)->findAll();
