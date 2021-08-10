@@ -148,6 +148,7 @@
                                 <th scope="col">RDV: Date/Heure Début</th>
                                 <th scope="col">RDV: Date/Heure Fin</th>
                                 <th scope="col">Commercial Affecté</th>
+                                <th scope="col">Notes</th>
                                 {#<th scope="col">Consultation</th>
                                 <th scope="col">Modification</th>
                                 <th scope="col">Suppression</th>#}
@@ -195,7 +196,13 @@
                                         {{ commercial_appointment.user.firstName ~ ' ' ~ commercial_appointment.user.lastName }}
                                     </td>
 
+                                    <td class="budget">
 
+
+                                        <button class="notes" data-container="body" data-toggle="popover" data-color="info" data-placement="top" data-content= "{{ commercial_appointment.appointmentNotes }}">
+                                            <i class="far fa-comment text-green"></i>
+                                        </button>
+                                    </td>
 
                                     {#<td >
                                     <a href="{{ path('show_client', {'id': client.id}) }}"  class="badge badge-default" >Consulter Fiche</a>
@@ -246,4 +253,22 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block additionalJs %}
+
+    <script>
+        $(document).ready(function () {
+           /* $(".notes").attr("data-content", "hiiii")
+            console.log($(".notes").data("content"))*/
+        })
+
+        /*$(".notes").hover(function () {
+            console.log("hi")
+        })*/
+
+            /*$(".notes").data("content", "hello ouss!")*/
+
+    </script>
+
 {% endblock %}
