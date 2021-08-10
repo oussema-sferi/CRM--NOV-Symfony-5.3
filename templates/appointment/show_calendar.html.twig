@@ -179,6 +179,12 @@
                                 {#<div class="text-muted mb-4">
                                     <small>Veuillez sélectionner la date et l'heure du RDV:</small>
                                 </div>#}
+                                <div>
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-username">Agent Commercial</label>
+                                        <input type="text" id="input-username" class="form-control" value="{{ commercial_user.firstName ~ ' ' ~ commercial_user.lastName }}" disabled>
+                                    </div>
+                                </div>
 
                                 {{ form_start(appointment_form) }}
                                     <div class="form-group">

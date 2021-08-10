@@ -46,7 +46,8 @@
                         </nav>
                     </div>
                     <div class="col-lg-6 col-5 text-right">
-                        <a href="{{ path('new_client') }}" class="btn btn-sm btn-success">Nouveau Evénement</a>
+                        <button id="test" type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal-form">Nouveau Evénement</button>
+                        {#<a href="" class="btn btn-sm btn-success">Nouveau Evénement</a>#}
                         {#<a href="#" class="btn btn-sm btn-neutral">Filters</a>#}
                     </div>
                 </div>
@@ -149,6 +150,62 @@
         </div>
     </div>
     </div>
+
+
+    <div class="modal fade" id="modal-form" tabindex="-1" role="dialog" aria-labelledby="modal-form" aria-hidden="true">
+        <div class="modal-dialog modal- modal-dialog-centered modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-body p-0">
+                    <div class="card bg-secondary border-0 mb-0">
+                        <div class="card-body px-lg-5 py-lg-5">
+                            {#<div class="text-muted mb-4">
+                                    <small>Veuillez sélectionner la date et l'heure du RDV:</small>
+                                </div>#}
+                            {#<div>
+                                <div class="form-group">
+                                    <label class="form-control-label" for="input-username">Agent Commercial</label>
+                                    <input type="text" id="input-username" class="form-control" value="{{ commercial_user.firstName ~ ' ' ~ commercial_user.lastName }}" disabled>
+                                </div>
+                            </div>#}
+
+                            {{ form_start(my_personal_event_form) }}
+                            <div class="form-group">
+                                <label for="example-datetime-local-input" class="form-control-label">Date et heure de Début</label>
+                                {{ form_widget(my_personal_event_form.start) }}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="example-datetime-local-input" class="form-control-label">Date et heure de Fin</label>
+                                {{ form_widget(my_personal_event_form.end) }}
+                            </div>
+
+                            <div class="form-group">
+
+                                <div>
+                                    <label class="form-control-label" for="notes">Description</label>
+                                </div>
+
+                                <textarea class="form-control" name="notes" id="notes" cols="30" rows="6" placeholder="..." resize="none" required></textarea>
+
+                            </div>
+
+                            <hr class="my-3">
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-success mt-4">Confirmer</button>
+                            </div>
+                            {{ form_end(my_personal_event_form)}}
+
+                        </div>
+                    </div>
+
+
+
+
+                </div>
+
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block additionalJs %}
@@ -172,7 +229,13 @@
             })
             calendar.render()
             calendar.on("dateClick", function (info) {
-                alert('clicked on ' + info.dateStr)
+                $("#test").click()
+                $("#appointment_form_start_date").val(info.dateStr)
+                $("#appointment_form_end_date").val(info.dateStr)
+            })
+            $("#test").on("click", function () {
+                $("#appointment_form_start_date").val($("#appointment_form_start_date").defaultDate)
+                $("#appointment_form_end_date").val($("#appointment_form_end_date").defaultDate)
             })
         }
     </script>

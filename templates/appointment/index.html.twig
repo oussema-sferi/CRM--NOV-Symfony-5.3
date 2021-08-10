@@ -19,7 +19,8 @@
                         </nav>
                     </div>
                     <div class="col-lg-6 col-5 text-right">
-                        <a href="{{ path('availibility_check') }}" class="btn btn-sm btn-success">Fixer un RDV</a>
+                        <button id="test" type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal-form">Fixer un RDV</button>
+                        {#<a href="{{ path('availibility_check') }}" class="btn btn-sm btn-success">Fixer un RDV</a>#}
                         {#<a href="#" class="btn btn-sm btn-neutral">Filters</a>#}
                     </div>
                 </div>
@@ -126,10 +127,17 @@
                     <!-- Card header -->
                     <div class="card-header border-0">
                         <div class="row">
-                            <div class="col-md-9">
+                            <div class="col-md-10">
                                 <h3 class="mb-0">Agents Commerciaux</h3>
+                                {% for message in app.flashes('appointment_duration_warning') %}
+                                    <div style="color: red">
+                                        <small>
+                                            {{ message }}
+                                        </small>
+                                    </div>
+                                {% endfor %}
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <input type="text" class="form-control " placeholder="Recherche" id="contact-filter">
                             </div>
                         </div>
@@ -215,6 +223,51 @@
                         </nav>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    {#<button type="button" class="btn btn-block btn-default" data-toggle="modal" data-target="#modal-form">Form</button>#}
+    <div class="modal fade" id="modal-form" tabindex="-1" role="dialog" aria-labelledby="modal-form" aria-hidden="true">
+        <div class="modal-dialog modal- modal-dialog-centered modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-body p-0">
+                    <div class="card bg-secondary border-0 mb-0">
+                        <div class="card-body px-lg-5 py-lg-5">
+                            {#<div class="text-muted mb-4">
+                                    <small>Veuillez sélectionner la date et l'heure du RDV:</small>
+                                </div>#}
+                            {#<div>
+                                <div class="form-group">
+                                    <label class="form-control-label" for="input-username">Agent Commercial</label>
+                                    <input type="text" id="input-username" class="form-control" value="{{ commercial_user.firstName ~ ' ' ~ commercial_user.lastName }}" disabled>
+                                </div>
+                            </div>#}
+
+                            {{ form_start(appointment_form) }}
+                            <div class="form-group">
+                                <label for="example-datetime-local-input" class="form-control-label">Date et heure de Début</label>
+                                {{ form_widget(appointment_form.start) }}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="example-datetime-local-input" class="form-control-label">Date et heure de Fin</label>
+                                {{ form_widget(appointment_form.end) }}
+                            </div>
+                            <hr class="my-3">
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary mt-4">Vérifier la disponibilité</button>
+                            </div>
+                            {{ form_end(appointment_form)}}
+
+                        </div>
+                    </div>
+
+
+
+
+                </div>
+
             </div>
         </div>
     </div>

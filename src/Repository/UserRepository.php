@@ -86,16 +86,29 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         return $qb->getQuery()->getResult();
     }
 
-    public function findFreeCommercials($id, $role, $teleprospectorId)
+    public function findFreeCommercials($busyCommercialsIdsArray, $role, $teleprospectorId)
     {
         $qb = $this->createQueryBuilder('u');
-        $qb->select('u')
+        $query = $qb->select('u')
             ->join('u.teleprospector', 't')
-            ->where("t.id = $teleprospectorId")
-            ->andWhere('u.id != :userid')
-            ->andWhere('u.roles LIKE :roles')
-            ->setParameter('roles', '%"'.$role.'"%')
-            ->setParameter('userid', $id);
-        return $qb->getQuery()->getResult();
+            ->where("t.id = $teleprospectorId");
+        foreach ($busyCommercialsIdsArray as $id) {
+            $query->andWhere("u.id != $id");
+        }
+        $query->andWhere('u.roles LIKE :roles')
+            ->setParameter('roles', '%"'.$role.'"%');
+        return $query->getQuery()->getResult();
+    }
+
+    public function findFreeCommercialsForSuperAdmin($busyCommercialsIdsArray, $role)
+    {
+        $qb = $this->createQueryBuilder('u');
+        $query = $qb->select('u')
+            ->where('u.roles LIKE :roles');
+        foreach ($busyCommercialsIdsArray as $id) {
+            $query->andWhere("u.id != $id");
+        }
+        $query->setParameter('roles', '%"'.$role.'"%');
+        return $query->getQuery()->getResult();
     }
 }

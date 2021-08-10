@@ -112,4 +112,15 @@ class ClientRepository extends ServiceEntityRepository
 
         return $qb->getQuery()->getResult();
     }*/
+
+    /*public function findFreeClients()
+    {
+        $qb = $this->createQueryBuilder('c');
+        $qb->select('c')
+            ->join('c.appointment', 'a')
+            ->where("a.id != ")
+            ->setParameter('keyword', '%'.$keyword.'%');
+
+        return $qb->getQuery()->getResult();
+    }*/
 }
