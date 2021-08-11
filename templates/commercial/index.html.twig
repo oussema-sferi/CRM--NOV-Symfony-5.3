@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Liste des RDV{% endblock %}
+{% block title %}Liste de mes RDV{% endblock %}
 
 {% block body %}
 
@@ -14,7 +14,7 @@
                             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
                                 <li class="breadcrumb-item"><a href="#"><i class="fas fa-chalkboard-teacher text-yellow"></i></a></li>
                                 <li class="breadcrumb-item"><a href="#">Service Commercial</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Liste des RDV</li>
+                                <li class="breadcrumb-item active" aria-current="page">Liste de mes RDV</li>
                             </ol>
                         </nav>
                     </div>
@@ -200,7 +200,7 @@
 
 
                                         <button class="notes" data-container="body" data-toggle="popover" data-color="info" data-placement="top" data-content= "{{ commercial_appointment.appointmentNotes }}">
-                                            <i class="far fa-comment text-green"></i>
+                                            <i class="far fa-comment text-cyan"></i>
                                         </button>
                                     </td>
 

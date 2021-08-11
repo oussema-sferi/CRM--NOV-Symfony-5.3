@@ -16,7 +16,8 @@ class CommercialController extends AbstractController
      */
     public function index(AppointmentRepository $appointment): Response
     {
-        $commercialAppointments = $appointment->findAll();
+        //Fetch all the appointments and sort by the most recent date
+        $commercialAppointments = $appointment->findBy(array(), array('start' => 'DESC'));
         return $this->render('commercial/index.html.twig', [
             'commercial_appointments' => $commercialAppointments,
         ]);

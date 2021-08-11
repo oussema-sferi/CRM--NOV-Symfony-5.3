@@ -20,12 +20,12 @@
                     <div class="col-lg-6 col-5 text-right">
                         {#<a href="{{ path('new_client') }}" class="btn btn-sm btn-success">Nouveau prospect</a>#}
                         {#<a href="#" class="btn btn-sm btn-neutral">Filters</a>#}
-                        <label for="pagination" style="color: white; font-size: small">Nb de résultats par page</label>
+                        {#<label for="pagination" style="color: white; font-size: small">Nb de résultats par page</label>
                         <select name="pagination" id="pagination" class="form-control-sm">
                             <option value="10" {% if app.session.get('pagination_value') == 10 %} selected {% endif %}>10</option>
                             <option value="50" {% if app.session.get('pagination_value') == 50 %} selected {% endif %}>50</option>
                             <option value="100" {% if app.session.get('pagination_value') == 100 %} selected {% endif %}>100</option>
-                        </select>
+                        </select>#}
                     </div>
                 </div>
                 <!-- Card stats -->

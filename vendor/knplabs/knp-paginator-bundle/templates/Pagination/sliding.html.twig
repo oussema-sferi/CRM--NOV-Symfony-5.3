@@ -1,6 +1,17 @@
 {# default Sliding pagination control implementation #}
 <div class="card-footer py-4">
+
     <nav aria-label="...">
+        <div class="row">
+        <div class="col-md-4">
+            <label for="pagination" style="font-size: small">Résultats par page</label>
+            <select name="pagination" id="pagination" class="form-control-sm">
+                <option value="10" {% if app.session.get('pagination_value') == 10 %} selected {% endif %}>10</option>
+                <option value="50" {% if app.session.get('pagination_value') == 50 %} selected {% endif %}>50</option>
+                <option value="100" {% if app.session.get('pagination_value') == 100 %} selected {% endif %}>100</option>
+            </select>
+        </div>
+        <div class="col-md-8">
         <ul class="pagination justify-content-end mb-0">
             {% if pageCount > 1 %}
                 <div class="pagination">
@@ -81,6 +92,8 @@
                 </div>
             {% endif %}
         </ul>
+        </div>
+        </div>
     </nav>
 </div>
 
