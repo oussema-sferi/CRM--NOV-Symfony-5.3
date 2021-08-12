@@ -461,6 +461,9 @@
             $(this).parent().parent().fadeOut(50)
             $('#initial-import').fadeIn(1000);
         })
+        $('#pagination').hover(function () {
+            $(this).css('cursor','pointer');
+        })
 
         $('#pagination').change(function () {
 

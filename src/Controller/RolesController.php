@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\GeographicArea;
 use App\Entity\User;
 use App\Form\UserFormType;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,12 +16,30 @@ class RolesController extends AbstractController
     /**
      * @Route("/dashboard/users", name="roles")
      */
-    public function index(): Response
+    public function index(Request $request, PaginatorInterface $paginator): Response
     {
-        $users = $this->getDoctrine()->getRepository(User::class)->findAll();
+        $session = $request->getSession();
+        $data = $this->getDoctrine()->getRepository(User::class)->findAll();
+        if($session->get('pagination_value')) {
+            $users = $paginator->paginate(
+                $data,
+                $request->query->getInt('page', 1),
+                $session->get('pagination_value')
+            );
+        } else {
+            $users = $paginator->paginate(
+                $data,
+                $request->query->getInt('page', 1),
+                10
+            );
+        }
+
+
+        /*$users = $this->getDoctrine()->getRepository(User::class)->findAll();*/
         /*dd($users);*/
         return $this->render('roles/index.html.twig', [
-            'users' => $users,
+            'allusers' => $data,
+            'users' => $users
         ]);
     }
 
@@ -64,12 +83,27 @@ class RolesController extends AbstractController
     /**
      * @Route("/dashboard/users/commercials", name="commercials_listing")
      */
-    public function commercialsListing(): Response
+    public function commercialsListing(Request $request, PaginatorInterface $paginator): Response
     {
-        $users = $this->getDoctrine()->getRepository(User::class)->findUsersByCommercialRole("ROLE_COMMERCIAL");
+        $session = $request->getSession();
+        $data = $this->getDoctrine()->getRepository(User::class)->findUsersByCommercialRole("ROLE_COMMERCIAL");
+        if($session->get('pagination_value')) {
+            $users = $paginator->paginate(
+                $data,
+                $request->query->getInt('page', 1),
+                $session->get('pagination_value')
+            );
+        } else {
+            $users = $paginator->paginate(
+                $data,
+                $request->query->getInt('page', 1),
+                10
+            );
+        }
 
         /*dd($users);*/
         return $this->render('roles/users_management/commercials/index.html.twig', [
+            'allusers' => $data,
             'users' => $users,
         ]);
     }
@@ -77,11 +111,26 @@ class RolesController extends AbstractController
     /**
      * @Route("/dashboard/users/telepro", name="telepro_listing")
      */
-    public function teleproListing(): Response
+    public function teleproListing(Request $request, PaginatorInterface $paginator): Response
     {
-        $users = $this->getDoctrine()->getRepository(User::class)->findUsersByCommercialRole("ROLE_TELEPRO");
-        /*dd($users);*/
+        $session = $request->getSession();
+        $data = $this->getDoctrine()->getRepository(User::class)->findUsersByCommercialRole("ROLE_TELEPRO");
+        if($session->get('pagination_value')) {
+            $users = $paginator->paginate(
+                $data,
+                $request->query->getInt('page', 1),
+                $session->get('pagination_value')
+            );
+        } else {
+            $users = $paginator->paginate(
+                $data,
+                $request->query->getInt('page', 1),
+                10
+            );
+        }
+
         return $this->render('roles/users_management/telepro/index.html.twig', [
+            'allusers' => $data,
             'users' => $users,
         ]);
     }

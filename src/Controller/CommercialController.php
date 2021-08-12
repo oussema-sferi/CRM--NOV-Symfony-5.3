@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Appointment;
 use App\Repository\AppointmentRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,12 +15,30 @@ class CommercialController extends AbstractController
     /**
      * @Route("/dashboard/commercial", name="commercial")
      */
-    public function index(AppointmentRepository $appointment): Response
+    public function index(AppointmentRepository $appointment, Request $request, PaginatorInterface $paginator): Response
     {
+        $session = $request->getSession();
         //Fetch all the appointments and sort by the most recent date
-        $commercialAppointments = $appointment->findBy(array(), array('start' => 'DESC'));
+        /*$commercialAppointments = $appointment->findBy(array(), array('start' => 'DESC'));*/
+        $data = $appointment->findBy(array(), array('start' => 'DESC'));
+
+        if($session->get('pagination_value')) {
+            $commercialAppointments = $paginator->paginate(
+                $data,
+                $request->query->getInt('page', 1),
+                $session->get('pagination_value')
+            );
+        } else {
+            $commercialAppointments = $paginator->paginate(
+                $data,
+                $request->query->getInt('page', 1),
+                10
+            );
+        }
+
         return $this->render('commercial/index.html.twig', [
-            'commercial_appointments' => $commercialAppointments,
+            'all_commercial_appointments' => $data,
+            'commercial_appointments' => $commercialAppointments
         ]);
     }
 
@@ -52,11 +71,27 @@ class CommercialController extends AbstractController
     /**
      * @Route("/dashboard/commercial/mycontacts", name="commercial_my_contacts")
      */
-    public function myContacts(AppointmentRepository $appointment): Response
+    public function myContacts(AppointmentRepository $appointment, Request $request, PaginatorInterface $paginator): Response
     {
-        $commercialContacts = $appointment->findAll();
+        $session = $request->getSession();
+        $data = $appointment->findAll();
+        if($session->get('pagination_value')) {
+            $commercialAppointments = $paginator->paginate(
+                $data,
+                $request->query->getInt('page', 1),
+                $session->get('pagination_value')
+            );
+        } else {
+            $commercialAppointments = $paginator->paginate(
+                $data,
+                $request->query->getInt('page', 1),
+                10
+            );
+        }
+        /*$commercialAppointments = $appointment->findAll();*/
         return $this->render('commercial/my_contacts.html.twig', [
-            'commercial_appointments' => $commercialContacts,
+            'all_commercial_appointments' => $data,
+            'commercial_appointments' => $commercialAppointments
         ]);
     }
 }

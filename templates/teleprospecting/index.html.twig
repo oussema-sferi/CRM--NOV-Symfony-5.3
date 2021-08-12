@@ -380,6 +380,9 @@
 
 {% block additionalJs %}
     <script>
+        $('#pagination').hover(function () {
+            $(this).css('cursor','pointer');
+        })
         $('#pagination').change(function () {
 
             $.ajax({

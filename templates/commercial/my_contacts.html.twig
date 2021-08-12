@@ -127,7 +127,7 @@
                     <div class="card-header border-0">
                         <div class="row">
                             <div class="col-md-9">
-                                <h3 class="mb-0">Liste de mes Contacts</h3>
+                                <h3 class="mb-0">Total: {{ all_commercial_appointments|length }} Contacts</h3>
                             </div>
                             <div class="col-md-3">
                                 <input type="text" class="form-control " placeholder="Recherche" id="contact-filter">
@@ -208,7 +208,8 @@
                         </table>
                     </div>
                     <!-- Card footer -->
-                    <div class="card-footer py-4">
+                    {{ knp_pagination_render(commercial_appointments) }}
+                    {#<div class="card-footer py-4">
                         <nav aria-label="...">
                             <ul class="pagination justify-content-end mb-0">
                                 <li class="page-item disabled">
@@ -232,9 +233,35 @@
                                 </li>
                             </ul>
                         </nav>
-                    </div>
+                    </div>#}
                 </div>
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block additionalJs %}
+    <script>
+        $('#pagination').hover(function () {
+            $(this).css('cursor','pointer');
+        })
+
+        $('#pagination').change(function () {
+
+            $.ajax({
+                url:"{{ path('teleprospecting_pagination') }}",
+                method: "POST",
+                dataType: 'json',
+                data : { paginationValue: this.value },
+                success: (e) => {
+                    location.reload();
+                },
+                error : (f) => {
+                    console.log(f);
+                }
+            })
+
+        })
+
+    </script>
 {% endblock %}

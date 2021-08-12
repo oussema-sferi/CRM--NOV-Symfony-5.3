@@ -8,6 +8,7 @@ use App\Entity\User;
 use App\Form\AppointmentFormType;
 use App\Repository\AppointmentRepository;
 use App\Repository\UserRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,20 +20,36 @@ class AppointmentController extends AbstractController
     /**
      * @Route("/dashboard/appointments", name="appointment")
      */
-    public function index(Request $request): Response
+    public function index(Request $request, PaginatorInterface $paginator): Response
     {
+        $session = $request->getSession();
         $loggedUserId = $this->getUser()->getId();
         /*dd($this->getUser()->getRoles());*/
         if(in_array("ROLE_SUPERADMIN", $this->getUser()->getRoles())) {
-            $commercial_agents = $this->getDoctrine()->getRepository(User::class)->findUsersByCommercialRole("ROLE_COMMERCIAL");
+            $data = $this->getDoctrine()->getRepository(User::class)->findUsersByCommercialRole("ROLE_COMMERCIAL");
         } elseif (in_array("ROLE_TELEPRO", $this->getUser()->getRoles())) {
-            $commercial_agents = $this->getDoctrine()->getRepository(User::class)->findAssignedUsersByCommercialRole($loggedUserId, "ROLE_COMMERCIAL");
+            $data = $this->getDoctrine()->getRepository(User::class)->findAssignedUsersByCommercialRole($loggedUserId, "ROLE_COMMERCIAL");
         } /*elseif (in_array("ROLE_COMMERCIAL", $this->getUser()->getRoles())) {
             return $this->redirectToRoute("show_calendar", [
                 "id" => $loggedUserId
             ]);
         }*/
         /*$commercial_agents = $this->getDoctrine()->getRepository(User::class)->findUsersByCommercialRole("ROLE_COMMERCIAL");*/
+
+        //pagination
+        if($session->get('pagination_value')) {
+            $commercial_agents = $paginator->paginate(
+                $data,
+                $request->query->getInt('page', 1),
+                $session->get('pagination_value')
+            );
+        } else {
+            $commercial_agents = $paginator->paginate(
+                $data,
+                $request->query->getInt('page', 1),
+                10
+            );
+        }
 
         /*dd($commercial_agents);*/
         $newAppointment = new Appointment();
@@ -117,6 +134,7 @@ class AppointmentController extends AbstractController
 
 
         return $this->render('appointment/index.html.twig', [
+            'all_commercial_agents' => $data,
             'commercial_agents' => $commercial_agents,
             'appointment_form' => $appointmentForm->createView()
         ]);
