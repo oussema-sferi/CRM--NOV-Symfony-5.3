@@ -28,6 +28,8 @@
     <!-- FullCalendar.io -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.8.0/main.min.css" integrity="sha256-u40zn9KeZYpMjgYaxWJccb4HnP0i8XI17xkXrEklevE=" crossorigin="anonymous">
 
+    {% block stylesheets %}
+    {% endblock %}
 
     {% block head %}
     {% endblock %}
@@ -396,7 +398,7 @@
                     {% if is_granted('ROLE_SUPERADMIN') %}
 
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ path('home') }}">
+                            <a class="nav-link" href="{{ path('statistics') }}">
                                 <i class="ni fas fa-chart-bar text-pink"></i>
                                 <span class="nav-link-text">Statistiques</span>
                             </a>
