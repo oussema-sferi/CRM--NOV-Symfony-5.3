@@ -88,6 +88,12 @@
                                                         <span class="sidenav-normal"> Liste des prospects </span>
                                                     </a>
                                                 </li>
+                                                <li class="nav-item">
+                                                    <a href="{{ path('teleprospecting_stats') }}" class="nav-link">
+                                                        <i class="ni fas fa-chart-bar text-orange"></i>
+                                                        <span class="sidenav-normal"> Statistiques </span>
+                                                    </a>
+                                                </li>
                                                {# <li class="nav-item">
                                                     <a href="{{ path('availibility_check') }}" class="nav-link">
                                                         <i class="ni fas fa-calendar-alt text-orange"></i>
@@ -398,7 +404,7 @@
                     {% if is_granted('ROLE_SUPERADMIN') %}
 
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ path('statistics') }}">
+                            <a class="nav-link" href="{{ path('all_statistics') }}">
                                 <i class="ni fas fa-chart-bar text-pink"></i>
                                 <span class="nav-link-text">Statistiques</span>
                             </a>

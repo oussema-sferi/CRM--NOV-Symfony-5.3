@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Appointment;
 use App\Entity\Call;
 use App\Entity\Client;
 use App\Entity\GeographicArea;
@@ -179,6 +180,26 @@ class TeleprospectingController extends AbstractController
                 return new JsonResponse(['message'=> 'Task Fails!']);
             }
         return new Response('use Ajax');
+    }
+
+    /**
+     * @Route("/dashboard/teleprospecting/stats", name="teleprospecting_stats")
+     */
+    public function teleprospectingStats(): Response
+    {
+        $allTelepros = $this->getDoctrine()->getRepository(User::class)->findUsersByCommercialRole("ROLE_TELEPRO");
+        $allClients = $this->getDoctrine()->getRepository(Client::class)->findAll();
+        $processedClients = $this->getDoctrine()->getRepository(Client::class)->findBy(["status" => 1]);
+        $notProcessedClients = $this->getDoctrine()->getRepository(Client::class)->findBy(["status" => 0]);
+        $allAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getAppointmentsWhereClientsExist();
+        /*dd($allProcessedClients);*/
+        return $this->render('teleprospecting/telepro_stats.html.twig', [
+            'total_telepros' => count($allTelepros),
+            'total_clients' => count($allClients),
+            'processed_clients' => count($processedClients),
+            'not_processed_clients' => count($notProcessedClients),
+            'total_appointments' => count($allAppointments)
+        ]);
     }
 
 }

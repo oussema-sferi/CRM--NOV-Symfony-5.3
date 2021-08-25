@@ -9,7 +9,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class StatisticsController extends AbstractController
 {
     /**
-     * @Route("/dashboard/statistics", name="statistics")
+     * @Route("/dashboard/allstats", name="all_statistics")
      */
     public function index(): Response
     {
@@ -18,4 +18,5 @@ class StatisticsController extends AbstractController
             'controller_name' => 'StatisticsController',
         ]);
     }
+
 }
