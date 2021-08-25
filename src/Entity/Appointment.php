@@ -42,7 +42,7 @@ class Appointment
 
     /**
      * @ORM\OneToOne(targetEntity=Client::class, inversedBy="appointment", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $client;
 

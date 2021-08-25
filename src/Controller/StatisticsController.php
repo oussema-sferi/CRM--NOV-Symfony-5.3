@@ -14,8 +14,6 @@ class StatisticsController extends AbstractController
     public function index(): Response
     {
 
-
-
         return $this->render('statistics/index.html.twig', [
             'controller_name' => 'StatisticsController',
         ]);

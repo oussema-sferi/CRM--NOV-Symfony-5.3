@@ -71,4 +71,14 @@ class AppointmentRepository extends ServiceEntityRepository
         /*return $qb->getQuery()->getResult();*/
 
     }
+
+    public function getAppointmentsWhereClientsExist()
+    {
+
+        $qb = $this->createQueryBuilder('a');
+        $qb->select('a')
+            ->where('a.client IS NOT NULL');
+
+        return $qb->orderBy('a.start', 'DESC')->getQuery()->getResult();
+    }
 }

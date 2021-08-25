@@ -1,6 +1,48 @@
 {
+    "amphp/amp": {
+        "version": "v2.6.0"
+    },
+    "amphp/byte-stream": {
+        "version": "v1.8.1"
+    },
+    "amphp/cache": {
+        "version": "v1.5.0"
+    },
+    "amphp/dns": {
+        "version": "v1.2.3"
+    },
+    "amphp/hpack": {
+        "version": "v3.1.1"
+    },
+    "amphp/http": {
+        "version": "v1.6.3"
+    },
+    "amphp/http-client": {
+        "version": "v4.6.1"
+    },
+    "amphp/parser": {
+        "version": "v1.0.0"
+    },
+    "amphp/process": {
+        "version": "v1.1.1"
+    },
+    "amphp/serialization": {
+        "version": "v1.0.0"
+    },
+    "amphp/socket": {
+        "version": "v1.2.0"
+    },
+    "amphp/sync": {
+        "version": "v1.4.0"
+    },
+    "amphp/windows-registry": {
+        "version": "v0.3.3"
+    },
     "composer/package-versions-deprecated": {
         "version": "1.11.99.2"
+    },
+    "daverandom/libdns": {
+        "version": "v2.0.2"
     },
     "doctrine/annotations": {
         "version": "1.0",
@@ -91,6 +133,9 @@
     "friendsofphp/proxy-manager-lts": {
         "version": "v1.0.5"
     },
+    "kelunik/certificate": {
+        "version": "v1.1.2"
+    },
     "knplabs/knp-components": {
         "version": "v3.1.0"
     },
@@ -105,6 +150,15 @@
     },
     "laminas/laminas-zendframework-bridge": {
         "version": "1.2.0"
+    },
+    "league/uri": {
+        "version": "6.4.0"
+    },
+    "league/uri-interfaces": {
+        "version": "2.3.0"
+    },
+    "league/uri-parser": {
+        "version": "1.4.1"
     },
     "maennchen/zipstream-php": {
         "version": "2.1.0"

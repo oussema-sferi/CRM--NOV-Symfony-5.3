@@ -19,7 +19,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => 'ce0c4db7370a3f577ed4ec4edb6d4e24dbfe3e43',
+    'reference' => 'b59d7c49b1f931001b51dd746b6275c0a57990f7',
     'name' => '__root__',
   ),
   'versions' => 
@@ -31,7 +31,124 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => 'ce0c4db7370a3f577ed4ec4edb6d4e24dbfe3e43',
+      'reference' => 'b59d7c49b1f931001b51dd746b6275c0a57990f7',
+    ),
+    'amphp/amp' => 
+    array (
+      'pretty_version' => 'v2.6.0',
+      'version' => '2.6.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'caa95edeb1ca1bf7532e9118ede4a3c3126408cc',
+    ),
+    'amphp/byte-stream' => 
+    array (
+      'pretty_version' => 'v1.8.1',
+      'version' => '1.8.1.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'acbd8002b3536485c997c4e019206b3f10ca15bd',
+    ),
+    'amphp/cache' => 
+    array (
+      'pretty_version' => 'v1.5.0',
+      'version' => '1.5.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '2b6b5dbb70e54cc914df9952ba7c012bc4cbcd28',
+    ),
+    'amphp/dns' => 
+    array (
+      'pretty_version' => 'v1.2.3',
+      'version' => '1.2.3.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '852292532294d7972c729a96b49756d781f7c59d',
+    ),
+    'amphp/hpack' => 
+    array (
+      'pretty_version' => 'v3.1.1',
+      'version' => '3.1.1.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'cf4f1663e9fd58f60258c06177098655ca6377a5',
+    ),
+    'amphp/http' => 
+    array (
+      'pretty_version' => 'v1.6.3',
+      'version' => '1.6.3.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'e2b75561011a9596e4574cc867e07a706d56394b',
+    ),
+    'amphp/http-client' => 
+    array (
+      'pretty_version' => 'v4.6.1',
+      'version' => '4.6.1.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'fafc7a0e72eb103dcb54c3dbe94d2fc659e8e7e2',
+    ),
+    'amphp/parser' => 
+    array (
+      'pretty_version' => 'v1.0.0',
+      'version' => '1.0.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'f83e68f03d5b8e8e0365b8792985a7f341c57ae1',
+    ),
+    'amphp/process' => 
+    array (
+      'pretty_version' => 'v1.1.1',
+      'version' => '1.1.1.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'b88c6aef75c0b22f6f021141dd2d5e7c5db4c124',
+    ),
+    'amphp/serialization' => 
+    array (
+      'pretty_version' => 'v1.0.0',
+      'version' => '1.0.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '693e77b2fb0b266c3c7d622317f881de44ae94a1',
+    ),
+    'amphp/socket' => 
+    array (
+      'pretty_version' => 'v1.2.0',
+      'version' => '1.2.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'a8af9f5d0a66c5fe9567da45a51509e592788fe6',
+    ),
+    'amphp/sync' => 
+    array (
+      'pretty_version' => 'v1.4.0',
+      'version' => '1.4.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '613047ac54c025aa800a9cde5b05c3add7327ed4',
+    ),
+    'amphp/windows-registry' => 
+    array (
+      'pretty_version' => 'v0.3.3',
+      'version' => '0.3.3.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '0f56438b9197e224325e88f305346f0221df1f71',
     ),
     'composer/package-versions-deprecated' => 
     array (
@@ -41,6 +158,15 @@ private static $installed = array (
       array (
       ),
       'reference' => 'c6522afe5540d5fc46675043d3ed5a45a740b27c',
+    ),
+    'daverandom/libdns' => 
+    array (
+      'pretty_version' => 'v2.0.2',
+      'version' => '2.0.2.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'e8b6d6593d18ac3a6a14666d8a68a4703b2e05f9',
     ),
     'doctrine/annotations' => 
     array (
@@ -213,6 +339,15 @@ private static $installed = array (
       ),
       'reference' => '006aa5d32f887a4db4353b13b5b5095613e0611f',
     ),
+    'kelunik/certificate' => 
+    array (
+      'pretty_version' => 'v1.1.2',
+      'version' => '1.1.2.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '56542e62d51533d04d0a9713261fea546bff80f6',
+    ),
     'knplabs/knp-components' => 
     array (
       'pretty_version' => 'v3.1.0',
@@ -257,6 +392,33 @@ private static $installed = array (
       array (
       ),
       'reference' => '6cccbddfcfc742eb02158d6137ca5687d92cee32',
+    ),
+    'league/uri' => 
+    array (
+      'pretty_version' => '6.4.0',
+      'version' => '6.4.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '09da64118eaf4c5d52f9923a1e6a5be1da52fd9a',
+    ),
+    'league/uri-interfaces' => 
+    array (
+      'pretty_version' => '2.3.0',
+      'version' => '2.3.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '00e7e2943f76d8cb50c7dfdc2f6dee356e15e383',
+    ),
+    'league/uri-parser' => 
+    array (
+      'pretty_version' => '1.4.1',
+      'version' => '1.4.1.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '671548427e4c932352d9b9279fdfa345bf63fa00',
     ),
     'maennchen/zipstream-php' => 
     array (

@@ -211,7 +211,7 @@ class AllContactsController extends AbstractController
 
 
                 /*$geographicArea = $this->getDoctrine()->getRepository(GeographicArea::class)->findOneBy(array('code' => $Row['M']));*/
-                $geographicArea = $this->getDoctrine()->getRepository(GeographicArea::class)->findOneBy(array('code' => (int)substr('59621',0,2)));
+                $geographicArea = $this->getDoctrine()->getRepository(GeographicArea::class)->findOneBy(array('code' => (int)substr($postalCode,0,2)));
 
                 /*dd($geographicArea);*/
 

@@ -20,7 +20,9 @@ class CommercialController extends AbstractController
         $session = $request->getSession();
         //Fetch all the appointments and sort by the most recent date
         /*$commercialAppointments = $appointment->findBy(array(), array('start' => 'DESC'));*/
-        $data = $appointment->findBy(array(), array('start' => 'DESC'));
+        /*$test = $appointment->getAppointmentsWhereClientsExist()->f;
+        dd($test);*/
+        $data = $appointment->getAppointmentsWhereClientsExist();
 
         if($session->get('pagination_value')) {
             $commercialAppointments = $paginator->paginate(
@@ -74,7 +76,8 @@ class CommercialController extends AbstractController
     public function myContacts(AppointmentRepository $appointment, Request $request, PaginatorInterface $paginator): Response
     {
         $session = $request->getSession();
-        $data = $appointment->findAll();
+
+        $data = $appointment->getAppointmentsWhereClientsExist();
         if($session->get('pagination_value')) {
             $commercialAppointments = $paginator->paginate(
                 $data,
