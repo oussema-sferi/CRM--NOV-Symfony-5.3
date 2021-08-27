@@ -41,7 +41,7 @@ class Appointment
     private $appointmentNotes;
 
     /**
-     * @ORM\OneToOne(targetEntity=Client::class, inversedBy="appointment", cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity=Client::class, inversedBy="appointment")
      * @ORM\JoinColumn(nullable=true)
      */
     private $client;
@@ -51,6 +51,11 @@ class Appointment
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $isDone;
 
     public function getId(): ?int
     {
@@ -125,6 +130,18 @@ class Appointment
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getIsDone(): ?bool
+    {
+        return $this->isDone;
+    }
+
+    public function setIsDone(?bool $isDone): self
+    {
+        $this->isDone = $isDone;
 
         return $this;
     }

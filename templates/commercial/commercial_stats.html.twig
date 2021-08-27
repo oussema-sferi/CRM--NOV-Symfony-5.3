@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Statistiques Téléprospection{% endblock %}
+{% block title %}Statistiques Commercial{% endblock %}
 
 
 
@@ -14,8 +14,8 @@
                         <h6 class="h2 text-white d-inline-block mb-0">CRM</h6>
                         <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
                             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
-                                <li class="breadcrumb-item"><a href="#"><i class="fas fa-phone-volume text-orange"></i></a></li>
-                                <li class="breadcrumb-item"><a href="#">Service Téléprospection</a></li>
+                                <li class="breadcrumb-item"><a href="#"><i class="fas fa-chalkboard-teacher text-yellow"></i></a></li>
+                                <li class="breadcrumb-item"><a href="#">Service Commercial</a></li>
                                 <li class="breadcrumb-item active" aria-current="page">Statistiques</li>
                                 {#<li class="breadcrumb-item active" aria-current="page">Default</li>#}
                             </ol>
@@ -34,8 +34,8 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col">
-                                        <h5 class="card-title text-uppercase text-muted mb-0">Total Téléprospecteurs</h5>
-                                        <span class="h2 font-weight-bold mb-0">{{ count_total_telepros }}</span>
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Total Commerciaux</h5>
+                                        <span class="h2 font-weight-bold mb-0">{{ count_total_commercials }}</span>
                                     </div>
                                     <div class="col-auto">
                                         <div class="icon icon-shape bg-gradient-yellow text-white rounded-circle shadow">
@@ -56,8 +56,8 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col">
-                                        <h5 class="card-title text-uppercase text-muted mb-0">Total Fiches de contact</h5>
-                                        <span class="h2 font-weight-bold mb-0">{{ total_clients }}</span>
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Total RDV</h5>
+                                        <span class="h2 font-weight-bold mb-0">{{ total_appointments }}</span>
                                     </div>
                                     <div class="col-auto">
                                         <div class="icon icon-shape bg-gradient-info text-white rounded-circle shadow">
@@ -78,8 +78,8 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col">
-                                        <h5 class="card-title text-uppercase text-muted mb-0">Fiches de contact Traités</h5>
-                                        <span class="h2 font-weight-bold mb-0">{{ processed_clients }}</span>
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Total RDV effectués</h5>
+                                        <span class="h2 font-weight-bold mb-0">{{ done_appointments }}</span>
                                     </div>
                                     <div class="col-auto">
                                         <div class="icon icon-shape bg-gradient-green text-white rounded-circle shadow">
@@ -100,8 +100,8 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col">
-                                        <h5 class="card-title text-uppercase text-muted mb-0">Fiches de contact Non Traités</h5>
-                                        <span class="h2 font-weight-bold mb-0">{{ not_processed_clients }}</span>
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Total RDV à Venir</h5>
+                                        <span class="h2 font-weight-bold mb-0">{{ upcoming_appointments }}</span>
                                     </div>
                                     <div class="col-auto">
                                         <div class="icon icon-shape bg-gradient-red text-white rounded-circle shadow">
@@ -122,12 +122,12 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col">
-                                        <h5 class="card-title text-uppercase text-muted mb-0">Total RDV Pris</h5>
-                                        <span class="h2 font-weight-bold mb-0">{{ total_appointments }}</span>
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Total Projets</h5>
+                                        <span class="h2 font-weight-bold mb-0">N/A</span>
                                     </div>
                                     <div class="col-auto">
                                         <div class="icon icon-shape bg-gradient-green text-white rounded-circle shadow">
-                                            <i class="far fa-calendar-check"></i>
+                                            <i class="ni ni-archive-2"></i>
                                         </div>
                                     </div>
                                 </div>
@@ -218,30 +218,29 @@
                         <table class="table align-items-center table-flush">
                             <thead class="thead-light">
                             <tr>
-                                <th scope="col">Téléprospecteur</th>
-                                <th scope="col">Fiches traités</th>
-                                <th scope="col">RDVs pris</th>
+                                <th scope="col">Commercial</th>
+                                <th scope="col">RDV effectués</th>
+                                <th scope="col">Projets réalisés</th>
                                 {#<th scope="col">Bounce rate</th>#}
                             </tr>
                             </thead>
                             <tbody>
-                            {% for telepro in all_telepros %}
+                            {% for commercial in all_commercials %}
                             <tr>
                                 <th scope="row">
-                                    {{ telepro.firstName ~ ' ' ~ telepro.lastName }}
+                                    {{ commercial.firstName ~ ' ' ~ commercial.lastName }}
                                 </th>
                                 <td>
-                                    {{ telepro.calls | length }}
-                                </td>
-                                <td>
                                     {% set counter = 0 %}
-                                    {% for call in telepro.calls  %}
-                                        {% if call.statusDetails == 7 %}
+                                    {% for appointment in commercial.appointments  %}
+                                        {% if appointment.isDone == 1 %}
                                             {% set counter = counter + 1 %}
                                         {% endif %}
                                     {% endfor %}
-
                                     {{ counter }}
+                                </td>
+                                <td>
+                                N/A
                                 </td>
                                 {#<td>
                                     <i class="fas fa-arrow-up text-success mr-3"></i> 46,53%

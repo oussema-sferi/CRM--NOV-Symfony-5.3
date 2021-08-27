@@ -25,13 +25,13 @@ class CallFormType extends AbstractType
             ->add('statusDetails', ChoiceType::class, [
                 'placeholder' => "Choisir les détails de l'appel",
                 'choices'  => [
-                    'Ne répond pas' => 0,
-                    'Répondeur' => 1,
-                    'Barrage Secrétaire' => 2,
-                    'Pas Intéressé' => 3,
-                    'A Rappeler' => 4,
-                    'RDV à prendre' => 5,
-                    'RDV fixé' => 6
+                    'Ne répond pas' => 1,
+                    'Répondeur' => 2,
+                    'Barrage Secrétaire' => 3,
+                    'Pas Intéressé' => 4,
+                    'A Rappeler' => 5,
+                    'RDV à prendre' => 6,
+                    'RDV fixé' => 7
                 ],
             ])
             ->add('callNotes', TextareaType::class, [

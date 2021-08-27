@@ -148,7 +148,7 @@
                     <form action="{{ path('all_contacts_search_filters') }}" method="post">
                     <div class="card-header border-0">
                         <div class="row">
-                            <div class="col-md-10">
+                            <div class="col-md-8">
                                 {% if app.session.get('total_contacts_search_results') and app.session.get('total_contacts_search_results') != "nothing" %}
                                     <h3 class="mb-0">Nombre de résultats: {{ app.session.get('total_contacts_search_results')}}</h3>
                                 {% elseif app.session.get('total_contacts_search_results') and app.session.get('total_contacts_search_results') == "nothing" %}
@@ -196,7 +196,8 @@
                                     {% endfor %}
                                 </span>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-4">
+                                <a class="btn btn-sm btn-primary" href="{{ path('all_contacts') }}" style="margin-left: 30px">Réinitialiser les filtres</a>
                                 {#<input type="text" class="form-control " placeholder="Recherche" id="contact-filter">#}
                                 <button class="btn btn-sm btn-success" type="submit" style="margin-left: 30px">Appliquer les filtres</button>
                             </div>
@@ -214,7 +215,8 @@
                                 <th scope="col">Catégorie</th>
                                 {#<th scope="col">Equipement</th>#}
                                 <th scope="col">Sous Contrat</th>
-                                <th scope="col">Etat</th>
+                                <th scope="col">état</th>
+                                <th scope="col">Détails</th>
                                 <th scope="col">Adresse</th>
                                 <th scope="col">Code Postal</th>
                                 <th scope="col">Département</th>
@@ -260,7 +262,20 @@
                                     <select id="status" name="status" class="form-control-sm">
                                         <option value="" selected>--- Choisir ---</option>
                                         <option value="0">Non traité</option>
-                                        <option value="1">En cours</option>
+                                        <option value="1">Appel non Qualifié</option>
+                                        <option value="2">Appel Qualifié</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select id="status" name="statusDetail" class="form-control-sm">
+                                        <option value="" selected>--- Choisir ---</option>
+                                        <option value="1">Ne répond pas</option>
+                                        <option value="2">Répondeur</option>
+                                        <option value="3">Barrage Secrétaire</option>
+                                        <option value="4">Pas Intéressé</option>
+                                        <option value="5">A Rappeler</option>
+                                        <option value="6">RDV à prendre</option>
+                                        <option value="7">RDV fixé</option>
                                     </select>
                                 </td>
                                 <td>
@@ -334,51 +349,95 @@
                                     </td>
 
                                     <td class="budget">
-                                        {% if  client.status == 0 %}
+                                        {% if client.status == 1 %}
                                             <span class="badge badge-warning badge-lg">
-                                                <i class="bg-info"></i>
-                                                Non Traité
-                                            </span>
-                                        {% elseif client.status == 1 %}
+                                        <i class="bg-warning"></i>
+                                         Appel non Qualifié
+                                        </span>
+                                        {% elseif client.status == 2 %}
                                             <span class="badge badge-success badge-lg">
-                                                <i class="bg-warning"></i>
-                                                 En Cours de Traitement
-                                            </span>
+                                        <i class="bg-success"></i>
+                                            Appel Qualifié
+                                        </span>
                                         {% else %}
-                                            <span class="badge badge-dot mr-4">
-                                                <i class="bg-success"></i>
-                                                Traité
-                                            </span>
+                                            <span class="badge badge-info badge-lg">
+                                        <i class="bg-info"></i>
+                                            Non Traité
+                                        </span>
                                         {% endif %}
                                     </td>
 
                                     <td class="budget">
-                            {{ client.address }}
-                        </td>
+                                        {% if client.statusDetail == 1 %}
+                                            <span class="badge badge-warning badge-lg">
+                                        <i class="bg-warning"></i>
+                                         Ne répond pas
+                                        </span>
+                                        {% elseif client.statusDetail == 2 %}
+                                            <span class="badge badge-warning badge-lg">
+                                        <i class="bg-warning"></i>
+                                            Répondeur
+                                        </span>
+                                        {% elseif client.statusDetail == 3 %}
+                                            <span class="badge badge-warning badge-lg">
+                                        <i class="bg-warning"></i>
+                                            Barrage Secrétaire
+                                        </span>
+                                        {% elseif client.statusDetail == 4 %}
+                                            <span class="badge badge-warning badge-lg">
+                                        <i class="bg-success"></i>
+                                            Pas Intéressé
+                                        </span>
+                                        {% elseif client.statusDetail == 5 %}
+                                            <span class="badge badge-warning badge-lg">
+                                        <i class="bg-warning"></i>
+                                            A Rappeler
+                                        </span>
+                                        {% elseif client.statusDetail == 6 %}
+                                            <span class="badge badge-success badge-lg">
+                                        <i class="bg-success"></i>
+                                            RDV à prendre
+                                        </span>
+                                        {% elseif client.statusDetail == 7 %}
+                                            <span class="badge badge-success badge-lg">
+                                        <i class="bg-success"></i>
+                                            RDV fixé
+                                        </span>
+                                        {% else %}
+                                            <span class="badge badge-info badge-lg">
+                                        <i class="bg-info"></i>
+                                            Non Traité
+                                        </span>
+                                        {% endif %}
+                                    </td>
 
-                        <td class="budget">
-                            {{ client.postalCode }}
-                        </td>
+                                    <td class="budget">
+                                        {{ client.address }}
+                                    </td>
 
-                        <td class="budget">
-                            {{ client.geographicArea.designation }}
-                        </td>
+                                    <td class="budget">
+                                        {{ client.postalCode }}
+                                    </td>
 
-                        <td class="budget">
-                            {{ client.city }}
-                        </td>
+                                    <td class="budget">
+                                        {{ client.geographicArea.designation }}
+                                    </td>
 
-                        <td class="budget">
-                            {{ client.country }}
-                        </td>
+                                    <td class="budget">
+                                        {{ client.city }}
+                                    </td>
 
-                        <td class="budget">
-                            {{ client.phoneNumber }}
-                        </td>
+                                    <td class="budget">
+                                        {{ client.country }}
+                                    </td>
 
-                        <td class="budget">
-                            {{ client.mobileNumber }}
-                        </td>
+                                    <td class="budget">
+                                        {{ client.phoneNumber }}
+                                    </td>
+
+                                    <td class="budget">
+                                        {{ client.mobileNumber }}
+                                    </td>
 
                                     {#<td >
                                         <a href="{{ path('call_handle', {'id': client.id}) }}"  class="badge badge-success" >Traiter Contact</a>

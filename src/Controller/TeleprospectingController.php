@@ -28,6 +28,7 @@ class TeleprospectingController extends AbstractController
 
         $session = $request->getSession();
         $data = $this->getDoctrine()->getRepository(Client::class)->findAll();
+        /*$data = $this->getDoctrine()->getRepository(Client::class)->getProcessedClients();*/
         $geographicAreas = $this->getDoctrine()->getRepository(GeographicArea::class)->findAll();
         $session->set('total_telepro',
             count($data)
@@ -136,7 +137,9 @@ class TeleprospectingController extends AbstractController
             $newCall->setCreatedAt(new  \DateTime());
             $newCall->setUser($loggedUser);
             $newCall->setClient($client);
-            $client->setStatus(1);
+            $client->setStatus($newCall->getGeneralStatus());
+            $client->setStatusDetail($newCall->getStatusDetails());
+            /*dd($newCall);*/
             $manager->persist($newCall);
             $manager->flush();
             return $this->redirectToRoute('teleprospecting');
@@ -189,12 +192,17 @@ class TeleprospectingController extends AbstractController
     {
         $allTelepros = $this->getDoctrine()->getRepository(User::class)->findUsersByCommercialRole("ROLE_TELEPRO");
         $allClients = $this->getDoctrine()->getRepository(Client::class)->findAll();
-        $processedClients = $this->getDoctrine()->getRepository(Client::class)->findBy(["status" => 1]);
+        $processedClients = $this->getDoctrine()->getRepository(Client::class)->getProcessedClients();
         $notProcessedClients = $this->getDoctrine()->getRepository(Client::class)->findBy(["status" => 0]);
         $allAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getAppointmentsWhereClientsExist();
-        /*dd($allProcessedClients);*/
+
+        /*$commercial = $this->getDoctrine()->getRepository(User::class)->find(4);
+        $appointments = $commercial->getAppointments();
+        dd($appointments[3]);*/
+
         return $this->render('teleprospecting/telepro_stats.html.twig', [
-            'total_telepros' => count($allTelepros),
+            'count_total_telepros' => count($allTelepros),
+            'all_telepros' => $allTelepros,
             'total_clients' => count($allClients),
             'processed_clients' => count($processedClients),
             'not_processed_clients' => count($notProcessedClients),

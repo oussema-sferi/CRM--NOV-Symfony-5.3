@@ -123,4 +123,13 @@ class ClientRepository extends ServiceEntityRepository
 
         return $qb->getQuery()->getResult();
     }*/
+    public function getProcessedClients()
+    {
+
+        $qb = $this->createQueryBuilder('c');
+        $qb->select('c')
+            ->where('c.status != 0');
+
+        return $qb->getQuery()->getResult();
+    }
 }

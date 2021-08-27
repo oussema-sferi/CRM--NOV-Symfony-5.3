@@ -124,13 +124,27 @@
                                             <li class="nav-item">
                                                 <a href="{{ path('commercial') }}" class="nav-link">
                                                     <i class="ni fas fa-list text-yellow"></i>
-                                                    <span class="sidenav-normal"> Liste des RDV </span>
+                                                    <span class="sidenav-normal">
+                                                        {% if is_granted('ROLE_COMMERCIAL') %}
+                                                        Liste de mes RDV
+                                                        {% else %}
+                                                        Liste de tous les RDV
+                                                        {% endif %}
+                                                    </span>
                                                 </a>
                                             </li>
+                                            {% if (is_granted('ROLE_COMMERCIAL')) %}
                                             <li class="nav-item">
                                                 <a href="{{ path('commercial_my_contacts') }}" class="nav-link">
                                                     <i class="ni fas fa-calendar-alt text-yellow"></i>
                                                     <span class="sidenav-normal"> Mes contacts </span>
+                                                </a>
+                                            </li>
+                                            {% endif %}
+                                            <li class="nav-item">
+                                                <a href="{{ path('commercial_stats') }}" class="nav-link">
+                                                    <i class="ni fas fa-chart-bar text-yellow"></i>
+                                                    <span class="sidenav-normal"> Statistiques </span>
                                                 </a>
                                             </li>
                                         </ul>
@@ -661,7 +675,7 @@
                         <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <div class="media align-items-center">
                   <span class="avatar avatar-sm rounded-circle">
-                    <img alt="Image placeholder" src="{{ asset('assets/img/theme/team-4.jpg') }}">
+                    <img alt="Image placeholder" src="{{ asset('assets/img/theme/male.png') }}">
                   </span>
                                 <div class="media-body  ml-2  d-none d-lg-block">
                                     <span class="mb-0 text-sm  font-weight-bold">

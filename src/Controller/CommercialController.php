@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Appointment;
+use App\Entity\Client;
+use App\Entity\User;
 use App\Repository\AppointmentRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,11 +20,18 @@ class CommercialController extends AbstractController
     public function index(AppointmentRepository $appointment, Request $request, PaginatorInterface $paginator): Response
     {
         $session = $request->getSession();
+        $loggedUserId = $this->getUser()->getId();
         //Fetch all the appointments and sort by the most recent date
         /*$commercialAppointments = $appointment->findBy(array(), array('start' => 'DESC'));*/
         /*$test = $appointment->getAppointmentsWhereClientsExist()->f;
         dd($test);*/
-        $data = $appointment->getAppointmentsWhereClientsExist();
+        /*dd($loggedUserId);*/
+        $loggedUserRolesArray = $this->getUser()->getRoles();
+        if (in_array("ROLE_COMMERCIAL",$loggedUserRolesArray)) {
+            $data = $appointment->getAppointmentsOfLoggedUser($loggedUserId);
+        } else {
+            $data = $appointment->getAppointmentsWhereClientsExist();
+        }
 
         if($session->get('pagination_value')) {
             $commercialAppointments = $paginator->paginate(
@@ -77,7 +86,13 @@ class CommercialController extends AbstractController
     {
         $session = $request->getSession();
 
-        $data = $appointment->getAppointmentsWhereClientsExist();
+        $loggedUserId = $this->getUser()->getId();
+        $loggedUserRolesArray = $this->getUser()->getRoles();
+        if (in_array("ROLE_COMMERCIAL",$loggedUserRolesArray)) {
+            $data = $appointment->getAppointmentsOfLoggedUser($loggedUserId);
+        } else {
+            $data = $appointment->getAppointmentsWhereClientsExist();
+        }
         if($session->get('pagination_value')) {
             $commercialAppointments = $paginator->paginate(
                 $data,
@@ -95,6 +110,57 @@ class CommercialController extends AbstractController
         return $this->render('commercial/my_contacts.html.twig', [
             'all_commercial_appointments' => $data,
             'commercial_appointments' => $commercialAppointments
+        ]);
+    }
+
+    /**
+     * @Route("/dashboard/commercial/appointment/{id}/handle", name="appointment_handle")
+     */
+    public function appointmentHandleIndex(Request $request, $id): Response
+    {
+        $appointmentToProcess = $this->getDoctrine()->getRepository(Appointment::class)->find($id);
+        if($request->isMethod('Post')) {
+            if($request->request->get('testing') === "on") {
+                $manager = $this->getDoctrine()->getManager();
+                $appointmentToProcess->setIsDone(true);
+                $manager->persist($appointmentToProcess);
+                $manager->flush();
+            }
+            return $this->redirectToRoute('commercial');
+
+        }
+
+        return $this->render('/commercial/appointmentHandle.html.twig', [
+
+            'appointment_to_process' => $appointmentToProcess
+        ]);
+    }
+
+
+    /**
+     * @Route("/dashboard/commercial/stats", name="commercial_stats")
+     */
+    public function commercialStats(): Response
+    {
+        $allCommercials = $this->getDoctrine()->getRepository(User::class)->findUsersByCommercialRole("ROLE_COMMERCIAL");
+        $allAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getAppointmentsWhereClientsExist();
+        $doneAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getDoneAppointments();
+        $upcomingAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getUpcomingAppointments();
+        $processedClients = $this->getDoctrine()->getRepository(Client::class)->getProcessedClients();
+        $notProcessedClients = $this->getDoctrine()->getRepository(Client::class)->findBy(["status" => 0]);
+
+
+        /*$commercial = $this->getDoctrine()->getRepository(User::class)->find(4);
+        $appointments = $commercial->getAppointments();
+        dd($appointments[3]);*/
+
+        return $this->render('commercial/commercial_stats.html.twig', [
+            'count_total_commercials' => count($allCommercials),
+            'all_commercials' => $allCommercials,
+            'total_appointments' => count($allAppointments),
+            'done_appointments' => count($doneAppointments),
+            'upcoming_appointments' => count($upcomingAppointments),
+            'processed_clients' => count($processedClients),
         ]);
     }
 }

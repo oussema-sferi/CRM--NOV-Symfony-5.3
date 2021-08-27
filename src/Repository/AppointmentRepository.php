@@ -81,4 +81,38 @@ class AppointmentRepository extends ServiceEntityRepository
 
         return $qb->orderBy('a.start', 'DESC')->getQuery()->getResult();
     }
+
+    public function getAppointmentsOfLoggedUser($loggedUserId)
+    {
+
+        $qb = $this->createQueryBuilder('a');
+        $qb->select('a')
+            ->join('a.user', 'u')
+            ->where('a.client IS NOT NULL')
+            ->andWhere("u.id =$loggedUserId" );
+
+        return $qb->orderBy('a.start', 'DESC')->getQuery()->getResult();
+    }
+
+    public function getDoneAppointments()
+    {
+
+        $qb = $this->createQueryBuilder('a');
+        $qb->select('a')
+            ->where('a.client IS NOT NULL')
+            ->andWhere("a.isDone = 1" );
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function getUpcomingAppointments()
+    {
+
+        $qb = $this->createQueryBuilder('a');
+        $qb->select('a')
+            ->where('a.client IS NOT NULL')
+            ->andWhere("a.isDone IS NULL" );
+
+        return $qb->getQuery()->getResult();
+    }
 }

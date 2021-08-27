@@ -95,9 +95,10 @@ class Client
     private $calls;
 
     /**
-     * @ORM\OneToOne(targetEntity=Appointment::class, mappedBy="client", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity=Appointment::class, mappedBy="client")
      */
-    private $appointment;
+    private $appointments;
+
 
     /**
      * @ORM\ManyToOne(targetEntity=Equipment::class, inversedBy="clients")
@@ -115,6 +116,13 @@ class Client
      */
     private $city;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $statusDetail;
+
+
+
 
     
     
@@ -122,6 +130,7 @@ class Client
     public function __construct()
     {
         $this->calls = new ArrayCollection();
+        $this->appointments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -334,22 +343,7 @@ class Client
         // return $this->id;
     }
 
-    public function getAppointment(): ?Appointment
-    {
-        return $this->appointment;
-    }
 
-    public function setAppointment(Appointment $appointment): self
-    {
-        // set the owning side of the relation if necessary
-        if ($appointment->getClient() !== $this) {
-            $appointment->setClient($this);
-        }
-
-        $this->appointment = $appointment;
-
-        return $this;
-    }
 
     public function getProvidedEquipment(): ?Equipment
     {
@@ -387,10 +381,33 @@ class Client
         return $this;
     }
 
+    public function getStatusDetail(): ?int
+    {
+        return $this->statusDetail;
+    }
 
+    public function setStatusDetail(?int $statusDetail): self
+    {
+        $this->statusDetail = $statusDetail;
 
+        return $this;
+    }
 
+    /**
+     * @return mixed
+     */
+    public function getAppointments()
+    {
+        return $this->appointments;
+    }
 
+    /**
+     * @param mixed $appointments
+     */
+    public function setAppointments($appointments): void
+    {
+        $this->appointments = $appointments;
+    }
 
 
 

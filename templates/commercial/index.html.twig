@@ -1,6 +1,12 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Liste de mes RDV{% endblock %}
+{% block title %}
+    {% if is_granted('ROLE_COMMERCIAL') %}
+    Liste de mes RDV
+{% else %}
+    Liste de tous les RDV
+{% endif %}
+{% endblock %}
 
 {% block body %}
 
@@ -14,7 +20,13 @@
                             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
                                 <li class="breadcrumb-item"><a href="#"><i class="fas fa-chalkboard-teacher text-yellow"></i></a></li>
                                 <li class="breadcrumb-item"><a href="#">Service Commercial</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Liste de mes RDV</li>
+                                <li class="breadcrumb-item active" aria-current="page">
+                                    {% if is_granted('ROLE_COMMERCIAL') %}
+                                        Liste de mes RDV
+                                    {% else %}
+                                        Liste de tous les RDV
+                                    {% endif %}
+                                </li>
                             </ol>
                         </nav>
                     </div>
@@ -144,11 +156,13 @@
 
                                 <th scope="col">Société</th>
                                 <th scope="col">Catégorie</th>
-                                <th scope="col">Sous Contrat</th>
+                                {#<th scope="col">Sous Contrat</th>#}
                                 <th scope="col">RDV: Date/Heure Début</th>
                                 <th scope="col">RDV: Date/Heure Fin</th>
                                 <th scope="col">Commercial Affecté</th>
-                                <th scope="col">Notes</th>
+                                <th scope="col">Observations</th>
+                                <th scope="col">état</th>
+                                <th scope="col">Traitement</th>
                                 {#<th scope="col">Consultation</th>
                                 <th scope="col">Modification</th>
                                 <th scope="col">Suppression</th>#}
@@ -175,13 +189,13 @@
                                         {{ commercial_appointment.client.category }}
                                     </td>
 
-                                    <td class="budget">
+                                    {#<td class="budget">
                                         {% if  commercial_appointment.client.isUnderContract %}
                                             Oui
                                         {% else %}
                                             Non
                                         {% endif %}
-                                    </td>
+                                    </td>#}
 
 
                                     <td class="budget">
@@ -196,12 +210,33 @@
                                         {{ commercial_appointment.user.firstName ~ ' ' ~ commercial_appointment.user.lastName }}
                                     </td>
 
-                                    <td class="budget">
-
-
+                                    <td class="budget" style="text-align: center">
                                         <button class="notes" data-container="body" data-toggle="popover" data-color="info" data-placement="top" data-content= "{{ commercial_appointment.appointmentNotes }}">
                                             <i class="far fa-comment text-cyan"></i>
                                         </button>
+                                    </td>
+
+                                    <td class="budget">
+                                        {# {% if  client.status == 0 %}
+                                    <span class="badge badge-warning badge-lg">
+                                        <i class="bg-info"></i>
+                                        Non Traité
+                                    </span>#}
+                                        {% if commercial_appointment.isDone == 1 %}
+                                            <span class="badge badge-success badge-lg">
+                                                <i class="bg-success"></i>
+                                                effectué
+                                            </span>
+                                        {% else %}
+                                            <span class="badge badge-warning badge-lg">
+                                            <i class="bg-warning"></i>
+                                            à venir
+                                            </span>
+                                        {% endif %}
+                                    </td>
+
+                                    <td >
+                                        <a href="{{ path('appointment_handle', {'id': commercial_appointment.id}) }}"  class="badge badge-default" >Traiter RDV</a>
                                     </td>
 
                                     {#<td >

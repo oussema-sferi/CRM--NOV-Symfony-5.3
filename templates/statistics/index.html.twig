@@ -14,7 +14,7 @@
                         <h6 class="h2 text-white d-inline-block mb-0">CRM</h6>
                         <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
                             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
-                                <li class="breadcrumb-item"><a href="#"><i class="fas fa-chart-bar"></i></a></li>
+                                <li class="breadcrumb-item"><a href="#"><i class="fas fa-chart-bar text-pink"></i></a></li>
                                 <li class="breadcrumb-item"><a href="#">Graphiques & Statistiques</a></li>
                                 {#<li class="breadcrumb-item active" aria-current="page">Default</li>#}
                             </ol>
@@ -33,12 +33,12 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col">
-                                        <h5 class="card-title text-uppercase text-muted mb-0">Total RDVs</h5>
-                                        <span class="h2 font-weight-bold mb-0">126</span>
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Total Contacts</h5>
+                                        <span class="h2 font-weight-bold mb-0">{{ total_all_contacts }}</span>
                                     </div>
                                     <div class="col-auto">
-                                        <div class="icon icon-shape bg-gradient-red text-white rounded-circle shadow">
-                                            <i class="ni ni-active-40"></i>
+                                        <div class="icon icon-shape bg-gradient-cyan text-white rounded-circle shadow">
+                                            <i class="fas fa-user-friends"></i>
                                         </div>
                                     </div>
                                 </div>
@@ -55,34 +55,12 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col">
-                                        <h5 class="card-title text-uppercase text-muted mb-0">Total Utilisateurs</h5>
-                                        <span class="h2 font-weight-bold mb-0">27</span>
-                                    </div>
-                                    <div class="col-auto">
-                                        <div class="icon icon-shape bg-gradient-orange text-white rounded-circle shadow">
-                                            <i class="ni ni-chart-pie-35"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                               {# <p class="mt-3 mb-0 text-sm">
-                                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
-                                    <span class="text-nowrap">Since last month</span>
-                                </p>#}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-3 col-md-6">
-                        <div class="card card-stats">
-                            <!-- Card body -->
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col">
-                                        <h5 class="card-title text-uppercase text-muted mb-0">Total Projets</h5>
-                                        <span class="h2 font-weight-bold mb-0">18</span>
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Total Contacts Traités</h5>
+                                        <span class="h2 font-weight-bold mb-0">{{ total_processed_contacts }}</span>
                                     </div>
                                     <div class="col-auto">
                                         <div class="icon icon-shape bg-gradient-green text-white rounded-circle shadow">
-                                            <i class="ni ni-money-coins"></i>
+                                            <i class="fas fa-list-alt"></i>
                                         </div>
                                     </div>
                                 </div>
@@ -99,8 +77,8 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col">
-                                        <h5 class="card-title text-uppercase text-muted mb-0">Performance</h5>
-                                        <span class="h2 font-weight-bold mb-0">49,65%</span>
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Performance Contacts</h5>
+                                        <span class="h2 font-weight-bold mb-0">{{ contacts_performance }}%</span>
                                     </div>
                                     <div class="col-auto">
                                         <div class="icon icon-shape bg-gradient-info text-white rounded-circle shadow">
@@ -115,6 +93,119 @@
                             </div>
                         </div>
                     </div>
+                    {#<div class="col-xl-3 col-md-6">
+                        <div class="card card-stats">
+                            <!-- Card body -->
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Total Projets</h5>
+                                        <span class="h2 font-weight-bold mb-0">18</span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-gradient-green text-white rounded-circle shadow">
+                                            <i class="ni ni-money-coins"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                #}{# <p class="mt-3 mb-0 text-sm">
+                                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
+                                    <span class="text-nowrap">Since last month</span>
+                                </p>#}{#
+                            </div>
+                        </div>
+                    </div>#}
+                </div>
+
+                <div class="row">
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card card-stats">
+                            <!-- Card body -->
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Total RDV</h5>
+                                        <span class="h2 font-weight-bold mb-0">{{ total_appointments }}</span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-gradient-info text-white rounded-circle shadow">
+                                            <i class="fas fa-list-alt"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                {#<p class="mt-3 mb-0 text-sm">
+                                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
+                                    <span class="text-nowrap">Since last month</span>
+                                </p>#}
+                            </div>
+                        </div>
+                    </div>
+                   {# <div class="col-xl-3 col-md-6">
+                        <div class="card card-stats">
+                            <!-- Card body -->
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Total Contacts Traités</h5>
+                                        <span class="h2 font-weight-bold mb-0">{{ total_processed_contacts }}</span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-gradient-green text-white rounded-circle shadow">
+                                            <i class="fas fa-list-alt"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                #}{# <p class="mt-3 mb-0 text-sm">
+                                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
+                                    <span class="text-nowrap">Since last month</span>
+                                </p>#}{#
+                            </div>
+                        </div>
+                    </div>#}
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card card-stats">
+                            <!-- Card body -->
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Performance RDV</h5>
+                                        <span class="h2 font-weight-bold mb-0">{{ appointments_performance }}%</span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-gradient-info text-white rounded-circle shadow">
+                                            <i class="ni ni-chart-bar-32"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                {# <p class="mt-3 mb-0 text-sm">
+                                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
+                                    <span class="text-nowrap">Since last month</span>
+                                </p>#}
+                            </div>
+                        </div>
+                    </div>
+                    {#<div class="col-xl-3 col-md-6">
+                        <div class="card card-stats">
+                            <!-- Card body -->
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Total Projets</h5>
+                                        <span class="h2 font-weight-bold mb-0">18</span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-gradient-green text-white rounded-circle shadow">
+                                            <i class="ni ni-money-coins"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                    #}{# <p class="mt-3 mb-0 text-sm">
+                                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
+                                    <span class="text-nowrap">Since last month</span>
+                                </p>#}{#
+                    </div>
+                </div>
+            </div>#}
                 </div>
             </div>
         </div>
@@ -123,13 +214,13 @@
 
     <div class="container-fluid mt--6">
         <div class="row">
-            <div class="col-xl-8">
+            <div class="col-xl-6">
                 <div class="card bg-default">
                     <div class="card-header bg-transparent">
                         <div class="row align-items-center">
                             <div class="col">
                                 <h6 class="text-light text-uppercase ls-1 mb-1">Aperçu</h6>
-                                <h5 class="h3 text-white mb-0">Evaluation des projets</h5>
+                                <h5 class="h3 text-white mb-0">Evaluation des contacts traités</h5>
                             </div>
                             <div class="col">
                                 <ul class="nav nav-pills justify-content-end">
@@ -158,7 +249,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xl-4">
+            {#<div class="col-xl-4">
                 <div class="card">
                     <div class="card-header bg-transparent">
                         <div class="row align-items-center">
@@ -172,6 +263,41 @@
                         <!-- Chart -->
                         <div class="chart">
                             <canvas id="chart-bars" class="chart-canvas"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>#}
+            <div class="col-xl-6">
+                <div class="card bg-default">
+                    <div class="card-header bg-transparent">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <h6 class="text-light text-uppercase ls-1 mb-1">Aperçu</h6>
+                                <h5 class="h3 text-white mb-0">Evaluation des RDV</h5>
+                            </div>
+                            <div class="col">
+                                <ul class="nav nav-pills justify-content-end">
+                                    <li class="nav-item mr-2 mr-md-0" data-toggle="chart" data-target="#chart-sales-dark" data-update='{"data":{"datasets":[{"data":[0, 20, 10, 30, 15, 40, 20, 60, 60]}]}}' data-prefix="$" data-suffix="k">
+                                        <a href="#" class="nav-link py-2 px-3 active" data-toggle="tab">
+                                            <span class="d-none d-md-block">Mois</span>
+                                            <span class="d-md-none">M</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item" data-toggle="chart" data-target="#chart-sales-dark" data-update='{"data":{"datasets":[{"data":[0, 20, 5, 25, 10, 30, 15, 40, 40]}]}}' data-prefix="$" data-suffix="k">
+                                        <a href="#" class="nav-link py-2 px-3" data-toggle="tab">
+                                            <span class="d-none d-md-block">Semaine</span>
+                                            <span class="d-md-none">W</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <!-- Chart -->
+                        <div class="chart">
+                            <!-- Chart wrapper -->
+                            <canvas id="chart-sales-dark" class="chart-canvas"></canvas>
                         </div>
                     </div>
                 </div>
