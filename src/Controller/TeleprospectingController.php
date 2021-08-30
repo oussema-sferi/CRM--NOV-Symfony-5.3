@@ -28,7 +28,7 @@ class TeleprospectingController extends AbstractController
 
         $session = $request->getSession();
         $data = $this->getDoctrine()->getRepository(Client::class)->findAll();
-        /*$data = $this->getDoctrine()->getRepository(Client::class)->getProcessedClients();*/
+        /*$data = $this->getDoctrine()->getRepository(Client::class)->findBy(["status" => 0]);*/
         $geographicAreas = $this->getDoctrine()->getRepository(GeographicArea::class)->findAll();
         $session->set('total_telepro',
             count($data)
@@ -134,12 +134,21 @@ class TeleprospectingController extends AbstractController
         $manager = $this->getDoctrine()->getManager();
 
         if($callForm->isSubmitted()) {
+            $status = (int)$request->request->get('status');
+            $statusDetailsNQ = (int)$request->request->get('detailsnq');
+            $statusDetailsQ = (int)$request->request->get('detailsq');
             $newCall->setCreatedAt(new  \DateTime());
             $newCall->setUser($loggedUser);
             $newCall->setClient($client);
-            $client->setStatus($newCall->getGeneralStatus());
-            $client->setStatusDetail($newCall->getStatusDetails());
-            /*dd($newCall);*/
+            $newCall->setGeneralStatus($status);
+            $client->setStatus($status);
+            if($statusDetailsQ) {
+                $newCall->setStatusDetails($statusDetailsQ);
+                $client->setStatusDetail($statusDetailsQ);
+            } elseif ($statusDetailsNQ) {
+                $newCall->setStatusDetails($statusDetailsNQ);
+                $client->setStatusDetail($statusDetailsNQ);
+            }
             $manager->persist($newCall);
             $manager->flush();
             return $this->redirectToRoute('teleprospecting');

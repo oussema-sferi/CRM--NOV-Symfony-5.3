@@ -151,7 +151,7 @@
 
 
 
-                            <div class="form-group">
+                            {#<div class="form-group">
 
                                     <label class="form-control-label" for="input-username">Statut</label>
                                     {{ form_widget(call_form.generalStatus, {'attr': {'class': 'form-control form-control-sm' }}) }}
@@ -163,7 +163,47 @@
                                 <label class="form-control-label" for="input-username">Détails</label>
                                 {{ form_widget(call_form.statusDetails, {'attr': {'class': 'form-control form-control-sm' }}) }}
 
-                            </div>
+                            </div>#}
+
+
+                                <div class="form-group">
+                                    <div>
+                                    <label class="form-control-label" for="status">Statut</label>
+                                    </div>
+                                    <select id="status" name="status" class="form-control" required>
+                                        <option value="" selected>Choisir le statut de l'appel</option>
+                                        <option value="1">Appel non Qualifié</option>
+                                        <option value="2">Appel Qualifié</option>
+                                    </select>
+                                </div>
+
+
+
+                                <div class="form-group" style="display: none">
+                                    <div>
+                                    <label class="form-control-label" for="detailsnq">Détails</label>
+                                    </div>
+                                    <select id="detailsnq" name="detailsnq" class="form-control">
+                                        <option value="" selected>Choisir les détails de l'appel</option>
+                                        <option value="1">Ne répond pas</option>
+                                        <option value="2">Répondeur</option>
+                                        <option value="3">Barrage Secrétaire</option>
+                                        <option value="4">Pas Intéressé</option>
+                                        <option value="5">A Rappeler</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group" style="display: none">
+                                    <div>
+                                        <label class="form-control-label" for="detailsq">Détails</label>
+                                    </div>
+                                    <select id="detailsq" name="detailsq" class="form-control">
+                                        <option value="" selected>Choisir les détails de l'appel</option>
+                                        <option value="6">RDV à prendre</option>
+                                        <option value="7">RDV fixé</option>
+                                    </select>
+                                </div>
+
 
                             <div class="form-group">
 
@@ -188,4 +228,45 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block additionalJs %}
+
+    <script>
+        window.onload = () => {
+            /*let calendarElement = document.querySelector("#calendar");*/
+            let status =  $("#status");
+            let statusDetailsnq =  $("#detailsnq");
+            let statusDetailsq =  $("#detailsq");
+            status.on('change', function() {
+                /*statusDetailsnq.parent().show('1500')
+                console.log($(this).val())*/
+                if($(this).val() === "1") {
+                    statusDetailsq.parent().hide('500')
+                    statusDetailsnq.parent().show('1500')
+                    statusDetailsq.val("")
+                    statusDetailsq.prop('required', false)
+                    statusDetailsnq.prop('required', true)
+                } else if ($(this).val() === "2") {
+                    statusDetailsnq.parent().hide('500')
+                    statusDetailsq.parent().show('1500')
+                    statusDetailsnq.val("")
+                    statusDetailsnq.prop('required', false)
+                    statusDetailsq.prop('required', true)
+                }
+            })
+            /*statusDetails.prop('disabled', true);*/
+
+           /* calendar.on("dateClick", function (info) {
+                $("#test").click()
+                $("#appointment_form_start_date").val(info.dateStr)
+                $("#appointment_form_end_date").val(info.dateStr)
+            })
+            $("#test").on("click", function () {
+                $("#appointment_form_start_date").val($("#appointment_form_start_date").defaultDate)
+                $("#appointment_form_end_date").val($("#appointment_form_end_date").defaultDate)
+            })*/
+        }
+    </script>
+
 {% endblock %}
