@@ -25,9 +25,21 @@ class TeleprospectingController extends AbstractController
      */
     public function index(Request $request, PaginatorInterface $paginator): Response
     {
+        $loggedTelepro = $this->getUser();
+        $teleproGeographicAreasArray = $loggedTelepro->getGeographicAreas();
+        $teleproGeographicAreasIdsArray = [];
+        foreach ($teleproGeographicAreasArray as $geographicArea) {
+            $teleproGeographicAreasIdsArray[] =  $geographicArea->getId();
+        }
+        $loggedUserRolesArray = $this->getUser()->getRoles();
+        if (in_array("ROLE_TELEPRO",$loggedUserRolesArray)) {
+            $data = $this->getDoctrine()->getRepository(Client::class)->findClientsByTeleproDepartments($teleproGeographicAreasIdsArray);
+        } else {
+            $data = $this->getDoctrine()->getRepository(Client::class)->getNotFixedAppointmentsClients();
+        }
 
         $session = $request->getSession();
-        $data = $this->getDoctrine()->getRepository(Client::class)->findAll();
+        /*$data = $this->getDoctrine()->getRepository(Client::class)->findAll();*/
         /*$data = $this->getDoctrine()->getRepository(Client::class)->findBy(["status" => 0]);*/
         $geographicAreas = $this->getDoctrine()->getRepository(GeographicArea::class)->findAll();
         $session->set('total_telepro',
@@ -66,6 +78,10 @@ class TeleprospectingController extends AbstractController
         $clientForm->handleRequest($request);
         $manager = $this->getDoctrine()->getManager();
         if($clientForm->isSubmitted()) {
+            $newClient->setStatus(0);
+            $newClient->setStatusDetail(null);
+            $newClient->setCreatedAt(new \DateTime());
+            $newClient->setUpdatedAt(new \DateTime());
             $manager->persist($newClient);
             $manager->flush();
             return $this->redirectToRoute('teleprospecting');

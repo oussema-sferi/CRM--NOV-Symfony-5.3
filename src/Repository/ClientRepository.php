@@ -132,4 +132,37 @@ class ClientRepository extends ServiceEntityRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    public function findClientsByTeleproDepartments($departmentsArrayIds)
+    {
+        $qb = $this->createQueryBuilder('c');
+        $qb->select('c')
+            ->join('c.geographicArea', 'g');
+        $counter = 0;
+        if(count($departmentsArrayIds) === 0) {
+            return [];
+        }
+        foreach ($departmentsArrayIds as $departmentId) {
+            $statement = "g.id = $departmentId";
+            if ($counter === 0) {
+                $qb->where($statement);
+            } else {
+                $qb->orWhere($statement);
+            }
+            $counter ++;
+        };
+        $qb->andWhere('c.statusDetail != 7');
+        return $qb->getQuery()->getResult();
+    }
+
+    public function getNotFixedAppointmentsClients()
+    {
+
+        $qb = $this->createQueryBuilder('c');
+        $qb->select('c')
+            ->where('c.statusDetail IS NOT NULL AND c.statusDetail != 7')
+            ->orWhere('c.statusDetail IS NULL');
+        return $qb->getQuery()->getResult();
+    }
+
 }

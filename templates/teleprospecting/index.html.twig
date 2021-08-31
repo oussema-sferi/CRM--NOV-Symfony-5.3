@@ -18,7 +18,7 @@
                         </nav>
                     </div>
                     <div class="col-lg-6 col-5 text-right">
-                        {#<a href="{{ path('new_client') }}" class="btn btn-sm btn-success">Nouveau prospect</a>#}
+                        <a href="{{ path('new_client') }}" class="btn btn-sm btn-success">Nouveau prospect</a>
                         {#<a href="#" class="btn btn-sm btn-neutral">Filters</a>#}
                         {#<label for="pagination" style="color: white; font-size: small">Nb de résultats par page</label>
                         <select name="pagination" id="pagination" class="form-control-sm">
@@ -160,11 +160,6 @@
                                     <th scope="col">Société</th>
                                     <th scope="col">Catégorie</th>
                                     <th scope="col">Sous Contrat</th>
-                                    <th scope="col">état</th>
-                                    <th scope="col">Détails</th>
-                                    {#<th scope="col">Observations</th>#}
-                                    {#<th scope="col">Appel</th>
-                                    <th scope="col">Détails</th>#}
                                     <th scope="col">Adresse</th>
                                     <th scope="col">Code Postal</th>
                                     <th scope="col">Département</th>
@@ -172,10 +167,10 @@
                                     <th scope="col">Pays</th>
                                     <th scope="col">Numéro Domicile</th>
                                     <th scope="col">Numéro Mobile</th>
+                                    <th scope="col">état</th>
+                                    <th scope="col">Détails</th>
+                                    <th scope="col">Observations</th>
                                     <th scope="col">Traitement</th>
-                                    {#<th scope="col">Consultation</th>
-                                    <th scope="col">Modification</th>
-                                    <th scope="col">Suppression</th>#}
                                 </tr>
 
                                 <tr>
@@ -206,29 +201,7 @@
                                             <option value="0">Non</option>
                                         </select>
                                     </td>
-                                    <td>
-                                        <select id="status" name="status" class="form-control-sm">
-                                            <option value="" selected>--- Choisir ---</option>
-                                            <option value="0">Non traité</option>
-                                            <option value="1">Appel non Qualifié</option>
-                                            <option value="2">Appel Qualifié</option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <select id="status" name="statusDetail" class="form-control-sm">
-                                            <option value="" selected>--- Choisir ---</option>
-                                            <option value="1">Ne répond pas</option>
-                                            <option value="2">Répondeur</option>
-                                            <option value="3">Barrage Secrétaire</option>
-                                            <option value="4">Pas Intéressé</option>
-                                            <option value="5">A Rappeler</option>
-                                            <option value="6">RDV à prendre</option>
-                                            <option value="7">RDV fixé</option>
-                                        </select>
-                                    </td>
-                                    {#<td>
 
-                                    </td>#}
                                     <td>
                                         <input id="address" name="address" class="test" type="text">
                                     </td>
@@ -255,32 +228,45 @@
                                     <td>
                                         <input id="mobileNumber" name="mobileNumber" class="test" type="text">
                                     </td>
+                                    <td>
+                                        <select id="status" name="status" class="form-control-sm">
+                                            <option value="" selected>--- Choisir ---</option>
+                                            <option value="0">Non traité</option>
+                                            <option value="1">Appel non Qualifié</option>
+                                            <option value="2">Appel Qualifié</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select id="status" name="statusDetail" class="form-control-sm">
+                                            <option value="" selected>--- Choisir ---</option>
+                                            <option value="1">Ne répond pas</option>
+                                            <option value="2">Répondeur</option>
+                                            <option value="3">Barrage Secrétaire</option>
+                                            <option value="4">Pas Intéressé</option>
+                                            <option value="5">A Rappeler</option>
+                                            <option value="6">RDV à prendre</option>
+                                            <option value="7">RDV fixé</option>
+                                        </select>
+                                    </td>
                                     <td></td>
-
+                                    <td></td>
                                 </tr>
-
                             </thead>
-
                             <tbody class="list" id="teleproBody">
-
                             {% for client in clients %}
                             <tr>
                                 <td class="budget">
                                     {{ client.firstName }}
                                 </td>
-
                                 <td class="budget">
                                     {{ client.lastName }}
                                 </td>
-
                                 <td class="budget">
                                     {{ client.email }}
                                 </td>
-
                                 <td class="budget">
                                     {{ client.companyName }}
                                 </td>
-
                                 <td class="budget">
                                     {{ client.category }}
                                 </td>
@@ -292,13 +278,34 @@
                                         Non
                                         {% endif %}
                                 </td>
+                                <td class="budget">
+                                    {{ client.address }}
+                                </td>
 
                                 <td class="budget">
-                                   {# {% if  client.status == 0 %}
-                                    <span class="badge badge-warning badge-lg">
-                                        <i class="bg-info"></i>
-                                        Non Traité
-                                    </span>#}
+                                    {{ client.postalCode }}
+                                </td>
+
+                                <td class="budget">
+                                    {{ client.geographicArea.designation }}
+                                </td>
+
+                                <td class="budget">
+                                    {{ client.city }}
+                                </td>
+
+                                <td class="budget">
+                                    {{ client.country }}
+                                </td>
+
+                                <td class="budget">
+                                    {{ client.phoneNumber }}
+                                </td>
+
+                                <td class="budget">
+                                    {{ client.mobileNumber }}
+                                </td>
+                                <td class="budget">
                                     {% if client.status == 1 %}
                                         <span class="badge badge-warning badge-lg">
                                         <i class="bg-warning"></i>
@@ -316,7 +323,6 @@
                                         </span>
                                     {% endif %}
                                 </td>
-
                                 <td class="budget">
                                     {% if client.statusDetail == 1 %}
                                         <span class="badge badge-warning badge-lg">
@@ -345,7 +351,7 @@
                                         </span>
                                     {% elseif client.statusDetail == 6 %}
                                         <span class="badge badge-success badge-lg">
-                                        <i class="bg-success"></i>
+                                            <i class="bg-success"></i>
                                             RDV à prendre
                                         </span>
                                     {% elseif client.statusDetail == 7 %}
@@ -360,60 +366,26 @@
                                         </span>
                                     {% endif %}
                                 </td>
+                                {% if client.calls|default %}
+                                    <td class="budget" style="text-align: center">
+                                        <button class="notes" data-container="body" data-toggle="popover" data-color="info" data-placement="top" data-content= "{{ client.calls[client.calls|length -1].callNotes }}">
+                                            <i class="far fa-comment text-cyan"></i>
+                                        </button>
+                                    </td>
+                                {% else %}
+                                    <td>Non Défini</td>
+                                {% endif %}
 
-                                {#<td class="budget">
-                                    {% if client.calls[0].callNotes %}
-                                    <button class="notes" data-container="body" data-toggle="popover" data-color="info" data-placement="top" data-content= "{{ client.calls[0].callNotes }}">
-                                        <i class="far fa-comment text-cyan"></i>
-                                    </button>
+                                <td >
+                                    {% if client.status == 0 %}
+                                        <a href="{{ path('call_handle', {'id': client.id}) }}"  class="badge badge-default" >Traiter Fiche</a>
                                     {% else %}
-                                        Non Défini
+                                        <a href="{{ path('show_client', {'id': client.id}) }}"><i class="fas fa-search-plus text-blue"></i></a>&nbsp;&nbsp;
+                                        <a href="{{ path('update_client', {'id': client.id}) }}"><i class="fas fa-edit text-yellow"></i></a>&nbsp;&nbsp;
+                                        <a href="" data-toggle="modal" data-target="#deleteModal"><i class="fas fa-trash-alt text-red"></i></a>
                                     {% endif %}
-                                </td>#}
-
-                                <td class="budget">
-                                    {{ client.address }}
                                 </td>
 
-                                <td class="budget">
-                                    {{ client.postalCode }}
-                                </td>
-
-                                <td class="budget">
-                                    {{ client.geographicArea.designation }}
-                                </td>
-
-                                <td class="budget">
-                                    {{ client.city }}
-                                </td>
-
-                                <td class="budget">
-                                    {{ client.country }}
-                                </td>
-
-                                <td class="budget">
-                                    {{ client.phoneNumber }}
-                                </td>
-
-                                <td class="budget">
-                                    {{ client.mobileNumber }}
-                                </td>
-
-                                <td >
-                                    <a href="{{ path('call_handle', {'id': client.id}) }}"  class="badge badge-default" >Traiter Fiche</a>
-                                </td>
-
-                                {#<td >
-                                    <a href="{{ path('show_client', {'id': client.id}) }}"  class="badge badge-default" >Consulter Fiche</a>
-                                </td>
-
-                                <td >
-                                    <a href="{{ path('update_client', {'id': client.id}) }}"  class="badge badge-info" >Modifier Contact</a>
-                                </td>
-
-                                <td >
-                                    <a href="{{ path('new_client') }}" data-href="/admin_resp/ingenieur/oussingenieurref/deleted" class="badge badge-danger" data-toggle="modal" data-target="#deleteModal">Supprimer Contact</a>
-                                </td>#}
 
                             </tr>
 

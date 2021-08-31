@@ -168,4 +168,59 @@ class SearchFiltersController extends AbstractController
     }
 
 
+    /**
+     * @Route("/dashboard/commercial/appointments/search/filters", name="appointments_search_filters")
+     */
+    public function appointmentsSearchFilters(Request $request, PaginatorInterface $paginator): Response
+    {
+        //search without ajax
+        $session = $request->getSession();
+        $geographicAreas = $this->getDoctrine()->getRepository(GeographicArea::class)->findAll();
+        if($request->isMethod('POST')) {
+            /*dd($request->request->all());*/
+            $session->set('criterias',
+                $request->request->all()
+            );
+        }
+        $criterias = $session->get('criterias');
+        $payload = $this->getDoctrine()->getRepository(Client::class)->fetchClientsbyFilters($criterias);
+        if(count($payload) === 0) {
+            $session->set('total_contacts_search_results',
+                'nothing'
+            );
+        } else {
+            $session->set('total_contacts_search_results',
+                count($payload)
+            );
+        }
+        /*dd($payload);*/
+
+
+        if($session->get('pagination_value')) {
+            $clients = $paginator->paginate(
+                $payload,
+                $request->query->getInt('page', 1),
+                $session->get('pagination_value')
+            );
+        } else {
+            $clients = $paginator->paginate(
+                $payload,
+                $request->query->getInt('page', 1),
+                10
+            );
+        }
+
+        /* $clients = $paginator->paginate(
+             $payload,
+             $request->query->getInt('page', 1),
+             10
+         );*/
+
+        return $this->render('all_contacts/index.html.twig', [
+            'clients' => $clients,
+            'geographic_areas'=> $geographicAreas
+        ]);
+    }
+
+
 }

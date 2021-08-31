@@ -157,7 +157,7 @@
                                     </div>
                                 </div>
 
-                                <div id="start_datetime" class="form-group" style="display: none">
+                                {#<div id="start_datetime" class="form-group" style="display: none">
                                     <label for="start-datetime-local-input" class="form-control-label">Heure Début</label>
                                     <input type="datetime-local" class="form-control">
                                 </div>
@@ -165,7 +165,7 @@
                                 <div id="end_datetime" class="form-group" style="display: none">
                                     <label for="end-datetime-local-input" class="form-control-label">Heure Fin</label>
                                     <input type="datetime-local" class="form-control">
-                                </div>
+                                </div>#}
 
                                 <div class="form-group">
                                         <div>
@@ -191,7 +191,7 @@
 
     <script>
         window.onload = () => {
-            let startTime = $("#start_datetime");
+           /* let startTime = $("#start_datetime");
             let endtTime = $("#end_datetime");
             $("#rdv").change(function () {
                 if($(this).is(':checked')) {
@@ -201,7 +201,7 @@
                     startTime.css("display", "none")
                     endtTime.css("display", "none")
                 }
-            })
+            })*/
         }
 
     </script>

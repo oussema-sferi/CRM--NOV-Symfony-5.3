@@ -22,7 +22,14 @@ class ClientFormType extends AbstractType
             ->add('country')
             ->add('phoneNumber')
             ->add('mobileNumber')
-            ->add('category')
+            ->add('category', ChoiceType::class, [
+                'choices'  => [
+                    'Médecin' => 'Médecin',
+                    'Vétérinaire' => 'Vétérinaire',
+                    'Chirurgien' => 'Chirurgien'
+                ],
+                'placeholder' => 'Catégorie'
+            ])
             ->add('providedEquipment')
             ->add('geographicArea')
             ->add('isUnderContract', ChoiceType::class, [
@@ -30,6 +37,7 @@ class ClientFormType extends AbstractType
                     'Non' => false,
                     'Oui' => true
                 ],
+                'placeholder' => 'Sous Contrat?'
             ])
         ;
     }

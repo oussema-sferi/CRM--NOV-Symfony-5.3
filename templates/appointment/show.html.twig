@@ -1,14 +1,36 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Fiche Contact{% endblock %}
+{% block title %}Fiche RDV{% endblock %}
 
 {% block body %}
 
-<div class="header pb-6 d-flex align-items-center" style="min-height: 100px; background-image: url(../assets/img/theme/profile-cover.jpg); background-size: cover;">
+<div class="header bg-primary pb-6">
+    <div class="container-fluid">
+        <div class="header-body">
+            <div class="row align-items-center py-4">
+                <div class="col-lg-6 col-7">
+                    <h6 class="h2 text-white d-inline-block mb-0">CRM</h6>
+                    <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+                        <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                            <li class="breadcrumb-item"><a href="#"><i class="fas fa-chalkboard-teacher text-yellow"></i></a></li>
+                            <li class="breadcrumb-item"><a href="#">Service Commercial</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Fiche RDV</li>
+                        </ol>
+                    </nav>
+                </div>
+                <div class="col-lg-6 col-5 text-right">
+                    <a href="{{ path('commercial') }}" class="btn btn-sm btn-neutral">Retour</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{#<div class="header pb-6 d-flex align-items-center" style="min-height: 100px; background-image: url(../assets/img/theme/profile-cover.jpg); background-size: cover;">
     <!-- Mask -->
     <span class="mask bg-gradient-default opacity-8"></span>
     <!-- Header container -->
-    {#<div class="container-fluid d-flex align-items-center">
+    #}{#<div class="container-fluid d-flex align-items-center">
         <div class="row">
             <div class="col-lg-7 col-md-10">
                 <h1 class="display-2 text-white">Hello Jesse</h1>
@@ -16,8 +38,8 @@
                 <a href="#!" class="btn btn-neutral">Edit profile</a>
             </div>
         </div>
-    </div>#}
-</div>
+    </div>#}{#
+</div>#}
 <!-- Page content -->
 <div class="container-fluid mt--6">
     <div class="row">
@@ -80,11 +102,11 @@
                 <div class="card-header">
                     <div class="row align-items-center">
                         <div class="col-8">
-                            <h3 class="mb-0">Fiche Contact</h3>
+                            <h3 class="mb-0">Fiche RDV</h3>
                         </div>
-                        <div class="col-4 text-right">
-                            <a href="{{ path('all_contacts') }}" class="btn btn-sm btn-primary">Retour</a>
-                        </div>
+                        {#<div class="col-4 text-right">
+                            <a href="{{ path('all_contacts') }}" class="btn btn-sm btn-neutral">Retour</a>
+                        </div>#}
                     </div>
                 </div>
                 <div class="card-body">
@@ -95,13 +117,13 @@
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label class="form-control-label" for="input-username">Prénom</label>
-                                        <input type="text" id="input-username" class="form-control" value="{{ client_to_show.firstName }}" disabled>
+                                        <input type="text" id="input-username" class="form-control" value="{{ appointment_to_show.client.firstName }}" disabled>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label class="form-control-label" for="input-email">Nom</label>
-                                        <input type="email" id="input-email" class="form-control" value="{{ client_to_show.lastName }}" disabled>
+                                        <input type="email" id="input-email" class="form-control" value="{{ appointment_to_show.client.lastName }}" disabled>
                                         {#<div type="email" id="input-email" class="list-group-item" placeholder="jesse@example.com">
                                             oussema@aol.fr
                                         </div>#}
@@ -113,48 +135,53 @@
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label class="form-control-label" for="input-last-name">Société</label>
-                                        <input type="text" id="input-last-name" class="form-control" value="{{ client_to_show.companyName }}" disabled>
+                                        <input type="text" id="input-last-name" class="form-control" value="{{ appointment_to_show.client.companyName }}" disabled>
                                     </div>
                                 </div>
 
                                 <div class="col-lg-6">
                                     <div class="form-group">
-                                        <label class="form-control-label" for="input-last-name">Email</label>
-                                        <input type="text" id="input-last-name" class="form-control" value="{{ client_to_show.email }}" disabled>
+                                        <label class="form-control-label" for="input-first-name">Email</label>
+                                        <input type="text" id="input-first-name" class="form-control" value="{{ appointment_to_show.client.email }}" disabled>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="row">
+
+
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label class="form-control-label" for="input-first-name">Adresse</label>
-                                        <input type="text" id="input-first-name" class="form-control" value="{{ client_to_show.address }}" disabled>
+                                        <input type="text" id="input-first-name" class="form-control" value="{{ appointment_to_show.client.address }}" disabled>
                                     </div>
                                 </div>
 
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label class="form-control-label" for="input-last-name">Code Postal</label>
-                                        <input type="text" id="input-last-name" class="form-control" value="{{ client_to_show.postalCode }}" disabled>
+                                        <input type="text" id="input-last-name" class="form-control" value="{{ appointment_to_show.client.postalCode }}" disabled>
                                     </div>
                                 </div>
 
                             </div>
 
                             <div class="row">
+
+
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label class="form-control-label" for="input-first-name">Département</label>
-                                        <input type="text" id="input-first-name" class="form-control" value="{{ client_to_show.geographicArea }}" disabled>
+                                        <input type="text" id="input-first-name" class="form-control" value="{{ appointment_to_show.client.geographicArea }}" disabled>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label class="form-control-label" for="input-first-name">Pays</label>
-                                        <input type="text" id="input-first-name" class="form-control" value="{{ client_to_show.country }}" disabled>
+                                        <input type="text" id="input-first-name" class="form-control" value="{{ appointment_to_show.client.country }}" disabled>
                                     </div>
                                 </div>
+
 
                             </div>
 
@@ -163,13 +190,13 @@
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label class="form-control-label" for="input-last-name">Numéro Domicile</label>
-                                        <input type="text" id="input-last-name" class="form-control" value="{{ client_to_show.phoneNumber }}" disabled>
+                                        <input type="text" id="input-last-name" class="form-control" value="{{ appointment_to_show.client.phoneNumber }}" disabled>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label class="form-control-label" for="input-first-name">Numéro Mobile</label>
-                                        <input type="text" id="input-first-name" class="form-control" value="{{ client_to_show.mobileNumber }}" disabled>
+                                        <input type="text" id="input-first-name" class="form-control" value="{{ appointment_to_show.client.mobileNumber }}" disabled>
                                     </div>
                                 </div>
                                 {#<div class="col-lg-6">
@@ -190,13 +217,13 @@
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label class="form-control-label" for="input-city">Catégorie</label>
-                                        <input type="text" id="input-city" class="form-control" value="{{ client_to_show.category }}" disabled>
+                                        <input type="text" id="input-city" class="form-control" value="{{ appointment_to_show.client.category }}" disabled>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label class="form-control-label" for="input-country">Equipement</label>
-                                        <input type="text" id="input-country" class="form-control" value="{{ client_to_show.providedEquipment }}" disabled>
+                                        <input type="text" id="input-country" class="form-control" value="{{ appointment_to_show.client.providedEquipment }}" disabled>
                                     </div>
                                 </div>
                             </div>
@@ -205,7 +232,7 @@
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label class="form-control-label" for="input-city">Sous Contrat</label>
-                                        <input type="text" id="input-city" class="form-control" value="{% if client_to_show.isUnderContract %}Oui{% else %}Non{% endif %}" disabled>
+                                        <input type="text" id="input-city" class="form-control" value="{% if appointment_to_show.client.isUnderContract %}Oui{% else %}Non{% endif %}" disabled>
                                     </div>
                                 </div>
                                 {#<div class="col-lg-6">
@@ -215,29 +242,30 @@
                                     </div>
                                 </div>#}
                             </div>
-
                         </div>
-                        <hr class="my-4" />
 
-                        <h6 class="heading-small text-muted mb-4">Informations Appel</h6>
+
+                        <hr class="my-4" />
+                        <!-- Address -->
+                        <h6 class="heading-small text-muted mb-4">Informations RDV</h6>
                         <div class="pl-lg-4">
 
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label class="form-control-label" for="input-city">Etat</label>
-                                        <input type="text" id="input-city" class="form-control" value="{% if client_to_show.status == 0 %}Non traité{% elseif client_to_show.status == 1 %}Appel non qualifié{% else %}Appel qualifié{% endif %}" disabled>
+                                        <input type="text" id="input-city" class="form-control" value="{% if appointment_to_show.isDone == 0 %}Effectué{% else %}A Venir{% endif %}" disabled>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
-                                        <label class="form-control-label" for="input-country">Détails</label>
-                                        <input type="text" id="input-country" class="form-control" value="{% if client_to_show.statusDetail == 1 %}Ne répond pas{% elseif client_to_show.statusDetail == 2 %}Répondeur{% elseif client_to_show.statusDetail == 3 %}Barrage Secrétaire{% elseif client_to_show.statusDetail == 4 %}Pas Intéressé{% elseif client_to_show.statusDetail == 5 %}A Rappeler{% elseif client_to_show.statusDetail == 6 %}RDV à prendre{% elseif client_to_show.statusDetail == 7 %}RDV fixé {% else %}Non traité{% endif %}" disabled>
+                                        <label class="form-control-label" for="input-country">Commercial Affecté</label>
+                                        <input type="text" id="input-country" class="form-control" value="{{ appointment_to_show.user.firstName ~ ' ' ~ appointment_to_show.user.lastName }}" disabled>
                                     </div>
                                 </div>
                             </div>
 
-                            {# <div class="row">
+                            <div class="row">
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label class="form-control-label" for="input-city">Date/heure Début</label>
@@ -250,15 +278,17 @@
                                         <input type="text" id="input-country" class="form-control" value="{{ appointment_to_show.end | date() }}" disabled>
                                     </div>
                                 </div>
-                            </div>#}
+                            </div>
                         </div>
+
+
                         <hr class="my-4" />
                         <!-- Description -->
-                        <h6 class="heading-small text-muted mb-4">Notes Appel</h6>
+                        <h6 class="heading-small text-muted mb-4">Notes RDV</h6>
                         <div class="pl-lg-4">
                             <div class="form-group">
                                 <label class="form-control-label">Notes</label>
-                                <textarea rows="4" class="form-control" placeholder="Pas de notes ..." resize="none" disabled>{% if client_to_show.calls|default%}{{ client_to_show.calls[client_to_show.calls|length - 1].callNotes }} {% endif %}</textarea>
+                                <textarea rows="4" class="form-control" placeholder="Pas de notes ..." resize="none" disabled>{{ appointment_to_show.appointmentNotes }}</textarea>
                             </div>
                         </div>
                     </form>
@@ -267,6 +297,5 @@
         </div>
     </div>
 
-
-
-    {% endblock %}
+</div>
+{% endblock %}

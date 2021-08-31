@@ -198,7 +198,7 @@ class RolesController extends AbstractController
     {
         $telepro = $this->getDoctrine()->getRepository(User::class)->find($id);
         $departments = $this->getDoctrine()->getRepository(GeographicArea::class)->findAll();
-        /*dd($users);*/
+        /*dd($telepro->getGeographicAreas()[2]);*/
         return $this->render('roles/users_management/telepro/departments_assignment.html.twig', [
             'telepro' => $telepro,
             'departments' => $departments

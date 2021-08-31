@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Consultation Fiche{% endblock %}
+{% block title %}Fiche Prospect{% endblock %}
 
 {% block body %}
 
@@ -80,7 +80,7 @@
                 <div class="card-header">
                     <div class="row align-items-center">
                         <div class="col-8">
-                            <h3 class="mb-0">Fiche Contact</h3>
+                            <h3 class="mb-0">Fiche Prospect</h3>
                         </div>
                         <div class="col-4 text-right">
                             <a href="{{ path('teleprospecting') }}" class="btn btn-sm btn-primary">Retour</a>
@@ -89,7 +89,7 @@
                 </div>
                 <div class="card-body">
                     <form>
-                        <h6 class="heading-small text-muted mb-4">Données Personnelles</h6>
+                        <h6 class="heading-small text-muted mb-4">Données Client</h6>
                         <div class="pl-lg-4">
                             <div class="row">
                                 <div class="col-lg-6">
@@ -119,20 +119,13 @@
 
                                 <div class="col-lg-6">
                                     <div class="form-group">
-                                        <label class="form-control-label" for="input-last-name">Catégorie</label>
-                                        <input type="text" id="input-last-name" class="form-control" value="{{ client_to_show.category }}" disabled>
+                                        <label class="form-control-label" for="input-last-name">Email</label>
+                                        <input type="text" id="input-last-name" class="form-control" value="{{ client_to_show.email }}" disabled>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="row">
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        <label class="form-control-label" for="input-first-name">Email</label>
-                                        <input type="text" id="input-first-name" class="form-control" value="{{ client_to_show.email }}" disabled>
-                                    </div>
-                                </div>
-
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label class="form-control-label" for="input-first-name">Adresse</label>
@@ -140,13 +133,20 @@
                                     </div>
                                 </div>
 
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-last-name">Code Postal</label>
+                                        <input type="text" id="input-last-name" class="form-control" value="{{ client_to_show.postalCode }}" disabled>
+                                    </div>
+                                </div>
+
                             </div>
 
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="form-group">
-                                        <label class="form-control-label" for="input-last-name">Code Postal</label>
-                                        <input type="text" id="input-last-name" class="form-control" value="{{ client_to_show.postalCode }}" disabled>
+                                        <label class="form-control-label" for="input-first-name">Département</label>
+                                        <input type="text" id="input-first-name" class="form-control" value="{{ client_to_show.geographicArea }}" disabled>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
@@ -185,6 +185,22 @@
                         <!-- Address -->
                         <h6 class="heading-small text-muted mb-4">Données Utiles</h6>
                         <div class="pl-lg-4">
+
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-city">Catégorie</label>
+                                        <input type="text" id="input-city" class="form-control" value="{{ client_to_show.category }}" disabled>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-country">Equipement</label>
+                                        <input type="text" id="input-country" class="form-control" value="{{ client_to_show.providedEquipment }}" disabled>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="form-group">
@@ -192,21 +208,57 @@
                                         <input type="text" id="input-city" class="form-control" value="{% if client_to_show.isUnderContract %}Oui{% else %}Non{% endif %}" disabled>
                                     </div>
                                 </div>
+                                {#<div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-country">Etat Appel</label>
+                                        <input type="text" id="input-country" class="form-control" value="{% if appointment_to_show.client.status == 0 %}Non traité{% elseif appointment_to_show.client.status == 1 %}Appel non qualifié{% else %}Appel qualifié{% endif %}" disabled>
+                                    </div>
+                                </div>#}
+                            </div>
+
+                        </div>
+                        <hr class="my-4" />
+
+                        <h6 class="heading-small text-muted mb-4">Informations Appel</h6>
+                        <div class="pl-lg-4">
+
+                            <div class="row">
                                 <div class="col-lg-6">
                                     <div class="form-group">
-                                        <label class="form-control-label" for="input-country">Etat Traitement</label>
-                                        <input type="text" id="input-country" class="form-control" value="{% if client_to_show.status == 0 %}Non traité{% elseif client_to_show.status == 1 %}Appel non qualifié{% else %}Appel qualifié{% endif %}" disabled>
+                                        <label class="form-control-label" for="input-city">Etat</label>
+                                        <input type="text" id="input-city" class="form-control" value="{% if client_to_show.status == 0 %}Non traité{% elseif client_to_show.status == 1 %}Appel non qualifié{% else %}Appel qualifié{% endif %}" disabled>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-country">Détails</label>
+                                        <input type="text" id="input-country" class="form-control" value="{% if client_to_show.statusDetail == 1 %}Ne répond pas{% elseif client_to_show.statusDetail == 2 %}Répondeur{% elseif client_to_show.statusDetail == 3 %}Barrage Secrétaire{% elseif client_to_show.statusDetail == 4 %}Pas Intéressé{% elseif client_to_show.statusDetail == 5 %}A Rappeler{% elseif client_to_show.statusDetail == 6 %}RDV à prendre{% elseif client_to_show.statusDetail == 7 %}RDV fixé {% else %}Non traité{% endif %}" disabled>
                                     </div>
                                 </div>
                             </div>
+
+                           {# <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-city">Date/heure Début</label>
+                                        <input type="text" id="input-city" class="form-control" value="{{ appointment_to_show.start | date() }}" disabled>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-country">Date/heure Fin</label>
+                                        <input type="text" id="input-country" class="form-control" value="{{ appointment_to_show.end | date() }}" disabled>
+                                    </div>
+                                </div>
+                            </div>#}
                         </div>
                         <hr class="my-4" />
                         <!-- Description -->
-                        <h6 class="heading-small text-muted mb-4">Notes Traitement</h6>
+                        <h6 class="heading-small text-muted mb-4">Notes Appel</h6>
                         <div class="pl-lg-4">
                             <div class="form-group">
                                 <label class="form-control-label">Notes</label>
-                                <textarea rows="4" class="form-control" placeholder="Pas de notes ..." resize="none" disabled></textarea>
+                                <textarea rows="4" class="form-control" placeholder="Pas de notes ..." resize="none" disabled>{{ client_to_show.calls[client_to_show.calls|length - 1].callNotes }}</textarea>
                             </div>
                         </div>
                     </form>

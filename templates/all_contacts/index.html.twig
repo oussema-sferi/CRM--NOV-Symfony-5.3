@@ -215,8 +215,6 @@
                                 <th scope="col">Catégorie</th>
                                 {#<th scope="col">Equipement</th>#}
                                 <th scope="col">Sous Contrat</th>
-                                <th scope="col">état</th>
-                                <th scope="col">Détails</th>
                                 <th scope="col">Adresse</th>
                                 <th scope="col">Code Postal</th>
                                 <th scope="col">Département</th>
@@ -225,6 +223,10 @@
                                 <th scope="col">Numéro Domicile</th>
                                 <th scope="col">Numéro Mobile</th>
                                 {#<th scope="col">Traitement</th>#}
+                                <th scope="col">état</th>
+                                <th scope="col">Détails</th>
+                                <th scope="col">Observations Appel</th>
+                                <th scope="col">Observations RDV</th>
                                 <th scope="col">Actions</th>
                                 {#<th scope="col">Modification</th>
                                 <th scope="col">Suppression</th>#}
@@ -259,26 +261,6 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <select id="status" name="status" class="form-control-sm">
-                                        <option value="" selected>--- Choisir ---</option>
-                                        <option value="0">Non traité</option>
-                                        <option value="1">Appel non Qualifié</option>
-                                        <option value="2">Appel Qualifié</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <select id="status" name="statusDetail" class="form-control-sm">
-                                        <option value="" selected>--- Choisir ---</option>
-                                        <option value="1">Ne répond pas</option>
-                                        <option value="2">Répondeur</option>
-                                        <option value="3">Barrage Secrétaire</option>
-                                        <option value="4">Pas Intéressé</option>
-                                        <option value="5">A Rappeler</option>
-                                        <option value="6">RDV à prendre</option>
-                                        <option value="7">RDV fixé</option>
-                                    </select>
-                                </td>
-                                <td>
                                     <input id="address" name="address" class="test" type="text">
                                 </td>
                                 <td>
@@ -304,8 +286,29 @@
                                 <td>
                                     <input id="mobileNumber" name="mobileNumber" class="test" type="text">
                                 </td>
+                                <td>
+                                    <select id="status" name="status" class="form-control-sm">
+                                        <option value="" selected>--- Choisir ---</option>
+                                        <option value="0">Non traité</option>
+                                        <option value="1">Appel non Qualifié</option>
+                                        <option value="2">Appel Qualifié</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select id="status" name="statusDetail" class="form-control-sm">
+                                        <option value="" selected>--- Choisir ---</option>
+                                        <option value="1">Ne répond pas</option>
+                                        <option value="2">Répondeur</option>
+                                        <option value="3">Barrage Secrétaire</option>
+                                        <option value="4">Pas Intéressé</option>
+                                        <option value="5">A Rappeler</option>
+                                        <option value="6">RDV à prendre</option>
+                                        <option value="7">RDV fixé</option>
+                                    </select>
+                                </td>
                                 <td></td>
-
+                                <td></td>
+                                <td></td>
                             </tr>
 
                             </thead>
@@ -348,6 +351,37 @@
                                         {% endif %}
                                     </td>
 
+                                    <td class="budget">
+                                        {{ client.address }}
+                                    </td>
+
+                                    <td class="budget">
+                                        {{ client.postalCode }}
+                                    </td>
+
+                                    <td class="budget">
+                                        {{ client.geographicArea.designation }}
+                                    </td>
+
+                                    <td class="budget">
+                                        {{ client.city }}
+                                    </td>
+
+                                    <td class="budget">
+                                        {{ client.country }}
+                                    </td>
+
+                                    <td class="budget">
+                                        {{ client.phoneNumber }}
+                                    </td>
+
+                                    <td class="budget">
+                                        {{ client.mobileNumber }}
+                                    </td>
+
+                                    {#<td >
+                                        <a href="{{ path('call_handle', {'id': client.id}) }}"  class="badge badge-success" >Traiter Contact</a>
+                                    </td>#}
                                     <td class="budget">
                                         {% if client.status == 1 %}
                                             <span class="badge badge-warning badge-lg">
@@ -410,38 +444,32 @@
                                         </span>
                                         {% endif %}
                                     </td>
-
-                                    <td class="budget">
-                                        {{ client.address }}
+                                    {% if client.calls|default %}
+                                    <td class="budget" style="text-align: center">
+                                        <button class="notes" data-container="body" data-toggle="popover" data-color="info" data-placement="top" data-content= "{{ client.calls[client.calls|length -1].callNotes }}">
+                                            <i class="far fa-comment text-cyan"></i>
+                                        </button>
                                     </td>
 
-                                    <td class="budget">
-                                        {{ client.postalCode }}
-                                    </td>
 
-                                    <td class="budget">
-                                        {{ client.geographicArea.designation }}
-                                    </td>
+                                    {% else %}
+                                        <td>Non Défini</td>
+                                    {% endif %}
 
-                                    <td class="budget">
-                                        {{ client.city }}
-                                    </td>
 
-                                    <td class="budget">
-                                        {{ client.country }}
-                                    </td>
+                                    {% if client.appointments|default %}
+                                        <td class="budget" style="text-align: center">
+                                            <button class="notes" data-container="body" data-toggle="popover" data-color="info" data-placement="top" data-content= "{{ client.appointments[client.appointments|length -1].appointmentNotes }}">
+                                                <i class="far fa-comment text-cyan"></i>
+                                            </button>
+                                        </td>
 
-                                    <td class="budget">
-                                        {{ client.phoneNumber }}
-                                    </td>
 
-                                    <td class="budget">
-                                        {{ client.mobileNumber }}
-                                    </td>
+                                    {% else %}
+                                        <td>Non Défini</td>
+                                    {% endif %}
 
-                                    {#<td >
-                                        <a href="{{ path('call_handle', {'id': client.id}) }}"  class="badge badge-success" >Traiter Contact</a>
-                                    </td>#}
+
 
                                     <td >
                                         {#<a href="{{ path('show_contact', {'id': client.id}) }}"  class="badge badge-default" >Consulter Fiche</a>#}

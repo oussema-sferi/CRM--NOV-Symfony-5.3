@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Ajout{% endblock %}
+{% block title %}Nouveau Contact{% endblock %}
 
 {% block body %}
 
@@ -12,9 +12,9 @@
                         <h6 class="h2 text-white d-inline-block mb-0">CRM</h6>
                         <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
                             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
-                                <li class="breadcrumb-item"><a href="#"><i class="fas fa-phone-volume"></i></a></li>
+                                <li class="breadcrumb-item"><a href="#"><i class="fas fa-phone-volume text-orange"></i></a></li>
                                 <li class="breadcrumb-item"><a href="#">Téléprospection</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Nouveau Contact</li>
+                                <li class="breadcrumb-item active" aria-current="page">Nouveau Prospect</li>
                             </ol>
                         </nav>
                     </div>
@@ -198,6 +198,15 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="ni ni-hat-3"></i></span>
                                     </div>
+                                    {{ form_widget(client_form.geographicArea, {'attr': {'class': 'form-control', 'placeholder':'Département' }}) }}
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="ni ni-hat-3"></i></span>
+                                    </div>
                                     {{ form_widget(client_form.country, {'attr': {'class': 'form-control', 'placeholder':'Pays'}}) }}
                                 </div>
                             </div>
@@ -238,8 +247,17 @@
                                 </div>
                             </div>
 
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="ni ni-hat-3"></i></span>
+                                    </div>
+                                    {{ form_widget(client_form.providedEquipment, {'attr': {'class': 'form-control', 'placeholder':'Equipement' }}) }}
+                                </div>
+                            </div>
+
                             <div class="text-center">
-                                <button type="submit" class="btn btn-primary mt-4">Confirmer</button>
+                                <button type="submit" class="btn btn-success mt-4">Confirmer</button>
                             </div>
 
                             {{ form_end(client_form)}}

@@ -473,6 +473,8 @@ class AppointmentController extends AbstractController
             $newAppointment->setClient($client);
             $newAppointment->setUser($commercial);
             $newAppointment->setAppointmentNotes($request->request->get('notes'));
+            $client->setStatus(2);
+            $client->setStatusDetail(7);
             $manager->persist($newAppointment);
             $manager->flush();
 
@@ -501,7 +503,8 @@ class AppointmentController extends AbstractController
             $newAppointment->setClient($client);
             $newAppointment->setUser($commercial);
             $newAppointment->setAppointmentNotes($request->request->get('notes'));
-
+            $client->setStatus(2);
+            $client->setStatusDetail(7);
             $manager->persist($newAppointment);
             $manager->flush();
 
@@ -512,6 +515,17 @@ class AppointmentController extends AbstractController
         }
         return $this->redirectToRoute('show_calendar', [
             'id' => $request->request->get('commercial'),
+        ]);
+    }
+
+    /**
+     * @Route("/dashboard/appointments/{id}/show", name="show_appointment")
+     */
+    public function show(Request $request, $id): Response
+    {
+        $appointmentToShow = $this->getDoctrine()->getRepository(Appointment::class)->find($id);
+        return $this->render('/appointment/show.html.twig', [
+            'appointment_to_show' => $appointmentToShow
         ]);
     }
 

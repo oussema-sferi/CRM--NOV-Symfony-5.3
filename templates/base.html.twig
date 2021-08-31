@@ -67,13 +67,14 @@
                         <div class="collapse navbar-collapse" id="sidenav-collapse-main">
                             <!-- Nav items -->
                             <ul class="navbar-nav">
+                                {% if (is_granted('ROLE_SUPERADMIN')) %}
                                 <li class="nav-item">
                                     <a class="nav-link" href="{{ path('all_contacts') }}">
                                         <i class="ni fas fa-address-book text-black-50"></i>
                                         <span class="nav-link-text">Gestion des Contacts</span>
                                     </a>
                                 </li>
-
+                                {% endif %}
                                 {% if (is_granted('ROLE_TELEPRO') or is_granted('ROLE_COMMERCIAL') or is_granted('ROLE_SUPERADMIN')) %}
                                     <li class="nav-item">
                                         <a class="nav-link" href="#navbar-dashboards" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="navbar-dashboards">
@@ -88,12 +89,14 @@
                                                         <span class="sidenav-normal"> Liste des prospects </span>
                                                     </a>
                                                 </li>
+                                                {% if (is_granted('ROLE_SUPERADMIN')) %}
                                                 <li class="nav-item">
                                                     <a href="{{ path('teleprospecting_stats') }}" class="nav-link">
                                                         <i class="ni fas fa-chart-bar text-orange"></i>
                                                         <span class="sidenav-normal"> Statistiques </span>
                                                     </a>
                                                 </li>
+                                                {% endif %}
                                                {# <li class="nav-item">
                                                     <a href="{{ path('availibility_check') }}" class="nav-link">
                                                         <i class="ni fas fa-calendar-alt text-orange"></i>
@@ -141,12 +144,14 @@
                                                 </a>
                                             </li>
                                             {% endif %}
+                                            {% if (is_granted('ROLE_SUPERADMIN')) %}
                                             <li class="nav-item">
                                                 <a href="{{ path('commercial_stats') }}" class="nav-link">
                                                     <i class="ni fas fa-chart-bar text-yellow"></i>
                                                     <span class="sidenav-normal"> Statistiques </span>
                                                 </a>
                                             </li>
+                                            {% endif %}
                                         </ul>
                                     </div>
                                 </li>

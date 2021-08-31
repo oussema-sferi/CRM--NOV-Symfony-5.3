@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Appointment;
 use App\Entity\Client;
+use App\Entity\GeographicArea;
 use App\Entity\User;
 use App\Repository\AppointmentRepository;
 use Knp\Component\Pager\PaginatorInterface;
@@ -21,6 +22,8 @@ class CommercialController extends AbstractController
     {
         $session = $request->getSession();
         $loggedUserId = $this->getUser()->getId();
+        $geographicAreas = $this->getDoctrine()->getRepository(GeographicArea::class)->findAll();
+        $commercialUsers = $this->getDoctrine()->getRepository(User::class)->findUsersByCommercialRole("ROLE_COMMERCIAL");
         //Fetch all the appointments and sort by the most recent date
         /*$commercialAppointments = $appointment->findBy(array(), array('start' => 'DESC'));*/
         /*$test = $appointment->getAppointmentsWhereClientsExist()->f;
@@ -49,7 +52,9 @@ class CommercialController extends AbstractController
 
         return $this->render('commercial/index.html.twig', [
             'all_commercial_appointments' => $data,
-            'commercial_appointments' => $commercialAppointments
+            'commercial_appointments' => $commercialAppointments,
+            'geographic_areas'=> $geographicAreas,
+            'commercial_users' => $commercialUsers
         ]);
     }
 

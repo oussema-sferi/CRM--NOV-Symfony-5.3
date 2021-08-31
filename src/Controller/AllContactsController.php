@@ -21,6 +21,14 @@ class AllContactsController extends AbstractController
      */
     public function index(Request $request, PaginatorInterface $paginator): Response
     {
+        $loggedUserRolesArray = $this->getUser()->getRoles();
+        if (in_array("ROLE_TELEPRO",$loggedUserRolesArray)) {
+            return $this->redirectToRoute('teleprospecting');
+        } elseif (in_array("ROLE_COMMERCIAL",$loggedUserRolesArray)) {
+            return $this->redirectToRoute('commercial');
+        } elseif (in_array("ROLE_ADMIN",$loggedUserRolesArray)) {
+            return $this->redirectToRoute('show_my_calendar');
+        }
         $session = $request->getSession();
         $geographicAreas = $this->getDoctrine()->getRepository(GeographicArea::class)->findAll();
         $data = $this->getDoctrine()->getRepository(Client::class)->findAll();
@@ -236,6 +244,7 @@ class AllContactsController extends AbstractController
                      $contact->setCategory($category);*/
                     $contact->setIsUnderContract(false);
                     $contact->setStatus(0);
+                    $contact->setStatusDetail(0);
                     /*$contact->setProvidedEquipment($providedEquipment);*/
                     $contact->setGeographicArea($geographicArea);
                     $contact->setCreatedAt(new \DateTime());

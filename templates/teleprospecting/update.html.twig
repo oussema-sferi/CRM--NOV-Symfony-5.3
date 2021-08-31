@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Ajout{% endblock %}
+{% block title %}Edition Prospect{% endblock %}
 
 {% block body %}
 
@@ -14,7 +14,7 @@
                             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
                                 <li class="breadcrumb-item"><a href="#"><i class="fas fa-phone-volume"></i></a></li>
                                 <li class="breadcrumb-item"><a href="#">Téléprospection</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Edition Contact</li>
+                                <li class="breadcrumb-item active" aria-current="page">Edition Prospect</li>
                             </ol>
                         </nav>
                     </div>
@@ -196,6 +196,15 @@
                             <div class="form-group">
                                 <div class="input-group">
                                     <div class="input-group-prepend">
+                                        <span class="input-group-text" style="width:120px">Département</span>
+                                    </div>
+                                    {{ form_widget(client_form.geographicArea, {'attr': {'class': 'form-control', 'value': client_to_update.geographicArea }}) }}
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
                                         <span class="input-group-text" style="width:120px">Pays</span>
                                     </div>
                                     {{ form_widget(client_form.country, {'attr': {'class': 'form-control', 'value': client_to_update.country }}) }}
@@ -237,9 +246,17 @@
                                     {{ form_widget(client_form.isUnderContract, {'attr': {'class': 'form-control', 'value': client_to_update.isUnderContract }}) }}
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" style="width:120px">Equipement</span>
+                                    </div>
+                                    {{ form_widget(client_form.providedEquipment, {'attr': {'class': 'form-control', 'value': client_to_update.providedEquipment }}) }}
+                                </div>
+                            </div>
 
                             <div class="text-center">
-                                <button type="submit" class="btn btn-primary mt-4">Confirmer</button>
+                                <button type="submit" class="btn btn-success mt-4">Confirmer</button>
                             </div>
 
                             {{ form_end(client_form)}}

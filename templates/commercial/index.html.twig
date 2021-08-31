@@ -31,7 +31,7 @@
                         </nav>
                     </div>
                     <div class="col-lg-6 col-5 text-right">
-                        {#<a href="{{ path('new_client') }}" class="btn btn-sm btn-success">Nouveau prospect</a>#}
+                        <a href="{{ path('new_client') }}" class="btn btn-sm btn-success">Nouveau client</a>
                         {#<a href="#" class="btn btn-sm btn-neutral">Filters</a>#}
                     </div>
                 </div>
@@ -136,6 +136,7 @@
             <div class="col">
                 <div class="card">
                     <!-- Card header -->
+                    <form action="{{ path('appointments_search_filters') }}" method="post">
                     <div class="card-header border-0">
                         <div class="row">
                             <div class="col-md-9">
@@ -153,20 +154,76 @@
                             <tr>
                                 <th scope="col">Prénom</th>
                                 <th scope="col">Nom</th>
-
                                 <th scope="col">Société</th>
                                 <th scope="col">Catégorie</th>
+                                <th scope="col">Département</th>
                                 {#<th scope="col">Sous Contrat</th>#}
                                 <th scope="col">RDV: Date/Heure Début</th>
                                 <th scope="col">RDV: Date/Heure Fin</th>
                                 <th scope="col">Commercial Affecté</th>
-                                <th scope="col">Observations</th>
                                 <th scope="col">état</th>
+                                <th scope="col">Observations</th>
                                 <th scope="col">Traitement</th>
                                 {#<th scope="col">Consultation</th>
                                 <th scope="col">Modification</th>
                                 <th scope="col">Suppression</th>#}
                             </tr>
+
+                            <tr>
+                                <td>
+                                    <input id="firstName" name="firstName" class="test" type="text">
+                                </td>
+                                <td>
+                                    <input id="lastName" name="lastName" class="test" type="text">
+                                </td>
+                                <td>
+                                    <input id="companyName" name="companyName" class="test" type="text">
+                                </td>
+                                <td>
+                                    <select id="category" name="category" class="form-control-sm">
+                                        <option value="" selected>--- Choisir ---</option>
+                                        <option value="Médecin">Médecin</option>
+                                        <option value="Vétérinaire">Vétérinaire</option>
+                                        <option value="Chirurgien">Chirurgien</option>
+                                    </select>
+                                </td>
+
+                                <td>
+                                    <select id="geographicArea" name="geographicArea" class="form-control-sm">
+                                        <option value="" selected>--- Choisir ---</option>
+                                        {% for geographic_area in geographic_areas %}
+                                            <option value="{{ geographic_area.id }}">{{ geographic_area.designation }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                                <td>
+                                    <input id="start" name="start" class="test" type="date">
+                                </td>
+                                <td>
+                                    <input id="end" name="end" class="test" type="date">
+                                </td>
+                                <td>
+                                    <select id="commercialuser" name="commercialuser" class="form-control-sm">
+                                        <option value="" selected>--- Choisir ---</option>
+                                        {% for commercial_user in commercial_users %}
+                                            <option value="{{ commercial_user.id }}">{{ commercial_user.firstName ~ ' ' ~ commercial_user.lastName }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                                <td>
+                                    <select id="status" name="status" class="form-control-sm">
+                                        <option value="" selected>--- Choisir ---</option>
+                                        <option value="0">Non traité</option>
+                                        <option value="1">Appel non Qualifié</option>
+                                        <option value="2">Appel Qualifié</option>
+                                    </select>
+                                </td>
+
+                                <td></td>
+                                <td></td>
+                            </tr>
+
+
                             </thead>
                             <tbody class="list">
 
@@ -187,6 +244,10 @@
 
                                     <td class="budget">
                                         {{ commercial_appointment.client.category }}
+                                    </td>
+
+                                    <td class="budget">
+                                        {{ commercial_appointment.client.geographicArea.designation }}
                                     </td>
 
                                     {#<td class="budget">
@@ -210,18 +271,7 @@
                                         {{ commercial_appointment.user.firstName ~ ' ' ~ commercial_appointment.user.lastName }}
                                     </td>
 
-                                    <td class="budget" style="text-align: center">
-                                        <button class="notes" data-container="body" data-toggle="popover" data-color="info" data-placement="top" data-content= "{{ commercial_appointment.appointmentNotes }}">
-                                            <i class="far fa-comment text-cyan"></i>
-                                        </button>
-                                    </td>
-
                                     <td class="budget">
-                                        {# {% if  client.status == 0 %}
-                                    <span class="badge badge-warning badge-lg">
-                                        <i class="bg-info"></i>
-                                        Non Traité
-                                    </span>#}
                                         {% if commercial_appointment.isDone == 1 %}
                                             <span class="badge badge-success badge-lg">
                                                 <i class="bg-success"></i>
@@ -235,8 +285,20 @@
                                         {% endif %}
                                     </td>
 
+                                    <td class="budget" style="text-align: center">
+                                        <button class="notes" data-container="body" data-toggle="popover" data-color="info" data-placement="top" data-content= "{{ commercial_appointment.appointmentNotes }}">
+                                            <i class="far fa-comment text-cyan"></i>
+                                        </button>
+                                    </td>
+
                                     <td >
-                                        <a href="{{ path('appointment_handle', {'id': commercial_appointment.id}) }}"  class="badge badge-default" >Traiter RDV</a>
+                                        {% if commercial_appointment.isDone != 1 %}
+                                            <a href="{{ path('appointment_handle', {'id': commercial_appointment.id}) }}"  class="badge badge-default" >Traiter RDV</a>
+                                        {% else %}
+                                            <a href="{{ path('show_appointment', {'id': commercial_appointment.id}) }}"><i class="fas fa-search-plus text-blue"></i></a>&nbsp;&nbsp;
+                                            {#<a href="{{ path('update_client', {'id': commercial_appointment.client.id}) }}"><i class="fas fa-edit text-yellow"></i></a>#}
+                                            <a href="" data-toggle="modal" data-target="#deleteModal"><i class="fas fa-trash-alt text-red"></i></a>
+                                        {% endif %}
                                     </td>
 
                                     {#<td >
@@ -258,6 +320,7 @@
                             </tbody>
                         </table>
                     </div>
+                    </form>
                     <!-- Card footer -->
                     {{ knp_pagination_render(commercial_appointments) }}
                     {#<div class="card-footer py-4">
