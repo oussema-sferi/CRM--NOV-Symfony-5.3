@@ -136,14 +136,16 @@
             <div class="col">
                 <div class="card">
                     <!-- Card header -->
-                    <form action="{{ path('appointments_search_filters') }}" method="post">
+                    {#<form action="{{ path('appointments_search_filters') }}" method="post">#}
                     <div class="card-header border-0">
                         <div class="row">
-                            <div class="col-md-9">
+                            <div class="col-md-8">
                                 <h3 class="mb-0">Total: {{ all_commercial_appointments|length }} RDVs</h3>
                             </div>
-                            <div class="col-md-3">
-                                <input type="text" class="form-control " placeholder="Recherche" id="contact-filter">
+                            <div class="col-md-4 text-right">
+                                <a class="btn btn-sm btn-primary" href="{{ path('commercial') }}">Réinitialiser les filtres</a>
+                                {#<input type="text" class="form-control " placeholder="Recherche" id="contact-filter">#}
+                                <button class="btn btn-sm btn-success" type="submit">Appliquer les filtres</button>
                             </div>
                         </div>
                     </div>
@@ -203,7 +205,7 @@
                                     <input id="end" name="end" class="test" type="date">
                                 </td>
                                 <td>
-                                    <select id="commercialuser" name="commercialuser" class="form-control-sm">
+                                    <select id="luser" name="user" class="form-control-sm">
                                         <option value="" selected>--- Choisir ---</option>
                                         {% for commercial_user in commercial_users %}
                                             <option value="{{ commercial_user.id }}">{{ commercial_user.firstName ~ ' ' ~ commercial_user.lastName }}</option>
@@ -211,11 +213,10 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <select id="status" name="status" class="form-control-sm">
+                                    <select id="isDone" name="isDone" class="form-control-sm">
                                         <option value="" selected>--- Choisir ---</option>
-                                        <option value="0">Non traité</option>
-                                        <option value="1">Appel non Qualifié</option>
-                                        <option value="2">Appel Qualifié</option>
+                                        <option value="0">A venir</option>
+                                        <option value="1">Effectué</option>
                                     </select>
                                 </td>
 
@@ -320,7 +321,7 @@
                             </tbody>
                         </table>
                     </div>
-                    </form>
+                    {#</form>#}
                     <!-- Card footer -->
                     {{ knp_pagination_render(commercial_appointments) }}
                     {#<div class="card-footer py-4">

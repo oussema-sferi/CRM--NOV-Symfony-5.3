@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Appointment;
 use App\Entity\Client;
 use App\Entity\GeographicArea;
 use Knp\Component\Pager\PaginatorInterface;
@@ -183,13 +184,13 @@ class SearchFiltersController extends AbstractController
             );
         }
         $criterias = $session->get('criterias');
-        $payload = $this->getDoctrine()->getRepository(Client::class)->fetchClientsbyFilters($criterias);
+        $payload = $this->getDoctrine()->getRepository(Appointment::class)->fetchAppointmentsbyFilters($criterias);
         if(count($payload) === 0) {
-            $session->set('total_contacts_search_results',
+            $session->set('total_appointments_search_results',
                 'nothing'
             );
         } else {
-            $session->set('total_contacts_search_results',
+            $session->set('total_appointments_search_results',
                 count($payload)
             );
         }
@@ -197,13 +198,13 @@ class SearchFiltersController extends AbstractController
 
 
         if($session->get('pagination_value')) {
-            $clients = $paginator->paginate(
+            $appointments = $paginator->paginate(
                 $payload,
                 $request->query->getInt('page', 1),
                 $session->get('pagination_value')
             );
         } else {
-            $clients = $paginator->paginate(
+            $appointments = $paginator->paginate(
                 $payload,
                 $request->query->getInt('page', 1),
                 10
@@ -216,8 +217,8 @@ class SearchFiltersController extends AbstractController
              10
          );*/
 
-        return $this->render('all_contacts/index.html.twig', [
-            'clients' => $clients,
+        return $this->render('commercial/index.html.twig', [
+            'appointments' => $appointments,
             'geographic_areas'=> $geographicAreas
         ]);
     }

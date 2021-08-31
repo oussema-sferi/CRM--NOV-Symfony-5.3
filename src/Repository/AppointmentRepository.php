@@ -14,6 +14,7 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class AppointmentRepository extends ServiceEntityRepository
 {
+    public const USER = 'user';
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Appointment::class);
@@ -115,4 +116,49 @@ class AppointmentRepository extends ServiceEntityRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    public function fetchAppointmentsbyFilters(array $filters): array
+    {
+        $builder = $this->createQueryBuilder('a');
+        $query = $builder->select('a')
+            ->join('a.user', 'u');
+        $counter = 0;
+        $filters = $this->_trimFiltersApp($filters);
+        foreach ($this->_trimFiltersApp($filters) as $key => $value) {
+            $statement = $key === self::USER ? " u.id = :$key" : "a.$key LIKE :$key";
+            if ($counter === 0) {
+                $query->where($statement);
+            }
+            else {
+                $query->andWhere($statement);
+            }
+            $counter ++;
+        }
+        $query->setParameters($filters);
+        return $query->getQuery()->getResult();
+    }
+
+    /**
+     * @param array<mixed> $filters
+     * @return array<string>
+     **/
+    private function _trimFiltersApp(array $filters): array
+    {
+        /** @var array<string> $result **/
+        $result = [];
+        foreach ($filters as $key => $value) {
+            if (trim($value) !== "") {
+                if ($key !== self::USER) {
+                    $result[$key] = '%'.$value.'%';
+                }
+                else {
+                    $result[$key] = $value;
+                }
+
+            }
+        }
+        return $result;
+    }
+
+
 }

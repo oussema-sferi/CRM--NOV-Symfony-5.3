@@ -143,10 +143,19 @@
                             <tr>
                                 <th scope="col">Prénom</th>
                                 <th scope="col">Nom</th>
-
+                                <th scope="col">Email</th>
                                 <th scope="col">Société</th>
                                 <th scope="col">Catégorie</th>
+                                {#<th scope="col">Equipement</th>#}
                                 <th scope="col">Sous Contrat</th>
+                                <th scope="col">Adresse</th>
+                                <th scope="col">Code Postal</th>
+                                <th scope="col">Département</th>
+                                <th scope="col">Commune</th>
+                                <th scope="col">Pays</th>
+                                <th scope="col">Numéro Domicile</th>
+                                <th scope="col">Numéro Mobile</th>
+                                <th scope="col">Actions</th>
                                 {#<th scope="col">Traitement</th>#}
                                 {#<th scope="col">Consultation</th>
                                 <th scope="col">Modification</th>
@@ -158,13 +167,16 @@
                             {% for commercial_appointment in commercial_appointments %}
                                 <tr>
                                     <td class="budget">
-                                        {{ commercial_appointment.client.firstName }}
+                                        {{commercial_appointment. client.firstName }}
                                     </td>
 
                                     <td class="budget">
                                         {{ commercial_appointment.client.lastName }}
                                     </td>
 
+                                    <td class="budget">
+                                        {{ commercial_appointment.client.email }}
+                                    </td>
 
                                     <td class="budget">
                                         {{ commercial_appointment.client.companyName }}
@@ -174,12 +186,55 @@
                                         {{ commercial_appointment.client.category }}
                                     </td>
 
+                                    {#<td class="budget">
+                                        {% if client.providedEquipment %}
+                                        {{ client.providedEquipment.designation }}
+                                        {% else %}
+                                        {% endif %}
+                                    </td>#}
+
                                     <td class="budget">
                                         {% if  commercial_appointment.client.isUnderContract %}
                                             Oui
                                         {% else %}
                                             Non
                                         {% endif %}
+                                    </td>
+
+                                    <td class="budget">
+                                        {{ commercial_appointment.client.address }}
+                                    </td>
+
+                                    <td class="budget">
+                                        {{ commercial_appointment.client.postalCode }}
+                                    </td>
+
+                                    <td class="budget">
+                                        {{ commercial_appointment.client.geographicArea.designation }}
+                                    </td>
+
+                                    <td class="budget">
+                                        {{ commercial_appointment.client.city }}
+                                    </td>
+
+                                    <td class="budget">
+                                        {{ commercial_appointment.client.country }}
+                                    </td>
+
+                                    <td class="budget">
+                                        {{ commercial_appointment.client.phoneNumber }}
+                                    </td>
+
+                                    <td class="budget">
+                                        {{ commercial_appointment.client.mobileNumber }}
+                                    </td>
+
+                                    <td >
+                                        {#<a href="{{ path('show_contact', {'id': client.id}) }}"  class="badge badge-default" >Consulter Fiche</a>#}
+                                        <a href="{{ path('show_contact', {'id': commercial_appointment.client.id}) }}"><i class="fas fa-search-plus text-blue"></i></a>&nbsp;&nbsp;
+                                        {#<a href="{{ path('update_contact', {'id': client.id}) }}"><i class="fas fa-edit text-yellow"></i></a>#}&nbsp;&nbsp;
+                                        <a href="" data-toggle="modal" data-target="#deleteModal"><i class="fas fa-trash-alt text-red"></i></a>
+
                                     </td>
 
                                    {# <td >

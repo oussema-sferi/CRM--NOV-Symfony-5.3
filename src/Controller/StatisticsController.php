@@ -19,7 +19,12 @@ class StatisticsController extends AbstractController
         $processedContacts = $this->getDoctrine()->getRepository(Client::class)->getProcessedClients();
         $contactsPerformance = number_format(((count($processedContacts) / count($allContacts)) * 100), 2);
         $allAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getAppointmentsWhereClientsExist();
-        $appointmentsPerformance = number_format(((count($allAppointments) / count($processedContacts)) * 100), 2);
+        if(count($processedContacts) !== 0) {
+            $appointmentsPerformance = number_format(((count($allAppointments) / count($processedContacts)) * 100), 2);
+        } else {
+            $appointmentsPerformance = 0;
+        }
+
 
         return $this->render('statistics/index.html.twig', [
             'total_all_contacts' => count($allContacts),

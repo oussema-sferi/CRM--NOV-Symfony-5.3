@@ -55,8 +55,8 @@ class AppointmentController extends AbstractController
         $newAppointment = new Appointment();
         $appointmentForm = $this->createForm(AppointmentFormType::class, $newAppointment);
         $appointmentForm->handleRequest($request);
-        /*$clients = $this->getDoctrine()->getRepository(Client::class)->findBy(["status" => 1]);*/
-        $clients = $this->getDoctrine()->getRepository(Client::class)->findAll();
+        $clients = $this->getDoctrine()->getRepository(Client::class)->findBy(["statusDetail" => 7]);
+        /*$clients = $this->getDoctrine()->getRepository(Client::class)->findAll();*/
         if($appointmentForm->isSubmitted()) {
             // for validation -> appointment duration must be <= 3 hours
             $validationStartTime = $newAppointment->getStart();
@@ -268,7 +268,8 @@ class AppointmentController extends AbstractController
         }
         $events = $appointment->findBy(['user' => $id]);
         /*$clients = $this->getDoctrine()->getRepository(Client::class)->findBy(["status" => 1]);*/
-        $clients = $this->getDoctrine()->getRepository(Client::class)->findAll();
+        /*$clients = $this->getDoctrine()->getRepository(Client::class)->findAll();*/
+        $clients = $this->getDoctrine()->getRepository(Client::class)->findBy(["statusDetail" => 7]);
         /*dd($events);*/
         $appointments = [];
         foreach ($events as $event) {

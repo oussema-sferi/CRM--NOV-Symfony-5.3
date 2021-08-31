@@ -142,10 +142,10 @@
                                 {% endif %}
                             </div>
 
-                            <div class="col-md-4">
-                                <a class="btn btn-sm btn-primary" href="{{ path('teleprospecting') }}" style="margin-left: 30px">Réinitialiser les filtres</a>
+                            <div class="col-md-4 text-right">
+                                <a class="btn btn-sm btn-primary" href="{{ path('teleprospecting') }}">Réinitialiser les filtres</a>
                                 {#<input type="text" class="form-control " placeholder="Recherche" id="contact-filter">#}
-                                <button class="btn btn-sm btn-success" type="submit" style="margin-left: 30px">Appliquer les filtres</button>
+                                <button class="btn btn-sm btn-success" type="submit">Appliquer les filtres</button>
                             </div>
                         </div>
                     </div>
@@ -245,7 +245,7 @@
                                             <option value="4">Pas Intéressé</option>
                                             <option value="5">A Rappeler</option>
                                             <option value="6">RDV à prendre</option>
-                                            <option value="7">RDV fixé</option>
+                                            {#<option value="7">RDV fixé</option>#}
                                         </select>
                                     </td>
                                     <td></td>
@@ -368,7 +368,7 @@
                                 </td>
                                 {% if client.calls|default %}
                                     <td class="budget" style="text-align: center">
-                                        <button class="notes" data-container="body" data-toggle="popover" data-color="info" data-placement="top" data-content= "{{ client.calls[client.calls|length -1].callNotes }}">
+                                        <button class="notes" data-container="body" data-toggle="popover" data-color="info" data-placement="top" data-content= "{{ client.calls[client.calls|length -1].callNotes }}" href="#">
                                             <i class="far fa-comment text-cyan"></i>
                                         </button>
                                     </td>
@@ -381,7 +381,7 @@
                                         <a href="{{ path('call_handle', {'id': client.id}) }}"  class="badge badge-default" >Traiter Fiche</a>
                                     {% else %}
                                         <a href="{{ path('show_client', {'id': client.id}) }}"><i class="fas fa-search-plus text-blue"></i></a>&nbsp;&nbsp;
-                                        <a href="{{ path('update_client', {'id': client.id}) }}"><i class="fas fa-edit text-yellow"></i></a>&nbsp;&nbsp;
+                                        {#<a href="{{ path('update_client', {'id': client.id}) }}"><i class="fas fa-edit text-yellow"></i></a>#}&nbsp;&nbsp;
                                         <a href="" data-toggle="modal" data-target="#deleteModal"><i class="fas fa-trash-alt text-red"></i></a>
                                     {% endif %}
                                 </td>
