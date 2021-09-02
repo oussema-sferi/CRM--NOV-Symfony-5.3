@@ -368,7 +368,7 @@
                                 </td>
                                 {% if client.calls|default %}
                                     <td class="budget" style="text-align: center">
-                                        <button class="notes" data-container="body" data-toggle="popover" data-color="info" data-placement="top" data-content= "{{ client.calls[client.calls|length -1].callNotes }}" href="#">
+                                        <button class="notes" data-container="body" type="button" data-toggle="popover" data-color="info" data-placement="top" data-content= "{{ client.calls[client.calls|length -1].callNotes }}" href="#">
                                             <i class="far fa-comment text-cyan"></i>
                                         </button>
                                     </td>
