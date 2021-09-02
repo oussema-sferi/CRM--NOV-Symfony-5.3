@@ -53,7 +53,7 @@ class Appointment
     private $user;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="boolean")
      */
     private $isDone;
 

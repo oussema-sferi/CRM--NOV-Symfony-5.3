@@ -35,7 +35,7 @@ class CommercialController extends AbstractController
         } else {
             $data = $appointment->getAppointmentsWhereClientsExist();
         }
-
+        $session->remove('total_appointments_search_results');
         if($session->get('pagination_value')) {
             $commercialAppointments = $paginator->paginate(
                 $data,

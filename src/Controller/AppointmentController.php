@@ -471,6 +471,7 @@ class AppointmentController extends AbstractController
             $commercial = $this->getDoctrine()->getRepository(User::class)->find($request->request->get('commercial'));
             $newAppointment = new Appointment();
             $newAppointment->setStatus(0);
+            $newAppointment->setIsDone(0);
             $newAppointment->setStart(new \DateTime($request->request->get('start')));
             $newAppointment->setEnd(new \DateTime($request->request->get('end')));
             $newAppointment->setClient($client);
@@ -501,6 +502,7 @@ class AppointmentController extends AbstractController
 
             $newAppointment = new Appointment();
             $newAppointment->setStatus(0);
+            $newAppointment->setIsDone(false);
             $newAppointment->setStart(new \DateTime($request->request->get('start')));
             $newAppointment->setEnd(new \DateTime($request->request->get('end')));
             $newAppointment->setClient($client);

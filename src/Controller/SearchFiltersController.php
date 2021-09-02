@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Appointment;
 use App\Entity\Client;
 use App\Entity\GeographicArea;
+use App\Entity\User;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -177,6 +178,7 @@ class SearchFiltersController extends AbstractController
         //search without ajax
         $session = $request->getSession();
         $geographicAreas = $this->getDoctrine()->getRepository(GeographicArea::class)->findAll();
+        $commercialUsers = $this->getDoctrine()->getRepository(User::class)->findUsersByCommercialRole("ROLE_COMMERCIAL");
         if($request->isMethod('POST')) {
             /*dd($request->request->all());*/
             $session->set('criterias',
@@ -196,7 +198,12 @@ class SearchFiltersController extends AbstractController
         }
         /*dd($payload);*/
 
-
+        $loggedUserRolesArray = $this->getUser()->getRoles();
+        if (in_array("ROLE_COMMERCIAL",$loggedUserRolesArray)) {
+            $data = $this->getDoctrine()->getRepository(Appointment::class)->getAppointmentsOfLoggedUser($loggedUserId);
+        } else {
+            $data = $this->getDoctrine()->getRepository(Appointment::class)->getAppointmentsWhereClientsExist();
+        }
         if($session->get('pagination_value')) {
             $appointments = $paginator->paginate(
                 $payload,
@@ -210,6 +217,7 @@ class SearchFiltersController extends AbstractController
                 10
             );
         }
+        /*dd($payload);*/
 
         /* $clients = $paginator->paginate(
              $payload,
@@ -218,8 +226,10 @@ class SearchFiltersController extends AbstractController
          );*/
 
         return $this->render('commercial/index.html.twig', [
-            'appointments' => $appointments,
-            'geographic_areas'=> $geographicAreas
+            'all_commercial_appointments' => $data,
+            'commercial_appointments' => $appointments,
+            'geographic_areas'=> $geographicAreas,
+            'commercial_users' => $commercialUsers
         ]);
     }
 
