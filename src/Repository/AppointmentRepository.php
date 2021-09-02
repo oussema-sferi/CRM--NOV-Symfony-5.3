@@ -160,5 +160,16 @@ class AppointmentRepository extends ServiceEntityRepository
         return $result;
     }
 
+    public function getAppointmentsOfUser($Id)
+    {
+
+        $qb = $this->createQueryBuilder('a');
+        $qb->select('a')
+            ->join('a.user', 'u')
+            ->where("u.id = $Id");
+
+        return $qb->getQuery()->getResult();
+    }
+
 
 }

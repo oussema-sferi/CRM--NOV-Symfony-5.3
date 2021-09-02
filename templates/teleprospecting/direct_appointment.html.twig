@@ -12,14 +12,15 @@
                         <h6 class="h2 text-white d-inline-block mb-0">CRM</h6>
                         <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
                             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
-                                <li class="breadcrumb-item"><a href="#"><i class="fas fa-phone-volume"></i></a></li>
+                                <li class="breadcrumb-item"><a href="#"><i class="fas fa-phone-volume text-orange"></i></a></li>
+                                <li class="breadcrumb-item"><a href="#">Prise de RDV</a></li>
                                 <li class="breadcrumb-item"><a href="#">Vérification des Disponibilités</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Fixer un RDV</li>
+                                {#<li class="breadcrumb-item active" aria-current="page">Fixer un RDV</li>#}
                             </ol>
                         </nav>
                     </div>
                     <div class="col-lg-6 col-5 text-right">
-                        <a href="{{ path('appointment') }}" class="btn btn-sm btn-neutral">Retour</a>
+                        {#<a href="{{ path('appointment') }}" class="btn btn-sm btn-neutral">Retour</a>#}
                     </div>
                 </div>
                 <!-- Card stats -->
@@ -138,7 +139,7 @@
                             <div class="text-center text-muted mb-4">
                             </div>
 
-                            <form action="{{ path('fix_appointment') }}" method="post">
+                            {#<form action="{{ path('fix_appointment') }}" method="post">
                                 <div class="form-group">
 
                                     <label class="form-control-label" for="commercial">Commerciaux Disponibles</label>
@@ -173,14 +174,14 @@
 
                                 <div class="form-group">
 
-                                    {#<label class="form-control-label" for="input-username">Date/Heure Début</label>#}
+                                    #}{#<label class="form-control-label" for="input-username">Date/Heure Début</label>#}{#
                                     <input class="form-control form-control-sm" type="hidden" value="{{ start }}" name="start">
 
                                 </div>
 
                                 <div class="form-group">
 
-                                    {#<label class="form-control-label" for="end">Date/Heure Fin</label>#}
+                                    #}{#<label class="form-control-label" for="end">Date/Heure Fin</label>#}{#
                                     <input id="end" class="form-control form-control-sm" type="hidden" value="{{ end }}" name="end">
 
                                 </div>
@@ -191,7 +192,29 @@
                                 <div class="text-center">
                                     <button type="submit" class="btn btn-success mt-4">Confirmer</button>
                                 </div>
-                            </form>
+                            </form>#}
+                            {{ form_start(appointment_form) }}
+                            <div class="form-group">
+                                <label for="example-datetime-local-input" class="form-control-label">Date et heure de Début</label>
+                                {{ form_widget(appointment_form.start) }}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="example-datetime-local-input" class="form-control-label">Date et heure de Fin</label>
+                                {{ form_widget(appointment_form.end) }}
+                            </div>
+                            <hr class="my-3">
+                            {% for message in app.flashes('appointment_duration_warning') %}
+                                <div style="color: red">
+                                    <small>
+                                        {{ message }}
+                                    </small>
+                                </div>
+                            {% endfor %}
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary mt-4">Vérifier la disponibilité</button>
+                            </div>
+                            {{ form_end(appointment_form)}}
                             {#<div class="form-group">
 
                                 <label for="example-datetime-local-input" class="form-control-label">Client</label>

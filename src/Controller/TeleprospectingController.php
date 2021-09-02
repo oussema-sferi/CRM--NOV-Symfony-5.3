@@ -7,6 +7,7 @@ use App\Entity\Call;
 use App\Entity\Client;
 use App\Entity\GeographicArea;
 use App\Entity\User;
+use App\Form\AppointmentFormType;
 use App\Form\CallFormType;
 use App\Form\ClientFormType;
 use Knp\Component\Pager\PaginatorInterface;
@@ -143,6 +144,10 @@ class TeleprospectingController extends AbstractController
         /*$loggedUserId = $this->getUser()->getUserIdentifier();
         $usr = $this->getDoctrine()->getRepository(User::class)->findBy(['email' => $loggedUserId]);*/
         /*dd($usr);*/
+        $directAppointment = new Appointment();
+        $appointmentForm = $this->createForm(AppointmentFormType::class, $directAppointment);
+        $appointmentForm->handleRequest($request);
+
         $newCall = new Call();
         $callForm = $this->createForm(CallFormType::class, $newCall);
         $callForm->handleRequest($request);
@@ -167,8 +172,91 @@ class TeleprospectingController extends AbstractController
             }
             $manager->persist($newCall);
             $manager->flush();
-            return $this->redirectToRoute('teleprospecting');
+
+            if($status === 2 && $statusDetailsQ === 7) {
+                return $this->render('/teleprospecting/direct_appointment.html.twig', [
+                    'appointment_form' => $appointmentForm->createView(),
+                ]);
+            } else {
+                return $this->redirectToRoute('teleprospecting');
+            }
         }
+        $loggedUserId = $this->getUser()->getId();
+        $clients = $this->getDoctrine()->getRepository(Client::class)->findAll();
+        if($appointmentForm->isSubmitted()) {
+            $validationStartTime = $directAppointment->getStart();
+            $validationEndTime = $directAppointment->getEnd();
+            $appointmentDuration = date_diff($validationEndTime,$validationStartTime);
+
+            if($validationEndTime < $validationStartTime) {
+                $this->addFlash(
+                    'appointment_duration_warning',
+                    "Veuillez revérifier vos entrées! L'heure de début doit être avant l'heure de fin!"
+                );
+                return $this->render('/teleprospecting/direct_appointment.html.twig', [
+                    'appointment_form' => $appointmentForm->createView(),
+                ]);
+            }
+
+            if((($validationEndTime > $validationStartTime) && ($appointmentDuration->days === 0) && ($appointmentDuration->h <= 2)) ||
+                (($validationEndTime > $validationStartTime) && ($appointmentDuration->days === 0) && ($appointmentDuration->h === 3)
+                    && ($appointmentDuration->i === 0) && ($appointmentDuration->s === 0))
+            ) {
+                $startTime = $directAppointment->getStart()->format('Y-m-d H:i:s');
+                $endTime = $directAppointment->getEnd()->format('Y-m-d H:i:s');
+                $busyAppointmentsTime = $this->getDoctrine()->getRepository(Appointment::class)->getAppointmentsBetweenByDate($startTime, $endTime);
+                /*dd($busyAppointmentsTime);*/
+                if($busyAppointmentsTime) {
+                    $busyCommercialsIdsArray = [];
+                    foreach ($busyAppointmentsTime as $busyAppointment) {
+                        $busyCommercialsIdsArray[] = $busyAppointment->getUser()->getId();
+                    }
+                    if(in_array("ROLE_SUPERADMIN", $this->getUser()->getRoles())) {
+                        $freeCommercials = $this->getDoctrine()->getRepository(User::class)->findFreeCommercialsForSuperAdmin($busyCommercialsIdsArray, "ROLE_COMMERCIAL");
+                    } else {
+                        /*$busyCommercialId = $busyAppointmentsTime[0]->getUser()->getId();*/
+                        /*dd($busyCommercialId);*/
+                        /*dd($result);*/
+                        $freeCommercials = $this->getDoctrine()->getRepository(User::class)->findFreeCommercials($busyCommercialsIdsArray, "ROLE_COMMERCIAL", $loggedUserId);
+                        /*dd($freeCommercials);*/
+                    }
+
+                } else {
+                    if(in_array("ROLE_SUPERADMIN", $this->getUser()->getRoles())) {
+                        $freeCommercials = $this->getDoctrine()->getRepository(User::class)->findUsersByCommercialRole("ROLE_COMMERCIAL");
+                    } else {
+                        $freeCommercials = $this->getDoctrine()->getRepository(User::class)->findAssignedUsersByCommercialRole($loggedUserId,"ROLE_COMMERCIAL");
+                    }
+                }
+                return $this->render('/appointment/free_commercials_check.html.twig', [
+                    /*'free_appointments' => $freeAppointmentsTime*/
+                    'free_commercials' => $freeCommercials,
+                    'clients' => $clients,
+                    'start' => $startTime,
+                    'end' => $endTime
+                ]);
+            } else {
+                if(($appointmentDuration->days === 0) && ($appointmentDuration->h === 0)
+                    && ($appointmentDuration->i === 0) && ($appointmentDuration->s === 0)) {
+                    /*dd($appointmentDuration);*/
+                    $this->addFlash(
+                        'appointment_duration_warning',
+                        "Veuillez revérifier vos entrées! La durée du RDV doit pas être nulle!"
+                    );
+                } else {
+                    $this->addFlash(
+                        'appointment_duration_warning',
+                        "Veuillez revérifier vos entrées! La durée du RDV ne doit pas dépasser trois heures!"
+                    );
+                }
+                return $this->render('/teleprospecting/direct_appointment.html.twig', [
+                    'appointment_form' => $appointmentForm->createView(),
+                ]);
+            }
+
+        }
+
+
         return $this->render('/teleprospecting/callHandle.html.twig', [
             'call_form' => $callForm->createView(),
             'client' => $client

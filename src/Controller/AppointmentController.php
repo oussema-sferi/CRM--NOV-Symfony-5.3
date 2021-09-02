@@ -55,7 +55,7 @@ class AppointmentController extends AbstractController
         $newAppointment = new Appointment();
         $appointmentForm = $this->createForm(AppointmentFormType::class, $newAppointment);
         $appointmentForm->handleRequest($request);
-        $clients = $this->getDoctrine()->getRepository(Client::class)->findBy(["statusDetail" => 7]);
+        $clients = $this->getDoctrine()->getRepository(Client::class)->findAll();
         /*$clients = $this->getDoctrine()->getRepository(Client::class)->findAll();*/
         if($appointmentForm->isSubmitted()) {
             // for validation -> appointment duration must be <= 3 hours

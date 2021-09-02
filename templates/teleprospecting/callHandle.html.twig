@@ -208,17 +208,33 @@
                             <div class="form-group">
 
                                     <div>
-                                        <label class="form-control-label" for="input-username">Observations</label>
+                                        <label class="form-control-label" for="input-username">Observations Appel</label>
                                     </div>
 
                                     {{ form_widget(call_form.callNotes, {'attr': {'class': 'form-control', 'placeholder':"..." }}) }}
 
                             </div>
 
+                            <div id="start_datetime" class="form-group"style="display: none">
+                                <label for="start-datetime-local-input" class="form-control-label">Date/Heure Début</label>
+                                <input type="datetime-local" name="start_datetime" class="form-control">
+                            </div>
+
+                            <div id="end_datetime" class="form-group"style="display: none">
+                                <label for="end-datetime-local-input" class="form-control-label">Date/Heure Fin</label>
+                                <input type="datetime-local" name="end_datetime" class="form-control">
+                            </div>
 
 
+                            {% for message in app.flashes('appointment_duration_warning') %}
+                                <div style="color: red">
+                                    <small>
+                                        {{ message }}
+                                    </small>
+                                </div>
+                            {% endfor %}
                             <div class="text-center">
-                                <button type="submit" class="btn btn-success mt-4">Confirmer</button>
+                                <button id="confirm" type="submit" class="btn btn-success mt-4">Confirmer</button>
                             </div>
 
                             {{ form_end(call_form)}}
@@ -228,16 +244,21 @@
             </div>
         </div>
     </div>
+
+
 {% endblock %}
 
 {% block additionalJs %}
 
     <script>
         window.onload = () => {
+
             /*let calendarElement = document.querySelector("#calendar");*/
             let status =  $("#status");
             let statusDetailsnq =  $("#detailsnq");
             let statusDetailsq =  $("#detailsq");
+            let startTime = $("#start_datetime");
+            let endTime = $("#end_datetime");
             status.on('change', function() {
                 /*statusDetailsnq.parent().show('1500')
                 console.log($(this).val())*/
@@ -247,6 +268,11 @@
                     statusDetailsq.val("")
                     statusDetailsq.prop('required', false)
                     statusDetailsnq.prop('required', true)
+                    $("#confirm").html('Confirmer');
+                    $("#confirm").removeClass("btn-primary");
+                    $("#confirm").addClass("btn-success");
+                    /*startTime.hide('500');
+                    endTime.hide('500');*/
                 } else if ($(this).val() === "2") {
                     statusDetailsnq.parent().hide('500')
                     statusDetailsq.parent().show('1500')
@@ -255,6 +281,39 @@
                     statusDetailsq.prop('required', true)
                 }
             })
+
+
+            statusDetailsq.on('change', function() {
+                {
+                    if($(this).val() === "7") {
+
+                        $("#confirm").html('Vers RDV');
+                        $("#confirm").removeClass("btn-success");
+                        $("#confirm").addClass("btn-primary");
+                    } else {
+                        $("#confirm").html('Confirmer');
+                        $("#confirm").removeClass("btn-primary");
+                        $("#confirm").addClass("btn-success");
+                    }
+                }
+
+            })
+
+
+            /*statusDetailsq.on('change', function() {
+                {
+                    if($(this).val() === "7") {
+
+                        startTime.show('1500');
+                        endTime.show('1500');
+                    } else {
+                        startTime.hide('500');
+                        endTime.hide('500');
+                    }
+                }
+
+            })*/
+
             /*statusDetails.prop('disabled', true);*/
 
            /* calendar.on("dateClick", function (info) {
