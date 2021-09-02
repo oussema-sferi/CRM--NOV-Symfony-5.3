@@ -149,18 +149,32 @@
                                     </select>
 
                                 </div>
+                                {% if clients is iterable %}
+                                    <div class="form-group">
 
-                                <div class="form-group">
+                                        <label class="form-control-label" for="input-username">Sélectionnez le Client</label>
+                                        <select class="form-control form-control-sm" name="client">
+                                            {% for client in clients %}
+                                                <option value="{{ client.id }}">{{ client.firstName ~ ' ' ~ client.lastName }}</option>
+                                            {% endfor %}
+                                        </select>
 
-                                    <label class="form-control-label" for="input-username">Sélectionnez le Client</label>
-                                    <select class="form-control form-control-sm" name="client">
-                                        {% for client in clients %}
-                                            <option value="{{ client.id }}">{{ client.firstName ~ ' ' ~ client.lastName }}</option>
-                                        {% endfor %}
-                                    </select>
+                                    </div>
+                                {% else %}
+                                    <div class="form-group">
 
-                                </div>
+                                        <label class="form-control-label" for="input-username">Client</label>
+                                        <input type="text" class="form-control" value="{{ clients.firstName ~ ' ' ~ clients.lastName }}" disabled>
 
+                                    </div>
+                                    <div class="form-group">
+
+                                        {#<label class="form-control-label" for="input-username">Date/Heure Début</label>#}
+                                        <input class="form-control form-control-sm" type="hidden" value="{{ clients.id }}" name="client">
+
+                                    </div>
+
+                                {% endif %}
                                 <div class="form-group">
 
                                     <div>

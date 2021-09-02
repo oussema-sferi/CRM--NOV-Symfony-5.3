@@ -103,6 +103,7 @@ class AppointmentController extends AbstractController
                         $freeCommercials = $this->getDoctrine()->getRepository(User::class)->findAssignedUsersByCommercialRole($loggedUserId,"ROLE_COMMERCIAL");
                     }
                 }
+
                 return $this->render('/appointment/free_commercials_check.html.twig', [
                     /*'free_appointments' => $freeAppointmentsTime*/
                     'free_commercials' => $freeCommercials,
@@ -466,6 +467,7 @@ class AppointmentController extends AbstractController
         $manager = $this->getDoctrine()->getManager();
         if($request->isMethod('Post')) {
             $client = $this->getDoctrine()->getRepository(Client::class)->find($request->request->get('client'));
+            /*dd($client);*/
             $commercial = $this->getDoctrine()->getRepository(User::class)->find($request->request->get('commercial'));
             $newAppointment = new Appointment();
             $newAppointment->setStatus(0);

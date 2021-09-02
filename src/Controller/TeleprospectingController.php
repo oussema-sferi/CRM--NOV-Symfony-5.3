@@ -231,7 +231,7 @@ class TeleprospectingController extends AbstractController
                 return $this->render('/appointment/free_commercials_check.html.twig', [
                     /*'free_appointments' => $freeAppointmentsTime*/
                     'free_commercials' => $freeCommercials,
-                    'clients' => $clients,
+                    'clients' => $client,
                     'start' => $startTime,
                     'end' => $endTime
                 ]);
