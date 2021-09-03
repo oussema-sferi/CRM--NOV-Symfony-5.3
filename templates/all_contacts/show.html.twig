@@ -261,6 +261,39 @@
                                 <textarea rows="4" class="form-control" placeholder="Pas de notes ..." resize="none" disabled>{% if client_to_show.calls|default%}{{ client_to_show.calls[client_to_show.calls|length - 1].callNotes }} {% endif %}</textarea>
                             </div>
                         </div>
+
+                        {% if client_appointments_list|length > 0 %}
+                        <hr class="my-4" />
+
+                        <h6 class="heading-small text-muted mb-4">Liste des RDV</h6>
+                        <div class="pl-lg-4">
+                            {% for appointment in client_appointments_list %}
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="input-city">Date et Heure de Début</label>
+                                            <input type="text" id="input-city" class="form-control" value="{{ appointment.start|date }}" disabled>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-4">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="input-country">Date et Heure de Fin</label>
+                                            <input type="text" id="input-country" class="form-control" value="{{ appointment.end|date }}" disabled>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-4">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="input-city">Commercial Affecté</label>
+                                            <input type="text" id="input-city" class="form-control" value="{{ appointment.user.firstName ~ ' ' ~ appointment.user.lastName }}" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        {% endif %}
                     </form>
                 </div>
             </div>

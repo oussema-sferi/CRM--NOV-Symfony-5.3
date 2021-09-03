@@ -125,8 +125,11 @@ class AllContactsController extends AbstractController
     public function show(Request $request, $id): Response
     {
         $clientToShow = $this->getDoctrine()->getRepository(Client::class)->find($id);
+        $clientAppointmentsList = $clientToShow->getAppointments();
+        /*dd($clientAppointmentsList);*/
         return $this->render('/all_contacts/show.html.twig', [
-            'client_to_show' => $clientToShow
+            'client_to_show' => $clientToShow,
+            'client_appointments_list' => $clientAppointmentsList,
         ]);
     }
 
