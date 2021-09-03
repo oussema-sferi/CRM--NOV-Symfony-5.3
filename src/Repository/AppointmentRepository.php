@@ -158,7 +158,6 @@ class AppointmentRepository extends ServiceEntityRepository
             $counter ++;
         }
         $query->setParameters($filters);
-
         return $query->getQuery()->getResult();
     }
 
@@ -196,6 +195,50 @@ class AppointmentRepository extends ServiceEntityRepository
             ->where("u.id = $Id");
 
         return $qb->getQuery()->getResult();
+    }
+
+    public function fetchAppointmentsbyFiltersForLoggedCommercial(array $filters, $loggedUserId): array
+    {
+        $builder = $this->createQueryBuilder('a');
+        $query = $builder->select('a')
+            ->join('a.user', 'u')
+            ->join('a.client', 'c')
+            ->join('c.geographicArea', 'g');
+        $counter = 0;
+        $filters = $this->_trimFiltersApp($filters);
+        /*dd($filters);*/
+        foreach ($this->_trimFiltersApp($filters) as $key => $value) {
+            if($key === self::USER) {
+                $statement = " u.id = :$key";
+            } elseif ($key === self::ISDONE) {
+                $statement = "a.$key = :$key";
+            } elseif ($key === 'start') {
+                $statement = "a.$key >= :$key";
+                /*dd("test");*/
+            } elseif ($key === 'end') {
+                $statement = "a.$key <= :$key";
+                /*dd("test");*/
+            } elseif ($key === self::GEOGRAPHICAREA) {
+                $statement = "g.id = :$key";
+                /*dd("test");*/
+            }
+            else {
+                $statement = "c.$key LIKE :$key";
+            }
+            /*$statement = $key === self::USER ? " u.id = :$key" : "c.$key LIKE :$key";*/
+            /*dd($key);*/
+            if ($counter === 0) {
+                $query->where($statement);
+            }
+            else {
+                $query->andWhere($statement);
+            }
+            $counter ++;
+        }
+        $query->andWhere('a.client IS NOT NULL')
+            ->andWhere("u.id = $loggedUserId" );
+        $query->setParameters($filters);
+        return $query->getQuery()->getResult();
     }
 
 

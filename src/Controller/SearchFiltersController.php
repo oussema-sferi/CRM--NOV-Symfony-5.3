@@ -201,7 +201,14 @@ class SearchFiltersController extends AbstractController
             );
         }
         $criterias = $session->get('criterias');
-        $payload = $this->getDoctrine()->getRepository(Appointment::class)->fetchAppointmentsbyFilters($criterias);
+        $loggedUserId = $this->getUser()->getId();
+        $loggedUserRolesArray = $this->getUser()->getRoles();
+        if (in_array("ROLE_COMMERCIAL",$loggedUserRolesArray)) {
+            $payload = $this->getDoctrine()->getRepository(Appointment::class)->fetchAppointmentsbyFiltersForLoggedCommercial($criterias, $loggedUserId);
+        } else {
+            $payload = $this->getDoctrine()->getRepository(Appointment::class)->fetchAppointmentsbyFilters($criterias);
+        }
+        /*$payload = $this->getDoctrine()->getRepository(Appointment::class)->fetchAppointmentsbyFilters($criterias);*/
         if(count($payload) === 0) {
             $session->set('total_appointments_search_results',
                 'nothing'
@@ -213,7 +220,7 @@ class SearchFiltersController extends AbstractController
         }
         /*dd($payload);*/
 
-        $loggedUserRolesArray = $this->getUser()->getRoles();
+
         if (in_array("ROLE_COMMERCIAL",$loggedUserRolesArray)) {
             $data = $this->getDoctrine()->getRepository(Appointment::class)->getAppointmentsOfLoggedUser($loggedUserId);
         } else {
