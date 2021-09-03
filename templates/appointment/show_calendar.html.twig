@@ -308,8 +308,8 @@
                     $("#test2").click()
                     /*console.log(info.event.title)*/
                     $("#client-show").val(info.event.title)
-                    $("#start-show").val(info.event.start)
-                    $("#end-show").val(info.event.end)
+                    $("#start-show").val((moment(info.event.start).format('DD/MM/YYYY hh:mm')))
+                    $("#end-show").val((moment(info.event.end).format('DD/MM/YYYY hh:mm')))
                     $("#notes-show").val(info.event.extendedProps.description)
                     // change the border color just for fun
                     /*info.el.style.borderColor = 'red';*/
