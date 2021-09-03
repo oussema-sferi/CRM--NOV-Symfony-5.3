@@ -9,7 +9,6 @@
 {% endblock %}
 
 {% block body %}
-
     <div class="header bg-primary pb-6">
         <div class="container-fluid">
             <div class="header-body">
@@ -168,7 +167,10 @@
                                 {#<th scope="col">Sous Contrat</th>#}
                                 <th scope="col">RDV: Date/Heure Début</th>
                                 <th scope="col">RDV: Date/Heure Fin</th>
-                                <th scope="col">Commercial Affecté</th>
+                                {% if "ROLE_COMMERCIAL" in app.user.roles  %}
+                                {% else %}
+                                    <th scope="col">Commercial Affecté</th>
+                                {% endif %}
                                 <th scope="col">état</th>
                                 <th scope="col">Observations</th>
                                 <th scope="col">Traitement</th>
@@ -210,14 +212,17 @@
                                 <td>
                                     <input id="end" name="end" class="test" type="datetime-local">
                                 </td>
-                                <td>
-                                    <select id="luser" name="user" class="form-control-sm">
-                                        <option value="" selected>--- Choisir ---</option>
-                                        {% for commercial_user in commercial_users %}
-                                            <option value="{{ commercial_user.id }}">{{ commercial_user.firstName ~ ' ' ~ commercial_user.lastName }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </td>
+                                {% if "ROLE_COMMERCIAL" in app.user.roles  %}
+                                {% else %}
+                                    <td>
+                                        <select id="user" name="user" class="form-control-sm">
+                                            <option value="" selected>--- Choisir ---</option>
+                                            {% for commercial_user in commercial_users %}
+                                                <option value="{{ commercial_user.id }}">{{ commercial_user.firstName ~ ' ' ~ commercial_user.lastName }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                {% endif %}
                                 <td>
                                     <select id="isDone" name="isDone" class="form-control-sm">
                                         <option value="" selected>--- Choisir ---</option>
@@ -273,10 +278,12 @@
                                     <td class="budget">
                                         {{ commercial_appointment.end | date() }}
                                     </td>
-
+                                    {% if "ROLE_COMMERCIAL" in app.user.roles  %}
+                                    {% else %}
                                     <td class="budget">
                                         {{ commercial_appointment.user.firstName ~ ' ' ~ commercial_appointment.user.lastName }}
                                     </td>
+                                    {% endif %}
 
                                     <td class="budget">
                                         {% if commercial_appointment.isDone == 1 %}

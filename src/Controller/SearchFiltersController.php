@@ -81,7 +81,7 @@ class SearchFiltersController extends AbstractController
                     count($payload)
                 );
             }
-            dd($payload);
+            /*dd($payload);*/
 
 
         if($session->get('pagination_value')) {
