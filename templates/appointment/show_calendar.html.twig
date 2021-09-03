@@ -198,6 +198,7 @@
                                         {{ form_widget(appointment_form.end) }}
                                     </div>
                                     <hr class="my-3">
+
                                     <div class="text-center">
                                         <button type="submit" class="btn btn-primary mt-4">Vérifier la disponibilité</button>
                                     </div>
@@ -216,32 +217,66 @@
         </div>
 
 
-    ////modal for showing event
+
 
     <div class="modal fade" id="modal-show-form" tabindex="-1" role="dialog" aria-labelledby="modal-show-form" aria-hidden="true">
         <div class="modal-dialog modal- modal-dialog-centered modal-sm" role="document">
             <div class="modal-content">
-                <div class="modal-body p-0">
-                    <div class="card bg-secondary border-0 mb-0">
-                        <div class="card-body px-lg-5 py-lg-5">
-                            {#<div class="text-muted mb-4">
-                                    <small>Veuillez sélectionner la date et l'heure du RDV:</small>
-                                </div>#}
 
-                            <div>
-                                <div class="form-group">
-                                    <label class="form-control-label" for="input-username">Description</label>
-                                    <input type="text" id="event_description" class="form-control" value="" disabled>
-                                </div>
-                            </div>
+                {#<div class="modal-header text-center">
+                    <h6 class="modal-title" id="modal-title-default">Détails RDV</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>#}
 
+                <div class="modal-body">
+
+                    <div>
+                        <div class="form-group">
+                            <label class="form-control-label" for="input-username">Client</label>
+                            <input type="text" id="client-show" class="form-control" value="" disabled>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="form-group">
+                            <label class="form-control-label" for="input-username">Date/Heure Début</label>
+                            <input type="text" id="start-show" class="form-control" value="" disabled>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="form-group">
+                            <label class="form-control-label" for="input-username">Date/Heure Fin</label>
+                            <input type="text" id="end-show" class="form-control" value="" disabled>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="form-group">
+                            <label class="form-control-label" for="input-username">Observations RDV</label>
+                            <textarea id="notes-show" class="form-control" name="notes" id="notes" cols="30" rows="6" placeholder="..." resize="none" disabled></textarea>
                         </div>
                     </div>
 
 
 
+                   {# <div>
+                        <div class="form-group">
+                            <label class="form-control-label" for="input-username">Description</label>
+                            <input type="text" id="description-show" class="form-control" value="{{ commercial_user.firstName ~ ' ' ~ commercial_user.lastName }}" disabled>
+                        </div>
+                    </div>#}
 
+                    <hr class="my-3">
+
+                    <div class="text-center">
+                        <button type="button" class="btn btn-link  ml-auto" data-dismiss="modal">Retour</button>
+                    </div>
                 </div>
+
+
 
             </div>
         </div>
@@ -263,10 +298,19 @@
                     end: "dayGridMonth,timeGridWeek"
                 },
                 events: {{ data['data']|raw }},
+                titleFormat: { // will produce something like "Tuesday, September 18, 2018"
+                    month: 'long',
+                    year: 'numeric',
+                    day: 'numeric',
+                    weekday: 'long'
+                },
                 eventClick: function(info) {
                     $("#test2").click()
-                    /*console.log(info.event.extendedProps.description)*/
-                    $("#event_description").val(info.event.extendedProps.description)
+                    /*console.log(info.event.title)*/
+                    $("#client-show").val(info.event.title)
+                    $("#start-show").val(info.event.start.format())
+                    $("#end-show").val(info.event.end)
+                    $("#notes-show").val(info.event.extendedProps.description)
                     // change the border color just for fun
                     /*info.el.style.borderColor = 'red';*/
                 }
