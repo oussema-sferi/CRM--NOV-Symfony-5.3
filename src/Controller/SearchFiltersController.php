@@ -23,6 +23,13 @@ class SearchFiltersController extends AbstractController
      */
     public function teleproSearchFilters(Request $request, PaginatorInterface $paginator): Response
     {
+        $loggedTelepro = $this->getUser();
+        $teleproGeographicAreasArray = $loggedTelepro->getGeographicAreas();
+        $teleproGeographicAreasIdsArray = [];
+        foreach ($teleproGeographicAreasArray as $geographicArea) {
+            $teleproGeographicAreasIdsArray[] =  $geographicArea->getId();
+        }
+        /*dd($teleproGeographicAreasIdsArray);*/
         /*$session = $request->getSession();
         if($request->isMethod('POST')) {
             $searchKeyword = $request->request->get('search_keyword');
@@ -56,7 +63,15 @@ class SearchFiltersController extends AbstractController
                 );
             }
             $criterias = $session->get('criterias');
-            $payload = $this->getDoctrine()->getRepository(Client::class)->fetchClientsbyFilters($criterias);
+
+            $loggedUserRolesArray = $this->getUser()->getRoles();
+            if (in_array("ROLE_TELEPRO",$loggedUserRolesArray)) {
+                $payload = $this->getDoctrine()->getRepository(Client::class)->fetchAssignedClientsbyFilters($teleproGeographicAreasIdsArray, $criterias);
+            } else {
+                $payload = $this->getDoctrine()->getRepository(Client::class)->fetchClientsbyFilters($criterias);
+            }
+
+
             if(count($payload) === 0) {
                 $session->set('total_telepro_search_results',
                     'nothing'
@@ -66,7 +81,7 @@ class SearchFiltersController extends AbstractController
                     count($payload)
                 );
             }
-            /*dd($payload);*/
+            dd($payload);
 
 
         if($session->get('pagination_value')) {

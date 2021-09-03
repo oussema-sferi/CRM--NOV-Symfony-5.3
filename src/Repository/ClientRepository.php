@@ -123,6 +123,17 @@ class ClientRepository extends ServiceEntityRepository
 
         return $qb->getQuery()->getResult();
     }*/
+
+    public function getNotFixedAppointmentsClients()
+    {
+
+        $qb = $this->createQueryBuilder('c');
+        $qb->select('c')
+            ->where('c.statusDetail IS NOT NULL AND c.statusDetail != 7')
+            ->orWhere('c.statusDetail IS NULL');
+        return $qb->getQuery()->getResult();
+    }
+
     public function getProcessedClients()
     {
 
@@ -155,14 +166,35 @@ class ClientRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function getNotFixedAppointmentsClients()
+    public function fetchAssignedClientsbyFilters(array $departmentsArrayIds, array $filters): array
     {
+        $builder = $this->createQueryBuilder('c');
+        $query = $builder->select('c')
+            ->join('c.geographicArea', 'g');
+        $counter = 0;
+        $filters = $this->_trimFilters($filters);
+        foreach ($this->_trimFilters($filters) as $key => $value) {
 
-        $qb = $this->createQueryBuilder('c');
-        $qb->select('c')
-            ->where('c.statusDetail IS NOT NULL AND c.statusDetail != 7')
-            ->orWhere('c.statusDetail IS NULL');
-        return $qb->getQuery()->getResult();
+            foreach ($departmentsArrayIds as $departmentId) {
+                $statement1 = "g.id = $departmentId";
+                if ($counter === 0) {
+                    $query->where($statement1);
+                } else {
+                    $query->orWhere($statement1);
+                }
+                $counter ++;
+            };
+            /*dd($query->getQuery());*/
+            $statement2 = $key === self::GEOGRAPHIC_AREA ? " g.id = :$key" : "c.$key LIKE :$key";
+                $query->andWhere($statement2);
+
+        }
+        /*dd($query->getQuery());*/
+        $query->andWhere('c.statusDetail != 7');
+        $query->setParameters($filters);
+        return $query->getQuery()->getResult();
     }
+
+
 
 }
