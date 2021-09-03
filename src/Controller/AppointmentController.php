@@ -159,6 +159,7 @@ class AppointmentController extends AbstractController
                 'title' => $event->getAppointmentNotes(),
                 'start' => $event->getStart()->format('Y-m-d H:i:s'),
                 'end' => $event->getEnd()->format('Y-m-d H:i:s'),
+                'description' => $event->getAppointmentNotes()
 
             ];
         }
@@ -279,6 +280,7 @@ class AppointmentController extends AbstractController
                 'title' => $event->getClient()->getFirstName() . " " . $event->getClient()->getLastName(),
                 'start' => $event->getStart()->format('Y-m-d H:i:s'),
                 'end' => $event->getEnd()->format('Y-m-d H:i:s'),
+                'description' => $event->getAppointmentNotes()
 
             ];
         }

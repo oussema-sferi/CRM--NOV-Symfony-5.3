@@ -48,6 +48,7 @@
                     <div class="col-lg-6 col-5 text-right">
                         {#<a href="" class="btn btn-sm btn-success">Fixer un RDV à {{ commercial_user.firstName ~ ' ' ~ commercial_user.lastName }}</a>#}
                         <button id="test" type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal-form">Fixer un RDV à {{ commercial_user.firstName ~ ' ' ~ commercial_user.lastName }}</button>
+                        <button id="test2" type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal-show-form" style="display: none">show</button>
                         {#<a href="{{ path('new_client') }}" class="btn btn-sm btn-success">Nouveau prospect</a>#}
                         {#<a href="#" class="btn btn-sm btn-neutral">Filters</a>#}
                     </div>
@@ -215,6 +216,36 @@
         </div>
 
 
+    ////modal for showing event
+
+    <div class="modal fade" id="modal-show-form" tabindex="-1" role="dialog" aria-labelledby="modal-show-form" aria-hidden="true">
+        <div class="modal-dialog modal- modal-dialog-centered modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-body p-0">
+                    <div class="card bg-secondary border-0 mb-0">
+                        <div class="card-body px-lg-5 py-lg-5">
+                            {#<div class="text-muted mb-4">
+                                    <small>Veuillez sélectionner la date et l'heure du RDV:</small>
+                                </div>#}
+
+                            <div>
+                                <div class="form-group">
+                                    <label class="form-control-label" for="input-username">Description</label>
+                                    <input type="text" id="event_description" class="form-control" value="" disabled>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+
+
+                </div>
+
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block additionalJs %}
@@ -232,6 +263,13 @@
                     end: "dayGridMonth,timeGridWeek"
                 },
                 events: {{ data['data']|raw }},
+                eventClick: function(info) {
+                    $("#test2").click()
+                    /*console.log(info.event.extendedProps.description)*/
+                    $("#event_description").val(info.event.extendedProps.description)
+                    // change the border color just for fun
+                    /*info.el.style.borderColor = 'red';*/
+                }
             })
             calendar.render()
             calendar.on("dateClick", function (info) {
