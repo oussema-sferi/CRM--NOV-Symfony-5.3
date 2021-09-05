@@ -306,10 +306,12 @@
                 },
                 eventClick: function(info) {
                     $("#test2").click()
+                    console.log(info.event.title)
                     if(info.event.title === "Evénement perso") {
                         $('#client_show-block').hide();
+                    } else {
+                        $('#client_show-block').show();
                     }
-
                     /*console.log(info.event.title)*/
                     $("#client-show").val(info.event.title)
                     $("#start-show").val((moment(info.event.start).format('DD/MM/YYYY hh:mm')))
