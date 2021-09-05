@@ -213,6 +213,7 @@ class AppointmentController extends AbstractController
                         $newEvent->setStatus(0);
                         $newEvent->setStart($validationStartTime);
                         $newEvent->setEnd($validationEndTime);
+                        $newEvent->setIsDone(0);
                         $newEvent->setAppointmentNotes($request->request->get('notes'));
                         $manager->persist($newEvent);
                         $manager->flush();
@@ -274,15 +275,25 @@ class AppointmentController extends AbstractController
         $clients = $this->getDoctrine()->getRepository(Client::class)->findBy(["statusDetail" => 7]);
         /*dd($events);*/
         $appointments = [];
+        /*dd($events[0]->getClient());*/
         foreach ($events as $event) {
-            $appointments[] = [
-                'id' => $event->getId(),
-                'title' => $event->getClient()->getFirstName() . " " . $event->getClient()->getLastName(),
-                'start' => $event->getStart()->format('Y-m-d H:i:s'),
-                'end' => $event->getEnd()->format('Y-m-d H:i:s'),
-                'description' => $event->getAppointmentNotes()
-
-            ];
+            if ($event->getClient()) {
+                $appointments[] = [
+                    'id' => $event->getId(),
+                    'title' => $event->getClient()->getFirstName() . " " . $event->getClient()->getLastName(),
+                    'start' => $event->getStart()->format('Y-m-d H:i:s'),
+                    'end' => $event->getEnd()->format('Y-m-d H:i:s'),
+                    'description' => $event->getAppointmentNotes()
+                ];
+            } else {
+                $appointments[] = [
+                    'id' => $event->getId(),
+                    'title' => "Evénement perso",
+                    'start' => $event->getStart()->format('Y-m-d H:i:s'),
+                    'end' => $event->getEnd()->format('Y-m-d H:i:s'),
+                    'description' => $event->getAppointmentNotes()
+                ];
+            }
         }
 
         $data = json_encode($appointments);

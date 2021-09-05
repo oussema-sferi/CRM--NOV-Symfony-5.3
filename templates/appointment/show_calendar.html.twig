@@ -232,7 +232,7 @@
 
                 <div class="modal-body">
 
-                    <div>
+                    <div id="client_show-block">
                         <div class="form-group">
                             <label class="form-control-label" for="input-username">Client</label>
                             <input type="text" id="client-show" class="form-control" value="" disabled>
@@ -306,6 +306,10 @@
                 },
                 eventClick: function(info) {
                     $("#test2").click()
+                    if(info.event.title === "Evénement perso") {
+                        $('#client_show-block').hide();
+                    }
+
                     /*console.log(info.event.title)*/
                     $("#client-show").val(info.event.title)
                     $("#start-show").val((moment(info.event.start).format('DD/MM/YYYY hh:mm')))
