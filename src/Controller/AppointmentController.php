@@ -154,14 +154,23 @@ class AppointmentController extends AbstractController
         /*dd($events);*/
         $appointments = [];
         foreach ($events as $event) {
-            $appointments[] = [
-                'id' => $event->getId(),
-                'title' => $event->getAppointmentNotes(),
-                'start' => $event->getStart()->format('Y-m-d H:i:s'),
-                'end' => $event->getEnd()->format('Y-m-d H:i:s'),
-                'description' => $event->getAppointmentNotes()
-
-            ];
+            if ($event->getClient()) {
+                $appointments[] = [
+                    'id' => $event->getId(),
+                    'title' => $event->getClient()->getFirstName() . " " . $event->getClient()->getLastName(),
+                    'start' => $event->getStart()->format('Y-m-d H:i:s'),
+                    'end' => $event->getEnd()->format('Y-m-d H:i:s'),
+                    'description' => $event->getAppointmentNotes()
+                ];
+            } else {
+                $appointments[] = [
+                    'id' => $event->getId(),
+                    'title' => "Evénement perso",
+                    'start' => $event->getStart()->format('Y-m-d H:i:s'),
+                    'end' => $event->getEnd()->format('Y-m-d H:i:s'),
+                    'description' => $event->getAppointmentNotes()
+                ];
+            }
         }
 
         $data = json_encode($appointments);

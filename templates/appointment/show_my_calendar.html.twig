@@ -47,6 +47,7 @@
                     </div>
                     <div class="col-lg-6 col-5 text-right">
                         <button id="test" type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal-form">Nouveau Evénement</button>
+                        <button id="test2" type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal-show-form" style="display: none">show</button>
                         {#<a href="" class="btn btn-sm btn-success">Nouveau Evénement</a>#}
                         {#<a href="#" class="btn btn-sm btn-neutral">Filters</a>#}
                     </div>
@@ -229,6 +230,70 @@
             </div>
         </div>
     </div>
+
+
+    <div class="modal fade" id="modal-show-form" tabindex="-1" role="dialog" aria-labelledby="modal-show-form" aria-hidden="true">
+        <div class="modal-dialog modal- modal-dialog-centered modal-sm" role="document">
+            <div class="modal-content">
+
+                {#<div class="modal-header text-center">
+                    <h6 class="modal-title" id="modal-title-default">Détails RDV</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>#}
+
+                <div class="modal-body">
+
+                    <div id="client_show-block">
+                        <div class="form-group">
+                            <label class="form-control-label" for="input-username">Client</label>
+                            <input type="text" id="client-show" class="form-control" value="" disabled>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="form-group">
+                            <label class="form-control-label" for="input-username">Date et heure de Début</label>
+                            <input type="text" id="start-show" class="form-control" value="" disabled>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="form-group">
+                            <label class="form-control-label" for="input-username">Date et heure de Fin</label>
+                            <input type="text" id="end-show" class="form-control" value="" disabled>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="form-group">
+                            <label class="form-control-label" for="input-username">Observations RDV</label>
+                            <textarea id="notes-show" class="form-control" name="notes" id="notes" cols="30" rows="6" placeholder="..." resize="none" disabled></textarea>
+                        </div>
+                    </div>
+
+
+
+                    {# <div>
+                        <div class="form-group">
+                            <label class="form-control-label" for="input-username">Description</label>
+                            <input type="text" id="description-show" class="form-control" value="{{ commercial_user.firstName ~ ' ' ~ commercial_user.lastName }}" disabled>
+                        </div>
+                    </div>#}
+
+                    <hr class="my-3">
+
+                    <div class="text-center">
+                        <button type="button" class="btn btn-link  ml-auto" data-dismiss="modal">Retour</button>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block additionalJs %}
@@ -246,8 +311,21 @@
                     end: "dayGridMonth,timeGridWeek"
                 },
                 events: {{ data['data']|raw }},
-                dayClick: function() {
-                    alert("hi!");
+                eventClick: function(info) {
+                    /*console.log(info.event.title)*/
+                    $("#test2").click()
+                    if(info.event.title === "Evénement perso") {
+                        $('#client_show-block').hide();
+                    } else {
+                        $('#client_show-block').show();
+                    }
+                    /*console.log(info.event.title)*/
+                    $("#client-show").val(info.event.title)
+                    $("#start-show").val((moment(info.event.start).format('DD/MM/YYYY hh:mm')))
+                    $("#end-show").val((moment(info.event.end).format('DD/MM/YYYY hh:mm')))
+                    $("#notes-show").val(info.event.extendedProps.description)
+                    // change the border color just for fun
+
                 }
             })
             calendar.render()

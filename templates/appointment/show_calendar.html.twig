@@ -298,15 +298,8 @@
                     end: "dayGridMonth,timeGridWeek"
                 },
                 events: {{ data['data']|raw }},
-                titleFormat: { // will produce something like "Tuesday, September 18, 2018"
-                    month: 'long',
-                    year: 'numeric',
-                    day: 'numeric',
-                    weekday: 'long'
-                },
                 eventClick: function(info) {
                     $("#test2").click()
-                    console.log(info.event.title)
                     if(info.event.title === "Evénement perso") {
                         $('#client_show-block').hide();
                     } else {
