@@ -311,22 +311,22 @@
                     end: "dayGridMonth,timeGridWeek"
                 },
                 events: {{ data['data']|raw }},
-                eventClick: function(info) {
-                    /*console.log(info.event.title)*/
+                /*eventClick: function(info) {
+                    /!*console.log(info.event.title)*!/
                     $("#test2").click()
                     if(info.event.title === "Evénement perso") {
                         $('#client_show-block').hide();
                     } else {
                         $('#client_show-block').show();
                     }
-                    /*console.log(info.event.title)*/
+                    /!*console.log(info.event.title)*!/
                     $("#client-show").val(info.event.title)
                     $("#start-show").val((moment(info.event.start).format('DD/MM/YYYY hh:mm')))
                     $("#end-show").val((moment(info.event.end).format('DD/MM/YYYY hh:mm')))
                     $("#notes-show").val(info.event.extendedProps.description)
                     // change the border color just for fun
 
-                }
+                }*/
             })
             calendar.render()
             calendar.on("dateClick", function (info) {

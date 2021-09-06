@@ -257,24 +257,31 @@
                         <div class="pl-lg-4">
                             {% for appointment in client_appointments_list %}
                                 <div class="row">
-                                    <div class="col-lg-4">
+                                    <div class="col-lg-3">
                                         <div class="form-group">
                                             <label class="form-control-label" for="input-city">Date et Heure de Début</label>
                                             <input type="text" id="input-city" class="form-control" value="{{ appointment.start|date }}" disabled>
                                         </div>
                                     </div>
 
-                                    <div class="col-lg-4">
+                                    <div class="col-lg-3">
                                         <div class="form-group">
                                             <label class="form-control-label" for="input-country">Date et Heure de Fin</label>
                                             <input type="text" id="input-country" class="form-control" value="{{ appointment.end|date }}" disabled>
                                         </div>
                                     </div>
 
-                                    <div class="col-lg-4">
+                                    <div class="col-lg-3">
                                         <div class="form-group">
                                             <label class="form-control-label" for="input-city">Commercial Affecté</label>
                                             <input type="text" id="input-city" class="form-control" value="{{ appointment.user.firstName ~ ' ' ~ appointment.user.lastName }}" disabled>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-3">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="input-city">Etat</label>
+                                            <input type="text" id="input-city" class="form-control" value="{% if appointment.isDone == 0 %}A Venir{% else %}Effectué{% endif %}" disabled>
                                         </div>
                                     </div>
                                 </div>
