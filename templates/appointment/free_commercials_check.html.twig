@@ -142,7 +142,7 @@
                                 <div class="form-group">
 
                                     <label class="form-control-label" for="commercial">Commerciaux Disponibles</label>
-                                    <select class="form-control form-control-sm" id="commercial" name="commercial">
+                                    <select id="commercial" name="commercial">
                                         {% for free_commercial in free_commercials %}
                                             <option value="{{ free_commercial.id }}">{{ free_commercial.firstName ~ ' ' ~ free_commercial.lastName }}</option>
                                         {% endfor %}
@@ -152,8 +152,8 @@
                                 {% if clients is iterable %}
                                     <div class="form-group">
 
-                                        <label class="form-control-label" for="input-username">Sélectionnez le Client</label>
-                                        <select class="form-control form-control-sm" name="client">
+                                        <label class="form-control-label" for="client">Clients</label>
+                                        <select id="client" name="client">
                                             {% for client in clients %}
                                                 <option value="{{ client.id }}">{{ client.firstName ~ ' ' ~ client.lastName }}</option>
                                             {% endfor %}
@@ -163,7 +163,7 @@
                                 {% else %}
                                     <div class="form-group">
 
-                                        <label class="form-control-label" for="input-username">Client</label>
+                                        <label class="form-control-label" for="client">Client</label>
                                         <input type="text" class="form-control" value="{{ clients.firstName ~ ' ' ~ clients.lastName }}" disabled>
 
                                     </div>
@@ -226,4 +226,34 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block additionalJs %}
+
+    {#<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
+    <script src="{{ asset('assets/js/plugins/jquery/dist/jquery.min.js') }}"></script>
+    <script>
+        $(document).ready(function () {
+            $('.selectpicker').selectpicker();
+        })
+    </script>#}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            /*$('#departments').val($('#department').val());*/
+            let client = new SlimSelect({
+                select: '#client',
+                placeholder: 'Choisissez le client',
+                searchText: 'Aucun Résultat',
+                searchPlaceholder: 'Rechercher',
+            })
+
+            let commerciauxDispo = new SlimSelect({
+                select: '#commercial',
+                placeholder: 'Choisissez le commercial',
+                searchText: 'Aucun Résultat',
+                searchPlaceholder: 'Rechercher',
+            })
+        });
+    </script>
+
 {% endblock %}

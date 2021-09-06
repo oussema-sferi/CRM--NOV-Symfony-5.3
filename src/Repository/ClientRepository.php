@@ -129,8 +129,7 @@ class ClientRepository extends ServiceEntityRepository
 
         $qb = $this->createQueryBuilder('c');
         $qb->select('c')
-            ->where('c.statusDetail IS NOT NULL AND c.statusDetail != 7')
-            ->orWhere('c.statusDetail IS NULL');
+            ->where('c.statusDetail != 7');
         return $qb->getQuery()->getResult();
     }
 

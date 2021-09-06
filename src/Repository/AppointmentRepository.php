@@ -114,7 +114,7 @@ class AppointmentRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('a');
         $qb->select('a')
             ->where('a.client IS NOT NULL')
-            ->andWhere("a.isDone IS NULL" );
+            ->andWhere("a.isDone = 0" );
 
         return $qb->getQuery()->getResult();
     }
