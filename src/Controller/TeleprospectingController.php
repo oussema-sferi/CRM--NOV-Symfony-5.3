@@ -174,6 +174,8 @@ class TeleprospectingController extends AbstractController
             $manager->flush();
 
             if($status === 2 && $statusDetailsQ === 7) {
+                $newCall->setStatusDetails($statusDetailsQ);
+                $client->setStatusDetail($statusDetailsQ);
                 return $this->render('/teleprospecting/direct_appointment.html.twig', [
                     'appointment_form' => $appointmentForm->createView(),
                 ]);

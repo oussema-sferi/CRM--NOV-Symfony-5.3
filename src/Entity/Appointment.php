@@ -57,6 +57,7 @@ class Appointment
      */
     private $isDone;
 
+
     public function getId(): ?int
     {
         return $this->id;

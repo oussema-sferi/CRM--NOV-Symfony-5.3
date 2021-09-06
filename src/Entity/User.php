@@ -82,6 +82,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $geographicAreas;
 
+
     public function __construct()
     {
         $this->calls = new ArrayCollection();
@@ -324,7 +325,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
-
 
 
 }
