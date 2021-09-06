@@ -240,12 +240,16 @@
     <script type="text/javascript">
         $(document).ready(function() {
             /*$('#departments').val($('#department').val());*/
-            let client = new SlimSelect({
-                select: '#client',
-                placeholder: 'Choisissez le client',
-                searchText: 'Aucun Résultat',
-                searchPlaceholder: 'Rechercher',
-            })
+            let clientCheck = document.querySelector('#client');
+            if(clientCheck) {
+                let client = new SlimSelect({
+                    select: '#client',
+                    placeholder: 'Choisissez le client',
+                    searchText: 'Aucun Résultat',
+                    searchPlaceholder: 'Rechercher',
+                })
+            }
+
 
             let commerciauxDispo = new SlimSelect({
                 select: '#commercial',

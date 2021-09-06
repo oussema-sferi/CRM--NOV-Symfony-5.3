@@ -17,7 +17,11 @@ class StatisticsController extends AbstractController
     {
         $allContacts = $this->getDoctrine()->getRepository(Client::class)->findAll();
         $processedContacts = $this->getDoctrine()->getRepository(Client::class)->getProcessedClients();
-        $contactsPerformance = number_format(((count($processedContacts) / count($allContacts)) * 100), 2);
+        if(count($allContacts) !== 0) {
+            $contactsPerformance = number_format(((count($processedContacts) / count($allContacts)) * 100), 2);
+        } else {
+            $contactsPerformance = 0;
+        }
         $allAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getAppointmentsWhereClientsExist();
         if(count($processedContacts) !== 0) {
             $appointmentsPerformance = number_format(((count($allAppointments) / count($processedContacts)) * 100), 2);
