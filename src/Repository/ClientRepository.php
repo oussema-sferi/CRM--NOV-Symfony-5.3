@@ -173,27 +173,25 @@ class ClientRepository extends ServiceEntityRepository
         $counter = 0;
         $filters = $this->_trimFilters($filters);
         foreach ($this->_trimFilters($filters) as $key => $value) {
+            $statement1 = $key === self::GEOGRAPHIC_AREA ? " g.id = :$key" : "c.$key LIKE :$key";
+            $query->andWhere($statement1);
 
-            foreach ($departmentsArrayIds as $departmentId) {
-                $statement1 = "g.id = $departmentId";
-                if ($counter === 0) {
-                    $query->where($statement1);
-                } else {
-                    $query->orWhere($statement1);
-                }
-                $counter ++;
-            };
             /*dd($query->getQuery());*/
-            $statement2 = $key === self::GEOGRAPHIC_AREA ? " g.id = :$key" : "c.$key LIKE :$key";
-                $query->andWhere($statement2);
+
 
         }
-        /*dd($query->getQuery());*/
+        $statement2 = "";
+        for($i = 0; $i < (count($departmentsArrayIds) - 1); $i++) {
+
+            $statement2 = $statement2 . "g.id = $departmentsArrayIds[$i] OR ";
+
+        };
+        $statement2 = $statement2 . "g.id = $departmentsArrayIds[$i]";
+            $query->andWhere($statement2);
         $query->andWhere('c.statusDetail != 7');
         $query->setParameters($filters);
+        /*dd($query->getQuery()->getResult());*/
         return $query->getQuery()->getResult();
     }
-
-
 
 }

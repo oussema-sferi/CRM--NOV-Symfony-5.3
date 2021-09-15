@@ -4,7 +4,7 @@
 
 {% block body %}
 
-    <div class="header bg-primary pb-6">
+    <div class="header pb-6" style="background-color: #EDA200">
         <div class="container-fluid">
             <div class="header-body">
                 <div class="row align-items-center py-4">
@@ -13,13 +13,13 @@
                         <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
                             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
                                 <li class="breadcrumb-item"><a href="#"><i class="fas fa-address-book text-black-50"></i></a></li>
-                                <li class="breadcrumb-item"><a href="#"></a>Gestion des contacts</li>
+                                <li class="breadcrumb-item">Gestion des contacts</li>
                                 <li class="breadcrumb-item active" aria-current="page">Liste des contacts</li>
                             </ol>
                         </nav>
                     </div>
                     <div id="initial-import" class="col-lg-6 col-5 text-right">
-                        <a id="import-button" class="btn btn-sm btn-info">Importer une liste</a>
+                        <a id="import-button" class="btn btn-sm btn-info" style="color: white">Importer une liste</a>
                         <a href="{{ path('new_contact') }}" class="btn btn-sm btn-success">Nouveau contact</a>
                         {#<label for="pagination" style="color: white; font-size: small">Nb de résultats par page</label>
                         <select name="pagination" id="pagination" class="form-control-sm">

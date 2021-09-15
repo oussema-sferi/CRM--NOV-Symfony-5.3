@@ -281,7 +281,7 @@ class AppointmentController extends AbstractController
         $events = $appointment->findBy(['user' => $id]);
         /*$clients = $this->getDoctrine()->getRepository(Client::class)->findBy(["status" => 1]);*/
         /*$clients = $this->getDoctrine()->getRepository(Client::class)->findAll();*/
-        $clients = $this->getDoctrine()->getRepository(Client::class)->findBy(["statusDetail" => 7]);
+        $clients = $this->getDoctrine()->getRepository(Client::class)->findAll();
         /*dd($events);*/
         $appointments = [];
         /*dd($events[0]->getClient());*/

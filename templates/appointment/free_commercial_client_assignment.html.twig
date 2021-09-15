@@ -4,7 +4,7 @@
 
 {% block body %}
 
-    <div class="header bg-primary pb-6">
+    <div class="header pb-6" style="background-color: #EDA200">
         <div class="container-fluid">
             <div class="header-body">
                 <div class="row align-items-center py-4">
@@ -143,7 +143,7 @@
                                 <div class="form-group">
 
                                     <label class="form-control-label" for="input-username">Sélectionnez le Client</label>
-                                    <select class="form-control form-control-sm" name="client">
+                                    <select id="client" name="client">
                                         {% for client in clients %}
                                             <option value="{{ client.id }}">{{ client.firstName ~ ' ' ~ client.lastName }}</option>
                                         {% endfor %}
@@ -209,4 +209,26 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block additionalJs %}
+
+    {#<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
+    <script src="{{ asset('assets/js/plugins/jquery/dist/jquery.min.js') }}"></script>
+    <script>
+        $(document).ready(function () {
+            $('.selectpicker').selectpicker();
+        })
+    </script>#}
+    <script type="text/javascript">
+        $(document).ready(function() {
+                let client = new SlimSelect({
+                    select: '#client',
+                    placeholder: 'Choisissez le client',
+                    searchText: 'Aucun Résultat',
+                    searchPlaceholder: 'Rechercher',
+                })
+        });
+    </script>
+
 {% endblock %}

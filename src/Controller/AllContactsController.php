@@ -27,6 +27,7 @@ class AllContactsController extends AbstractController
         } elseif (in_array("ROLE_COMMERCIAL",$loggedUserRolesArray)) {
             return $this->redirectToRoute('commercial');
         } elseif (in_array("ROLE_ADMIN",$loggedUserRolesArray)) {
+            /*dd("yeeah");*/
             return $this->redirectToRoute('show_my_calendar');
         }
         $session = $request->getSession();

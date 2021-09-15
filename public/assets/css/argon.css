@@ -6635,8 +6635,8 @@ input[type='button'].btn-block
     z-index: 3;
 
     color: #fff;
-    border-color: #5e72e4; 
-    background-color: #5e72e4;
+    border-color: #EDA200;
+    background-color: #EDA200;
 }
 
 .page-item.disabled .page-link
@@ -21471,7 +21471,7 @@ textarea[resize='horizontal']
     content: '\f105';
     transition: all .15s ease; 
 
-    color: #ced4da;
+    color: #EDA200;
 
     text-rendering: auto;
     -webkit-font-smoothing: antialiased;

@@ -75,11 +75,11 @@
                                     </a>
                                 </li>
                                 {% endif %}
-                                {% if (is_granted('ROLE_TELEPRO') or is_granted('ROLE_COMMERCIAL') or is_granted('ROLE_SUPERADMIN')) %}
+                                {% if (is_granted('ROLE_TELEPRO') or is_granted('ROLE_SUPERADMIN')) %}
                                     <li class="nav-item">
-                                        <a class="nav-link" href="#navbar-dashboards" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="navbar-dashboards">
+                                        <a class="nav-link" href="#navbar-dashboards" data-toggle="collapse" role="button" aria-controls="navbar-dashboards">
                                             <i class="ni fas fa-phone-volume text-orange"></i>
-                                            <span class="nav-link-text">Service Téléprospection</span>
+                                            <span class="nav-link-text">Téléprospection</span>
                                         </a>
                                         <div class="collapse hide" id="navbar-dashboards">
                                             <ul class="nav nav-sm flex-column">
@@ -118,7 +118,7 @@
                                 {% if (is_granted('ROLE_COMMERCIAL') or is_granted('ROLE_SUPERADMIN')) %}
 
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#navbar-dashboards1" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="navbar-dashboards1">
+                                    <a class="nav-link" href="#navbar-dashboards1" data-toggle="collapse" role="button" aria-controls="navbar-dashboards1">
                                         <i class="ni fas fa-chalkboard-teacher text-yellow"></i>
                                         <span class="nav-link-text">Service Commercial</span>
                                     </a>
@@ -333,7 +333,7 @@
                             <i class="ni fas fa-calendar-alt text-cyan"></i>
                             <span class="nav-link-text">Agendas</span>
                         </a>#}
-                        <a class="nav-link" href="#navbar-dashboards9" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="navbar-dashboards9">
+                        <a class="nav-link" href="#navbar-dashboards9" data-toggle="collapse" role="button" aria-controls="navbar-dashboards9">
                             <i class="ni fas fa-calendar-alt text-cyan"></i>
                             <span class="nav-link-text">Agendas</span>
                         </a>
@@ -369,7 +369,7 @@
                     {% if (is_granted('ROLE_SUPERADMIN')) %}
 
                     <li class="nav-item">
-                        <a class="nav-link" href="#navbar-dashboards3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="navbar-dashboards3">
+                        <a class="nav-link" href="#navbar-dashboards3" data-toggle="collapse" role="button" aria-controls="navbar-dashboards3">
                             <i class="ni ni-single-02 text-black-50"></i>
                             <span class="nav-link-text">Utilisateurs & Rôles</span>
                         </a>
@@ -484,7 +484,7 @@
 <!-- Main content -->
 <div class="main-content" id="panel">
     <!-- Topnav -->
-    <nav class="navbar navbar-top navbar-expand navbar-dark bg-primary border-bottom">
+    <nav class="navbar navbar-top navbar-expand navbar-dark border-bottom" style="background-color: #EDA200">
         <div class="container-fluid">
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <!-- Search form -->
@@ -1017,20 +1017,20 @@
         </div>#}
 
     <!-- Page content -->
-    <div class="container-fluid mt--6">
+    {#<div class="container-fluid mt--6">
         <div class="row">
             <div class="col">
                 <div class="card border-0">
 
                 </div>
             </div>
-        </div>
+        </div>#}
         <!-- Footer -->
         <footer class="footer pt-0">
             <div class="row align-items-center justify-content-lg-between">
                 <div class="col-lg-6">
                     <div class="copyright text-center  text-lg-left  text-muted">
-                        &copy; 2021 <a href="" class="font-weight-bold ml-1" target="_blank">NOVUUS</a>
+                        &copy; 2021 <a href="" class="font-weight-bold ml-1" target="_blank" style="color: #EDA200">NOVUUS</a>
                     </div>
                 </div>
                 <div class="col-lg-6">
