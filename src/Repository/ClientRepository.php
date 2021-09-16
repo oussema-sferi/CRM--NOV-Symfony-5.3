@@ -195,4 +195,25 @@ class ClientRepository extends ServiceEntityRepository
         return $query->getQuery()->getResult();
     }
 
+    public function fetchClientsbyFiltersAllContacts(array $filters): array
+    {
+        $builder = $this->createQueryBuilder('c');
+        $query = $builder->select('c')
+            ->join('c.geographicArea', 'g');
+        $counter = 0;
+        $filters = $this->_trimFilters($filters);
+        foreach ($this->_trimFilters($filters) as $key => $value) {
+            $statement = $key === self::GEOGRAPHIC_AREA ? " g.id = :$key" : "c.$key LIKE :$key";
+            if ($counter === 0) {
+                $query->where($statement);
+            }
+            else {
+                $query->andWhere($statement);
+            }
+            $counter ++;
+        }
+        $query->setParameters($filters);
+        return $query->getQuery()->getResult();
+    }
+
 }

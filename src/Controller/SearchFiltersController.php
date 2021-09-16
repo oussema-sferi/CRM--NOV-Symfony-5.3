@@ -127,7 +127,7 @@ class SearchFiltersController extends AbstractController
             );
         }
         $criterias = $session->get('criterias');
-        $payload = $this->getDoctrine()->getRepository(Client::class)->fetchClientsbyFilters($criterias);
+        $payload = $this->getDoctrine()->getRepository(Client::class)->fetchClientsbyFiltersAllContacts($criterias);
         if(count($payload) === 0) {
             $session->set('total_contacts_search_results',
                 'nothing'
@@ -165,27 +165,6 @@ class SearchFiltersController extends AbstractController
             'geographic_areas'=> $geographicAreas
         ]);
     }
-
-    // the ajax search is not used anymore
-    /**
-     * @Route("/search/telepro/searchajax", name="telepro_search_ajax")
-     */
-    public function teleproSearchAjax(Request $request): Response
-    {
-        if($request->isXmlHttpRequest()) {
-            $keyword = $request->get('keyword');
-            $filter = $request->get('filter');
-            $telepros = $this->getDoctrine()->getRepository(Client::class)->findClientsByFilterAndKeyword($filter, $keyword);
-
-                $serializer = new Serializer([new ObjectNormalizer()]);
-                $result = $serializer->normalize($telepros,'json',['attributes' => ['id','lastName','postalCode']]);
-                return new JsonResponse($result);
-
-        }
-        return new Response('use Ajax');
-
-    }
-
 
     /**
      * @Route("/dashboard/commercial/appointments/search/filters", name="appointments_search_filters")
