@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Nouveau RDV{% endblock %}
+{% block title %}Fixer un RDV{% endblock %}
 
 {% block body %}
 
@@ -12,14 +12,15 @@
                         <h6 class="h2 text-white d-inline-block mb-0">CRM</h6>
                         <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
                             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
-                                <li class="breadcrumb-item"><a href="#"><i class="fas fa-phone-volume"></i></a></li>
-                                <li class="breadcrumb-item"><a href="#">{{ commercial_user.firstName ~ ' ' ~ commercial_user.lastName }}</a></li>
+                                <li class="breadcrumb-item">Agendas</li>
+                                <li class="breadcrumb-item"><a href="{{ path('appointment') }}">Agendas des Commerciaux</a></li>
+                                <li class="breadcrumb-item">{{ commercial_user.firstName ~ ' ' ~ commercial_user.lastName }}</li>
                                 <li class="breadcrumb-item active" aria-current="page">Fixer un RDV</li>
                             </ol>
                         </nav>
                     </div>
                     <div class="col-lg-6 col-5 text-right">
-                        <a href="" class="btn btn-sm btn-neutral">Retour</a>
+                        {#<a href="" class="btn btn-sm btn-neutral">Retour</a>#}
                     </div>
                 </div>
                 <!-- Card stats -->

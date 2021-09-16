@@ -11,9 +11,9 @@
                         <h6 class="h2 text-white d-inline-block mb-0">CRM</h6>
                         <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
                             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
-                                <li class="breadcrumb-item"><a href="#"><i class="ni ni-single-02 text-black-50"></i></a></li>
-                                <li class="breadcrumb-item"><a href="#">Utilisateurs & Rôles</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Gestion des affectations</li>
+                                <li class="breadcrumb-item"><i class="ni ni-single-02 text-black-50"></i></li>
+                                <li class="breadcrumb-item">Utilisateurs & Rôles</li>
+                                <li class="breadcrumb-item">Gestion des affectations</li>
                                 <li class="breadcrumb-item active" aria-current="page">Liste des téléprospecteurs</li>
                             </ol>
                         </nav>
@@ -129,9 +129,9 @@
                             <div class="col-md-9">
                                 <h3 class="mb-0">Total: {{ allusers|length }} Téléprospecteurs</h3>
                             </div>
-                            <div class="col-md-3">
+                            {#<div class="col-md-3">
                                 <input type="text" class="form-control " placeholder="Recherche" id="contact-filter">
-                            </div>
+                            </div>#}
                         </div>
                     </div>
                     <!-- Light table -->
@@ -143,7 +143,7 @@
                                 <th scope="col">Nom</th>
                                 <th scope="col">Email</th>
                                 <th scope="col">Rôle</th>
-                                <th scope="col">Départements</th>
+                                <th scope="col">Départements Affectés</th>
                                 <th scope="col">Commerciaux Affectés</th>
                                 {#<th scope="col">Actions</th>#}
                                 {#<th scope="col">Consultation</th>

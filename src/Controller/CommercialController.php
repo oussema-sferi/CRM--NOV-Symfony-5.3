@@ -93,13 +93,15 @@ class CommercialController extends AbstractController
 
         $loggedUserId = $this->getUser()->getId();
         $loggedUserRolesArray = $this->getUser()->getRoles();
+        $clientsIdsArray = [];
         if (in_array("ROLE_COMMERCIAL",$loggedUserRolesArray)) {
             $loggedCommercialAppointments = $appointment->getAppointmentsOfLoggedUser($loggedUserId);
             foreach ($loggedCommercialAppointments as $appointment) {
                 $clientsIdsArray[] = $appointment->getClient()->getId();
             }
+            /*dd($clientsIdsArray);*/
             $uniqueClientsIdsArray = array_unique($clientsIdsArray);
-
+            $data = [];
             foreach ($uniqueClientsIdsArray as $clientId) {
                 foreach ($loggedCommercialAppointments as $appointment) {
                     if($appointment->getClient()->getId() === $clientId) {

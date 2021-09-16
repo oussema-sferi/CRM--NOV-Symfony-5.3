@@ -4,23 +4,31 @@
 
 {% block body %}
 
-<div class="header pb-6 d-flex align-items-center" style="min-height: 100px; background-image: url(../assets/img/theme/profile-cover.jpg); background-size: cover;">
-    <!-- Mask -->
-    <span class="mask" style="background-color: #EDA200"></span>
-    <!-- Header container -->
-    {#<div class="container-fluid d-flex align-items-center">
-        <div class="row">
-            <div class="col-lg-7 col-md-10">
-                <h1 class="display-2 text-white">Hello Jesse</h1>
-                <p class="text-white mt-0 mb-5">This is your profile page. You can see the progress you've made with your work and manage your projects or assigned tasks</p>
-                <a href="#!" class="btn btn-neutral">Edit profile</a>
+<div class="header pb-6" style="background-color: #EDA200">
+    <div class="container-fluid">
+        <div class="header-body">
+            <div class="row align-items-center py-4">
+                <div class="col-lg-6 col-7">
+                    <h6 class="h2 text-white d-inline-block mb-0">CRM</h6>
+                    <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+                        <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                            <li class="breadcrumb-item"><i class="fas fa-phone-volume text-orange"></i></li>
+                            <li class="breadcrumb-item">Service Téléprospection</li>
+                            <li class="breadcrumb-item active" aria-current="page">Fiche Prospect</li>
+                        </ol>
+                    </nav>
+                </div>
+                <div class="col-lg-6 col-5 text-right">
+                    <a href="{{ path('teleprospecting') }}" class="btn btn-sm btn-neutral">Retour</a>
+                </div>
             </div>
+
         </div>
-    </div>#}
+    </div>
 </div>
 <!-- Page content -->
 <div class="container-fluid mt--6">
-    <div class="row">
+
         {#<div class="col-xl-4 order-xl-2">
             <div class="card card-profile">
                 <img src="../assets/img/theme/img-1-1000x600.jpg" alt="Image placeholder" class="card-img-top">
@@ -82,9 +90,9 @@
                         <div class="col-8">
                             <h3 class="mb-0">Fiche Prospect</h3>
                         </div>
-                        <div class="col-4 text-right">
+                        {#<div class="col-4 text-right">
                             <a href="{{ path('teleprospecting') }}" class="btn btn-sm btn-primary">Retour</a>
-                        </div>
+                        </div>#}
                     </div>
                 </div>
                 <div class="card-body">

@@ -27,7 +27,8 @@ class UserFormType extends AbstractType
                         'Admin' => 'ROLE_ADMIN',
                         'Commercial' => 'ROLE_COMMERCIAL',
                         'Téléprospecteur' => 'ROLE_TELEPRO'
-                    ]
+                    ],
+                    /*'data' => 'ROLE_COMMERCIAL'*/
                 ]
             ])
             /*->add('teleprospector')*/
