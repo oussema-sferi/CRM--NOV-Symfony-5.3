@@ -12,8 +12,9 @@
                         <h6 class="h2 text-white d-inline-block mb-0">CRM</h6>
                         <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
                             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
-                                <li class="breadcrumb-item"><i class="fas fa-phone-volume"></i></li>
+                                <li class="breadcrumb-item"><i class="ni fas fa-address-book text-black-50"></i></li>
                                 <li class="breadcrumb-item">Gestion des contacts</li>
+                                <li class="breadcrumb-item"><a href="{{ path('all_contacts') }}">Liste des contacts</a></li>
                                 <li class="breadcrumb-item active" aria-current="page">Fiche Contact</li>
                             </ol>
                         </nav>
@@ -264,6 +265,8 @@
                         <h6 class="heading-small text-muted mb-4">Liste des RDV</h6>
                         <div class="pl-lg-4">
                             {% for appointment in client_appointments_list %}
+
+
                                 <div class="row">
                                     <div class="col-lg-3">
                                         <div class="form-group">
@@ -293,6 +296,19 @@
                                         </div>
                                     </div>
                                 </div>
+
+
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="input-city">Notes RDV</label>
+                                            <textarea rows="4" class="form-control" placeholder="Pas de notes ..." resize="none" disabled>{{ appointment.appointmentNotes }}</textarea>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <hr class="my-4" />
                             {% endfor %}
                         </div>
 

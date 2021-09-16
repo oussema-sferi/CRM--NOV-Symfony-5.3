@@ -12,8 +12,9 @@
                         <h6 class="h2 text-white d-inline-block mb-0">CRM</h6>
                         <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
                             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
-                                <li class="breadcrumb-item"><a href="#"><i class="fas fa-address-book"></i></a></li>
-                                <li class="breadcrumb-item"><a href="#">Utilisateurs & Rôles</a></li>
+                                <li class="breadcrumb-item"><i class="ni ni-single-02 text-black-50"></i></li>
+                                <li class="breadcrumb-item">Utilisateurs & Rôles</li>
+                                <li class="breadcrumb-item"><a href="{{ path('roles') }}">Liste des utilisateurs</a></li>
                                 <li class="breadcrumb-item active" aria-current="page">Edition Utilisateur</li>
                             </ol>
                         </nav>
@@ -171,7 +172,28 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text" style="width:120px">Rôle</span>
                                             </div>
-                                            {{ form_widget(user_form.roles, {'attr': {'class': 'form-control' }}) }}
+                                            <select class="form-control" name="role" id="role">
+                                                    <option value="ROLE_SUPERADMIN"
+                                                                {% if user_to_update.roles[0] == "ROLE_SUPERADMIN" %}
+                                                                    selected
+                                                                {% endif %}
+                                                            >Super Admin</option>
+                                                    <option value="ROLE_ADMIN"
+                                                            {% if user_to_update.roles[0] == "ROLE_ADMIN" %}
+                                                                selected
+                                                            {% endif %}
+                                                    >Admin</option>
+                                                    <option value="ROLE_COMMERCIAL"
+                                                            {% if user_to_update.roles[0] == "ROLE_COMMERCIAL" %}
+                                                                selected
+                                                            {% endif %}
+                                                    >Commercial</option>
+                                                    <option value="ROLE_TELEPRO"
+                                                            {% if user_to_update.roles[0] == "ROLE_TELEPRO" %}
+                                                                selected
+                                                            {% endif %}
+                                                    >Téléprospecteur</option>
+                                            </select>
                                         </div>
                                     </div>
 

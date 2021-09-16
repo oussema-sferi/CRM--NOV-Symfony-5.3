@@ -3,6 +3,9 @@
 namespace App\Form;
 
 use App\Entity\Client;
+use App\Entity\Equipment;
+use App\Entity\GeographicArea;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -28,10 +31,16 @@ class ClientFormType extends AbstractType
                     'Vétérinaire' => 'Vétérinaire',
                     'Chirurgien' => 'Chirurgien'
                 ],
-                'placeholder' => 'Catégorie'
+                'placeholder' => 'Choisir la catégorie'
             ])
-            ->add('providedEquipment')
-            ->add('geographicArea')
+            ->add('providedEquipment', EntityType::class, [
+                'class' => Equipment::class,
+                'placeholder' => "Choisir l'équipement..."
+            ])
+            ->add('geographicArea', EntityType::class, [
+                'class' => GeographicArea::class,
+                'placeholder' => 'Choisir le département...'
+            ])
             ->add('isUnderContract', ChoiceType::class, [
                 'choices'  => [
                     'Non' => false,

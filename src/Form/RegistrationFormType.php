@@ -47,18 +47,16 @@ class RegistrationFormType extends AbstractType
                     ]),
                 ],
             ])*/
-            ->add('roles', CollectionType::class, [
-                'entry_type' => ChoiceType::class,
-                'entry_options' => [
-                    'label' => false,
+            ->add('roles', ChoiceType::class, [
                     'choices' => [
                         'Super Admin' => 'ROLE_SUPERADMIN',
                         'Admin' => 'ROLE_ADMIN',
                         'Commercial' => 'ROLE_COMMERCIAL',
                         'Téléprospecteur' => 'ROLE_TELEPRO'
-                    ]
+                    ],
+                    'data' => 'test'
                 ]
-            ])
+            )
             ->add('password', PasswordType::class)
             ->add('confirmPassword', PasswordType::class)
         ;

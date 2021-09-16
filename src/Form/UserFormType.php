@@ -18,7 +18,7 @@ class UserFormType extends AbstractType
             /*->add('password')*/
             ->add('firstName')
             ->add('lastName')
-            ->add('roles', CollectionType::class, [
+            /*->add('roles', CollectionType::class, [
                 'entry_type' => ChoiceType::class,
                 'entry_options' => [
                     'label' => false,
@@ -28,9 +28,9 @@ class UserFormType extends AbstractType
                         'Commercial' => 'ROLE_COMMERCIAL',
                         'Téléprospecteur' => 'ROLE_TELEPRO'
                     ],
-                    /*'data' => 'ROLE_COMMERCIAL'*/
+                    'data' => 'ROLE_COMMERCIAL'
                 ]
-            ])
+            ])*/
             /*->add('teleprospector')*/
         ;
     }

@@ -76,6 +76,7 @@ class ClientRepository extends ServiceEntityRepository
             }
             $counter ++;
         }
+        $query->andWhere('c.statusDetail != 7');
         $query->setParameters($filters);
         return $query->getQuery()->getResult();
     }

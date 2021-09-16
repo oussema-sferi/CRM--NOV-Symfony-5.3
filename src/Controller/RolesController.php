@@ -65,11 +65,13 @@ class RolesController extends AbstractController
         $userForm->handleRequest($request);
         $manager = $this->getDoctrine()->getManager();
         $userToUpdate = $this->getDoctrine()->getRepository(User::class)->find($id);
+        /*dd($userToUpdate->getRoles());*/
+        $newArrayRoles = $newUser->getRoles();
         if($userForm->isSubmitted()) {
-            /*dd($newUser->getRoles());*/
+            array_unshift($newArrayRoles,$request->request->get("role"));
             $userToUpdate->setFirstName($newUser->getFirstName());
             $userToUpdate->setLastName($newUser->getLastName());
-            $userToUpdate->setRoles($newUser->getRoles());
+            $userToUpdate->setRoles($newArrayRoles);
             $manager->persist($userToUpdate);
             $manager->flush();
             return $this->redirectToRoute('roles');
