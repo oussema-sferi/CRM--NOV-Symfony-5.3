@@ -189,9 +189,9 @@
                                     <td>
                                         <select id="category" name="category" class="form-control-sm">
                                             <option value="" selected>--- Choisir ---</option>
-                                            <option value="Médecin">Médecin</option>
-                                            <option value="Vétérinaire">Vétérinaire</option>
-                                            <option value="Chirurgien">Chirurgien</option>
+                                            <option value="1">Médecin</option>
+                                            <option value="2">Vétérinaire</option>
+                                            <option value="3">Chirurgien</option>
                                         </select>
                                     </td>
                                     <td>
@@ -268,7 +268,13 @@
                                     {{ client.companyName }}
                                 </td>
                                 <td class="budget">
-                                    {{ client.category }}
+                                    {% if  client.category == 1 %}
+                                        Médecin
+                                    {% elseif client.category == 2 %}
+                                        Vétérinaire
+                                    {% elseif client.category == 3 %}
+                                        Chirurgien
+                                    {% endif %}
                                 </td>
 
                                 <td class="budget">

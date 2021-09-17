@@ -3,7 +3,6 @@
 {% block title %}Edition contact{% endblock %}
 
 {% block body %}
-
     <div class="header pb-6" style="background-color: #EDA200">
         <div class="container-fluid">
             <div class="header-body">
@@ -106,7 +105,7 @@
                                                 <span class="input-group-text" style="width:120px">Département</span>
                                             </div>#}
                                             {{ form_label(client_form.geographicArea, 'Département') }}
-                                            {{ form_widget(client_form.geographicArea, {'attr': {'class': 'form-control', 'value': client_to_update.geographicArea }}) }}
+                                            {{ form_widget(client_form.geographicArea, {'attr': {'class': 'form-control'}}) }}
 
                                     </div>
 
@@ -201,4 +200,27 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block additionalJs %}
+
+    {#<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
+    <script src="{{ asset('assets/js/plugins/jquery/dist/jquery.min.js') }}"></script>
+    <script>
+        $(document).ready(function () {
+            $('.selectpicker').selectpicker();
+        })
+    </script>#}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#client_form_geographicArea').val({{ client_to_update.geographicArea.id }})
+            $('#client_form_providedEquipment').val({{ client_to_update.providedEquipment.id }})
+            $('#client_form_category').val({{ client_to_update.category }})
+
+
+
+
+        });
+    </script>
+
 {% endblock %}
