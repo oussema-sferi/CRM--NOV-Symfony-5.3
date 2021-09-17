@@ -82,6 +82,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $geographicAreas;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Client::class, mappedBy="creatorUser")
+     */
+    private $clients;
+
 
     public function __construct()
     {
@@ -89,6 +94,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->appointments = new ArrayCollection();
         $this->commercials = new ArrayCollection();
         $this->geographicAreas = new ArrayCollection();
+        $this->clients = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -322,6 +328,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeGeographicArea(GeographicArea $geographicArea): self
     {
         $this->geographicAreas->removeElement($geographicArea);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Client[]
+     */
+    public function getClients(): Collection
+    {
+        return $this->clients;
+    }
+
+    public function addClient(Client $client): self
+    {
+        if (!$this->clients->contains($client)) {
+            $this->clients[] = $client;
+            $client->setCreatorUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeClient(Client $client): self
+    {
+        if ($this->clients->removeElement($client)) {
+            // set the owning side to null (unless already changed)
+            if ($client->getCreatorUser() === $this) {
+                $client->setCreatorUser(null);
+            }
+        }
 
         return $this;
     }

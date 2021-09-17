@@ -64,10 +64,11 @@ class SearchFiltersController extends AbstractController
             }
             $criterias = $session->get('criterias');
 
+            $loggedUserId = $this->getUser()->getId();
             $loggedUserRolesArray = $this->getUser()->getRoles();
             if (in_array("ROLE_TELEPRO",$loggedUserRolesArray)) {
                 /*dd($teleproGeographicAreasIdsArray);*/
-                $payload = $this->getDoctrine()->getRepository(Client::class)->fetchAssignedClientsbyFilters($teleproGeographicAreasIdsArray, $criterias);
+                $payload = $this->getDoctrine()->getRepository(Client::class)->fetchAssignedClientsbyFilters($teleproGeographicAreasIdsArray, $criterias, $loggedUserId);
 
             } else {
                 $payload = $this->getDoctrine()->getRepository(Client::class)->fetchClientsbyFilters($criterias);

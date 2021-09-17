@@ -31,7 +31,7 @@ class ClientFormType extends AbstractType
                     'Vétérinaire' => 'Vétérinaire',
                     'Chirurgien' => 'Chirurgien'
                 ],
-                'placeholder' => 'Choisir la catégorie'
+                'placeholder' => 'Choisir la catégorie...'
             ])
             ->add('providedEquipment', EntityType::class, [
                 'class' => Equipment::class,

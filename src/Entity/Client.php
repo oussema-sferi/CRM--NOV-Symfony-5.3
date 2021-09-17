@@ -121,11 +121,16 @@ class Client
      */
     private $statusDetail;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="clients")
+     */
+    private $creatorUser;
 
 
 
-    
-    
+
+
+
 
     public function __construct()
     {
@@ -407,6 +412,18 @@ class Client
     public function setAppointments($appointments): void
     {
         $this->appointments = $appointments;
+    }
+
+    public function getCreatorUser(): ?User
+    {
+        return $this->creatorUser;
+    }
+
+    public function setCreatorUser(?User $creatorUser): self
+    {
+        $this->creatorUser = $creatorUser;
+
+        return $this;
     }
 
 

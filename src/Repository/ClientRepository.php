@@ -144,11 +144,12 @@ class ClientRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function findClientsByTeleproDepartments($departmentsArrayIds)
+    public function findClientsByTeleproDepartments($departmentsArrayIds, $loggedUserId)
     {
         $qb = $this->createQueryBuilder('c');
         $qb->select('c')
             ->join('c.geographicArea', 'g');
+            /*->join('c.creatorUser', 'u');*/
         $counter = 0;
         if(count($departmentsArrayIds) === 0) {
             return [];
@@ -163,10 +164,15 @@ class ClientRepository extends ServiceEntityRepository
             $counter ++;
         };
         $qb->andWhere('c.statusDetail != 7');
-        return $qb->getQuery()->getResult();
+        /*$qb->orWhere('u.id = 15');*/
+        /*dd($qb->getQuery()->getResult());*/
+        $qb2 = $this->createQueryBuilder('c')->select('c')->join('c.creatorUser', 'u');
+        $qb2->where("u.id = $loggedUserId");
+        /*dd($qb2->getQuery()->getResult());*/
+        return array_merge($qb->getQuery()->getResult(),$qb2->getQuery()->getResult());
     }
 
-    public function fetchAssignedClientsbyFilters(array $departmentsArrayIds, array $filters): array
+    public function fetchAssignedClientsbyFilters(array $departmentsArrayIds, array $filters, int $loggedUserId): array
     {
         $builder = $this->createQueryBuilder('c');
         $query = $builder->select('c')
@@ -176,10 +182,7 @@ class ClientRepository extends ServiceEntityRepository
         foreach ($this->_trimFilters($filters) as $key => $value) {
             $statement1 = $key === self::GEOGRAPHIC_AREA ? " g.id = :$key" : "c.$key LIKE :$key";
             $query->andWhere($statement1);
-
             /*dd($query->getQuery());*/
-
-
         }
         $statement2 = "";
         for($i = 0; $i < (count($departmentsArrayIds) - 1); $i++) {
@@ -188,11 +191,22 @@ class ClientRepository extends ServiceEntityRepository
 
         };
         $statement2 = $statement2 . "g.id = $departmentsArrayIds[$i]";
-            $query->andWhere($statement2);
+        $query->andWhere($statement2);
         $query->andWhere('c.statusDetail != 7');
         $query->setParameters($filters);
-        /*dd($query->getQuery()->getResult());*/
-        return $query->getQuery()->getResult();
+        /*dd($query->getQuery());*/
+        $query2 = $this->createQueryBuilder('c')->select('c')->join('c.geographicArea', 'g')
+            ->join('c.creatorUser', 'u');
+        foreach ($this->_trimFilters($filters) as $key => $value) {
+            $statement3 = $key === self::GEOGRAPHIC_AREA ? " g.id = :$key" : "c.$key LIKE :$key";
+            $query2->andWhere($statement3);
+        }
+        $query2->andWhere('c.statusDetail != 7')
+            ->andWhere("u.id = $loggedUserId");
+        $query2->setParameters($filters);
+        /*dd($query2->getQuery()->getResult());*/
+        /*dd($query->getQuery());*/
+        return array_merge($query->getQuery()->getResult(),$query2->getQuery()->getResult());
     }
 
     public function fetchClientsbyFiltersAllContacts(array $filters): array

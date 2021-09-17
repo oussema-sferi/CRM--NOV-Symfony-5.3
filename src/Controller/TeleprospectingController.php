@@ -34,7 +34,8 @@ class TeleprospectingController extends AbstractController
         }
         $loggedUserRolesArray = $this->getUser()->getRoles();
         if (in_array("ROLE_TELEPRO",$loggedUserRolesArray)) {
-            $data = $this->getDoctrine()->getRepository(Client::class)->findClientsByTeleproDepartments($teleproGeographicAreasIdsArray);
+            $data = $this->getDoctrine()->getRepository(Client::class)->findClientsByTeleproDepartments($teleproGeographicAreasIdsArray, $loggedTelepro->getId());
+            /*dd($loggedTelepro->getId());*/
         } else {
             $data = $this->getDoctrine()->getRepository(Client::class)->getNotFixedAppointmentsClients();
         }
@@ -74,15 +75,17 @@ class TeleprospectingController extends AbstractController
      */
     public function add(Request $request): Response
     {
+        $loggedUser = $this->getUser();
         $newClient = new Client();
         $clientForm = $this->createForm(ClientFormType::class, $newClient);
         $clientForm->handleRequest($request);
         $manager = $this->getDoctrine()->getManager();
         if($clientForm->isSubmitted()) {
             $newClient->setStatus(0);
-            $newClient->setStatusDetail(null);
+            $newClient->setStatusDetail(0);
             $newClient->setCreatedAt(new \DateTime());
             $newClient->setUpdatedAt(new \DateTime());
+            $newClient->setCreatorUser($loggedUser);
             $manager->persist($newClient);
             $manager->flush();
             return $this->redirectToRoute('teleprospecting');
