@@ -157,9 +157,9 @@
                                     <th scope="col">Prénom</th>
                                     <th scope="col">Nom</th>
                                     <th scope="col">Email</th>
-                                    <th scope="col">Société</th>
+
                                     <th scope="col">Catégorie</th>
-                                    <th scope="col">Sous Contrat</th>
+
                                     <th scope="col">Adresse</th>
                                     <th scope="col">Code Postal</th>
                                     <th scope="col">Département</th>
@@ -167,9 +167,11 @@
                                     <th scope="col">Pays</th>
                                     <th scope="col">Numéro Domicile</th>
                                     <th scope="col">Numéro Mobile</th>
+                                    <th scope="col">Société</th>
+                                    <th scope="col">Sous Contrat</th>
                                     <th scope="col">état</th>
                                     <th scope="col">Détails</th>
-                                    <th scope="col">Observations</th>
+                                    <th scope="col">Observations Appel</th>
                                     <th scope="col">Traitement</th>
                                 </tr>
 
@@ -183,9 +185,7 @@
                                     <td>
                                         <input id="email" name="email" class="test" type="text">
                                     </td>
-                                    <td>
-                                        <input id="companyName" name="companyName" class="test" type="text">
-                                    </td>
+
                                     <td>
                                         <select id="category" name="category" class="form-control-sm">
                                             <option value="" selected>--- Choisir ---</option>
@@ -194,13 +194,7 @@
                                             <option value="3">Chirurgien</option>
                                         </select>
                                     </td>
-                                    <td>
-                                        <select id="isUnderContract" name="isUnderContract" class="form-control-sm">
-                                            <option value="" selected>--- Choisir ---</option>
-                                            <option value="1">Oui</option>
-                                            <option value="0">Non</option>
-                                        </select>
-                                    </td>
+
 
                                     <td>
                                         <input id="address" name="address" class="test" type="text">
@@ -227,6 +221,16 @@
                                     </td>
                                     <td>
                                         <input id="mobileNumber" name="mobileNumber" class="test" type="text">
+                                    </td>
+                                    <td>
+                                        <input id="companyName" name="companyName" class="test" type="text">
+                                    </td>
+                                    <td>
+                                        <select id="isUnderContract" name="isUnderContract" class="form-control-sm">
+                                            <option value="" selected>--- Choisir ---</option>
+                                            <option value="1">Oui</option>
+                                            <option value="0">Non</option>
+                                        </select>
                                     </td>
                                     <td>
                                         <select id="status" name="status" class="form-control-sm">
@@ -264,9 +268,7 @@
                                 <td class="budget">
                                     {{ client.email }}
                                 </td>
-                                <td class="budget">
-                                    {{ client.companyName }}
-                                </td>
+
                                 <td class="budget">
                                     {% if  client.category == 1 %}
                                         Médecin
@@ -277,13 +279,7 @@
                                     {% endif %}
                                 </td>
 
-                                <td class="budget">
-                                    {% if  client.isUnderContract %}
-                                        Oui
-                                    {% else %}
-                                        Non
-                                        {% endif %}
-                                </td>
+
                                 <td class="budget">
                                     {{ client.address }}
                                 </td>
@@ -310,6 +306,18 @@
 
                                 <td class="budget">
                                     {{ client.mobileNumber }}
+                                </td>
+                                <td class="budget">
+                                    {{ client.companyName }}
+                                </td>
+                                <td class="budget">
+                                    {% if client.isUnderContract is null %}
+
+                                    {% elseif client.isUnderContract == 0 %}
+                                        Non
+                                    {% elseif client.isUnderContract == 1 %}
+                                        Oui
+                                    {% endif %}
                                 </td>
                                 <td class="budget">
                                     {% if client.status == 1 %}

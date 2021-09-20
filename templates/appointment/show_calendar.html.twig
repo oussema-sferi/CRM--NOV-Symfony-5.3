@@ -35,7 +35,7 @@
         <div class="container-fluid">
             <div class="header-body">
                 <div class="row align-items-center py-4">
-                    <div class="col-lg-6 col-7">
+                    <div class="col-lg-8 col-7">
                         <h6 class="h2 text-white d-inline-block mb-0">CRM</h6>
                         <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
                             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
@@ -46,7 +46,7 @@
                             </ol>
                         </nav>
                     </div>
-                    <div class="col-lg-6 col-5 text-right">
+                    <div class="col-lg-4 col-5 text-right">
                         {#<a href="" class="btn btn-sm btn-success">Fixer un RDV à {{ commercial_user.firstName ~ ' ' ~ commercial_user.lastName }}</a>#}
                         <button id="test" type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal-form">Fixer un RDV à {{ commercial_user.firstName ~ ' ' ~ commercial_user.lastName }}</button>
                         <button id="test2" type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal-show-form" style="display: none">show</button>
@@ -67,7 +67,7 @@
                     <div class="card-header border-0">
                         <div class="row">
                             <div class="col-md-4">
-                                <h3 class="mb-0">RDV</h3>
+                                {#<h3 class="mb-0">RDV</h3>#}
                             </div>
                             <div class="col-md-8">
                                 {% for message in app.flashes('appointment_busy_commercial_warning') %}

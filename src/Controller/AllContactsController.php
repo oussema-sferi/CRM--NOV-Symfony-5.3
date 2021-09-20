@@ -74,6 +74,7 @@ class AllContactsController extends AbstractController
         $manager = $this->getDoctrine()->getManager();
         if($clientForm->isSubmitted()) {
             $newClient->setStatus(0);
+            $newClient->setStatusDetail(0);
             $newClient->setCreatedAt(new \DateTime());
             $newClient->setUpdatedAt(new \DateTime());
             $manager->persist($newClient);
@@ -96,18 +97,18 @@ class AllContactsController extends AbstractController
         $manager = $this->getDoctrine()->getManager();
         $clientToUpdate = $this->getDoctrine()->getRepository(Client::class)->find($id);
         if($clientForm->isSubmitted()) {
-            $clientToUpdate->setFirstName($newClient->getFirstName());
+            if ($newClient->getFirstName()) $clientToUpdate->setFirstName($newClient->getFirstName());
             $clientToUpdate->setLastName($newClient->getLastName());
-            $clientToUpdate->setCompanyName($newClient->getCompanyName());
-            $clientToUpdate->setEmail($newClient->getEmail());
+            if ($newClient->getCompanyName()) $clientToUpdate->setCompanyName($newClient->getCompanyName());
+            if ($newClient->getEmail()) $clientToUpdate->setEmail($newClient->getEmail());
             $clientToUpdate->setAddress($newClient->getAddress());
             $clientToUpdate->setPostalCode($newClient->getPostalCode());
             $clientToUpdate->setCountry($newClient->getCountry());
             $clientToUpdate->setPhoneNumber($newClient->getPhoneNumber());
-            $clientToUpdate->setMobileNumber($newClient->getMobileNumber());
-            $clientToUpdate->setCategory($newClient->getCategory());
-            $clientToUpdate->setIsUnderContract($newClient->getIsUnderContract());
-            $clientToUpdate->setProvidedEquipment($newClient->getProvidedEquipment());
+            if ($newClient->getMobileNumber()) $clientToUpdate->setMobileNumber($newClient->getMobileNumber());
+            if ($newClient->getCategory()) $clientToUpdate->setCategory($newClient->getCategory());
+            if ($newClient->getIsUnderContract()) $clientToUpdate->setIsUnderContract($newClient->getIsUnderContract());
+            if ($newClient->getProvidedEquipment()) $clientToUpdate->setProvidedEquipment($newClient->getProvidedEquipment());
             $clientToUpdate->setGeographicArea($newClient->getGeographicArea());
             $clientToUpdate->setUpdatedAt(new \DateTime());
             $manager->persist($clientToUpdate);
@@ -246,7 +247,7 @@ class AllContactsController extends AbstractController
                     $contact->setPhoneNumber($phoneNumber);
                     /* $contact->setMobileNumber($mobileNumber);
                      $contact->setCategory($category);*/
-                    $contact->setIsUnderContract(false);
+                    /*$contact->setIsUnderContract(false);*/
                     $contact->setStatus(0);
                     $contact->setStatusDetail(0);
                     /*$contact->setProvidedEquipment($providedEquipment);*/

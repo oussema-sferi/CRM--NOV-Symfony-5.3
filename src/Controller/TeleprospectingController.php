@@ -133,8 +133,10 @@ class TeleprospectingController extends AbstractController
     public function show(Request $request, $id): Response
     {
         $clientToShow = $this->getDoctrine()->getRepository(Client::class)->find($id);
-        return $this->render('/teleprospecting/show.html.twig', [
-            'client_to_show' => $clientToShow
+        $clientAppointmentsList = $clientToShow->getAppointments();
+        return $this->render('/all_contacts/show.html.twig', [
+            'client_to_show' => $clientToShow,
+            'client_appointments_list' => $clientAppointmentsList
         ]);
     }
 

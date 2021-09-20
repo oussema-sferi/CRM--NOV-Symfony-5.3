@@ -199,7 +199,13 @@
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label class="form-control-label" for="input-city">Catégorie</label>
-                                        <input type="text" id="input-city" class="form-control" value="{{ client_to_show.category }}" disabled>
+                                        <input type="text" id="input-city" class="form-control" value="{% if  client_to_show.category == 1 %}
+                                            Médecin
+                                        {% elseif client_to_show.category == 2 %}
+                                            Vétérinaire
+                                        {% elseif client_to_show.category == 3 %}
+                                            Chirurgien
+                                        {% endif %}" disabled>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
@@ -214,7 +220,11 @@
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label class="form-control-label" for="input-city">Sous Contrat</label>
-                                        <input type="text" id="input-city" class="form-control" value="{% if client_to_show.isUnderContract %}Oui{% else %}Non{% endif %}" disabled>
+                                        <input type="text" id="input-city" class="form-control" value="{% if client_to_show.isUnderContract is null %}{% elseif client_to_show.isUnderContract == 0 %}
+                                            Non
+                                        {% elseif client_to_show.isUnderContract == 1 %}
+                                            Oui
+                                        {% endif %}" disabled>
                                     </div>
                                 </div>
                                 {#<div class="col-lg-6">

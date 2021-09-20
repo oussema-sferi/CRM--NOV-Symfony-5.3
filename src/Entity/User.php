@@ -13,7 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
- * @UniqueEntity(fields={"email"}, message="There is already an account with this email")
+ * @UniqueEntity(fields={"email"}, message="Un utilisateur avec cette addresse email existe déjà!")
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -37,11 +37,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
+     * @Assert\Length(min="8", minMessage="Le mot de passe doit contenir au moins 8 caractères!")
+     * @Assert\Regex(pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).*$^", message="Le mot de passe doit contenir au moins, un caractère en majuscule, un en minuscule, un numéro et un caractère spécial!")
      */
     private $password;
 
     /**
-     * @Assert\EqualTo(propertyPath="password", message="Vous n'avez pas entré le même mot de passe")
+     * @Assert\EqualTo(propertyPath="password", message="Les mots de passe doivent être identiques!")
      */
     public $confirmPassword;
 

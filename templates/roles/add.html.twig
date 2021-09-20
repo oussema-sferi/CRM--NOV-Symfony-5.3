@@ -14,7 +14,8 @@
                             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
                                 <li class="breadcrumb-item"><i class="ni ni-single-02 text-black-50"></i></li>
                                 <li class="breadcrumb-item">Utilisateurs & Rôles</li>
-                                <li class="breadcrumb-item active" aria-current="page">Nouveau Utilisateur</li>
+                                <li class="breadcrumb-item"><a href="{{ path('roles') }}">Liste des utilisateurs</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Nouveau utilisateur</li>
                             </ol>
                         </nav>
                     </div>
@@ -139,7 +140,7 @@
                             </div>
                             {{ form_start(registrationForm) }}
 
-                                    <div class="form-group">
+                                    {#<div class="form-group">
                                         <div class="input-group">
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text"><i class="ni ni-hat-3"></i></span>
@@ -196,8 +197,67 @@
                                             </div>
                                             {{ form_widget(registrationForm.roles, {'attr': {'class': 'form-control'}}) }}
                                         </div>
+                                    </div>#}
+                                    <div class="form-group">
+
+                                        {# <div class="input-group-prepend">
+                                                        <span class="input-group-text"><i class="ni ni-hat-3"></i></span>
+                                                    </div>#}
+                                        {#{{ form_label(client_form.lastName, 'Nom') }}#}
+                                        {{ form_row(registrationForm.firstName, {'label': 'Prénom','attr': {'class': 'form-control', 'placeholder':'Prénom'}}) }}
+
                                     </div>
 
+                                    <div class="form-group">
+
+                                        {# <div class="input-group-prepend">
+                                                                <span class="input-group-text"><i class="ni ni-hat-3"></i></span>
+                                                            </div>#}
+                                        {#{{ form_label(client_form.lastName, 'Nom') }}#}
+                                        {{ form_row(registrationForm.lastName, {'label': 'Nom','attr': {'class': 'form-control', 'placeholder':'Nom'}}) }}
+
+                                    </div>
+                                    <div class="form-group">
+
+                                        {# <div class="input-group-prepend">
+                                                                <span class="input-group-text"><i class="ni ni-hat-3"></i></span>
+                                                            </div>#}
+                                        {#{{ form_label(client_form.lastName, 'Nom') }}#}
+                                        {{ form_row(registrationForm.email, {'label': 'Email','attr': {'class': 'form-control', 'placeholder':'Email'}}) }}
+
+                                    </div>
+                                    <div class="form-group">
+
+                                        {# <div class="input-group-prepend">
+                                                                <span class="input-group-text"><i class="ni ni-hat-3"></i></span>
+                                                            </div>#}
+                                        {#{{ form_label(client_form.lastName, 'Nom') }}#}
+                                        {{ form_row(registrationForm.password, {'label': 'Mot de Passe','attr': {'class': 'form-control', 'placeholder':'Mot de Passe'}}) }}
+                                        <div style="color: grey; font-size: small">
+                                            <small>
+                                                Le mot de passe doit contenir au moins 8 caractères, dont au moins, un en majuscule, un numéro et un caractère spécial.
+                                            </small>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+
+                                        {# <div class="input-group-prepend">
+                                                                <span class="input-group-text"><i class="ni ni-hat-3"></i></span>
+                                                            </div>#}
+                                        {#{{ form_label(client_form.lastName, 'Nom') }}#}
+                                        {{ form_row(registrationForm.confirmPassword, {'label': 'Confirmation Mot de Passe','attr': {'class': 'form-control', 'placeholder':'Confirmation Mot de Passe'}}) }}
+
+                                    </div>
+                                    <div class="form-group">
+
+                                        {# <div class="input-group-prepend">
+                                                                <span class="input-group-text"><i class="ni ni-hat-3"></i></span>
+                                                            </div>#}
+                                        {#{{ form_label(client_form.lastName, 'Nom') }}#}
+                                        {{ form_row(registrationForm.roles, {'label': 'Rôle'}) }}
+
+                                    </div>
 
 
                             <div class="text-center">
