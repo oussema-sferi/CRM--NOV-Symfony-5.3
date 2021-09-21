@@ -6,6 +6,7 @@ use App\Entity\GeographicArea;
 use App\Entity\User;
 use App\Form\UserFormType;
 use Knp\Component\Pager\PaginatorInterface;
+use MercurySeries\FlashyBundle\FlashyNotifier;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -154,7 +155,7 @@ class RolesController extends AbstractController
     /**
      * @Route("/dashboard/users/commercials/departments/assignment", name="commercials_departments_assignment")
      */
-    public function commercialsDepartmentsAssignment(Request $request): Response
+    public function commercialsDepartmentsAssignment(Request $request, FlashyNotifier $flashy): Response
     {
         $departments = [];
         $manager = $this->getDoctrine()->getManager();
@@ -183,10 +184,12 @@ class RolesController extends AbstractController
             $manager->persist($commercial);
             $manager->flush();
 
-            $this->addFlash(
+            $flashy->success('Modifications enregistrées avec succès !');
+
+            /*$this->addFlash(
                 'notice_departments',
                 "Modifications enregistrées avec succès!"
-            );
+            );*/
         }
         return $this->redirectToRoute('commercials_departments', [
             "id" => $commercialId

@@ -1,0 +1,17 @@
+{% for message in app.flashes('mercuryseries_flashy_notification') %}
+    <script id="flashy-template" type="text/template">
+        <div class="flashy flashy--{{ message.type }}">
+            {% if message.type == "success" %}
+            <i class="far fa-check-circle fa-2x"></i>
+                <a class="flashy__body" href="#" target="_blank"></a>
+            {% else %}
+                <i class="fas fa-exclamation fa-2x"></i>
+            <a class="flashy__body" href="#" target="_blank"></a>
+            {% endif %}
+        </div>
+    </script>
+
+    <script>
+        flashy("{{ message.message }}", "{{ message.link }}");
+    </script>
+{% endfor %}
