@@ -8,8 +8,8 @@ function flashy(message, link) {
         .end()
         .appendTo('body')
         .hide()
-        .fadeIn(500)
-        .delay(2800)
+        .fadeIn(700)
+        .delay(5000)
         .animate(
             {
                 marginRight: '-100%'

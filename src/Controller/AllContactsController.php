@@ -7,6 +7,7 @@ use App\Entity\Equipment;
 use App\Entity\GeographicArea;
 use App\Form\ClientFormType;
 use Knp\Component\Pager\PaginatorInterface;
+use MercurySeries\FlashyBundle\FlashyNotifier;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -142,7 +143,7 @@ class AllContactsController extends AbstractController
      * @param Request $request
      * @throws \Exception
      */
-    public function importContactsExcel(Request $request)
+    public function importContactsExcel(Request $request, FlashyNotifier $flashy)
     {
         $file = $request->files->get('excelcontactsfile'); // get the file from the sent request
         // check the type of the uploaded file
@@ -284,14 +285,15 @@ class AllContactsController extends AbstractController
                 );
             }
 
-
+            $flashy->info("Opération d'import des données terminée !");
 
 
         } else {
-            $this->addFlash(
+            $flashy->warning("Désolé! Ce type de fichier n'est pas autorisé !");
+            /*$this->addFlash(
                 'import_file_type_error',
                 "Désolé! Ce type de fichier n'est pas autorisé!"
-            );
+            );*/
 
         }
 
