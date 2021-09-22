@@ -332,12 +332,12 @@
             calendar.render()
             calendar.on("dateClick", function (info) {
                 $("#test").click()
-                $("#appointment_form_start_date").val(info.dateStr)
-                $("#appointment_form_end_date").val(info.dateStr)
+                $("#appointment_form_start").val(moment(info.dateStr).format('YYYY-MM-DDTHH:mm'))
+                $("#appointment_form_end").val(moment(info.dateStr).format('YYYY-MM-DDTHH:mm'))
             })
             $("#test").on("click", function () {
-                $("#appointment_form_start_date").val($("#appointment_form_start_date").defaultDate)
-                $("#appointment_form_end_date").val($("#appointment_form_end_date").defaultDate)
+                $("#appointment_form_start").val($("#appointment_form_start").defaultDate)
+                $("#appointment_form_end").val($("#appointment_form_end").defaultDate)
             })
         }
     </script>

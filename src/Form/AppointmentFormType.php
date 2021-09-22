@@ -18,10 +18,12 @@ class AppointmentFormType extends AbstractType
     {
         $builder
             ->add('start', DateTimeType::class, [
-                'date_widget' => 'single_text'
+                'attr' => ['class' => 'form-control'],
+                'widget' => 'single_text'
             ])
             ->add('end', DateTimeType::class, [
-                'date_widget' => 'single_text'
+                'attr' => ['class' => 'form-control'],
+                'widget' => 'single_text'
             ])
          /*   ->add('client', EntityType::class, [
                 'class' => Client::class,
