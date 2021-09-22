@@ -8,6 +8,7 @@ use App\Entity\GeographicArea;
 use App\Entity\User;
 use App\Repository\AppointmentRepository;
 use Knp\Component\Pager\PaginatorInterface;
+use MercurySeries\FlashyBundle\FlashyNotifier;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,6 +16,11 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class CommercialController extends AbstractController
 {
+    public function __construct(FlashyNotifier $flashy)
+    {
+        $this->flashy = $flashy;
+    }
+
     /**
      * @Route("/dashboard/commercial", name="commercial")
      */
@@ -145,6 +151,9 @@ class CommercialController extends AbstractController
                 $appointmentToProcess->setIsDone(true);
                 $manager->persist($appointmentToProcess);
                 $manager->flush();
+                $this->flashy->success("RDV traité avec succès !");
+            } else {
+                $this->flashy->info("Aucun traitement n'a été effectué sur le RDV !");
             }
             return $this->redirectToRoute('commercial');
 

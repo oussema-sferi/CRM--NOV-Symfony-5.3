@@ -4,12 +4,12 @@
             {% if message.type == "success" %}
                 <i class="far fa-check-circle fa-2x"></i>
                 <a class="flashy__body" href="#" target="_blank"></a>
-            {% elseif message.type == "warning" %}
-                <i class="fas fa-times fa-2x"></i>
-                <a class="flashy__body" href="#" target="_blank"></a>
-                {% elseif message.type == "info" %}
-                    <i class="fas fa-info-circle fa-2x"></i>
+                {% elseif message.type == "warning" %}
+                    <i class="fas fa-times fa-2x"></i>
                     <a class="flashy__body" href="#" target="_blank"></a>
+                    {% elseif message.type == "info" %}
+                        <i class="fas fa-info-circle fa-2x"></i>
+                        <a class="flashy__body" href="#" target="_blank"></a>
             {% endif %}
         </div>
     </script>

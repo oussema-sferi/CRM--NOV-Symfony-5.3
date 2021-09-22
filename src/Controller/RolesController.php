@@ -14,6 +14,11 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class RolesController extends AbstractController
 {
+    public function __construct(FlashyNotifier $flashy)
+    {
+        $this->flashy = $flashy;
+    }
+
     /**
      * @Route("/dashboard/users", name="roles")
      */
@@ -75,6 +80,7 @@ class RolesController extends AbstractController
             $userToUpdate->setRoles($newArrayRoles);
             $manager->persist($userToUpdate);
             $manager->flush();
+            $this->flashy->success("Utilisateur mis à jour avec succès !");
             return $this->redirectToRoute('roles');
         }
         return $this->render('/roles/update.html.twig', [
@@ -155,7 +161,7 @@ class RolesController extends AbstractController
     /**
      * @Route("/dashboard/users/commercials/departments/assignment", name="commercials_departments_assignment")
      */
-    public function commercialsDepartmentsAssignment(Request $request, FlashyNotifier $flashy): Response
+    public function commercialsDepartmentsAssignment(Request $request): Response
     {
         $departments = [];
         $manager = $this->getDoctrine()->getManager();
@@ -184,7 +190,7 @@ class RolesController extends AbstractController
             $manager->persist($commercial);
             $manager->flush();
 
-            $flashy->success('Modifications enregistrées avec succès !');
+            $this->flashy->success('Modifications enregistrées avec succès !');
 
             /*$this->addFlash(
                 'notice_departments',
@@ -250,10 +256,11 @@ class RolesController extends AbstractController
             }
             $manager->persist($telepro);
             $manager->flush();
-            $this->addFlash(
+            $this->flashy->success('Modifications enregistrées avec succès !');
+            /*$this->addFlash(
                 'notice_departments',
                 "Modifications enregistrées avec succès!"
-            );
+            );*/
 
         }
         return $this->redirectToRoute('telepro_departments', [
@@ -309,10 +316,11 @@ class RolesController extends AbstractController
             }
             $manager->persist($telepro);
             $manager->flush();
-            $this->addFlash(
+            $this->flashy->success('Modifications enregistrées avec succès !');
+            /*$this->addFlash(
                 'notice_commercials_assignment',
                 "Modifications enregistrées avec succès!"
-            );
+            );*/
         }
         return $this->redirectToRoute('telepro_commercials', [
             "id" => $teleproId

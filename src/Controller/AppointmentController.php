@@ -9,6 +9,7 @@ use App\Form\AppointmentFormType;
 use App\Repository\AppointmentRepository;
 use App\Repository\UserRepository;
 use Knp\Component\Pager\PaginatorInterface;
+use MercurySeries\FlashyBundle\FlashyNotifier;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,6 +18,12 @@ use function mysql_xdevapi\getSession;
 
 class AppointmentController extends AbstractController
 {
+
+    public function __construct(FlashyNotifier $flashy)
+    {
+        $this->flashy = $flashy;
+    }
+
     /**
      * @Route("/dashboard/appointments", name="appointment")
      */
@@ -58,10 +65,11 @@ class AppointmentController extends AbstractController
             $validationEndTime = $newAppointment->getEnd();
             $appointmentDuration = date_diff($validationEndTime,$validationStartTime);
             if($validationEndTime < $validationStartTime) {
-                $this->addFlash(
+                $this->flashy->warning("Veuillez revérifier vos entrées! L'heure de début doit être avant l'heure de fin !");
+               /* $this->addFlash(
                     'appointment_duration_warning',
                     "Veuillez revérifier vos entrées! L'heure de début doit être avant l'heure de fin!"
-                );
+                );*/
                 return $this->render('/appointment/index.html.twig', [
                     'all_commercial_agents' => $data,
                     'commercial_agents' => $commercial_agents,
@@ -110,15 +118,17 @@ class AppointmentController extends AbstractController
                 if(($appointmentDuration->days === 0) && ($appointmentDuration->h === 0)
                     && ($appointmentDuration->i === 0) && ($appointmentDuration->s === 0)) {
                     /*dd($appointmentDuration);*/
-                    $this->addFlash(
+                    $this->flashy->warning("Veuillez revérifier vos entrées! La durée du RDV doit pas être nulle !");
+                    /*$this->addFlash(
                         'appointment_duration_warning',
                         "Veuillez revérifier vos entrées! La durée du RDV doit pas être nulle!"
-                    );
+                    );*/
                 } else {
-                    $this->addFlash(
+                    $this->flashy->warning("Veuillez revérifier vos entrées! La durée du RDV ne doit pas dépasser trois heures !");
+                    /*$this->addFlash(
                         'appointment_duration_warning',
                         "Veuillez revérifier vos entrées! La durée du RDV ne doit pas dépasser trois heures!"
-                    );
+                    );*/
                 }
                 return $this->render('/appointment/index.html.twig', [
                     'all_commercial_agents' => $data,
@@ -182,10 +192,11 @@ class AppointmentController extends AbstractController
                 $validationEndTime = $myPersonalEvent->getEnd();
                 $appointmentDuration = date_diff($validationEndTime,$validationStartTime);
                 if($validationEndTime < $validationStartTime) {
-                    $this->addFlash(
+                    $this->flashy->warning("Veuillez revérifier vos entrées! L'heure de début doit être avant l'heure de fin !");
+                    /*$this->addFlash(
                         'event_duration_warning',
                         "Veuillez revérifier vos entrées! L'heure de début doit être avant l'heure de fin!"
-                    );
+                    );*/
                     return $this->redirectToRoute('show_my_calendar');
                 }
 
@@ -200,10 +211,11 @@ class AppointmentController extends AbstractController
                     if($busyAppointmentsTime) {
                         foreach ($busyAppointmentsTime as $appointment) {
                             if($appointment->getUser()->getId() === (int)$this->getUser()->getId()) {
-                                $this->addFlash(
+                                $this->flashy->info("Aucune disponibilité à l'intervalle de temps choisi, Veuillez sélectionner d'autres dates !");
+                                /*$this->addFlash(
                                     'event_busy_warning',
                                     "Aucune disponibilité à l'intervalle de temps choisi, Veuillez sélectionner d'autres dates!"
-                                );
+                                );*/
                                 return $this->redirectToRoute('show_my_calendar');
                             }
                         }
@@ -221,13 +233,12 @@ class AppointmentController extends AbstractController
                         $newEvent->setAppointmentNotes($request->request->get('notes'));
                         $manager->persist($newEvent);
                         $manager->flush();
+                        $this->flashy->success("Evénement fixé avec succès !");
 
-
-
-                        $this->addFlash(
+                        /*$this->addFlash(
                             'event_confirmation',
                             "Félicitations! L'événement est fixé avec succès!"
-                        );
+                        );*/
                         return $this->redirectToRoute('show_my_calendar');
                     }
 
@@ -236,15 +247,17 @@ class AppointmentController extends AbstractController
                     if(($appointmentDuration->days === 0) && ($appointmentDuration->h === 0)
                         && ($appointmentDuration->i === 0) && ($appointmentDuration->s === 0)) {
                         /*dd($appointmentDuration);*/
-                        $this->addFlash(
+                        $this->flashy->warning("Veuillez revérifier vos entrées! La durée de l'événement ne doit pas être nulle !");
+                        /*$this->addFlash(
                             'event_duration_warning',
                             "Veuillez revérifier vos entrées! La durée de l'événement ne doit pas être nulle!"
-                        );
+                        );*/
                     } else {
-                        $this->addFlash(
+                        $this->flashy->warning("Veuillez revérifier vos entrées! La durée de l'événement ne doit pas dépasser trois heures !");
+                        /*$this->addFlash(
                             'event_duration_warning',
                             "Veuillez revérifier vos entrées! La durée de l'événement ne doit pas dépasser trois heures!"
-                        );
+                        );*/
                     }
                     return $this->redirectToRoute('show_my_calendar');
                 }
@@ -316,10 +329,11 @@ class AppointmentController extends AbstractController
             $validationEndTime = $newAppointment->getEnd();
             $appointmentDuration = date_diff($validationEndTime,$validationStartTime);
             if($validationEndTime < $validationStartTime) {
-                $this->addFlash(
+                $this->flashy->warning("Veuillez revérifier vos entrées! L'heure de début doit être avant l'heure de fin !");
+                /*$this->addFlash(
                     'appointment_duration_warning',
                     "Veuillez revérifier vos entrées! L'heure de début doit être avant l'heure de fin!"
-                );
+                );*/
                 return $this->redirectToRoute('show_calendar', [
                     'id' => $id,
                 ]);
@@ -336,10 +350,11 @@ class AppointmentController extends AbstractController
                 if($busyAppointmentsTime) {
                     foreach ($busyAppointmentsTime as $appointment) {
                         if($appointment->getUser()->getId() === (int)$id) {
-                            $this->addFlash(
+                            $this->flashy->info("Cet utilisateur n'est pas disponible à l'intervalle de temps choisi, Veuillez sélectionner d'autres dates !");
+                            /*$this->addFlash(
                                 'appointment_busy_commercial_warning',
                                 "Cet utilisateur n'est pas disponible à l'intervalle de temps choisi, Veuillez sélectionner d'autres dates!"
-                            );
+                            );*/
                             return $this->redirectToRoute('show_calendar', [
                                 'id' => $id,
                             ]);
@@ -362,15 +377,17 @@ class AppointmentController extends AbstractController
                 if(($appointmentDuration->days === 0) && ($appointmentDuration->h === 0)
                     && ($appointmentDuration->i === 0) && ($appointmentDuration->s === 0)) {
                     /*dd($appointmentDuration);*/
-                    $this->addFlash(
+                    $this->flashy->warning("Veuillez revérifier vos entrées! La durée du RDV ne doit pas être nulle !");
+                    /*$this->addFlash(
                         'appointment_duration_warning',
                         "Veuillez revérifier vos entrées! La durée du RDV ne doit pas être nulle!"
-                    );
+                    );*/
                 } else {
-                    $this->addFlash(
+                    $this->flashy->warning("Veuillez revérifier vos entrées! La durée du RDV ne doit pas dépasser trois heures !");
+                    /*$this->addFlash(
                         'appointment_duration_warning',
                         "Veuillez revérifier vos entrées! La durée du RDV ne doit pas dépasser trois heures!"
-                    );
+                    );*/
                 }
                 return $this->redirectToRoute('show_calendar', [
                     'id' => $id,
@@ -425,7 +442,7 @@ class AppointmentController extends AbstractController
             $client->setStatusDetail(7);
             $manager->persist($newAppointment);
             $manager->flush();
-
+            $this->flashy->success("RDV fixé avec succès !");
         }
         return $this->redirectToRoute('show_calendar', [
             'id' => $request->request->get('commercial'),
@@ -456,11 +473,12 @@ class AppointmentController extends AbstractController
             $client->setStatusDetail(7);
             $manager->persist($newAppointment);
             $manager->flush();
+            $this->flashy->success("RDV fixé avec succès !");
 
-            $this->addFlash(
+            /*$this->addFlash(
                 'appointment_confirmation',
                 "Félicitations! Le RDV est fixé avec succès!"
-            );
+            );*/
         }
         return $this->redirectToRoute('show_calendar', [
             'id' => $request->request->get('commercial'),

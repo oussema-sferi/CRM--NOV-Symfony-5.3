@@ -11,6 +11,7 @@ use App\Form\AppointmentFormType;
 use App\Form\CallFormType;
 use App\Form\ClientFormType;
 use Knp\Component\Pager\PaginatorInterface;
+use MercurySeries\FlashyBundle\FlashyNotifier;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -21,6 +22,11 @@ use Symfony\Component\Serializer\Serializer;
 
 class TeleprospectingController extends AbstractController
 {
+    public function __construct(FlashyNotifier $flashy)
+    {
+        $this->flashy = $flashy;
+    }
+
     /**
      * @Route("/dashboard/teleprospecting", name="teleprospecting")
      */
@@ -88,6 +94,7 @@ class TeleprospectingController extends AbstractController
             $newClient->setCreatorUser($loggedUser);
             $manager->persist($newClient);
             $manager->flush();
+            $this->flashy->success("Contact créé avec succès !");
             return $this->redirectToRoute('teleprospecting');
         }
         return $this->render('/teleprospecting/add.html.twig', [
@@ -119,6 +126,7 @@ class TeleprospectingController extends AbstractController
             $clientToUpdate->setIsUnderContract($newClient->getIsUnderContract());
             $manager->persist($clientToUpdate);
             $manager->flush();
+            $this->flashy->success("Contact mis à jour avec succès !");
             return $this->redirectToRoute('teleprospecting');
         }
         return $this->render('/teleprospecting/update.html.twig', [
@@ -185,6 +193,7 @@ class TeleprospectingController extends AbstractController
                     'appointment_form' => $appointmentForm->createView(),
                 ]);
             } else {
+                $this->flashy->success("Fiche Contact traitée avec succès !");
                 return $this->redirectToRoute('teleprospecting');
             }
         }
@@ -196,10 +205,11 @@ class TeleprospectingController extends AbstractController
             $appointmentDuration = date_diff($validationEndTime,$validationStartTime);
 
             if($validationEndTime < $validationStartTime) {
-                $this->addFlash(
+                $this->flashy->warning("Veuillez revérifier vos entrées! L'heure de début doit être avant l'heure de fin !");
+                /*$this->addFlash(
                     'appointment_duration_warning',
                     "Veuillez revérifier vos entrées! L'heure de début doit être avant l'heure de fin!"
-                );
+                );*/
                 return $this->render('/teleprospecting/direct_appointment.html.twig', [
                     'appointment_form' => $appointmentForm->createView(),
                 ]);
@@ -246,15 +256,17 @@ class TeleprospectingController extends AbstractController
                 if(($appointmentDuration->days === 0) && ($appointmentDuration->h === 0)
                     && ($appointmentDuration->i === 0) && ($appointmentDuration->s === 0)) {
                     /*dd($appointmentDuration);*/
-                    $this->addFlash(
+                    $this->flashy->warning("Veuillez revérifier vos entrées! La durée du RDV ne doit pas être nulle !");
+                    /*$this->addFlash(
                         'appointment_duration_warning',
                         "Veuillez revérifier vos entrées! La durée du RDV doit pas être nulle!"
-                    );
+                    );*/
                 } else {
-                    $this->addFlash(
+                    $this->flashy->warning("Veuillez revérifier vos entrées! La durée du RDV ne doit pas dépasser trois heures !");
+                   /* $this->addFlash(
                         'appointment_duration_warning',
                         "Veuillez revérifier vos entrées! La durée du RDV ne doit pas dépasser trois heures!"
-                    );
+                    );*/
                 }
                 return $this->render('/teleprospecting/direct_appointment.html.twig', [
                     'appointment_form' => $appointmentForm->createView(),

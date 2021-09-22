@@ -17,6 +17,11 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class AllContactsController extends AbstractController
 {
+    public function __construct(FlashyNotifier $flashy)
+    {
+        $this->flashy = $flashy;
+    }
+
     /**
      * @Route("/dashboard/allcontacts", name="all_contacts")
      */
@@ -80,6 +85,7 @@ class AllContactsController extends AbstractController
             $newClient->setUpdatedAt(new \DateTime());
             $manager->persist($newClient);
             $manager->flush();
+            $this->flashy->success("Contact créé avec succès !");
             return $this->redirectToRoute('all_contacts');
         }
         return $this->render('/all_contacts/add.html.twig', [
@@ -114,6 +120,7 @@ class AllContactsController extends AbstractController
             $clientToUpdate->setUpdatedAt(new \DateTime());
             $manager->persist($clientToUpdate);
             $manager->flush();
+            $this->flashy->success("Contact mis à jour avec succès !");
             return $this->redirectToRoute('all_contacts');
         }
         return $this->render('/all_contacts/update.html.twig', [
@@ -143,7 +150,7 @@ class AllContactsController extends AbstractController
      * @param Request $request
      * @throws \Exception
      */
-    public function importContactsExcel(Request $request, FlashyNotifier $flashy)
+    public function importContactsExcel(Request $request)
     {
         $file = $request->files->get('excelcontactsfile'); // get the file from the sent request
         // check the type of the uploaded file
@@ -178,11 +185,12 @@ class AllContactsController extends AbstractController
                 $activeSheet->getCellByColumnAndRow(4,1)->getValue() === "Commune" &&
                 $activeSheet->getCellByColumnAndRow(5,1)->getValue() === "Code Postal")
             ) {
+                $this->flashy->warning("Désolé! Ce fichier ne suit pas les normes du modèle !");
                 /*dd("yes");*/
-                $this->addFlash(
+                /*$this->addFlash(
                     'import_file_template_error',
                     "Désolé! Ce fichier ne suit pas les normes du modèle!"
-                );
+                );*/
                 return $this->redirectToRoute('all_contacts');
             }
 
@@ -285,11 +293,11 @@ class AllContactsController extends AbstractController
                 );
             }
 
-            $flashy->info("Opération d'import des données terminée !");
+            $this->flashy->info("Opération d'import des données terminée !");
 
 
         } else {
-            $flashy->warning("Désolé! Ce type de fichier n'est pas autorisé !");
+            $this->flashy->warning("Désolé! Ce type de fichier n'est pas autorisé !");
             /*$this->addFlash(
                 'import_file_type_error',
                 "Désolé! Ce type de fichier n'est pas autorisé!"
