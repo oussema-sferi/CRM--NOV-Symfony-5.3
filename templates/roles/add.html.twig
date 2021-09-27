@@ -223,7 +223,7 @@
                                                                 <span class="input-group-text"><i class="ni ni-hat-3"></i></span>
                                                             </div>#}
                                         {#{{ form_label(client_form.lastName, 'Nom') }}#}
-                                        {{ form_row(registrationForm.email, {'label': 'Email','attr': {'class': 'form-control', 'placeholder':'Email'}}) }}
+                                        {{ form_row(registrationForm.email, {'label': 'Email','attr': {'class': 'form-control', 'placeholder':'nom@exemple.com'}}) }}
 
                                     </div>
                                     <div class="form-group">
@@ -235,7 +235,7 @@
                                         {{ form_row(registrationForm.password, {'label': 'Mot de Passe','attr': {'class': 'form-control', 'placeholder':'Mot de Passe'}}) }}
                                         <div style="color: grey; font-size: small">
                                             <small>
-                                                Le mot de passe doit contenir au moins 8 caractères, dont au moins, un en majuscule, un numéro et un caractère spécial.
+                                                Le mot de passe doit contenir au moins 8 caractères, dont au moins, un majuscule, un minuscule, un nombre et un caractère spécial.
                                             </small>
                                         </div>
                                     </div>

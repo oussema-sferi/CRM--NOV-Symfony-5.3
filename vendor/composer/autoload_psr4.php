@@ -10,6 +10,7 @@ return array(
     'ZipStream\\' => array($vendorDir . '/maennchen/zipstream-php/src'),
     'Webmozart\\Assert\\' => array($vendorDir . '/webmozart/assert/src'),
     'Twig\\Extra\\TwigExtraBundle\\' => array($vendorDir . '/twig/extra-bundle'),
+    'Twig\\Extra\\Intl\\' => array($vendorDir . '/twig/intl-extra'),
     'Twig\\' => array($vendorDir . '/twig/twig/src'),
     'Symfony\\Runtime\\Symfony\\Component\\' => array($vendorDir . '/symfony/runtime/Internal'),
     'Symfony\\Requirements\\' => array($vendorDir . '/symfony/requirements-checker/src'),

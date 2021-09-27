@@ -171,6 +171,7 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/league/uri-interfaces" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/league/uri" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/mercuryseries/flashy-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/twig/intl-extra" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

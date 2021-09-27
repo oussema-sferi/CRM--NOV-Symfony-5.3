@@ -25,7 +25,7 @@ class AppointmentController extends AbstractController
     }
 
     /**
-     * @Route("/dashboard/appointments", name="appointment")
+     * @Route("/dashboard/appointments/commercialslist", name="appointment")
      */
     public function index(Request $request, PaginatorInterface $paginator): Response
     {

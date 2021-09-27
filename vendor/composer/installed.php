@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'a60e2cb747dc23efe8b1522c96bfd85723aac9ab',
+        'reference' => '9b6dc0cbdabab668692bbc0a691ff47d835b434a',
         'name' => '__root__',
         'dev' => true,
     ),
@@ -16,7 +16,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'a60e2cb747dc23efe8b1522c96bfd85723aac9ab',
+            'reference' => '9b6dc0cbdabab668692bbc0a691ff47d835b434a',
             'dev_requirement' => false,
         ),
         'amphp/amp' => array(
@@ -1611,6 +1611,15 @@
             'install_path' => __DIR__ . '/../twig/extra-bundle',
             'aliases' => array(),
             'reference' => 'e12a8ee63387abb83fb7e4c897663bfb94ac22b6',
+            'dev_requirement' => false,
+        ),
+        'twig/intl-extra' => array(
+            'pretty_version' => 'v3.3.3',
+            'version' => '3.3.3.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../twig/intl-extra',
+            'aliases' => array(),
+            'reference' => '5a84d0f6bab386bc4224b4220da1daef8d015577',
             'dev_requirement' => false,
         ),
         'twig/twig' => array(

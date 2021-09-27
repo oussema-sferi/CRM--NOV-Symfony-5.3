@@ -2,9 +2,14 @@
 
 namespace App\Controller;
 
+use App\Entity\Appointment;
+use App\Entity\Call;
 use App\Entity\Client;
 use App\Entity\Equipment;
 use App\Entity\GeographicArea;
+use App\Entity\User;
+use App\Form\AppointmentFormType;
+use App\Form\CallFormType;
 use App\Form\ClientFormType;
 use Knp\Component\Pager\PaginatorInterface;
 use MercurySeries\FlashyBundle\FlashyNotifier;
@@ -126,6 +131,71 @@ class AllContactsController extends AbstractController
         return $this->render('/all_contacts/update.html.twig', [
             'client_form' => $clientForm->createView(),
             'client_to_update' => $clientToUpdate
+        ]);
+    }
+
+
+    /**
+     * @Route("/dashboard/allcontacts/fullupdate/{id}", name="full_update_contact")
+     */
+    public function fullUpdate(Request $request, $id): Response
+    {
+        $newClient = new Client();
+        $clientToUpdate = $this->getDoctrine()->getRepository(Client::class)->find($id);
+        $call1 = new Call();
+        $call1->setId(1);
+        $call1->setCallNotes(null);
+        $newClient->getCalls()->add($call1);
+
+        $clientForm = $this->createForm(ClientFormType::class, $newClient);
+        $clientForm->handleRequest($request);
+        $manager = $this->getDoctrine()->getManager();
+
+        $clientAppointmentsList = $clientToUpdate->getAppointments();
+
+        $newAppointment = new Appointment();
+        $appointmentForm = $this->createForm(AppointmentFormType::class, $newAppointment);
+        $appointmentForm->handleRequest($request);
+
+       /* $calls = $clientToUpdate->getCalls();*/
+        $commercials = $this->getDoctrine()->getRepository(User::class)->findUsersByCommercialRole("ROLE_COMMERCIAL");
+        /*dd($clientForm->getData());*/
+        /*dd($clientToUpdate->getCalls()[0]);*/
+        /*if($request->isMethod('Post')) {
+           dd($request->request->all());
+        }*/
+
+
+        /*dd(count($clientToUpdate->getCalls()));*/
+        /*$callsCount = count($clientToUpdate->getCalls());
+        for ($i = 0; $i < $callsCount; $i++) {
+
+            $call = new Call();
+            ($call . '' . $i) = new Call();
+            dd($call . $i);
+
+
+        }
+
+
+        /*$call1 = new Call();
+        $call1->setCallNotes('test1');
+        $newClient->getCalls()->add($call1);*/
+
+        /*dd($calls);*/
+        /*$newCall = new Call();
+        $callForm = $this->createForm(CallFormType::class, $newCall);
+        $callForm->handleRequest($request);*/
+/*dd($clientForm->getData()->getCalls());*/
+
+        return $this->render('/all_contacts/full_update_contact.html.twig', [
+            'client_form' => $clientForm->createView(),
+            'client_to_update' => $clientToUpdate,
+            'client_appointments_list' => $clientAppointmentsList,
+            'appointment_form' => $appointmentForm->createView(),
+            /*'client_calls' => $calls,*/
+            /*'calls' => $clientForm->getData()->getCalls()->createView(),*/
+            'commercials' => $commercials
         ]);
     }
 

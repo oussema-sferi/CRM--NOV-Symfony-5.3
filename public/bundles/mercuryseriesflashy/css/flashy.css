@@ -1,5 +1,5 @@
 .flashy {
-    font-family: Verdana, sans-serif;
+    font-family: Arial, sans-serif;
     padding: 11px 30px;
     border-radius: 4px;
     font-weight: 400;
@@ -11,13 +11,13 @@
 }
 
 .flashy--success {
-    background-color: green;
+    background-color: #99c93d;
     color: #fff;
 }
 
 .flashy--warning {
-    color: #fff;
-    background-color: red;
+    color: #8a6d3b;
+    background-color: #fcf8e3;
     border-color: #faebcc;
 }
 

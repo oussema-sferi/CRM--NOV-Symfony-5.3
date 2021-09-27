@@ -320,8 +320,72 @@ class TeleprospectingController extends AbstractController
     /**
      * @Route("/dashboard/teleprospecting/stats", name="teleprospecting_stats")
      */
-    public function teleprospectingStats(): Response
+    public function teleprospectingStats(Request $request): Response
     {
+        /*$session = $request->getSession();
+        if(!$session->get('date_filter_value'))*/
+        $allTelepros = $this->getDoctrine()->getRepository(User::class)->findUsersByCommercialRole("ROLE_TELEPRO");
+        $allClients = $this->getDoctrine()->getRepository(Client::class)->findAll();
+        $processedClients = $this->getDoctrine()->getRepository(Client::class)->getProcessedClients();
+        $notProcessedClients = $this->getDoctrine()->getRepository(Client::class)->findBy(["status" => 0]);
+        $allAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getAppointmentsWhereClientsExist();
+
+        return $this->render('teleprospecting/telepro_stats.html.twig', [
+            'count_total_telepros' => count($allTelepros),
+            'all_telepros' => $allTelepros,
+            'total_clients' => count($allClients),
+            'processed_clients' => $processedClients,
+            'processed_clients_count' => count($processedClients),
+            'not_processed_clients' => count($notProcessedClients),
+            'total_appointments' => $allAppointments,
+            'total_appointments_count' => count($allAppointments)
+        ]);
+    }
+
+    /**
+     * @Route("/dashboard/teleprospecting/stats/filters", name="teleprospecting_stats_filters")
+     */
+    public function teleprospectingStatsFilters(Request $request): Response
+    {
+
+        $session = $request->getSession();
+        if($request->isXmlHttpRequest()) {
+            $dateFilterValue = $request->get('dateFilterValue');
+            /*dd($dateFilterValue);*/
+            /*if($dateFilterValue) {*/
+                /*$session->remove('start_date');
+                $session->remove('end_date');*/
+                $session->set('date_filter_value',
+                    $dateFilterValue
+                );
+                /*$session->remove('invalid_date');*/
+                /*dd($dateFilterValue);*/
+                /*$serializer = new Serializer([new ObjectNormalizer()]);
+                $result = $serializer->normalize($products,'json',['attributes' => ['id','name','price', 'quantityInStock']]);*/
+                return new JsonResponse(['message'=> 'Task Success!']);
+            /*}*/
+
+        } else {
+            return new JsonResponse(['message'=> 'Task Fails!']);
+            /*if($request->isMethod('Post')) {
+                $startDate = new \DateTime($request->request->get('start_date'));
+                $endDate = new \DateTime($request->request->get('end_date'));
+                if($startDate > $endDate) {
+                    $this->flashy->warning("Une erreur est survenue, veuillez sélectioonner une période valide !");
+
+                }
+                $session->remove('date_filter_value');
+                $session->set('start_date',
+                    $startDate
+                );
+                $session->set('end_date',
+                    $endDate
+                );
+
+                return $this->redirectToRoute("teleprospecting_stats");
+            }*/
+        }
+       /* return new Response('use Ajax');
         $allTelepros = $this->getDoctrine()->getRepository(User::class)->findUsersByCommercialRole("ROLE_TELEPRO");
         $allClients = $this->getDoctrine()->getRepository(Client::class)->findAll();
         $processedClients = $this->getDoctrine()->getRepository(Client::class)->getProcessedClients();
@@ -335,7 +399,7 @@ class TeleprospectingController extends AbstractController
             'processed_clients' => count($processedClients),
             'not_processed_clients' => count($notProcessedClients),
             'total_appointments' => count($allAppointments)
-        ]);
+        ]);*/
     }
 
 }

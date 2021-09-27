@@ -15,8 +15,8 @@
 
 
 {% block body %}
-{#{{ dump(data['data']) }}#}
-{#<div id="calendar">
+    {#{{ dump(data['data']) }}#}
+    {#<div id="calendar">
     <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -100,47 +100,39 @@
 
 
 
-                        <!-- Table -->
-                       {# <div class="row justify-content-center">
+                    <!-- Table -->
+                    {# <div class="row justify-content-center">
                             <div class="col-lg-6 col-md-8">
-
                             </div>
                         </div>#}
 
 
 
-                        <div id="calendar">
-                            <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-body">
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                            <p></p>
-                                        </div>
+                    <div id="calendar">
+                        <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-body">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        <p></p>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
                     <!-- Light table -->
                     {#<div class="table-responsive">
                         <table class="table align-items-center table-flush">
                             <thead class="thead-light">
                             <tr>
-
                             </tr>
                             </thead>
                             <tbody class="list">
-
-
                                 <tr>
-
-
                                 </tr>
-
                             {% endfor %}
-
                             </tbody>
                         </table>
                     </div>#}
@@ -171,9 +163,9 @@
                         </nav>
                     </div>
 
+                </div>
             </div>
         </div>
-    </div>
     </div>
 
 
@@ -326,18 +318,17 @@
                     $("#end-show").val((moment(info.event.end).format('DD/MM/YYYY hh:mm')))
                     $("#notes-show").val(info.event.extendedProps.description)
                     // change the border color just for fun
-
                 }
             })
             calendar.render()
             calendar.on("dateClick", function (info) {
                 $("#test").click()
-                $("#appointment_form_start").val(moment(info.dateStr).format('YYYY-MM-DDTHH:mm'))
-                $("#appointment_form_end").val(moment(info.dateStr).format('YYYY-MM-DDTHH:mm'))
+                $("#appointment_form_start_date").val(info.dateStr)
+                $("#appointment_form_end_date").val(info.dateStr)
             })
             $("#test").on("click", function () {
-                $("#appointment_form_start").val($("#appointment_form_start").defaultDate)
-                $("#appointment_form_end").val($("#appointment_form_end").defaultDate)
+                $("#appointment_form_start_date").val($("#appointment_form_start_date").defaultDate)
+                $("#appointment_form_end_date").val($("#appointment_form_end_date").defaultDate)
             })
         }
     </script>

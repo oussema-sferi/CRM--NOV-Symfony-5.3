@@ -9,17 +9,16 @@ use App\Entity\GeographicArea;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ClientFormType extends AbstractType
+class ClientUpdateFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('firstName')
+
+            /*->add('firstName')
             ->add('lastName', null,[
                 'required' => true
             ])
@@ -68,11 +67,11 @@ class ClientFormType extends AbstractType
                 'placeholder' => 'Sous contrat ?',
                 'required' => false
             ])
-            /*->add('calls', CollectionType::class, [
-                'entry_type' => CallUpdateFormType::class,
-                'entry_options' => ['label' => false],
-            ]);*/
-        ;
+        ;*/
+        $builder->add('calls', CollectionType::class, [
+            'entry_type' => Call::class,
+            'entry_options' => ['label' => false],
+        ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

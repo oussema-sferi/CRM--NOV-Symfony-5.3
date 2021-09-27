@@ -115,6 +115,7 @@ class ComposerStaticInit7e03b1b634e91a00d7327a2e1e8d71bb
         'T' => 
         array (
             'Twig\\Extra\\TwigExtraBundle\\' => 27,
+            'Twig\\Extra\\Intl\\' => 16,
             'Twig\\' => 5,
         ),
         'S' => 
@@ -293,6 +294,10 @@ class ComposerStaticInit7e03b1b634e91a00d7327a2e1e8d71bb
         'Twig\\Extra\\TwigExtraBundle\\' => 
         array (
             0 => __DIR__ . '/..' . '/twig/extra-bundle',
+        ),
+        'Twig\\Extra\\Intl\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/twig/intl-extra',
         ),
         'Twig\\' => 
         array (
@@ -7394,6 +7399,7 @@ class ComposerStaticInit7e03b1b634e91a00d7327a2e1e8d71bb
         'Twig\\Extension\\SandboxExtension' => __DIR__ . '/..' . '/twig/twig/src/Extension/SandboxExtension.php',
         'Twig\\Extension\\StagingExtension' => __DIR__ . '/..' . '/twig/twig/src/Extension/StagingExtension.php',
         'Twig\\Extension\\StringLoaderExtension' => __DIR__ . '/..' . '/twig/twig/src/Extension/StringLoaderExtension.php',
+        'Twig\\Extra\\Intl\\IntlExtension' => __DIR__ . '/..' . '/twig/intl-extra/IntlExtension.php',
         'Twig\\Extra\\TwigExtraBundle\\DependencyInjection\\Compiler\\MissingExtensionSuggestorPass' => __DIR__ . '/..' . '/twig/extra-bundle/DependencyInjection/Compiler/MissingExtensionSuggestorPass.php',
         'Twig\\Extra\\TwigExtraBundle\\DependencyInjection\\Configuration' => __DIR__ . '/..' . '/twig/extra-bundle/DependencyInjection/Configuration.php',
         'Twig\\Extra\\TwigExtraBundle\\DependencyInjection\\TwigExtraExtension' => __DIR__ . '/..' . '/twig/extra-bundle/DependencyInjection/TwigExtraExtension.php',

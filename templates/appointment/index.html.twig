@@ -19,7 +19,9 @@
                         </nav>
                     </div>
                     <div class="col-lg-6 col-5 text-right">
+                        {% if all_commercial_agents|length != 0 %}
                         <button id="test" type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal-form">Fixer un RDV</button>
+                        {% endif %}
                         {#<a href="{{ path('availibility_check') }}" class="btn btn-sm btn-success">Fixer un RDV</a>#}
                         {#<a href="#" class="btn btn-sm btn-neutral">Filters</a>#}
                     </div>
