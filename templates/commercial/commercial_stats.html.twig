@@ -21,12 +21,42 @@
                             </ol>
                         </nav>
                     </div>
-                    {#<div class="col-lg-6 col-5 text-right">
-                        <a href="#" class="btn btn-sm btn-neutral">New</a>
-                        <a href="#" class="btn btn-sm btn-neutral">Filters</a>
-                    </div>#}
+                    <div class="col-lg-6 col-5 text-right">
+                        {#<a href="#" class="btn btn-sm btn-neutral">Période</a>#}
+                        <form {#action="{{ path('teleprospecting_stats_filters') }}" method="post"#}>
+                            <div class="form-group" id="normal_period_block">
+                                <label for="period" style="font-weight: bolder; font-family: Cambria; color: #fff">Période</label>
+                                <select class="form-control-sm" name="normal_period" id="normal_period">
+                                    <option value="" {#{% if app.session.get('date_filter_value_commercial_stats' is null) %} selected {% endif %}#}>Choisir...</option>
+                                    <option value="0" {% if app.session.get('date_filter_value_commercial_stats') == 0 %} selected {% endif %}>Aujourd'hui</option>
+                                    <option value="1" {% if app.session.get('date_filter_value_commercial_stats') == 1 %} selected {% endif %}>Hier</option>
+                                    <option value="7" {% if app.session.get('date_filter_value_commercial_stats') == 7 %} selected {% endif %}>7 derniers jours</option>
+                                    <option value="14" {% if app.session.get('date_filter_value_commercial_stats') == 14 %} selected {% endif %}>14 derniers jours</option>
+                                    <option value="30" {% if app.session.get('date_filter_value_commercial_stats') == 30 %} selected {% endif %}>30 derniers jours</option>
+                                    <option value="60" {% if app.session.get('date_filter_value_commercial_stats') == 60 %} selected {% endif %}>60 derniers jours</option>
+                                    <option value="90" {% if app.session.get('date_filter_value_commercial_stats') == 90 %} selected {% endif %}>90 derniers jours</option>
+                                    <option value="100">Personalisée</option>
+                                </select>
+                                {#<input class="btn btn-sm btn-success" type="submit" value="Confirmer">#}
+                            </div>
+
+                            <div class="form-group" id="custom_period_block" style="display: none">
+                                <label for="start_date" style="font-weight: bolder; font-family: Cambria; color: #fff">De: </label>
+                                <input type="date" class="form-control-sm" name="start_date" id="start_date" required>
+                                <label for="start_date" style="font-weight: bolder; font-family: Cambria; color: #fff">Jusqu'à: </label>
+                                <input type="date" class="form-control-sm" name="end_date" id="end_date" required>
+                                <a id="retour_period" class="btn btn-sm btn-neutral" style="margin-left: 10px">Retour</a>
+                                <input class="btn btn-sm btn-success" type="submit" value="Confirmer">
+                            </div>
+                        </form>
+                        {#<a href="#" class="btn btn-sm btn-neutral">Filters</a>#}
+                    </div>
                 </div>
                 <!-- Card stats -->
+                {% if app.session.get('date_filter_value_commercial_stats') is not null %}
+                    {% set filter = app.session.get('date_filter_value_commercial_stats') %}
+                    {% set selected_date = "now"|date_modify("-" ~ filter ~ " day")| format_datetime('short', 'none') %}
+                {% endif %}
                 <div class="row">
                     <div class="col-xl-4 col-md-6">
                         <div class="card card-stats">
@@ -57,7 +87,27 @@
                                 <div class="row">
                                     <div class="col">
                                         <h5 class="card-title text-uppercase text-muted mb-0">Total RDV</h5>
-                                        <span class="h2 font-weight-bold mb-0">{{ total_appointments }}</span>
+                                        <span class="h2 font-weight-bold mb-0">
+                                            {#{{ total_appointments }}#}
+                                            {% if app.session.get('date_filter_value_commercial_stats') is not null %}
+                                                {% set fixed_appointments_counter = 0 %}
+                                                {% for appointment in total_appointments %}
+                                                    {% set appointment_date = appointment.createdAt | format_datetime('short', 'none') %}
+                                                    {% if filter == "0" or filter == "1" %}
+                                                        {% if appointment_date == selected_date %}
+                                                            {% set fixed_appointments_counter = fixed_appointments_counter + 1 %}
+                                                        {% endif %}
+                                                    {% else %}
+                                                        {% if appointment_date >= selected_date %}
+                                                            {% set fixed_appointments_counter = fixed_appointments_counter + 1 %}
+                                                        {% endif%}
+                                                    {% endif %}
+                                                {% endfor %}
+                                                {{ fixed_appointments_counter }}
+                                            {% else %}
+                                                {{ total_appointments_count }}
+                                            {% endif %}
+                                        </span>
                                     </div>
                                     <div class="col-auto">
                                         <div class="icon icon-shape bg-gradient-info text-white rounded-circle shadow">
@@ -79,7 +129,27 @@
                                 <div class="row">
                                     <div class="col">
                                         <h5 class="card-title text-uppercase text-muted mb-0">Total RDV effectués</h5>
-                                        <span class="h2 font-weight-bold mb-0">{{ done_appointments }}</span>
+                                        <span class="h2 font-weight-bold mb-0">
+                                            {#{{ done_appointments }}#}
+                                            {% if app.session.get('date_filter_value_commercial_stats') is not null %}
+                                                {% set done_appointments_counter = 0 %}
+                                                {% for appointment in total_appointments %}
+                                                    {% set appointment_date = appointment.doneAt | format_datetime('short', 'none') %}
+                                                    {% if filter == "0" or filter == "1" %}
+                                                        {% if appointment_date == selected_date %}
+                                                            {% set done_appointments_counter = done_appointments_counter + 1 %}
+                                                        {% endif %}
+                                                    {% else %}
+                                                        {% if appointment_date >= selected_date %}
+                                                            {% set done_appointments_counter = done_appointments_counter + 1 %}
+                                                        {% endif%}
+                                                    {% endif %}
+                                                {% endfor %}
+                                                {{ done_appointments_counter }}
+                                            {% else %}
+                                                {{ done_appointments_count }}
+                                            {% endif %}
+                                        </span>
                                     </div>
                                     <div class="col-auto">
                                         <div class="icon icon-shape bg-gradient-green text-white rounded-circle shadow">
@@ -104,7 +174,14 @@
                                 <div class="row">
                                     <div class="col">
                                         <h5 class="card-title text-uppercase text-muted mb-0">Total RDV à Venir</h5>
-                                        <span class="h2 font-weight-bold mb-0">{{ upcoming_appointments }}</span>
+                                        <span class="h2 font-weight-bold mb-0">
+                                            {#{{ upcoming_appointments }}#}
+                                            {% if app.session.get('date_filter_value_commercial_stats') is not null %}
+                                                {{ fixed_appointments_counter - done_appointments_counter }}
+                                            {% else %}
+                                                {{ upcoming_appointments }}
+                                            {% endif %}
+                                        </span>
                                     </div>
                                     <div class="col-auto">
                                         <div class="icon icon-shape bg-gradient-red text-white rounded-circle shadow">
@@ -260,16 +337,47 @@
 
 {% block additionalJs %}
     <script>
-      /*  let categories = document.querySelector("#categories");
-        let categGraph = new Chart(categories, {
-            type: "pie",
-            data: {
-                labels: ["cat1","cat2","cat3"],
-                datasets: [{
-                    label: "Répartition des catégories",
-                    data: [2, 5, 3]
-                }]
-            }
-        })*/
+      window.onload = () => {
+          let normalPeriod =  $("#normal_period");
+          let normalPeriodBlock =  $("#normal_period_block");
+          let customPeriod = $("#custom_period_block");
+          normalPeriod.on('change', function() {
+              if($(this).val() === "100") {
+                  $(this).parent().fadeOut(50)
+                  customPeriod.fadeIn(1000)
+              }
+          })
+          $('#retour_period').click(function () {
+              $(this).parent().fadeOut(50)
+              normalPeriodBlock.fadeIn(1000);
+              normalPeriod.val({{ app.session.get('date_filter_value_commercial_stats') }});
+          })
+
+          //date
+
+          $('#normal_period').hover(function () {
+              $(this).css('cursor','pointer');
+          })
+          $('#normal_period').change(function () {
+              console.log(this.value == "14")
+              if(this.value && this.value != "100") {
+                  $.ajax({
+                      url:"{{ path('commercial_stats_filters') }}",
+                      method: "POST",
+                      dataType: 'json',
+                      data : { dateFilterValueCommercialStats: this.value },
+                      success: (e) => {
+                          location.reload();
+                          /*console.log(e);*/
+                      },
+                      error : (f) => {
+                          console.log(f);
+                      }
+                  })
+              }
+
+
+          })
+      }
     </script>
 {% endblock %}

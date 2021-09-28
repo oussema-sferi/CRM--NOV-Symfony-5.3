@@ -26,7 +26,7 @@
                             <div class="form-group" id="normal_period_block">
                                 <label for="period" style="font-weight: bolder; font-family: Cambria; color: #fff">Période</label>
                                 <select class="form-control-sm" name="normal_period" id="normal_period">
-                                    <option value="">Choisir...</option>
+                                    <option value="" {#{% if app.session.get('date_filter_value') == null %} selected {% endif %}#}>Choisir...</option>
                                     <option value="0" {% if app.session.get('date_filter_value') == 0 %} selected {% endif %}>Aujourd'hui</option>
                                     <option value="1" {% if app.session.get('date_filter_value') == 1 %} selected {% endif %}>Hier</option>
                                     <option value="7" {% if app.session.get('date_filter_value') == 7 %} selected {% endif %}>7 derniers jours</option>
@@ -100,11 +100,12 @@
                     <div class="col-xl-4 col-md-6">
                         <div class="card card-stats">
                             <!-- Card body -->
-                            {% if app.session.get('date_filter_value') is defined %}
+                            {% if app.session.get('date_filter_value') is not null %}
                                 {% set filter = app.session.get('date_filter_value') %}
                                 {% set selected_date = "now"|date_modify("-" ~ filter ~ " day")| format_datetime('short', 'none') %}
                             {% endif %}
                             <div class="card-body">
+                                {#{{ dump(selected_date) }}#}
                                 <div class="row">
                                     <div class="col">
                                         <h5 class="card-title text-uppercase text-muted mb-0">Fiches de contact Traités</h5>
@@ -112,7 +113,7 @@
                                             {#{{ dump(processed_clients) }}#}
                                             {#{{ dump(processed_clients[2].calls) }}#}
                                             {#{{ processed_clients }}#}
-                                            {% if app.session.get('date_filter_value') is defined %}
+                                            {% if app.session.get('date_filter_value') is not null %}
                                                 {% set processed_clients_counter = 0 %}
                                                 {% for client in processed_clients %}
                                                 {% set break = false %}
@@ -164,7 +165,7 @@
                                         <h5 class="card-title text-uppercase text-muted mb-0">Fiches de contact Non Traités</h5>
                                         <span class="h2 font-weight-bold mb-0">
                                             {#{{ not_processed_clients }}#}
-                                            {% if app.session.get('date_filter_value') is defined %}
+                                            {% if app.session.get('date_filter_value') is not null %}
                                                 {{ total_clients - processed_clients_counter }}
                                             {% else %}
                                                 {{ not_processed_clients }}
@@ -193,7 +194,8 @@
                                         <h5 class="card-title text-uppercase text-muted mb-0">Total RDV Pris</h5>
                                         <span class="h2 font-weight-bold mb-0">
                                             {#{{ total_appointments_count }}#}
-                                            {% if app.session.get('date_filter_value') is defined %}
+                                            {#{{ dump(selected_date) }}#}
+                                            {% if app.session.get('date_filter_value') is not null %}
                                                 {% set fixed_appointments_counter = 0 %}
                                                 {% for appointment in total_appointments %}
                                                     {% set appointment_date = appointment.createdAt | format_datetime('short', 'none') %}
@@ -312,7 +314,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            {% if app.session.get('date_filter_value') is defined %}
+                            {% if app.session.get('date_filter_value') is not null %}
                                 {% set filter = app.session.get('date_filter_value') %}
                                 {% set selected_date = "now"|date_modify("-" ~ filter ~ " day")| format_datetime('short', 'none') %}
                             {% endif %}
@@ -325,7 +327,7 @@
                                 </th>
                                 <td>
                                 {#{{ dump(app.session.get('date_filter_value')) }}#}
-                                    {% if app.session.get('date_filter_value') is defined %}
+                                    {% if app.session.get('date_filter_value') is not null %}
                                         {% set processed_counter = 0 %}
                                         {% for call in telepro.calls  %}
                                             {% set call_date = call.createdAt | format_datetime('short', 'none') %}
@@ -346,7 +348,7 @@
                                 </td>
                                 <td>
                                     {% set taken_appointments_counter = 0 %}
-                                    {% if app.session.get('date_filter_value') is defined %}
+                                    {% if app.session.get('date_filter_value') is not null %}
                                         {% for call in telepro.calls  %}
                                                 {% set call_date = call.createdAt | format_datetime('short', 'none') %}
                                                 {% if call_date >= selected_date %}

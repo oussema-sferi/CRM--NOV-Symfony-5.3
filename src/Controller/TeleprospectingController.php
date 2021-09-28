@@ -323,7 +323,7 @@ class TeleprospectingController extends AbstractController
     public function teleprospectingStats(Request $request): Response
     {
         /*$session = $request->getSession();
-        if(!$session->get('date_filter_value'))*/
+        $session->remove('date_filter_value');*/
         $allTelepros = $this->getDoctrine()->getRepository(User::class)->findUsersByCommercialRole("ROLE_TELEPRO");
         $allClients = $this->getDoctrine()->getRepository(Client::class)->findAll();
         $processedClients = $this->getDoctrine()->getRepository(Client::class)->getProcessedClients();

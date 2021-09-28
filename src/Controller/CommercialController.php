@@ -10,6 +10,7 @@ use App\Repository\AppointmentRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use MercurySeries\FlashyBundle\FlashyNotifier;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -186,10 +187,30 @@ class CommercialController extends AbstractController
         return $this->render('commercial/commercial_stats.html.twig', [
             'count_total_commercials' => count($allCommercials),
             'all_commercials' => $allCommercials,
-            'total_appointments' => count($allAppointments),
-            'done_appointments' => count($doneAppointments),
+            'total_appointments' => $allAppointments,
+            'total_appointments_count' => count($allAppointments),
+            'done_appointments' => $doneAppointments,
+            'done_appointments_count' => count($doneAppointments),
             'upcoming_appointments' => count($upcomingAppointments),
             'processed_clients' => count($processedClients),
         ]);
+    }
+
+    /**
+     * @Route("/dashboard/commercial/stats/filters", name="commercial_stats_filters")
+     */
+    public function commercialStatsFilters(Request $request): Response
+    {
+        $session = $request->getSession();
+        if($request->isXmlHttpRequest()) {
+            $dateFilterValueCommercialStats = $request->get('dateFilterValueCommercialStats');
+            $session->set('date_filter_value_commercial_stats',
+                $dateFilterValueCommercialStats
+            );
+            return new JsonResponse(['message'=> 'Task Success!']);
+        } else {
+            return new JsonResponse(['message'=> 'Task Fails!']);
+
+        }
     }
 }

@@ -63,6 +63,12 @@ class Appointment
      */
     private $createdAt;
 
+    /**
+     * @ORM\Column(type="datetime")
+     * @Assert\DateTime()
+     */
+    private $doneAt;
+
 
     public function getId(): ?int
     {
@@ -168,6 +174,23 @@ class Appointment
     {
         $this->createdAt = $createdAt;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getDoneAt()
+    {
+        return $this->doneAt;
+    }
+
+    /**
+     * @param mixed $doneAt
+     */
+    public function setDoneAt($doneAt): void
+    {
+        $this->doneAt = $doneAt;
+    }
+
 
 
 }
