@@ -316,7 +316,31 @@
                                             {% set counter = counter + 1 %}
                                         {% endif %}
                                     {% endfor %}
-                                    {{ counter }}
+
+                                    {% if app.session.get('date_filter_value_commercial_stats') is not null %}
+                                        {% set done_appointments_counter = 0 %}
+                                        {% for appointment in commercial.appointments  %}
+                                            {% set appointment_done_date = appointment.doneAt | format_datetime('short', 'none') %}
+                                            {% if filter == "0" or filter == "1" %}
+                                                {% if appointment_done_date == selected_date %}
+                                                    {% set done_appointments_counter = done_appointments_counter + 1 %}
+                                                {% endif %}
+                                            {% else %}
+                                                {% if appointment_done_date >= selected_date %}
+                                                    {% set done_appointments_counter = done_appointments_counter + 1 %}
+                                                {% endif%}
+                                            {% endif %}
+                                        {% endfor %}
+                                        {{ done_appointments_counter }}
+                                    {% else %}
+                                        {% set counter = 0 %}
+                                        {% for appointment in commercial.appointments  %}
+                                            {% if appointment.isDone == 1 %}
+                                                {% set counter = counter + 1 %}
+                                            {% endif %}
+                                        {% endfor %}
+                                        {{ counter }}
+                                    {% endif %}
                                 </td>
                                 <td>
                                 N/A
