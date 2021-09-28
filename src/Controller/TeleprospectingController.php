@@ -322,6 +322,11 @@ class TeleprospectingController extends AbstractController
      */
     public function teleprospectingStats(Request $request): Response
     {
+        /*$array = [5,8,22];
+        if (($key = array_search(8, $array)) !== false) {
+            unset($array[$key]);
+        }
+        dd($array);*/
         /*$session = $request->getSession();
         $session->remove('date_filter_value');*/
         $allTelepros = $this->getDoctrine()->getRepository(User::class)->findUsersByCommercialRole("ROLE_TELEPRO");

@@ -327,7 +327,7 @@
                                 </th>
                                 <td>
                                 {#{{ dump(app.session.get('date_filter_value')) }}#}
-                                    {% if app.session.get('date_filter_value') is not null %}
+                                    {#{% if app.session.get('date_filter_value') is not null %}
                                         {% set processed_counter = 0 %}
                                         {% for call in telepro.calls  %}
                                             {% set call_date = call.createdAt | format_datetime('short', 'none') %}
@@ -341,6 +341,42 @@
                                                     {% endif%}
                                                 {% endif %}
                                         {% endfor %}
+                                        {{ processed_counter }}
+                                    {% else %}
+                                        {{ telepro.calls | length }}
+                                    {% endif %}#}
+                                    {% if app.session.get('date_filter_value') is not null %}
+                                        {% set processed_counter = 0 %}
+                                        {% set calls_clients_ids_array = [] %}
+                                            {% for call in telepro.calls  %}
+                                            {% set calls_clients_ids_array = calls_clients_ids_array|merge([call.client.id]) %}
+                                            {% endfor %}
+
+                                            {% set newArray = [] %}
+                                            {% for id in calls_clients_ids_array %}
+                                                {% if id not in newArray %}
+                                                    {% set newArray = newArray|merge([id]) %}
+                                                {% endif %}
+                                            {% endfor %}
+
+                                            {% for call in telepro.calls  %}
+                                                {% set call_date = call.createdAt | format_datetime('short', 'none') %}
+                                                {% if call.client.id in newArray %}
+                                                    {% if filter == "0" or filter == "1" %}
+                                                        {% if call_date == selected_date %}
+                                                            {% set processed_counter = processed_counter + 1 %}
+                                                            {% set newArray = remove(newArray, call.client.id) %}
+                                                        {% endif %}
+                                                    {% else %}
+                                                        {% if call_date >= selected_date %}
+                                                            {% set processed_counter = processed_counter + 1 %}
+                                                            {% set newArray = remove(newArray, call.client.id) %}
+                                                        {% endif%}
+                                                    {% endif %}
+
+                                                {% endif %}
+                                            {% endfor %}
+                                        {#{{ dump(newArray) }}#}
                                         {{ processed_counter }}
                                     {% else %}
                                         {{ telepro.calls | length }}
