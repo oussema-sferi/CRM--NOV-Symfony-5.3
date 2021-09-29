@@ -397,7 +397,7 @@
                                         </button>
                                     </td>
                                         {% else %}
-                                            <td>Non Défini</td>
+                                            <td >Non Défini</td>
                                             {% endif %}
                                 {% else %}
                                     <td>Non Défini</td>
@@ -408,7 +408,7 @@
                                         <a href="{{ path('call_handle', {'id': client.id}) }}"  class="badge badge-default" >Traiter Fiche</a>
                                     {% else %}
                                         <a href="{{ path('show_client', {'id': client.id}) }}"><i class="fas fa-search-plus text-blue"></i></a>&nbsp;&nbsp;
-                                        {#<a href="{{ path('update_client', {'id': client.id}) }}"><i class="fas fa-edit text-yellow"></i></a>#}&nbsp;&nbsp;
+                                        <a href="{{ path('full_update_contact', {'id': client.id}) }}"><i class="fas fa-edit text-yellow"></i></a>
                                         <a href="" data-toggle="modal" data-target="#deleteModal"><i class="fas fa-trash-alt text-red"></i></a>
                                     {% endif %}
                                 </td>

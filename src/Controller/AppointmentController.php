@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Appointment;
+use App\Entity\Call;
 use App\Entity\Client;
 use App\Entity\User;
 use App\Form\AppointmentFormType;
@@ -231,6 +232,7 @@ class AppointmentController extends AbstractController
                        /* dd($request->request->get('notes'));*/
 
                         $newEvent = new Appointment();
+                        $newEvent->setCreatedAt(new \DateTime());
                         $newEvent->setUser($this->getUser());
                         $newEvent->setStatus(0);
                         $newEvent->setStart($validationStartTime);
@@ -445,6 +447,22 @@ class AppointmentController extends AbstractController
         $manager = $this->getDoctrine()->getManager();
         if($request->isMethod('Post')) {
             $client = $this->getDoctrine()->getRepository(Client::class)->find($request->request->get('client'));
+            /*dd($client->getCalls());*/
+            $value = false;
+            foreach ($client->getCalls() as $call) {
+                if ($call->getStatusDetails() == 7) {
+                    $value = true;
+                    break;
+                }
+            }
+            if($value) {
+                $call->setCallNotes($request->request->get('notes'));
+            } else {
+                $aNewCall = new Call();
+                $aNewCall->setGeneralStatus(2);
+                $aNewCall->setStatusDetails(7);
+                $aNewCall->setCallNotes($request->request->get('notes'));
+            }
             /*dd($client);*/
             /*$value = false;
             foreach ($client->getCalls() as $call) {

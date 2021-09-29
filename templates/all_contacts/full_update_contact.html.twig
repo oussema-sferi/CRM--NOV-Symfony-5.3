@@ -12,24 +12,30 @@
                         <h6 class="h2 text-white d-inline-block mb-0">CRM</h6>
                         <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
                             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
-                                {% if not (is_granted('ROLE_COMMERCIAL')) %}
+                                {% if (is_granted('ROLE_SUPERADMIN')) %}
                                     <li class="breadcrumb-item"><i class="ni fas fa-address-book text-black-50"></i></li>
                                     <li class="breadcrumb-item">Gestion des contacts</li>
                                     <li class="breadcrumb-item"><a href="{{ path('all_contacts') }}">Liste des contacts</a></li>
-                                {% else %}
+                                {% elseif (is_granted('ROLE_COMMERCIAL')) %}
                                     <li class="breadcrumb-item"><i class="fas fa-chalkboard-teacher text-yellow"></i></li>
                                     <li class="breadcrumb-item">Service Commercial</li>
                                     <li class="breadcrumb-item"><a href="{{ path('commercial_my_contacts') }}">Mes contacts</a></li>
+                                {% elseif (is_granted('ROLE_TELEPRO')) %}
+                                    <li class="breadcrumb-item"><i class="fas fa-phone-volume text-orange"></i></li>
+                                    <li class="breadcrumb-item">Service Téléprospection</li>
+                                    <li class="breadcrumb-item"><a href="{{ path('teleprospecting') }}">Liste des prospects</a></li>
                                 {% endif %}
                                 <li class="breadcrumb-item active" aria-current="page">Fiche contact</li>
                             </ol>
                         </nav>
                     </div>
                     <div class="col-lg-6 col-5 text-right">
-                        {% if not (is_granted('ROLE_COMMERCIAL')) %}
+                        {% if (is_granted('ROLE_SUPERADMIN')) %}
                             <a href="{{ path('all_contacts') }}" class="btn btn-sm btn-neutral">Retour</a>
-                        {% else %}
+                        {% elseif (is_granted('ROLE_COMMERCIAL')) %}
                             <a href="{{ path('commercial_my_contacts') }}" class="btn btn-sm btn-neutral">Retour</a>
+                        {% elseif (is_granted('ROLE_TELEPRO')) %}
+                            <a href="{{ path('teleprospecting') }}" class="btn btn-sm btn-neutral">Retour</a>
                         {% endif %}
                     </div>
                 </div>
@@ -308,10 +314,11 @@
                                                 <textarea rows="4" class="form-control" placeholder="Pas de notes ..." resize="none" disabled>{{ call.callNotes }}</textarea>
                                             </div>
                                         </div>
+                                        {% if not (is_granted('ROLE_TELEPRO')) %}
                                         <div class="text-right">
                                             <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal-call-form{{ call.id }}">Editer Appel {{ calls_counter }}</button>
                                         </div>
-
+                                        {% endif %}
                                         <hr class="my-4" />
 
                                         <div class="modal fade" id="modal-call-form{{ call.id }}" tabindex="-1" role="dialog" aria-labelledby="modal-call-form{{ call.id }}" aria-hidden="true">
@@ -460,9 +467,11 @@
                                     </div>
 
                                 </div>
+                                {% if not (is_granted('ROLE_TELEPRO')) %}
                                 <div class="text-right">
                                     <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal-appointment-form{{ appointment.id }}">Editer RDV {{ appointments_counter }}</button>
                                 </div>
+                                {% endif %}
                                 <hr class="my-4" />
 
                                 <div class="modal fade" id="modal-appointment-form{{ appointment.id }}" tabindex="-1" role="dialog" aria-labelledby="modal-appointment-form{{ appointment.id }}" aria-hidden="true">
