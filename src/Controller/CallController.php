@@ -2,13 +2,22 @@
 
 namespace App\Controller;
 
+use App\Entity\Appointment;
 use App\Entity\Call;
+use App\Entity\User;
+use MercurySeries\FlashyBundle\FlashyNotifier;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class CallController extends AbstractController
 {
+    public function __construct(FlashyNotifier $flashy)
+    {
+        $this->flashy = $flashy;
+    }
+
     /**
      * @Route("/dashboard/calls", name="call")
      */
@@ -18,6 +27,29 @@ class CallController extends AbstractController
         /*dd($calls);*/
         return $this->render('call/index.html.twig', [
             'calls' => $calls
+        ]);
+    }
+
+    /**
+     * @Route("/dashboard/calls/update/call/{id}", name="update_call")
+     */
+    public function fullUpdateCall(Request $request, $id): Response
+    {
+        /*dd($request->request->all());*/
+        $manager = $this->getDoctrine()->getManager();
+        $callToUpdate = $this->getDoctrine()->getRepository(Call::class)->find($id);
+        $clientId = $callToUpdate->getClient()->getId();
+        $callToUpdate->setGeneralStatus($request->request->get('status'));
+        $callToUpdate->setStatusDetails($request->request->get('status_details'));
+        $callToUpdate->setCallNotes($request->request->get('notes_call'));
+        $manager->persist($callToUpdate);
+        $manager->flush();
+        /*dd(new \DateTime($request->request->get('start_appointment')));
+        dd($request->request->all());
+        dd($id);*/
+        $this->flashy->success('Appel mis à jour avec succès !');
+        return $this->redirectToRoute('full_update_contact', [
+            "id" => $clientId
         ]);
     }
 }

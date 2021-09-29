@@ -103,4 +103,14 @@ class StatisticsController extends AbstractController
          ]);*/
     }
 
+    /**
+     * @Route("/dashboard/allstats/filters/Initialization", name="all_stats_filters_initialization")
+     */
+    public function allStatsFiltersInitialization(Request $request): Response
+    {
+        $session = $request->getSession();
+        $session->remove('date_filter_value_all_stats');
+        return $this->redirectToRoute('all_statistics');
+    }
+
 }

@@ -167,11 +167,11 @@
                                     <input type="datetime-local" class="form-control">
                                 </div>#}
 
-                                <div class="form-group">
+                                <div class="form-group" id="appointment_notes_block" style="display: none">
                                         <div>
-                                            <label class="form-control-label" for="input-username">Observations</label>
+                                            <label class="form-control-label" for="input-username">Observations RDV</label>
                                         </div>
-                                    <textarea class="form-control" name="notes" id="notes" cols="30" rows="6" placeholder="..." resize="none" disabled>{{ appointment_to_process.appointmentNotes }}</textarea>
+                                    <textarea class="form-control" name="notes" id="notes" cols="30" rows="6" placeholder="..." resize="none"></textarea>
                                 </div>
 
                                 <div class="text-center">
@@ -191,17 +191,21 @@
 
     <script>
         window.onload = () => {
-           /* let startTime = $("#start_datetime");
-            let endtTime = $("#end_datetime");
+            /*let startTime = $("#start_datetime");
+            let endtTime = $("#end_datetime");*/
             $("#rdv").change(function () {
                 if($(this).is(':checked')) {
-                    startTime.css("display", "block")
-                    endtTime.css("display", "block")
+                    /*startTime.css("display", "block")
+                    endtTime.css("display", "block")*/
+                    $("#appointment_notes_block").show('1500')
+                    $("#notes").prop('required', true)
                 } else {
-                    startTime.css("display", "none")
-                    endtTime.css("display", "none")
+                    /*startTime.css("display", "none")
+                    endtTime.css("display", "none")*/
+                    $("#appointment_notes_block").hide('500')
+                    $("#notes").prop('required', false)
                 }
-            })*/
+            })
         }
 
     </script>

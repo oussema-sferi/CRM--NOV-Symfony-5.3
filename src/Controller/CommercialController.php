@@ -148,8 +148,11 @@ class CommercialController extends AbstractController
         $appointmentToProcess = $this->getDoctrine()->getRepository(Appointment::class)->find($id);
         if($request->isMethod('Post')) {
             if($request->request->get('testing') === "on") {
+                /*dd($request->request->get('notes'));*/
                 $manager = $this->getDoctrine()->getManager();
                 $appointmentToProcess->setIsDone(true);
+                $appointmentToProcess->setDoneAt(new \DateTime());
+                $appointmentToProcess->setAppointmentNotes($request->request->get('notes'));
                 $manager->persist($appointmentToProcess);
                 $manager->flush();
                 $this->flashy->success("RDV traité avec succès !");
@@ -212,5 +215,15 @@ class CommercialController extends AbstractController
             return new JsonResponse(['message'=> 'Task Fails!']);
 
         }
+    }
+
+    /**
+     * @Route("/dashboard/commercial/stats/filters/Initialization", name="commercial_stats_filters_initialization")
+     */
+    public function commercialStatsFiltersInitialization(Request $request): Response
+    {
+        $session = $request->getSession();
+        $session->remove('date_filter_value_commercial_stats');
+        return $this->redirectToRoute('commercial_stats');
     }
 }

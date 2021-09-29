@@ -38,7 +38,8 @@ class CallFormType extends AbstractType
                     'attr' => [
                         'rows' => 6,
                         'resize' => 'none'
-                        ]
+                        ],
+                'required' => false
             ])
             /*->add('client')*/
             /*->add('user')*/

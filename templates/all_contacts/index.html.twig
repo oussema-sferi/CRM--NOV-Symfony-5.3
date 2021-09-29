@@ -101,11 +101,13 @@
                                     {% endfor %}
                                 </span>
                             </div>
+                            {% if clients|length != 0 %}
                             <div class="col-md-4 text-right">
                                 <a class="btn btn-sm btn-primary" href="{{ path('all_contacts') }}">Réinitialiser les filtres</a>
                                 {#<input type="text" class="form-control " placeholder="Recherche" id="contact-filter">#}
                                 <button class="btn btn-sm btn-success" type="submit">Appliquer les filtres</button>
                             </div>
+                            {% endif %}
                         </div>
                     </div>
                     <!-- Light table -->
@@ -138,6 +140,7 @@
                                 <th scope="col">Suppression</th>#}
                             </tr>
 
+                            {% if clients|length != 0 %}
                             <tr>
                                 <td>
                                     <input id="firstName" name="firstName" class="test" type="text">
@@ -217,6 +220,8 @@
                                 <td></td>
                                 <td></td>
                             </tr>
+
+                            {% endif %}
 
                             </thead>
                             <tbody class="list">

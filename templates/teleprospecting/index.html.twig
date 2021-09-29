@@ -142,11 +142,13 @@
                                 {% endif %}
                             </div>
 
+                            {% if clients|length != 0 %}
                             <div class="col-md-4 text-right">
                                 <a class="btn btn-sm btn-primary" href="{{ path('teleprospecting') }}">Réinitialiser les filtres</a>
                                 {#<input type="text" class="form-control " placeholder="Recherche" id="contact-filter">#}
                                 <button class="btn btn-sm btn-success" type="submit">Appliquer les filtres</button>
                             </div>
+                            {% endif %}
                         </div>
                     </div>
                     <!-- Light table -->
@@ -157,9 +159,7 @@
                                     <th scope="col">Prénom</th>
                                     <th scope="col">Nom</th>
                                     <th scope="col">Email</th>
-
                                     <th scope="col">Catégorie</th>
-
                                     <th scope="col">Adresse</th>
                                     <th scope="col">Code Postal</th>
                                     <th scope="col">Département</th>
@@ -175,6 +175,7 @@
                                     <th scope="col">Traitement</th>
                                 </tr>
 
+                                {% if clients|length != 0 %}
                                 <tr>
                                     <td>
                                         <input id="firstName" name="firstName" class="test" type="text">
@@ -255,6 +256,8 @@
                                     <td></td>
                                     <td></td>
                                 </tr>
+                                {% endif %}
+
                             </thead>
                             <tbody class="list" id="teleproBody">
                             {% for client in clients %}

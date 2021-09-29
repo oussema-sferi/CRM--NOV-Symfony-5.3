@@ -36,7 +36,7 @@ class Appointment
     private $status;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable=true)
      */
     private $appointmentNotes;
 
@@ -64,7 +64,7 @@ class Appointment
     private $createdAt;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=true)
      * @Assert\DateTime()
      */
     private $doneAt;

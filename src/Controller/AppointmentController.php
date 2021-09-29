@@ -33,8 +33,15 @@ class AppointmentController extends AbstractController
         $loggedUserId = $this->getUser()->getId();
         /*dd($this->getUser()->getRoles());*/
         if(in_array("ROLE_SUPERADMIN", $this->getUser()->getRoles())) {
+            $clients = $this->getDoctrine()->getRepository(Client::class)->findAll();
             $data = $this->getDoctrine()->getRepository(User::class)->findUsersByCommercialRole("ROLE_COMMERCIAL");
         } elseif (in_array("ROLE_TELEPRO", $this->getUser()->getRoles())) {
+            $teleproGeographicAreasArray = $this->getUser()->getGeographicAreas();
+            $teleproGeographicAreasIdsArray = [];
+            foreach ($teleproGeographicAreasArray as $geographicArea) {
+                $teleproGeographicAreasIdsArray[] =  $geographicArea->getId();
+            }
+            $clients = $this->getDoctrine()->getRepository(Client::class)->findClientsByTeleproDepartments($teleproGeographicAreasIdsArray, $this->getUser()->getId());
             $data = $this->getDoctrine()->getRepository(User::class)->findAssignedUsersByCommercialRole($loggedUserId, "ROLE_COMMERCIAL");
         }
 
@@ -57,7 +64,6 @@ class AppointmentController extends AbstractController
         $newAppointment = new Appointment();
         $appointmentForm = $this->createForm(AppointmentFormType::class, $newAppointment);
         $appointmentForm->handleRequest($request);
-        $clients = $this->getDoctrine()->getRepository(Client::class)->findAll();
         /*$clients = $this->getDoctrine()->getRepository(Client::class)->findAll();*/
         if($appointmentForm->isSubmitted()) {
             // for validation -> appointment duration must be <= 3 hours
@@ -289,7 +295,18 @@ class AppointmentController extends AbstractController
         $events = $appointment->findBy(['user' => $id]);
         /*$clients = $this->getDoctrine()->getRepository(Client::class)->findBy(["status" => 1]);*/
         /*$clients = $this->getDoctrine()->getRepository(Client::class)->findAll();*/
-        $clients = $this->getDoctrine()->getRepository(Client::class)->findAll();
+        if(in_array("ROLE_SUPERADMIN", $this->getUser()->getRoles())) {
+            $clients = $this->getDoctrine()->getRepository(Client::class)->findAll();
+        } elseif (in_array("ROLE_TELEPRO", $this->getUser()->getRoles())) {
+            $teleproGeographicAreasArray = $this->getUser()->getGeographicAreas();
+            $teleproGeographicAreasIdsArray = [];
+            foreach ($teleproGeographicAreasArray as $geographicArea) {
+                $teleproGeographicAreasIdsArray[] =  $geographicArea->getId();
+            }
+            $clients = $this->getDoctrine()->getRepository(Client::class)->findClientsByTeleproDepartments($teleproGeographicAreasIdsArray, $this->getUser()->getId());
+        }
+
+
         /*dd($events);*/
         $appointments = [];
         /*dd($events[0]->getClient());*/
@@ -429,15 +446,35 @@ class AppointmentController extends AbstractController
         if($request->isMethod('Post')) {
             $client = $this->getDoctrine()->getRepository(Client::class)->find($request->request->get('client'));
             /*dd($client);*/
+            /*$value = false;
+            foreach ($client->getCalls() as $call) {
+                if ($call->getStatusDetails() === 7) {
+                    $value = true;
+                    break;
+                }
+            }
+            if(in_array("ROLE_TELEPRO", $this->getUser()->getRoles())) {
+                if (!$value) {
+                    $this->flashy->warning("Désolé! Ce client doit être traité avant l'affectation un RDV !");
+                    return $this->redirectToRoute('appointment');
+                }
+            }*/
+
+            /*dd($call);*/
+            /*dd($client->getId());*/
             $commercial = $this->getDoctrine()->getRepository(User::class)->find($request->request->get('commercial'));
+
             $newAppointment = new Appointment();
             $newAppointment->setStatus(0);
             $newAppointment->setIsDone(0);
             $newAppointment->setStart(new \DateTime($request->request->get('start')));
             $newAppointment->setEnd(new \DateTime($request->request->get('end')));
+            $newAppointment->setCreatedAt(new \DateTime());
             $newAppointment->setClient($client);
             $newAppointment->setUser($commercial);
-            $newAppointment->setAppointmentNotes($request->request->get('notes'));
+            /*$call->setCallNotes($request->request->get('notes'));*/
+            /*$newAppointment->setAppointmentNotes($request->request->get('notes'));*/
+            $client->setStatus(2);
             $client->setStatus(2);
             $client->setStatusDetail(7);
             $manager->persist($newAppointment);
@@ -457,28 +494,42 @@ class AppointmentController extends AbstractController
     {
         $manager = $this->getDoctrine()->getManager();
         if($request->isMethod('Post')) {
-            /*dd($request->request->all());*/
             $client = $this->getDoctrine()->getRepository(Client::class)->find($request->request->get('client'));
+            /*dd($client);*/
+            /*$value = false;
+            foreach ($client->getCalls() as $call) {
+                if ($call->getStatusDetails() === 7) {
+                    $value = true;
+                    break;
+                }
+            }
+            if(in_array("ROLE_TELEPRO", $this->getUser()->getRoles())) {
+                if (!$value) {
+                    $this->flashy->warning("Désolé! Ce client doit être traité avant l'affectation un RDV !");
+                    return $this->redirectToRoute('appointment');
+                }
+            }*/
+
+            /*dd($call);*/
+            /*dd($client->getId());*/
             $commercial = $this->getDoctrine()->getRepository(User::class)->find($request->request->get('commercial'));
 
             $newAppointment = new Appointment();
             $newAppointment->setStatus(0);
-            $newAppointment->setIsDone(false);
+            $newAppointment->setIsDone(0);
             $newAppointment->setStart(new \DateTime($request->request->get('start')));
             $newAppointment->setEnd(new \DateTime($request->request->get('end')));
+            $newAppointment->setCreatedAt(new \DateTime());
             $newAppointment->setClient($client);
             $newAppointment->setUser($commercial);
-            $newAppointment->setAppointmentNotes($request->request->get('notes'));
+            /*$call->setCallNotes($request->request->get('notes'));*/
+            /*$newAppointment->setAppointmentNotes($request->request->get('notes'));*/
+            $client->setStatus(2);
             $client->setStatus(2);
             $client->setStatusDetail(7);
             $manager->persist($newAppointment);
             $manager->flush();
             $this->flashy->success("RDV fixé avec succès !");
-
-            /*$this->addFlash(
-                'appointment_confirmation',
-                "Félicitations! Le RDV est fixé avec succès!"
-            );*/
         }
         return $this->redirectToRoute('show_calendar', [
             'id' => $request->request->get('commercial'),
@@ -493,6 +544,31 @@ class AppointmentController extends AbstractController
         $appointmentToShow = $this->getDoctrine()->getRepository(Appointment::class)->find($id);
         return $this->render('/appointment/show.html.twig', [
             'appointment_to_show' => $appointmentToShow
+        ]);
+    }
+
+    /**
+     * @Route("/dashboard/appointments/update/appointment/{id}", name="update_appointment")
+     */
+    public function fullUpdateAppointment(Request $request, $id): Response
+    {
+        $manager = $this->getDoctrine()->getManager();
+        $appointmentToUpdate = $this->getDoctrine()->getRepository(Appointment::class)->find($id);
+        $selectedCommercial = $this->getDoctrine()->getRepository(User::class)->find((int)$request->request->get('assigned_commercial_appointment'));
+        /*$clientToUpdate = $this->getDoctrine()->getRepository(Client::class)->find($appointmentToUpdate->getClient()->getId());*/
+        $clientId = $appointmentToUpdate->getClient()->getId();
+        $appointmentToUpdate->setStart(new \DateTime($request->request->get('start_appointment')));
+        $appointmentToUpdate->setEnd(new \DateTime($request->request->get('end_appointment')));
+        $appointmentToUpdate->setAppointmentNotes($request->request->get('notes_appointment'));
+        $appointmentToUpdate->setUser($selectedCommercial);
+        $manager->persist($appointmentToUpdate);
+        $manager->flush();
+        /*dd(new \DateTime($request->request->get('start_appointment')));
+        dd($request->request->all());
+        dd($id);*/
+        $this->flashy->success('Rendez-Vous mis à jour avec succès !');
+        return $this->redirectToRoute('full_update_contact', [
+            "id" => $clientId
         ]);
     }
 }

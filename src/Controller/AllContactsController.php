@@ -142,10 +142,10 @@ class AllContactsController extends AbstractController
     {
         $newClient = new Client();
         $clientToUpdate = $this->getDoctrine()->getRepository(Client::class)->find($id);
-        $call1 = new Call();
+        /*$call1 = new Call();
         $call1->setId(1);
         $call1->setCallNotes(null);
-        $newClient->getCalls()->add($call1);
+        $newClient->getCalls()->add($call1);*/
 
         $clientForm = $this->createForm(ClientFormType::class, $newClient);
         $clientForm->handleRequest($request);
@@ -188,6 +188,7 @@ class AllContactsController extends AbstractController
         $callForm->handleRequest($request);*/
 /*dd($clientForm->getData()->getCalls());*/
 
+
         return $this->render('/all_contacts/full_update_contact.html.twig', [
             'client_form' => $clientForm->createView(),
             'client_to_update' => $clientToUpdate,
@@ -198,6 +199,8 @@ class AllContactsController extends AbstractController
             'commercials' => $commercials
         ]);
     }
+
+
 
     /**
      * @Route("/dashboard/allcontacts/show/{id}", name="show_contact")
