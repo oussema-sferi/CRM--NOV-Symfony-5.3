@@ -188,6 +188,28 @@ class AllContactsController extends AbstractController
         $callForm->handleRequest($request);*/
 /*dd($clientForm->getData()->getCalls());*/
 
+        if($clientForm->isSubmitted()) {
+            if ($newClient->getFirstName()) $clientToUpdate->setFirstName($newClient->getFirstName());
+            $clientToUpdate->setLastName($newClient->getLastName());
+            if ($newClient->getCompanyName()) $clientToUpdate->setCompanyName($newClient->getCompanyName());
+            if ($newClient->getEmail()) $clientToUpdate->setEmail($newClient->getEmail());
+            $clientToUpdate->setAddress($newClient->getAddress());
+            $clientToUpdate->setPostalCode($newClient->getPostalCode());
+            $clientToUpdate->setCountry($newClient->getCountry());
+            $clientToUpdate->setPhoneNumber($newClient->getPhoneNumber());
+            if ($newClient->getMobileNumber()) $clientToUpdate->setMobileNumber($newClient->getMobileNumber());
+            if ($newClient->getCategory()) $clientToUpdate->setCategory($newClient->getCategory());
+            if ($newClient->getIsUnderContract()) $clientToUpdate->setIsUnderContract($newClient->getIsUnderContract());
+            if ($newClient->getProvidedEquipment()) $clientToUpdate->setProvidedEquipment($newClient->getProvidedEquipment());
+            $clientToUpdate->setGeographicArea($newClient->getGeographicArea());
+            $clientToUpdate->setUpdatedAt(new \DateTime());
+            $manager->persist($clientToUpdate);
+            $manager->flush();
+            $this->flashy->success("Informations personnelles mises à jour avec succès !");
+            return $this->redirectToRoute('full_update_contact', [
+                "id" => $id
+            ]);
+        }
 
         return $this->render('/all_contacts/full_update_contact.html.twig', [
             'client_form' => $clientForm->createView(),

@@ -147,7 +147,7 @@
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="form-group">
-                                        <label class="form-control-label" for="input-first-name">Adresse</label>
+                                        <label class="form-control-label" for="input-first-name">Addresse</label>
                                         <input type="text" id="input-first-name" class="form-control" value="{{ client_to_show.address }}" disabled>
                                     </div>
                                 </div>
@@ -162,18 +162,26 @@
                             </div>
 
                             <div class="row">
+
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-first-name">Commune</label>
+                                        <input type="text" id="input-first-name" class="form-control" value="{{ client_to_show.city }}" disabled>
+                                    </div>
+                                </div>
+
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label class="form-control-label" for="input-first-name">Département</label>
                                         <input type="text" id="input-first-name" class="form-control" value="{{ client_to_show.geographicArea }}" disabled>
                                     </div>
                                 </div>
-                                <div class="col-lg-6">
+                                {#<div class="col-lg-6">
                                     <div class="form-group">
                                         <label class="form-control-label" for="input-first-name">Pays</label>
                                         <input type="text" id="input-first-name" class="form-control" value="{{ client_to_show.country }}" disabled>
                                     </div>
-                                </div>
+                                </div>#}
 
                             </div>
 
@@ -181,16 +189,23 @@
 
                                 <div class="col-lg-6">
                                     <div class="form-group">
+                                        <label class="form-control-label" for="input-first-name">Pays</label>
+                                        <input type="text" id="input-first-name" class="form-control" value="{{ client_to_show.country }}" disabled>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <div class="form-group">
                                         <label class="form-control-label" for="input-last-name">Numéro Domicile</label>
                                         <input type="text" id="input-last-name" class="form-control" value="{{ client_to_show.phoneNumber }}" disabled>
                                     </div>
                                 </div>
-                                <div class="col-lg-6">
+                                {#<div class="col-lg-6">
                                     <div class="form-group">
                                         <label class="form-control-label" for="input-first-name">Numéro Mobile</label>
                                         <input type="text" id="input-first-name" class="form-control" value="{{ client_to_show.mobileNumber }}" disabled>
                                     </div>
-                                </div>
+                                </div>#}
                                 {#<div class="col-lg-6">
                                     <div class="form-group">
                                         <label class="form-control-label" for="input-last-name">Numéro Mobile</label>
@@ -199,13 +214,14 @@
                                 </div>#}
                             </div>
 
-                        </div>
-                        <hr class="my-4" />
-                        <!-- Address -->
-                        <h6 class="heading-small text-muted mb-4">Données Utiles</h6>
-                        <div class="pl-lg-4">
-
                             <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-first-name">Numéro Mobile</label>
+                                        <input type="text" id="input-first-name" class="form-control" value="{{ client_to_show.mobileNumber }}" disabled>
+                                    </div>
+                                </div>
+
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label class="form-control-label" for="input-city">Catégorie</label>
@@ -218,75 +234,140 @@
                                         {% endif %}" disabled>
                                     </div>
                                 </div>
+                            </div>
+
+                            <div class="row">
+                                {#<div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-city">Catégorie</label>
+                                        <input type="text" id="input-city" class="form-control" value="{% if  client_to_show.category == 1 %}
+                                            Médecin
+                                        {% elseif client_to_show.category == 2 %}
+                                            Vétérinaire
+                                        {% elseif client_to_show.category == 3 %}
+                                            Chirurgien
+                                        {% endif %}" disabled>
+                                    </div>
+                                </div>#}
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label class="form-control-label" for="input-country">Equipement</label>
                                         <input type="text" id="input-country" class="form-control" value="{{ client_to_show.providedEquipment }}" disabled>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="row">
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label class="form-control-label" for="input-city">Sous Contrat</label>
-                                        <input type="text" id="input-city" class="form-control" value="{% if client_to_show.isUnderContract is null %}{% elseif client_to_show.isUnderContract == 0 %}
-                                            Non
-                                        {% elseif client_to_show.isUnderContract == 1 %}
-                                            Oui
-                                        {% endif %}" disabled>
+                                        <input type="text" id="input-city" class="form-control" value="{% if client_to_show.isUnderContract is null %}{% elseif client_to_show.isUnderContract == 0 %}Non{% elseif client_to_show.isUnderContract == 1 %}Oui{% endif %}" disabled>
                                     </div>
                                 </div>
-                                {#<div class="col-lg-6">
+                            </div>
+
+
+
+                        </div>
+                        {#<hr class="my-4" />#}
+                        <!-- Address -->
+                        {#<h6 class="heading-small text-muted mb-4">Données Utiles</h6>#}
+                        {#<div class="pl-lg-4">#}
+
+                            {#<div class="row">
+                                #}{#<div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-city">Catégorie</label>
+                                        <input type="text" id="input-city" class="form-control" value="{% if  client_to_show.category == 1 %}
+                                            Médecin
+                                        {% elseif client_to_show.category == 2 %}
+                                            Vétérinaire
+                                        {% elseif client_to_show.category == 3 %}
+                                            Chirurgien
+                                        {% endif %}" disabled>
+                                    </div>
+                                </div>#}{#
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-country">Equipement</label>
+                                        <input type="text" id="input-country" class="form-control" value="{{ client_to_show.providedEquipment }}" disabled>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-city">Sous Contrat</label>
+                                        <input type="text" id="input-city" class="form-control" value="{% if client_to_show.isUnderContract is null %}{% elseif client_to_show.isUnderContract == 0 %}Non{% elseif client_to_show.isUnderContract == 1 %}Oui{% endif %}" disabled>
+                                    </div>
+                                </div>
+                            </div>#}
+
+                            {#<div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-city">Sous Contrat</label>
+                                        <input type="text" id="input-city" class="form-control" value="{% if client_to_show.isUnderContract is null %}{% elseif client_to_show.isUnderContract == 0 %}Non{% elseif client_to_show.isUnderContract == 1 %}Oui{% endif %}" disabled>
+                                    </div>
+                                </div>
+                                #}{#<div class="col-lg-6">
                                     <div class="form-group">
                                         <label class="form-control-label" for="input-country">Etat Appel</label>
                                         <input type="text" id="input-country" class="form-control" value="{% if appointment_to_show.client.status == 0 %}Non traité{% elseif appointment_to_show.client.status == 1 %}Appel non qualifié{% else %}Appel qualifié{% endif %}" disabled>
                                     </div>
-                                </div>#}
-                            </div>
+                                </div>#}{#
+                            </div>#}
 
-                        </div>
+                        {#</div>#}
 
-                        {% if client_to_show.status != 0 %}
+                        {% if client_to_show.calls|length > 0 %}
+                            {% set calls_counter = 0 %}
                         <hr class="my-4" />
 
-                        <h6 class="heading-small text-muted mb-4">Informations Appel</h6>
-                            <div class="pl-lg-4">
+                        <h6 class="heading-small text-muted mb-4">Liste des Appels</h6>
 
+                            {% for call in client_to_show.calls %}
+                            <div class="pl-lg-4">
+                                {% set calls_counter = calls_counter + 1 %}
+                                <h3 class="heading-small text-muted mb-4">Appel {{ calls_counter }}</h3>
                                 <div class="row">
                                     <div class="col-lg-6">
                                         <div class="form-group">
                                             <label class="form-control-label" for="input-city">Etat</label>
-                                            <input type="text" id="input-city" class="form-control" value="{% if client_to_show.status == 0 %}Non traité{% elseif client_to_show.status == 1 %}Appel non qualifié{% else %}Appel qualifié{% endif %}" disabled>
+                                            <input type="text" id="input-city" class="form-control" value="{% if call.generalStatus == 0 %}Non traité{% elseif call.generalStatus == 1 %}Appel non qualifié{% else %}Appel qualifié{% endif %}" disabled>
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="form-group">
                                             <label class="form-control-label" for="input-country">Détails</label>
-                                            <input type="text" id="input-country" class="form-control" value="{% if client_to_show.statusDetail == 1 %}Ne répond pas{% elseif client_to_show.statusDetail == 2 %}Répondeur{% elseif client_to_show.statusDetail == 3 %}Barrage Secrétaire{% elseif client_to_show.statusDetail == 4 %}Pas Intéressé{% elseif client_to_show.statusDetail == 5 %}A Rappeler{% elseif client_to_show.statusDetail == 6 %}RDV à prendre{% elseif client_to_show.statusDetail == 7 %}RDV fixé {% else %}Non traité{% endif %}" disabled>
+                                            <input type="text" id="input-country" class="form-control" value="{% if call.statusDetails == 1 %}Ne répond pas{% elseif call.statusDetails == 2 %}Répondeur{% elseif call.statusDetails == 3 %}Barrage Secrétaire{% elseif call.statusDetails == 4 %}Pas Intéressé{% elseif call.statusDetails == 5 %}A Rappeler{% elseif call.statusDetails == 6 %}RDV à prendre{% elseif call.statusDetails == 7 %}RDV fixé {% else %}Non traité{% endif %}" disabled>
                                         </div>
                                     </div>
                                 </div>
 
                             </div>
-                        <hr class="my-4" />
+                        {#<hr class="my-4" />#}
                         <!-- Description -->
-                        <h6 class="heading-small text-muted mb-4">Observations Appel</h6>
+                        {#<h6 class="heading-small text-muted mb-4">Observations Appel</h6>#}
                             <div class="pl-lg-4">
                                 <div class="form-group">
-                                    <label class="form-control-label">Notes</label>
-                                    <textarea rows="4" class="form-control" placeholder="Pas de notes ..." resize="none" disabled>{% if client_to_show.calls|default%}{{ client_to_show.calls[client_to_show.calls|length - 1].callNotes }} {% endif %}</textarea>
+                                    <label class="form-control-label">Observations Appel</label>
+                                    <textarea rows="4" class="form-control" placeholder="Pas de notes ..." resize="none" disabled>{{ call.callNotes }}</textarea>
                                 </div>
                             </div>
+                                <hr class="my-4" />
+                            {% endfor %}
                         {% endif %}
                         {% if client_appointments_list|length > 0 %}
                         <hr class="my-4" />
-
-                        <h6 class="heading-small text-muted mb-4">Liste des RDV</h6>
-                        <div class="pl-lg-4">
+                        <div class="row align-items-center py-4">
+                            <div class="col-lg-6 col-7">
+                                <h6 class="heading-small text-muted mb-4">Liste des RDV</h6>
+                            </div>
+                        </div>
+                            {% set appointments_counter = 0 %}
+                        {#<h6 class="heading-small text-muted mb-4">Liste des RDV</h6>#}
                             {% for appointment in client_appointments_list %}
-
-
+                        <div class="pl-lg-4">
+                                {% set appointments_counter = appointments_counter + 1 %}
+                                <h3 class="heading-small text-muted mb-4">RDV {{ appointments_counter }}</h3>
                                 <div class="row">
                                     <div class="col-lg-3">
                                         <div class="form-group">
