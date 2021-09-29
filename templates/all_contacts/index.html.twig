@@ -107,6 +107,12 @@
                                 {#<input type="text" class="form-control " placeholder="Recherche" id="contact-filter">#}
                                 <button class="btn btn-sm btn-success" type="submit">Appliquer les filtres</button>
                             </div>
+                            {% else %}
+                                <div class="col-md-4 text-right">
+                                    <a class="btn btn-sm btn-primary" href="{{ path('all_contacts') }}">Réinitialiser les filtres</a>
+                                    {#<input type="text" class="form-control " placeholder="Recherche" id="contact-filter">#}
+                                    {#<button class="btn btn-sm btn-success" type="submit">Appliquer les filtres</button>#}
+                                </div>
                             {% endif %}
                         </div>
                     </div>
@@ -368,12 +374,15 @@
                                         {% endif %}
                                     </td>
                                     {% if client.calls|default %}
+                                    {% if client.calls[client.calls|length - 1].callNotes is not null %}
                                     <td class="budget" style="text-align: center">
                                         <button class="notes" data-container="body" type="button" data-toggle="popover" data-color="info" data-placement="top" data-content= "{{ client.calls[client.calls|length -1].callNotes }}">
                                             <i class="far fa-comment text-cyan"></i>
                                         </button>
                                     </td>
-
+                                    {% else %}
+                                        <td >Non Défini</td>
+                                    {% endif %}
 
                                     {% else %}
                                         <td>Non Défini</td>
@@ -381,13 +390,16 @@
 
 
                                     {% if client.appointments|default %}
+                                    {% if client.appointments[client.appointments|length -1].appointmentNotes is not null %}
                                         <td class="budget" style="text-align: center">
                                             <button class="notes" data-container="body" type="button" data-toggle="popover" data-color="info" data-placement="top" data-content= "{{ client.appointments[client.appointments|length -1].appointmentNotes }}">
                                                 <i class="far fa-comment text-cyan"></i>
                                             </button>
                                         </td>
 
-
+                                    {% else %}
+                                        <td>Non Défini</td>
+                                    {% endif %}
                                     {% else %}
                                         <td>Non Défini</td>
                                     {% endif %}
@@ -397,7 +409,7 @@
                                     <td >
                                         {#<a href="{{ path('show_contact', {'id': client.id}) }}"  class="badge badge-default" >Consulter Fiche</a>#}
                                         <a href="{{ path('show_contact', {'id': client.id}) }}"><i class="fas fa-search-plus text-blue"></i></a>&nbsp;&nbsp;
-                                        <a href="{{ path('update_contact', {'id': client.id}) }}"><i class="fas fa-edit text-yellow"></i></a>&nbsp;&nbsp;
+                                        <a href="{{ path('full_update_contact', {'id': client.id}) }}"><i class="fas fa-edit text-yellow"></i></a>&nbsp;&nbsp;
                                         <a href="" data-toggle="modal" data-target="#deleteModal"><i class="fas fa-trash-alt text-red"></i></a>
 
                                     </td>

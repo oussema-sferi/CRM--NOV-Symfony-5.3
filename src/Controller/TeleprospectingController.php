@@ -168,6 +168,7 @@ class TeleprospectingController extends AbstractController
         $manager = $this->getDoctrine()->getManager();
 
         if($callForm->isSubmitted()) {
+            /*dd($request->request->get('call_form[callNotes]'));*/
             $status = (int)$request->request->get('status');
             $statusDetailsNQ = (int)$request->request->get('detailsnq');
             $statusDetailsQ = (int)$request->request->get('detailsq');
@@ -175,7 +176,12 @@ class TeleprospectingController extends AbstractController
             $newCall->setUser($loggedUser);
             $newCall->setClient($client);
             $newCall->setGeneralStatus($status);
+            /*if(!$request->request->get('detailsnq')) {
             $newCall->setCallNotes(null);
+            } else {
+                $newCall->setCallNotes($request->request->get('detailsnq'));
+            }*/
+
             $client->setStatus($status);
             if($statusDetailsQ) {
                 $newCall->setStatusDetails($statusDetailsQ);

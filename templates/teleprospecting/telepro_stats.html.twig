@@ -35,7 +35,7 @@
                                     <option value="30" {% if app.session.get('date_filter_value') is defined and app.session.get('date_filter_value') == "30" %} selected {% endif %}>30 derniers jours</option>
                                     <option value="60" {% if app.session.get('date_filter_value') is defined and app.session.get('date_filter_value') == "60" %} selected {% endif %}>60 derniers jours</option>
                                     <option value="90" {% if app.session.get('date_filter_value') is defined and app.session.get('date_filter_value') == "90" %} selected {% endif %}>90 derniers jours</option>
-                                    <option value="100">Personalisée</option>
+                                    <option value="100" disabled>Personalisée</option>
                                 </select>
                                 <a href="{{ path('teleprospecting_stats_filters_initialization') }}" class="btn btn-sm btn-success">Réinitialiser les filtres</a>
                             </div>
