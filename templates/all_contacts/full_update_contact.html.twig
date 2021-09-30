@@ -311,14 +311,25 @@
                                             {#<h3 class="heading-small text-muted mb-4">Notes Appel {{ calls_counter }}</h3>#}
                                             <div class="form-group">
                                                 <label class="form-control-label">Observations Appel</label>
-                                                <textarea rows="4" class="form-control" placeholder="Pas de notes ..." resize="none" disabled>{{ call.callNotes }}</textarea>
+                                                {#<textarea rows="4" class="form-control" placeholder="Pas de notes ..." resize="none" disabled>{{ call.callNotes }}</textarea>#}
+                                                {% if call.statusDetails != 7 %}<textarea rows="4" class="form-control" placeholder="Pas de notes ..." resize="none" disabled>{{ call.callNotes }}</textarea>{% else %}
+                                                    {% set value = "" %}
+                                                    {% set break = false %}
+                                                    {% for appointment in client_appointments_list %}
+                                                        {% if break == false %}
+                                                            {% if appointment.appointmentCallNotes is not null %}
+                                                                {% set value = appointment.appointmentCallNotes %}
+                                                                {% set break = true %}
+                                                            {% endif%}
+                                                        {% endif %}
+                                                    {% endfor %}<textarea rows="4" class="form-control" placeholder="Pas de notes ..." resize="none" disabled>{{ value }}</textarea>{% endif%}
                                             </div>
                                         </div>
-                                        {% if not (is_granted('ROLE_TELEPRO')) %}
+                                        {#{% if not (is_granted('ROLE_TELEPRO')) %}#}
                                         <div class="text-right">
                                             <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal-call-form{{ call.id }}">Editer Appel {{ calls_counter }}</button>
                                         </div>
-                                        {% endif %}
+                                        {#{% endif %}#}
                                         <hr class="my-4" />
 
                                         <div class="modal fade" id="modal-call-form{{ call.id }}" tabindex="-1" role="dialog" aria-labelledby="modal-call-form{{ call.id }}" aria-hidden="true">
@@ -372,7 +383,18 @@
                                                             <div>
                                                                 <div class="form-group">
                                                                     <label class="form-control-label" for="input-username">Observations Appel</label>
-                                                                    <textarea id="notes-show" class="form-control" name="notes_call" id="notes" cols="30" rows="6" placeholder="..." resize="none" required>{{ call.callNotes }}</textarea>
+                                                                    {#<textarea id="notes-show" class="form-control" name="notes_call" id="notes" cols="30" rows="6" placeholder="..." resize="none" required>{{ call.callNotes }}</textarea>#}
+                                                                    {% if call.statusDetails != 7 %}<textarea rows="4" class="form-control" name="notes_call" placeholder="Pas de notes ..." resize="none">{{ call.callNotes }}</textarea>{% else %}
+                                                                        {% set value = "" %}
+                                                                        {% set break = false %}
+                                                                        {% for appointment in client_appointments_list %}
+                                                                            {% if break == false %}
+                                                                                {% if appointment.appointmentCallNotes is not null %}
+                                                                                    {% set value = appointment.appointmentCallNotes %}
+                                                                                    {% set break = true %}
+                                                                                {% endif%}
+                                                                            {% endif %}
+                                                                        {% endfor %}<textarea rows="4" class="form-control" name="notes_call" placeholder="Pas de notes ..." resize="none">{{ value }}</textarea>{% endif%}
                                                                 </div>
                                                             </div>
                                                             <hr class="my-3">

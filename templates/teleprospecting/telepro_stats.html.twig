@@ -388,11 +388,20 @@
                                     {% if app.session.get('date_filter_value') is not null %}
                                         {% for call in telepro.calls  %}
                                                 {% set call_date = call.createdAt | format_datetime('short', 'none') %}
+
+                                            {% if filter == "0" or filter == "1" %}
+                                                {% if call_date == selected_date %}
+                                                    {% if call.statusDetails == 7 %}
+                                                        {% set taken_appointments_counter = taken_appointments_counter + 1 %}
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% else %}
                                                 {% if call_date >= selected_date %}
                                                     {% if call.statusDetails == 7 %}
                                                         {% set taken_appointments_counter = taken_appointments_counter + 1 %}
                                                     {% endif %}
                                                 {% endif %}
+                                            {% endif %}
                                         {% endfor %}
 
                                     {% else %}

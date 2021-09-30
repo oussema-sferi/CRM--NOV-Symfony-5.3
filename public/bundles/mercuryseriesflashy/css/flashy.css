@@ -11,13 +11,13 @@
 }
 
 .flashy--success {
-    background-color: #99c93d;
+    background-color: green;
     color: #fff;
 }
 
 .flashy--warning {
-    color: #8a6d3b;
-    background-color: #fcf8e3;
+    color: #fff;
+    background-color: red;
     border-color: #faebcc;
 }
 

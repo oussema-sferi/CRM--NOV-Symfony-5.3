@@ -54,10 +54,10 @@
                                 <th scope="col">Prénom</th>
                                 <th scope="col">Nom</th>
                                 <th scope="col">Email</th>
-                                <th scope="col">Société</th>
+                                {#<th scope="col">Société</th>#}
                                 <th scope="col">Catégorie</th>
                                 {#<th scope="col">Equipement</th>#}
-                                <th scope="col">Sous Contrat</th>
+                                {#<th scope="col">Sous Contrat</th>#}
                                 <th scope="col">Adresse</th>
                                 <th scope="col">Code Postal</th>
                                 <th scope="col">Département</th>
@@ -65,6 +65,8 @@
                                 <th scope="col">Pays</th>
                                 <th scope="col">Numéro Domicile</th>
                                 <th scope="col">Numéro Mobile</th>
+                                <th scope="col">Société</th>
+                                <th scope="col">Sous Contrat</th>
                                 <th scope="col">Actions</th>
                                 {#<th scope="col">Traitement</th>#}
                                 {#<th scope="col">Consultation</th>
@@ -90,9 +92,9 @@
                                         {{ commercial_appointment.client.email }}
                                     </td>
 
-                                    <td class="budget">
+                                    {#<td class="budget">
                                         {{ commercial_appointment.client.companyName }}
-                                    </td>
+                                    </td>#}
 
                                     <td class="budget">
                                         {{ commercial_appointment.client.category }}
@@ -105,13 +107,13 @@
                                         {% endif %}
                                     </td>#}
 
-                                    <td class="budget">
+                                    {#<td class="budget">
                                         {% if  commercial_appointment.client.isUnderContract %}
                                             Oui
                                         {% else %}
                                             Non
                                         {% endif %}
-                                    </td>
+                                    </td>#}
 
                                     <td class="budget">
                                         {{ commercial_appointment.client.address }}
@@ -141,10 +143,22 @@
                                         {{ commercial_appointment.client.mobileNumber }}
                                     </td>
 
+                                    <td class="budget">
+                                        {{ commercial_appointment.client.companyName }}
+                                    </td>
+
+                                    <td class="budget">
+                                        {% if  commercial_appointment.client.isUnderContract %}
+                                            Oui
+                                        {% else %}
+                                            Non
+                                        {% endif %}
+                                    </td>
+
                                     <td >
                                         {#<a href="{{ path('show_contact', {'id': client.id}) }}"  class="badge badge-default" >Consulter Fiche</a>#}
                                         <a href="{{ path('show_contact', {'id': commercial_appointment.client.id}) }}"><i class="fas fa-search-plus text-blue"></i></a>&nbsp;&nbsp;
-                                        {#<a href="{{ path('update_contact', {'id': client.id}) }}"><i class="fas fa-edit text-yellow"></i></a>#}&nbsp;&nbsp;
+                                        <a href="{{ path('full_update_contact', {'id': commercial_appointment.client.id}) }}"><i class="fas fa-edit text-yellow"></i></a>&nbsp;&nbsp;
                                         <a href="" data-toggle="modal" data-target="#deleteModal"><i class="fas fa-trash-alt text-red"></i></a>
 
                                     </td>

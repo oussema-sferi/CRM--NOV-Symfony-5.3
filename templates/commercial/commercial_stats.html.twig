@@ -136,6 +136,7 @@
                                             {% if app.session.get('date_filter_value_commercial_stats') is not null %}
                                                 {% set done_appointments_counter = 0 %}
                                                 {% for appointment in total_appointments %}
+                                                    {% if appointment.doneAt is not null %}
                                                     {% set appointment_date = appointment.doneAt | format_datetime('short', 'none') %}
                                                     {% if filter == "0" or filter == "1" %}
                                                         {% if appointment_date == selected_date %}
@@ -145,6 +146,7 @@
                                                         {% if appointment_date >= selected_date %}
                                                             {% set done_appointments_counter = done_appointments_counter + 1 %}
                                                         {% endif%}
+                                                    {% endif %}
                                                     {% endif %}
                                                 {% endfor %}
                                                 {{ done_appointments_counter }}
@@ -322,6 +324,7 @@
                                     {% if app.session.get('date_filter_value_commercial_stats') is not null %}
                                         {% set done_appointments_counter = 0 %}
                                         {% for appointment in commercial.appointments  %}
+                                            {% if appointment.doneAt is not null %}
                                             {% set appointment_done_date = appointment.doneAt | format_datetime('short', 'none') %}
                                             {% if filter == "0" or filter == "1" %}
                                                 {% if appointment_done_date == selected_date %}
@@ -331,6 +334,7 @@
                                                 {% if appointment_done_date >= selected_date %}
                                                     {% set done_appointments_counter = done_appointments_counter + 1 %}
                                                 {% endif%}
+                                            {% endif %}
                                             {% endif %}
                                         {% endfor %}
                                         {{ done_appointments_counter }}

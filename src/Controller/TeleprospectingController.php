@@ -173,37 +173,37 @@ class TeleprospectingController extends AbstractController
             $status = (int)$request->request->get('status');
             $statusDetailsNQ = (int)$request->request->get('detailsnq');
             $statusDetailsQ = (int)$request->request->get('detailsq');
-            $newCall->setCreatedAt(new  \DateTime());
-            $newCall->setUser($loggedUser);
-            $newCall->setClient($client);
-            $newCall->setGeneralStatus($status);
+            if($status === 2 && $statusDetailsQ === 7) {
+                return $this->render('/teleprospecting/direct_appointment.html.twig', [
+                    'appointment_form' => $appointmentForm->createView(),
+                ]);
+
+            } else {
+                /*$client->setStatusDetail($statusDetailsQ);*/
+                $newCall->setCreatedAt(new  \DateTime());
+                $newCall->setUser($loggedUser);
+                $newCall->setClient($client);
+                $newCall->setGeneralStatus($status);
+                $newCall->setCallNotes($newCall->getCallNotes());
+                $client->setStatus($status);
+                if($statusDetailsQ) {
+                    $newCall->setStatusDetails($statusDetailsQ);
+                    $client->setStatusDetail($statusDetailsQ);
+                } elseif ($statusDetailsNQ) {
+                    $newCall->setStatusDetails($statusDetailsNQ);
+                    $client->setStatusDetail($statusDetailsNQ);
+                }
+                $manager->persist($newCall);
+                $manager->flush();
+                $this->flashy->success("Fiche contact traitée avec succès !");
+                return $this->redirectToRoute('teleprospecting');
+            }
+
             /*if(!$request->request->get('detailsnq')) {
             $newCall->setCallNotes(null);
             } else {
                 $newCall->setCallNotes($request->request->get('detailsnq'));
             }*/
-            $newCall->setCallNotes($newCall->getCallNotes());
-            $client->setStatus($status);
-            if($statusDetailsQ) {
-                $newCall->setStatusDetails($statusDetailsQ);
-                $client->setStatusDetail($statusDetailsQ);
-            } elseif ($statusDetailsNQ) {
-                $newCall->setStatusDetails($statusDetailsNQ);
-                $client->setStatusDetail($statusDetailsNQ);
-            }
-            $manager->persist($newCall);
-            $manager->flush();
-
-            if($status === 2 && $statusDetailsQ === 7) {
-                $newCall->setStatusDetails($statusDetailsQ);
-                $client->setStatusDetail($statusDetailsQ);
-                return $this->render('/teleprospecting/direct_appointment.html.twig', [
-                    'appointment_form' => $appointmentForm->createView(),
-                ]);
-            } else {
-                $this->flashy->success("Fiche Contact traitée avec succès !");
-                return $this->redirectToRoute('teleprospecting');
-            }
         }
         $loggedUserId = $this->getUser()->getId();
         $clients = $this->getDoctrine()->getRepository(Client::class)->findAll();

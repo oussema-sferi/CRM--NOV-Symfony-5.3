@@ -128,10 +128,6 @@ class Client
 
 
 
-
-
-
-
     public function __construct()
     {
         $this->calls = new ArrayCollection();

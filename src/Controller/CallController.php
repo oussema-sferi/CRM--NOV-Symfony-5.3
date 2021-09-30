@@ -35,13 +35,24 @@ class CallController extends AbstractController
      */
     public function fullUpdateCall(Request $request, $id): Response
     {
-        /*dd($request->request->all());*/
+        /*dd($request->request->all());
+        dd($request->request->get('status'));*/
+
         $manager = $this->getDoctrine()->getManager();
         $callToUpdate = $this->getDoctrine()->getRepository(Call::class)->find($id);
         $clientId = $callToUpdate->getClient()->getId();
         $callToUpdate->setGeneralStatus($request->request->get('status'));
         $callToUpdate->setStatusDetails($request->request->get('status_details'));
-        $callToUpdate->setCallNotes($request->request->get('notes_call'));
+        if($request->request->get('status') === "2" && $request->request->get('status_details') === "7") {
+            $clientAppointments = $callToUpdate->getClient()->getAppointments();
+            /*dd($clientAppointments[count($clientAppointments) - 1]);*/
+            /*dd($request->request->all());*/
+            $clientAppointments[count($clientAppointments) - 1]->setAppointmentCallNotes($request->request->get('notes_call'));
+        } else {
+            /*$test = $callToUpdate->getClient()->getAppointments();*/
+            $callToUpdate->setCallNotes($request->request->get('notes_call'));
+        }
+
         $manager->persist($callToUpdate);
         $manager->flush();
         /*dd(new \DateTime($request->request->get('start_appointment')));

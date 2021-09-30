@@ -41,6 +41,11 @@ class Appointment
     private $appointmentNotes;
 
     /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $appointmentCallNotes;
+
+    /**
      * @ORM\ManyToOne(targetEntity=Client::class, inversedBy="appointment")
      * @ORM\JoinColumn(nullable=true)
      */
@@ -189,6 +194,22 @@ class Appointment
     public function setDoneAt($doneAt): void
     {
         $this->doneAt = $doneAt;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAppointmentCallNotes()
+    {
+        return $this->appointmentCallNotes;
+    }
+
+    /**
+     * @param mixed $appointmentCallNotes
+     */
+    public function setAppointmentCallNotes($appointmentCallNotes): void
+    {
+        $this->appointmentCallNotes = $appointmentCallNotes;
     }
 
 

@@ -172,7 +172,7 @@ class AppointmentController extends AbstractController
                     'title' => $event->getClient()->getFirstName() . " " . $event->getClient()->getLastName(),
                     'start' => $event->getStart()->format('Y-m-d H:i:s'),
                     'end' => $event->getEnd()->format('Y-m-d H:i:s'),
-                    'description' => $event->getAppointmentNotes()
+                    'description' => $event->getAppointmentCallNotes()
                 ];
             } else {
                 $appointments[] = [
@@ -319,7 +319,7 @@ class AppointmentController extends AbstractController
                     'title' => $event->getClient()->getFirstName() . " " . $event->getClient()->getLastName(),
                     'start' => $event->getStart()->format('Y-m-d H:i:s'),
                     'end' => $event->getEnd()->format('Y-m-d H:i:s'),
-                    'description' => $event->getAppointmentNotes()
+                    'description' => $event->getAppointmentCallNotes()
                 ];
             } else {
                 $appointments[] = [
@@ -448,20 +448,22 @@ class AppointmentController extends AbstractController
         if($request->isMethod('Post')) {
             $client = $this->getDoctrine()->getRepository(Client::class)->find($request->request->get('client'));
             /*dd($client->getCalls());*/
+
             $value = false;
             foreach ($client->getCalls() as $call) {
-                if ($call->getStatusDetails() == 7) {
+                if ($call->getStatus() == 2 && $call->getStatusDetails() == 7) {
                     $value = true;
                     break;
                 }
             }
-            if($value) {
-                $call->setCallNotes($request->request->get('notes'));
-            } else {
+
+            if(!$value) {
                 $aNewCall = new Call();
+                $aNewCall->setUser($this->getUser());
+                $aNewCall->setClient($client);
                 $aNewCall->setGeneralStatus(2);
                 $aNewCall->setStatusDetails(7);
-                $aNewCall->setCallNotes($request->request->get('notes'));
+                $aNewCall->setCreatedAt(new \DateTime());
             }
             /*dd($client);*/
             /*$value = false;
@@ -490,12 +492,14 @@ class AppointmentController extends AbstractController
             $newAppointment->setCreatedAt(new \DateTime());
             $newAppointment->setClient($client);
             $newAppointment->setUser($commercial);
+            $newAppointment->setAppointmentCallNotes($request->request->get('notes'));
             /*$call->setCallNotes($request->request->get('notes'));*/
             /*$newAppointment->setAppointmentNotes($request->request->get('notes'));*/
             $client->setStatus(2);
             $client->setStatus(2);
             $client->setStatusDetail(7);
             $manager->persist($newAppointment);
+            $manager->persist($aNewCall);
             $manager->flush();
             $this->flashy->success("RDV fixé avec succès !");
         }
@@ -514,19 +518,22 @@ class AppointmentController extends AbstractController
         if($request->isMethod('Post')) {
             $client = $this->getDoctrine()->getRepository(Client::class)->find($request->request->get('client'));
             /*dd($client);*/
-            /*$value = false;
+            $value = false;
             foreach ($client->getCalls() as $call) {
-                if ($call->getStatusDetails() === 7) {
+                if ($call->getStatusDetails() == 7) {
                     $value = true;
                     break;
                 }
             }
-            if(in_array("ROLE_TELEPRO", $this->getUser()->getRoles())) {
-                if (!$value) {
-                    $this->flashy->warning("Désolé! Ce client doit être traité avant l'affectation un RDV !");
-                    return $this->redirectToRoute('appointment');
-                }
-            }*/
+            if(!$value) {
+                $aNewCall = new Call();
+                $aNewCall->setUser($this->getUser());
+                $aNewCall->setClient($client);
+                $aNewCall->setGeneralStatus(2);
+                $aNewCall->setStatusDetails(7);
+                $aNewCall->setCreatedAt(new \DateTime());
+            }
+
 
             /*dd($call);*/
             /*dd($client->getId());*/
@@ -540,12 +547,14 @@ class AppointmentController extends AbstractController
             $newAppointment->setCreatedAt(new \DateTime());
             $newAppointment->setClient($client);
             $newAppointment->setUser($commercial);
+            $newAppointment->setAppointmentCallNotes($request->request->get('notes'));
             /*$call->setCallNotes($request->request->get('notes'));*/
             /*$newAppointment->setAppointmentNotes($request->request->get('notes'));*/
             $client->setStatus(2);
             $client->setStatus(2);
             $client->setStatusDetail(7);
             $manager->persist($newAppointment);
+            $manager->persist($aNewCall);
             $manager->flush();
             $this->flashy->success("RDV fixé avec succès !");
         }
