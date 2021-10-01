@@ -233,7 +233,7 @@
                             <tbody class="list">
 
                             {% for client in clients %}
-                                <tr>
+                                <tr class="clickable-row" data-href="{{ path('show_contact', {'id': client.id}) }}">
                                     <td class="budget">
                                         {{ client.firstName }}
                                     </td>
@@ -499,38 +499,48 @@
 {% block additionalJs %}
     <script>
 
-        /*$(".test").css({position:'fixed'});*/
+        $(document).ready(function() {
+            /*$(".test").css({position:'fixed'});*/
 
-        //hide new contact block and show import block
-        $('#import-button').click(function () {
-            $(this).parent().fadeOut(200)
-            $('#import-block').fadeIn(1000);
-        })
-
-        //hide import block and show import block new contact block
-        $('#retour-import').click(function () {
-            $(this).parent().parent().fadeOut(50)
-            $('#initial-import').fadeIn(1000);
-        })
-        $('#pagination').hover(function () {
-            $(this).css('cursor','pointer');
-        })
-
-        $('#pagination').change(function () {
-
-            $.ajax({
-                url:"{{ path('teleprospecting_pagination') }}",
-                method: "POST",
-                dataType: 'json',
-                data : { paginationValue: this.value },
-                success: (e) => {
-                    location.reload();
-                },
-                error : (f) => {
-                    console.log(f);
-                }
+            //hide new contact block and show import block
+            $('#import-button').click(function () {
+                $(this).parent().fadeOut(200)
+                $('#import-block').fadeIn(1000);
             })
 
+            //hide import block and show import block new contact block
+            $('#retour-import').click(function () {
+                $(this).parent().parent().fadeOut(50)
+                $('#initial-import').fadeIn(1000);
+            })
+            $('#pagination').hover(function () {
+                $(this).css('cursor', 'pointer');
+            })
+
+            $('#pagination').change(function () {
+
+                $.ajax({
+                    url: "{{ path('teleprospecting_pagination') }}",
+                    method: "POST",
+                    dataType: 'json',
+                    data: {paginationValue: this.value},
+                    success: (e) => {
+                        location.reload();
+                    },
+                    error: (f) => {
+                        console.log(f);
+                    }
+                })
+
+            })
+
+            $(".clickable-row").hover(function() {
+                $(this).css('cursor', 'pointer');
+            });
+
+            $(".clickable-row").click(function() {
+                window.location = $(this).data("href");
+            });
         })
 
     </script>

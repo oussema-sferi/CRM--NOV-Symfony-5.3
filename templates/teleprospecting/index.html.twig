@@ -267,7 +267,7 @@
                             </thead>
                             <tbody class="list" id="teleproBody">
                             {% for client in clients %}
-                            <tr>
+                            <tr class="clickable-row" data-href="{{ path('show_client', {'id': client.id}) }}">
                                 <td class="budget">
                                     {{ client.firstName }}
                                 </td>
@@ -458,86 +458,36 @@
 
 {% block additionalJs %}
     <script>
-        $('#pagination').hover(function () {
-            $(this).css('cursor','pointer');
+
+        $(document).ready(function() {
+                $('#pagination').hover(function () {
+                    $(this).css('cursor', 'pointer');
+                })
+                $('#pagination').change(function () {
+
+                    $.ajax({
+                        url: "{{ path('teleprospecting_pagination') }}",
+                        method: "POST",
+                        dataType: 'json',
+                        data: {paginationValue: this.value},
+                        success: (e) => {
+                            location.reload();
+                        },
+                        error: (f) => {
+                            console.log(f);
+                        }
+                    })
+
+                })
+
+                $(".clickable-row").hover(function () {
+                    $(this).css('cursor', 'pointer');
+                });
+
+                $(".clickable-row").click(function () {
+                    window.location = $(this).data("href");
+                });
         })
-        $('#pagination').change(function () {
-
-            $.ajax({
-                url:"{{ path('teleprospecting_pagination') }}",
-                method: "POST",
-                dataType: 'json',
-                data : { paginationValue: this.value },
-                success: (e) => {
-                    location.reload();
-                },
-                error : (f) => {
-                    console.log(f);
-                }
-            })
-
-        })
-
-        /*let inputsNumber = $('.test').length;*/
-
-        /*$('.test').keyup(function () {
-            /!*let currentIndex = $('.test').index($(this));*!/
-            /!*console.log(this.value)*!/
-            /!*let newArray = $('.test');*!/
-            /!*newArray.splice(currentIndex,1);*!/
-            /!*let table = $('#teleproBody');*!/
-            /!*console.log(emptyInputsChecker(newArray))*!/
-           if(emptyInputsChecker(newArray) === 1) {
-               console.log('yeeeeeeeeees')
-               $.ajax({
-                   url:"",
-                   method: "POST",
-                   dataType: 'json',
-                   data : { filter: $(this).attr('id') ,keyword: this.value },
-                   success: (e) => {
-
-                       /!*console.log(e);
-                       localStorage.setItem("my_results", JSON.stringify((e)));
-
-                       table.empty();
-                       e.forEach(client => {
-                           table.append(
-                               '<tr><td class="budget">' + 'test' + '</td><td class="budget">' + client.lastName + '</td> <td class="budget"> </td> <td class="budget"> </td> <td class="budget"> </td> <td class="budget"> </td> <td class="budget"> </td> <td class="budget"> </td> <td class="budget">' + client.postalCode + '</td> <td class="budget"> </td> <td class="budget"> </td> <td class="budget"> </td> <td class="budget"> </td> <td class="budget"> </td> <td > </td></tr>'
-                           )
-                       })
-*!/
-                       // then maybe we should save results in session for further use if other input is filled
-
-                   },
-                   error : (f) => {
-                      /!* console.log(f);*!/
-                   }
-               })
-
-           } else {
-               /!*console.log('nooooooo')*!/
-               /!*let existingResults = JSON.parse(localStorage.getItem("my_results"));
-               let actualKeyword = this.value;
-               table.empty();
-               console.log($(this).attr('id'))
-               console.log(this.value)
-               console.log(existingResults)*!/
-               //take the saved results from session
-           }
-
-
-        })*/
-
-        // Helper Function
-        /*function emptyInputsChecker(array) {
-            let counter = 0;
-            Array.prototype.forEach.call(array, element => {
-                if(element.value.length !== 0) {
-                    counter++;
-                }
-            })
-            return counter
-        }*/
 
 
     </script>
