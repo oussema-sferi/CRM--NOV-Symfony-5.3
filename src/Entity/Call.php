@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CallRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -39,6 +41,11 @@ class Call
     private $callNotes;
 
     /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $callIfAppointmentNotes;
+
+    /**
      * @ORM\ManyToOne(targetEntity=Client::class, inversedBy="calls")
      * @ORM\JoinColumn(nullable=false)
      */
@@ -49,6 +56,16 @@ class Call
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Appointment::class, mappedBy="appointmentCall")
+     */
+    private $appointments;
+
+    public function __construct()
+    {
+        $this->appointments = new ArrayCollection();
+    }
 
 
     public function setId(int $id): self
@@ -136,5 +153,50 @@ class Call
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getCallIfAppointmentNotes()
+    {
+        return $this->callIfAppointmentNotes;
+    }
+
+    /**
+     * @param mixed $callIfAppointmentNotes
+     */
+    public function setCallIfAppointmentNotes($callIfAppointmentNotes): void
+    {
+        $this->callIfAppointmentNotes = $callIfAppointmentNotes;
+    }
+
+    /**
+     * @return Collection|Appointment[]
+     */
+    public function getAppointments(): Collection
+    {
+        return $this->appointments;
+    }
+
+    public function addAppointment(Appointment $appointment): self
+    {
+        if (!$this->appointments->contains($appointment)) {
+            $this->appointments[] = $appointment;
+            $appointment->setAppointmentCall($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAppointment(Appointment $appointment): self
+    {
+        if ($this->appointments->removeElement($appointment)) {
+            // set the owning side to null (unless already changed)
+            if ($appointment->getAppointmentCall() === $this) {
+                $appointment->setAppointmentCall(null);
+            }
+        }
+
+        return $this;
+    }
 
 }

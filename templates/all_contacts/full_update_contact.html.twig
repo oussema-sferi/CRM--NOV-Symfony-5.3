@@ -313,7 +313,7 @@
                                                 <label class="form-control-label">Observations Appel</label>
                                                 {#<textarea rows="4" class="form-control" placeholder="Pas de notes ..." resize="none" disabled>{{ call.callNotes }}</textarea>#}
                                                 {% if call.statusDetails != 7 %}<textarea rows="4" class="form-control" placeholder="Pas de notes ..." resize="none" disabled>{{ call.callNotes }}</textarea>{% else %}
-                                                    {% set value = "" %}
+                                                    {#{% set value = "" %}
                                                     {% set break = false %}
                                                     {% for appointment in client_appointments_list %}
                                                         {% if break == false %}
@@ -322,7 +322,7 @@
                                                                 {% set break = true %}
                                                             {% endif%}
                                                         {% endif %}
-                                                    {% endfor %}<textarea rows="4" class="form-control" placeholder="Pas de notes ..." resize="none" disabled>{{ value }}</textarea>{% endif%}
+                                                    {% endfor %}#}<textarea rows="4" class="form-control" placeholder="Pas de notes ..." resize="none" disabled>{{ call.callIfAppointmentNotes }}</textarea>{% endif%}
                                             </div>
                                         </div>
                                         {#{% if not (is_granted('ROLE_TELEPRO')) %}#}
@@ -385,7 +385,7 @@
                                                                     <label class="form-control-label" for="input-username">Observations Appel</label>
                                                                     {#<textarea id="notes-show" class="form-control" name="notes_call" id="notes" cols="30" rows="6" placeholder="..." resize="none" required>{{ call.callNotes }}</textarea>#}
                                                                     {% if call.statusDetails != 7 %}<textarea rows="4" class="form-control" name="notes_call" placeholder="Pas de notes ..." resize="none">{{ call.callNotes }}</textarea>{% else %}
-                                                                        {% set value = "" %}
+                                                                        {#{% set value = "" %}
                                                                         {% set break = false %}
                                                                         {% for appointment in client_appointments_list %}
                                                                             {% if break == false %}
@@ -394,7 +394,7 @@
                                                                                     {% set break = true %}
                                                                                 {% endif%}
                                                                             {% endif %}
-                                                                        {% endfor %}<textarea rows="4" class="form-control" name="notes_call" placeholder="Pas de notes ..." resize="none">{{ value }}</textarea>{% endif%}
+                                                                        {% endfor %}#}<textarea rows="4" class="form-control" name="notes_call" placeholder="Pas de notes ..." resize="none">{{ call.callIfAppointmentNotes }}</textarea>{% endif%}
                                                                 </div>
                                                             </div>
                                                             <hr class="my-3">

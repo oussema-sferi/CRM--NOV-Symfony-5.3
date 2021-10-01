@@ -226,4 +226,13 @@ class CommercialController extends AbstractController
         $session->remove('date_filter_value_commercial_stats');
         return $this->redirectToRoute('commercial_stats');
     }
+
+    /**
+     * @Route("/dashboard/commercial/stats/filters/notifications", name="commercial_stats_filters_notifications")
+     */
+    public function commercialStatsFiltersNotifications(): Response
+    {
+        $this->flashy->success('Filtre mis à jour avec succès !');
+        return $this->redirectToRoute('commercial_stats');
+    }
 }

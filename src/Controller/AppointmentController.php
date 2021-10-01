@@ -172,7 +172,7 @@ class AppointmentController extends AbstractController
                     'title' => $event->getClient()->getFirstName() . " " . $event->getClient()->getLastName(),
                     'start' => $event->getStart()->format('Y-m-d H:i:s'),
                     'end' => $event->getEnd()->format('Y-m-d H:i:s'),
-                    'description' => $event->getAppointmentCallNotes()
+                    'description' => $event->getAppointmentCall()->getCallIfAppointmentNotes()
                 ];
             } else {
                 $appointments[] = [
@@ -319,7 +319,7 @@ class AppointmentController extends AbstractController
                     'title' => $event->getClient()->getFirstName() . " " . $event->getClient()->getLastName(),
                     'start' => $event->getStart()->format('Y-m-d H:i:s'),
                     'end' => $event->getEnd()->format('Y-m-d H:i:s'),
-                    'description' => $event->getAppointmentCallNotes()
+                    'description' => $event->getAppointmentCall()->getCallIfAppointmentNotes()
                 ];
             } else {
                 $appointments[] = [
@@ -448,23 +448,6 @@ class AppointmentController extends AbstractController
         if($request->isMethod('Post')) {
             $client = $this->getDoctrine()->getRepository(Client::class)->find($request->request->get('client'));
             /*dd($client->getCalls());*/
-
-            $value = false;
-            foreach ($client->getCalls() as $call) {
-                if ($call->getStatus() == 2 && $call->getStatusDetails() == 7) {
-                    $value = true;
-                    break;
-                }
-            }
-
-            if(!$value) {
-                $aNewCall = new Call();
-                $aNewCall->setUser($this->getUser());
-                $aNewCall->setClient($client);
-                $aNewCall->setGeneralStatus(2);
-                $aNewCall->setStatusDetails(7);
-                $aNewCall->setCreatedAt(new \DateTime());
-            }
             /*dd($client);*/
             /*$value = false;
             foreach ($client->getCalls() as $call) {
@@ -492,12 +475,31 @@ class AppointmentController extends AbstractController
             $newAppointment->setCreatedAt(new \DateTime());
             $newAppointment->setClient($client);
             $newAppointment->setUser($commercial);
-            $newAppointment->setAppointmentCallNotes($request->request->get('notes'));
+            /*$newAppointment->setAppointmentCallNotes($request->request->get('notes'));*/
             /*$call->setCallNotes($request->request->get('notes'));*/
             /*$newAppointment->setAppointmentNotes($request->request->get('notes'));*/
-            $client->setStatus(2);
+            /*$client->setStatus(2);*/
             $client->setStatus(2);
             $client->setStatusDetail(7);
+
+            /*$value = false;
+            foreach ($client->getCalls() as $call) {
+                if ($call->getStatus() == 2 && $call->getStatusDetails() == 7) {
+                    $value = true;
+                    break;
+                }
+            }*/
+            /*if(!$value) {*/
+            $aNewCall = new Call();
+            $aNewCall->setUser($this->getUser());
+            $aNewCall->setClient($client);
+            $aNewCall->setGeneralStatus(2);
+            $aNewCall->setStatusDetails(7);
+            $aNewCall->setCallIfAppointmentNotes($request->request->get('notes'));
+            $aNewCall->setCreatedAt(new \DateTime());
+            /*}*/
+            $newAppointment->setAppointmentCall($aNewCall);
+
             $manager->persist($newAppointment);
             $manager->persist($aNewCall);
             $manager->flush();

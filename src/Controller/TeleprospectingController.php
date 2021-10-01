@@ -325,6 +325,7 @@ class TeleprospectingController extends AbstractController
      */
     public function teleprospectingStats(Request $request): Response
     {
+
         $allTelepros = $this->getDoctrine()->getRepository(User::class)->findUsersByCommercialRole("ROLE_TELEPRO");
         $allClients = $this->getDoctrine()->getRepository(Client::class)->findAll();
         $processedClients = $this->getDoctrine()->getRepository(Client::class)->getProcessedClients();
@@ -367,6 +368,15 @@ class TeleprospectingController extends AbstractController
     {
         $session = $request->getSession();
         $session->remove('date_filter_value');
+        return $this->redirectToRoute('teleprospecting_stats');
+    }
+
+    /**
+     * @Route("/dashboard/teleprospecting/stats/filters/notifications", name="teleprospecting_stats_filters_notifications")
+     */
+    public function teleprospectingStatsFiltersNotifications(): Response
+    {
+        $this->flashy->success('Filtre mis à jour avec succès !');
         return $this->redirectToRoute('teleprospecting_stats');
     }
 

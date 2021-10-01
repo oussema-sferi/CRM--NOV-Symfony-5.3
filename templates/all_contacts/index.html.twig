@@ -389,10 +389,10 @@
                                     {% endif %}#}
                                     {#{% if client.calls|default %}#}
                                         {% if client.statusDetail == 7 %}
-                                            {% if client.appointments|default %}
-                                                {% if client.appointments[client.appointments|length -1].appointmentCallNotes is not null %}
+                                            {% if client.calls|default %}
+                                                {% if client.calls[client.calls|length - 1].callIfAppointmentNotes is not null %}
                                                 <td class="budget" style="text-align: center">
-                                                    <button class="notes" data-container="body" type="button" data-toggle="popover" data-color="info" data-placement="top" data-content= "{{ client.appointments[client.appointments|length -1].appointmentCallNotes }}">
+                                                    <button class="notes" data-container="body" type="button" data-toggle="popover" data-color="info" data-placement="top" data-content= "{{ client.calls[client.calls|length - 1].callIfAppointmentNotes }}">
                                                         <i class="far fa-comment text-cyan"></i>
                                                     </button>
                                                 </td>

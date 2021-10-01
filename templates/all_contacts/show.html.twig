@@ -101,9 +101,9 @@
                         <div class="col-8">
                             <h3 class="mb-0">Fiche Contact</h3>
                         </div>
-                        {#<div class="col-4 text-right">
-                            <a href="{{ path('all_contacts') }}" class="btn btn-sm btn-primary">Retour</a>
-                        </div>#}
+                        <div class="col-4 text-right">
+                            <a href="{{ path('full_update_contact', {'id': client_to_show.id}) }}" class="btn btn-sm btn-info">Editer contact</a>
+                        </div>
                     </div>
                 </div>
                 <div class="card-body">
@@ -351,7 +351,7 @@
                                     <label class="form-control-label">Observations Appel</label>
 
                                         {% if call.statusDetails != 7 %}<textarea rows="4" class="form-control" placeholder="Pas de notes ..." resize="none" disabled>{{ call.callNotes }}</textarea>{% else %}
-                                            {% set value = "" %}
+                                            {#{% set value = "" %}
                                             {% set break = false %}
                                             {% for appointment in client_appointments_list %}
                                                 {% if break == false %}
@@ -360,7 +360,7 @@
                                                         {% set break = true %}
                                                     {% endif%}
                                                 {% endif %}
-                                            {% endfor %}<textarea rows="4" class="form-control" placeholder="Pas de notes ..." resize="none" disabled>{{ value }}</textarea>{% endif%}
+                                            {% endfor %}#}<textarea rows="4" class="form-control" placeholder="Pas de notes ..." resize="none" disabled>{{ call.callIfAppointmentNotes }}</textarea>{% endif%}
 
                                 </div>
                             </div>

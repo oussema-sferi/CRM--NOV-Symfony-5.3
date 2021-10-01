@@ -33,7 +33,7 @@ class CallController extends AbstractController
     /**
      * @Route("/dashboard/calls/update/call/{id}", name="update_call")
      */
-    public function fullUpdateCall(Request $request, $id): Response
+    public function updateCall(Request $request, $id): Response
     {
         /*dd($request->request->all());
         dd($request->request->get('status'));*/
@@ -44,15 +44,15 @@ class CallController extends AbstractController
         $callToUpdate->setGeneralStatus($request->request->get('status'));
         $callToUpdate->setStatusDetails($request->request->get('status_details'));
         if($request->request->get('status') === "2" && $request->request->get('status_details') === "7") {
-            $clientAppointments = $callToUpdate->getClient()->getAppointments();
-            /*dd($clientAppointments[count($clientAppointments) - 1]);*/
-            /*dd($request->request->all());*/
-            $clientAppointments[count($clientAppointments) - 1]->setAppointmentCallNotes($request->request->get('notes_call'));
+            /*$clientAppointments = $callToUpdate->getClient()->getAppointments();
+            dd($clientAppointments[count($clientAppointments) - 1]);
+            dd($request->request->all());
+            $clientAppointments[count($clientAppointments) - 1]->setAppointmentCallNotes($request->request->get('notes_call'));*/
+            $callToUpdate->setCallIfAppointmentNotes($request->request->get('notes_call'));
         } else {
             /*$test = $callToUpdate->getClient()->getAppointments();*/
             $callToUpdate->setCallNotes($request->request->get('notes_call'));
         }
-
         $manager->persist($callToUpdate);
         $manager->flush();
         /*dd(new \DateTime($request->request->get('start_appointment')));

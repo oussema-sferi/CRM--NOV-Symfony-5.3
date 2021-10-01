@@ -113,4 +113,13 @@ class StatisticsController extends AbstractController
         return $this->redirectToRoute('all_statistics');
     }
 
+    /**
+     * @Route("/dashboard/allstats/filters/notifications", name="all_stats_filters_notifications")
+     */
+    public function allStatsFilterssNotifications(): Response
+    {
+        $this->flashy->success('Filtre mis à jour avec succès !');
+        return $this->redirectToRoute('all_statistics');
+    }
+
 }

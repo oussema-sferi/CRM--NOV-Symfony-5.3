@@ -40,10 +40,6 @@ class Appointment
      */
     private $appointmentNotes;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $appointmentCallNotes;
 
     /**
      * @ORM\ManyToOne(targetEntity=Client::class, inversedBy="appointment")
@@ -73,6 +69,12 @@ class Appointment
      * @Assert\DateTime()
      */
     private $doneAt;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Call::class, inversedBy="appointments")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $appointmentCall;
 
 
     public function getId(): ?int
@@ -196,22 +198,16 @@ class Appointment
         $this->doneAt = $doneAt;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getAppointmentCallNotes()
+    public function getAppointmentCall(): ?Call
     {
-        return $this->appointmentCallNotes;
+        return $this->appointmentCall;
     }
 
-    /**
-     * @param mixed $appointmentCallNotes
-     */
-    public function setAppointmentCallNotes($appointmentCallNotes): void
+    public function setAppointmentCall(?Call $appointmentCall): self
     {
-        $this->appointmentCallNotes = $appointmentCallNotes;
+        $this->appointmentCall = $appointmentCall;
+
+        return $this;
     }
-
-
 
 }

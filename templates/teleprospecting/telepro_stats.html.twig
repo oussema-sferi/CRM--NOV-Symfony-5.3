@@ -37,7 +37,8 @@
                                     <option value="90" {% if app.session.get('date_filter_value') is defined and app.session.get('date_filter_value') == "90" %} selected {% endif %}>90 derniers jours</option>
                                     <option value="100" disabled>Personalisée</option>
                                 </select>
-                                <a href="{{ path('teleprospecting_stats_filters_initialization') }}" class="btn btn-sm btn-success">Réinitialiser les filtres</a>
+                                <a href="{{ path('teleprospecting_stats_filters_initialization') }}" class="btn btn-sm btn-primary">Réinitialiser les filtres</a>
+                                <a href="{{ path('teleprospecting_stats_filters_notifications') }}" class="btn btn-sm btn-success">Appliquer les filtres</a>
                             </div>
 
                             <div class="form-group" id="custom_period_block" style="display: none">
@@ -103,7 +104,7 @@
                             <!-- Card body -->
                             {% if app.session.get('date_filter_value') is not null %}
                                 {% set filter = app.session.get('date_filter_value') %}
-                                {% set selected_date = "now"|date_modify("-" ~ filter ~ " day")| format_datetime('short', 'none') %}
+                                {% set selected_date = "now"|date_modify("-" ~ filter ~ " day")| date('Y-m-d') %}
                             {% endif %}
                             <div class="card-body">
                                 {#{{ dump(selected_date) }}#}
@@ -120,7 +121,7 @@
                                                 {% set break = false %}
                                                     {% for call in client.calls %}
                                                         {% if break == false %}
-                                                            {% set call_date = call.createdAt | format_datetime('short', 'none') %}
+                                                            {% set call_date = call.createdAt | date('Y-m-d') %}
                                                             {% if filter == "0" or filter == "1" %}
                                                                 {% if call_date == selected_date %}
                                                                     {% set processed_clients_counter = processed_clients_counter + 1 %}
@@ -199,7 +200,7 @@
                                             {% if app.session.get('date_filter_value') is not null %}
                                                 {% set fixed_appointments_counter = 0 %}
                                                 {% for appointment in total_appointments %}
-                                                    {% set appointment_date = appointment.createdAt | format_datetime('short', 'none') %}
+                                                    {% set appointment_date = appointment.createdAt | date('Y-m-d') %}
                                                     {% if filter == "0" or filter == "1" %}
                                                         {% if appointment_date == selected_date %}
                                                             {% set fixed_appointments_counter = fixed_appointments_counter + 1 %}
@@ -317,7 +318,7 @@
                             <tbody>
                             {% if app.session.get('date_filter_value') is not null %}
                                 {% set filter = app.session.get('date_filter_value') %}
-                                {% set selected_date = "now"|date_modify("-" ~ filter ~ " day")| format_datetime('short', 'none') %}
+                                {% set selected_date = "now"|date_modify("-" ~ filter ~ " day")| date('Y-m-d') %}
                             {% endif %}
 
                             {#{% set today = "now"|format_datetime('short', 'none') %}#}
@@ -361,7 +362,7 @@
                                             {% endfor %}
 
                                             {% for call in telepro.calls  %}
-                                                {% set call_date = call.createdAt | format_datetime('short', 'none') %}
+                                                {% set call_date = call.createdAt | date('Y-m-d') %}
                                                 {% if call.client.id in newArray %}
                                                     {% if filter == "0" or filter == "1" %}
                                                         {% if call_date == selected_date %}
@@ -387,7 +388,7 @@
                                     {% set taken_appointments_counter = 0 %}
                                     {% if app.session.get('date_filter_value') is not null %}
                                         {% for call in telepro.calls  %}
-                                                {% set call_date = call.createdAt | format_datetime('short', 'none') %}
+                                                {% set call_date = call.createdAt | date('Y-m-d') %}
 
                                             {% if filter == "0" or filter == "1" %}
                                                 {% if call_date == selected_date %}
@@ -462,7 +463,7 @@
                         dataType: 'json',
                         data : { dateFilterValue: this.value },
                         success: (e) => {
-                            location.reload();
+                            /*location.reload();*/
                             /*console.log(e);*/
                         },
                         error : (f) => {

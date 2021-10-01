@@ -36,7 +36,8 @@
                                     <option value="90" {% if app.session.get('date_filter_value_all_stats') is defined and app.session.get('date_filter_value_all_stats') == "90" %} selected {% endif %}>90 derniers jours</option>
                                     <option value="100" disabled>Personalisée</option>
                                 </select>
-                                <a href="{{ path('all_stats_filters_initialization') }}" class="btn btn-sm btn-success">Réinitialiser les filtres</a>
+                                <a href="{{ path('all_stats_filters_initialization') }}" class="btn btn-sm btn-primary">Réinitialiser les filtres</a>
+                                <a href="{{ path('all_stats_filters_notifications') }}" class="btn btn-sm btn-success">Appliquer les filtres</a>
                             </div>
 
                             <div class="form-group" id="custom_period_block" style="display: none">
@@ -81,7 +82,7 @@
                             <!-- Card body -->
                             {% if app.session.get('date_filter_value_all_stats') is not null %}
                                 {% set filter = app.session.get('date_filter_value_all_stats') %}
-                                {% set selected_date = "now"|date_modify("-" ~ filter ~ " day")| format_datetime('short', 'none') %}
+                                {% set selected_date = "now"|date_modify("-" ~ filter ~ " day")| date('Y-m-d') %}
                             {% endif %}
                             {#{{ dump(selected_date) }}#}
                             <div class="card-body">
@@ -96,7 +97,7 @@
                                                     {% set break = false %}
                                                     {% for call in client.calls %}
                                                         {% if break == false %}
-                                                            {% set call_date = call.createdAt | format_datetime('short', 'none') %}
+                                                            {% set call_date = call.createdAt | date('Y-m-d') %}
                                                             {% if filter == "0" or filter == "1" %}
                                                                 {% if call_date == selected_date %}
                                                                     {% set processed_contacts_counter = processed_contacts_counter + 1 %}
@@ -200,7 +201,7 @@
                                             {% if app.session.get('date_filter_value_all_stats') is not null %}
                                                 {% set fixed_appointments_counter = 0 %}
                                                 {% for appointment in total_appointments %}
-                                                    {% set appointment_date = appointment.createdAt | format_datetime('short', 'none') %}
+                                                    {% set appointment_date = appointment.createdAt | date('Y-m-d') %}
                                                     {% if filter == "0" or filter == "1" %}
                                                         {% if appointment_date == selected_date %}
                                                             {% set fixed_appointments_counter = fixed_appointments_counter + 1 %}
@@ -702,7 +703,7 @@
                       dataType: 'json',
                       data : { dateFilterValueAllStats: this.value },
                       success: (e) => {
-                          location.reload();
+                          /*location.reload();*/
                           /*console.log(e);*/
                       },
                       error : (f) => {
