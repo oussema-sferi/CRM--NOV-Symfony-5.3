@@ -224,6 +224,7 @@ class CommercialController extends AbstractController
     {
         $session = $request->getSession();
         $session->remove('date_filter_value_commercial_stats');
+        $this->flashy->success('Filtre réinitialisé avec succès !');
         return $this->redirectToRoute('commercial_stats');
     }
 

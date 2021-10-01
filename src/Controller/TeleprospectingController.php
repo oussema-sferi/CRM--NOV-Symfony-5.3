@@ -368,6 +368,7 @@ class TeleprospectingController extends AbstractController
     {
         $session = $request->getSession();
         $session->remove('date_filter_value');
+        $this->flashy->success('Filtre réinitialisé avec succès !');
         return $this->redirectToRoute('teleprospecting_stats');
     }
 

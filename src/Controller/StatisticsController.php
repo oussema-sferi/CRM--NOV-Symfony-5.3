@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Appointment;
 use App\Entity\Client;
+use MercurySeries\FlashyBundle\FlashyNotifier;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,6 +13,11 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class StatisticsController extends AbstractController
 {
+    public function __construct(FlashyNotifier $flashy)
+    {
+        $this->flashy = $flashy;
+    }
+
     /**
      * @Route("/dashboard/allstats", name="all_statistics")
      */
@@ -110,6 +116,7 @@ class StatisticsController extends AbstractController
     {
         $session = $request->getSession();
         $session->remove('date_filter_value_all_stats');
+        $this->flashy->success('Filtre réinitialisé avec succès !');
         return $this->redirectToRoute('all_statistics');
     }
 
