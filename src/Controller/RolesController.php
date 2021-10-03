@@ -62,6 +62,21 @@ class RolesController extends AbstractController
     }
 
     /**
+     * @Route("/dashboard/users/delete/{id}", name="delete_user")
+     */
+    public function delete(Request $request, $id): Response
+    {
+        $manager = $this->getDoctrine()->getManager();
+        $userToDelete = $this->getDoctrine()->getRepository(User::class)->find($id);
+        $userToDelete->setIsDeleted(true);
+        $userToDelete->setDeletionDate(new \DateTime());
+        $manager->persist($userToDelete);
+        $manager->flush();
+        $this->flashy->success("Utilisateur supprimé avec succès !");
+        return $this->redirectToRoute('roles');
+    }
+
+    /**
      * @Route("/dashboard/users/update/{id}", name="update_user")
      */
     public function update(Request $request, $id): Response
