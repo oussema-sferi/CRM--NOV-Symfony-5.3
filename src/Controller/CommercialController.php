@@ -180,7 +180,7 @@ class CommercialController extends AbstractController
         $doneAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getDoneAppointments();
         $upcomingAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getUpcomingAppointments();
         $processedClients = $this->getDoctrine()->getRepository(Client::class)->getProcessedClients();
-        $notProcessedClients = $this->getDoctrine()->getRepository(Client::class)->findBy(["status" => 0]);
+        /*$notProcessedClients = $this->getDoctrine()->getRepository(Client::class)->findBy(["status" => 0]);*/
 
 
         /*$commercial = $this->getDoctrine()->getRepository(User::class)->find(4);

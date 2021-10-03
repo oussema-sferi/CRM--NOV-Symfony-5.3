@@ -43,7 +43,7 @@ class AllContactsController extends AbstractController
         }
         $session = $request->getSession();
         $geographicAreas = $this->getDoctrine()->getRepository(GeographicArea::class)->findAll();
-        $data = $this->getDoctrine()->getRepository(Client::class)->findAll();
+        $data = $this->getDoctrine()->getRepository(Client::class)->getNotDeletedClients();
         $session->set('total_contacts',
             count($data)
         );
@@ -88,6 +88,7 @@ class AllContactsController extends AbstractController
             $newClient->setStatusDetail(0);
             $newClient->setCreatedAt(new \DateTime());
             $newClient->setUpdatedAt(new \DateTime());
+            $newClient->setIsDeleted(false);
             $manager->persist($newClient);
             $manager->flush();
             $this->flashy->success("Contact créé avec succès !");
@@ -238,7 +239,20 @@ class AllContactsController extends AbstractController
         ]);
     }
 
-
+    /**
+     * @Route("/dashboard/allcontacts/delete/{id}", name="delete_contact")
+     */
+    public function delete(Request $request, $id): Response
+    {
+        $manager = $this->getDoctrine()->getManager();
+        $clientToDelete = $this->getDoctrine()->getRepository(Client::class)->find($id);
+        $clientToDelete->setIsDeleted(true);
+        $clientToDelete->setDeletionDate(new \DateTime());
+        $manager->persist($clientToDelete);
+        $manager->flush();
+        $this->flashy->success("Contact supprimé avec succès !");
+        return $this->redirectToRoute('all_contacts');
+    }
 
     /**
      * @Route("/dashboard/allcontacts/import-contacts", name="import_contacts")
@@ -303,9 +317,10 @@ class AllContactsController extends AbstractController
             $counterOfNonAdded = 0;
             foreach ($sheetData as $Row)
             {
-
-                /*$firstName = $Row['A']; // store the first_name on each iteration*/
-                $lastName = $Row['B']; // store the last_name on each iteration
+                $allTheName = $Row['B'];
+                $SplitedNameArray = explode(" ", $allTheName, 2);
+                $firstName = $SplitedNameArray[0]; // store the first_name on each iteration
+                $lastName = $SplitedNameArray[1]; // store the last_name on each iteration
                 /*$email= $Row['C'];*/     // store the email on each iteration
                 /*$companyName= $Row['D'];*/
                 $address= $Row['C'];
@@ -340,7 +355,7 @@ class AllContactsController extends AbstractController
                 {
 
                     $contact = new Client();
-                    /*$contact->setFirstName($firstName);*/
+                    $contact->setFirstName($firstName);
                     $contact->setLastName($lastName);
                     /* $contact->setEmail($email);
                      $contact->setCompanyName($companyName);*/
@@ -358,6 +373,7 @@ class AllContactsController extends AbstractController
                     $contact->setGeographicArea($geographicArea);
                     $contact->setCreatedAt(new \DateTime());
                     $contact->setUpdatedAt(new \DateTime());
+                    $contact->setIsDeleted(false);
                     $entityManager->persist($contact);
                     $entityManager->flush();
                     // here Doctrine checks all the fields of all fetched data and make a transaction to the database.

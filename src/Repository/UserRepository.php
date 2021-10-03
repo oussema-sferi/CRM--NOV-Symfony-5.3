@@ -70,6 +70,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $qb = $this->createQueryBuilder('u');
         $qb->select('u')
             ->where('u.roles LIKE :roles')
+            ->andWhere('u.isDeleted = 0')
             ->setParameter('roles', '%"'.$role.'"%');
 
         return $qb->getQuery()->getResult();
@@ -82,6 +83,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->join('u.teleprospector', 't')
             ->where("t.id = $id")
             ->andWhere('u.roles LIKE :roles')
+            ->andWhere('u.isDeleted = 0')
             ->setParameter('roles', '%"'.$role.'"%');
         return $qb->getQuery()->getResult();
     }
@@ -96,6 +98,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             $query->andWhere("u.id != $id");
         }
         $query->andWhere('u.roles LIKE :roles')
+            ->andWhere('u.isDeleted = 0')
             ->setParameter('roles', '%"'.$role.'"%');
         return $query->getQuery()->getResult();
     }
@@ -104,11 +107,32 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     {
         $qb = $this->createQueryBuilder('u');
         $query = $qb->select('u')
-            ->where('u.roles LIKE :roles');
+            ->where('u.roles LIKE :roles')
+            ->andWhere('u.isDeleted = 0');
         foreach ($busyCommercialsIdsArray as $id) {
             $query->andWhere("u.id != $id");
         }
         $query->setParameter('roles', '%"'.$role.'"%');
         return $query->getQuery()->getResult();
+    }
+
+    public function getNotDeletedUsers()
+    {
+
+        $qb = $this->createQueryBuilder('u');
+        $qb->select('u')
+            ->where('u.isDeleted = 0');
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function getDeletedUsers()
+    {
+
+        $qb = $this->createQueryBuilder('u');
+        $qb->select('u')
+            ->where('u.isDeleted = 1');
+
+        return $qb->getQuery()->getResult();
     }
 }

@@ -23,7 +23,7 @@ class StatisticsController extends AbstractController
      */
     public function index(): Response
     {
-        $allContacts = $this->getDoctrine()->getRepository(Client::class)->findAll();
+        $allContacts = $this->getDoctrine()->getRepository(Client::class)->getNotDeletedClients();
         $processedContacts = $this->getDoctrine()->getRepository(Client::class)->getProcessedClients();
         if(count($allContacts) !== 0) {
             $contactsPerformance = number_format(((count($processedContacts) / count($allContacts)) * 100), 2);

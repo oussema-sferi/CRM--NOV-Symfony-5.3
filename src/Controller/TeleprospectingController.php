@@ -327,9 +327,9 @@ class TeleprospectingController extends AbstractController
     {
 
         $allTelepros = $this->getDoctrine()->getRepository(User::class)->findUsersByCommercialRole("ROLE_TELEPRO");
-        $allClients = $this->getDoctrine()->getRepository(Client::class)->findAll();
+        $allClients = $this->getDoctrine()->getRepository(Client::class)->getNotDeletedClients();
         $processedClients = $this->getDoctrine()->getRepository(Client::class)->getProcessedClients();
-        $notProcessedClients = $this->getDoctrine()->getRepository(Client::class)->findBy(["status" => 0]);
+        $notProcessedClients = $this->getDoctrine()->getRepository(Client::class)->getNotProcessedClients();
         $allAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getAppointmentsWhereClientsExist();
 
         return $this->render('teleprospecting/telepro_stats.html.twig', [

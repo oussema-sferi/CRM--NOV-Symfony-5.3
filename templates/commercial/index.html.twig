@@ -272,11 +272,11 @@
 
 
                                     <td class="budget">
-                                        {{ commercial_appointment.start | date() }}
+                                        {{ commercial_appointment.start | format_datetime(locale='fr') }}
                                     </td>
 
                                     <td class="budget">
-                                        {{ commercial_appointment.end | date() }}
+                                        {{ commercial_appointment.end | format_datetime(locale='fr') }}
                                     </td>
                                     {% if "ROLE_COMMERCIAL" in app.user.roles  %}
                                     {% else %}

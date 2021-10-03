@@ -475,6 +475,7 @@ class AppointmentController extends AbstractController
             $newAppointment->setCreatedAt(new \DateTime());
             $newAppointment->setClient($client);
             $newAppointment->setUser($commercial);
+            $newAppointment->setIsDeleted(false);
             /*$newAppointment->setAppointmentCallNotes($request->request->get('notes'));*/
             /*$call->setCallNotes($request->request->get('notes'));*/
             /*$newAppointment->setAppointmentNotes($request->request->get('notes'));*/
@@ -550,6 +551,7 @@ class AppointmentController extends AbstractController
             $newAppointment->setClient($client);
             $newAppointment->setUser($commercial);
             $newAppointment->setAppointmentCallNotes($request->request->get('notes'));
+            $newAppointment->setIsDeleted(false);
             /*$call->setCallNotes($request->request->get('notes'));*/
             /*$newAppointment->setAppointmentNotes($request->request->get('notes'));*/
             $client->setStatus(2);

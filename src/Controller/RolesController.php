@@ -25,7 +25,7 @@ class RolesController extends AbstractController
     public function index(Request $request, PaginatorInterface $paginator): Response
     {
         $session = $request->getSession();
-        $data = $this->getDoctrine()->getRepository(User::class)->findAll();
+        $data = $this->getDoctrine()->getRepository(User::class)->getNotDeletedUsers();
         if($session->get('pagination_value')) {
             $users = $paginator->paginate(
                 $data,

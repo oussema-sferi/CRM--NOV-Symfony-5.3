@@ -1,0 +1,139 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Utilisateurs Supprimés{% endblock %}
+
+{% block body %}
+
+    <div class="header pb-6" style="background-color: #EDA200">
+        <div class="container-fluid">
+            <div class="header-body">
+                <div class="row align-items-center py-4">
+                    <div class="col-lg-6 col-7">
+                        <h6 class="h2 text-white d-inline-block mb-0">CRM</h6>
+                        <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+                            <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                                <li class="breadcrumb-item"><i class="ni fas fa-trash-alt text-teal"></i></li>
+                                <li class="breadcrumb-item">Corbeille</li>
+                                <li class="breadcrumb-item active" aria-current="page">Liste des utilisateurs supprimés</li>
+                            </ol>
+                        </nav>
+                    </div>
+                    <div class="col-lg-6 col-5 text-right">
+                        {#<a href="{{ path('new_user') }}" class="btn btn-sm btn-success">Nouveau utilisateur</a>#}
+                        {#<a href="#" class="btn btn-sm btn-neutral">Filters</a>#}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container-fluid mt--6">
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <!-- Card header -->
+                    <div class="card-header border-0">
+                        <div class="row">
+                            <div class="col-md-9">
+                                <h3 class="mb-0">Total: {{ all_deleted_users|length }} Utilisateurs</h3>
+                            </div>
+                            <div class="col-md-3">
+                                {#<input type="text" class="form-control " placeholder="Recherche" id="contact-filter">#}
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Light table -->
+                    <div class="table-responsive">
+                        <table class="table align-items-center table-flush">
+                            <thead class="thead-light">
+                            <tr>
+                                <th scope="col">Prénom</th>
+                                <th scope="col">Nom</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Rôle</th>
+                                {#<th scope="col">Actions</th>#}
+                                {#<th scope="col">Consultation</th>
+                                <th scope="col">Modification</th>
+                                <th scope="col">Suppression</th>#}
+                            </tr>
+                            </thead>
+                            <tbody class="list">
+
+                            {% for user in deleted_users %}
+                                <tr>
+                                    <td class="budget">
+                                        {{ user.firstName }}
+                                    </td>
+
+                                    <td class="budget">
+                                        {{ user.lastName }}
+                                    </td>
+
+                                    <td class="budget">
+                                        {{ user.email }}
+                                    </td>
+
+                                    <td class="budget">
+                                        {{ user.roles[0] }}
+                                    </td>
+
+                                    {#<td >
+                                        #}{#<a href="{{ path('show_contact', {'id': client.id}) }}"  class="badge badge-default" >Consulter Fiche</a>#}{#
+                                        <a href="{{ path('show_user', {'id': user.id}) }}"><i class="fas fa-search-plus text-blue"></i></a>&nbsp;&nbsp;
+                                        <a href="{{ path('update_user', {'id': user.id}) }}"><i class="fas fa-edit text-yellow"></i></a>&nbsp;&nbsp;
+                                        <a href="" data-toggle="modal" data-target="#deleteModal"><i class="fas fa-trash-alt text-red"></i></a>
+
+                                    </td>#}
+                                    {#<td >
+                                    <a href="{{ path('show_client', {'id': client.id}) }}"  class="badge badge-default" >Consulter Fiche</a>
+                                </td>
+
+                                <td >
+                                    <a href="{{ path('update_client', {'id': client.id}) }}"  class="badge badge-info" >Modifier Contact</a>
+                                </td>
+
+                                <td >
+                                    <a href="{{ path('new_client') }}" data-href="/admin_resp/ingenieur/oussingenieurref/deleted" class="badge badge-danger" data-toggle="modal" data-target="#deleteModal">Supprimer Contact</a>
+                                </td>#}
+
+                                </tr>
+
+                            {% endfor %}
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- Card footer -->
+                    {{ knp_pagination_render(deleted_users) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block additionalJs %}
+    <script>
+        $('#pagination').hover(function () {
+            $(this).css('cursor','pointer');
+        })
+
+        $('#pagination').change(function () {
+
+            $.ajax({
+                url:"{{ path('deleted_users_pagination') }}",
+                method: "POST",
+                dataType: 'json',
+                data : { paginationValue: this.value },
+                success: (e) => {
+                    location.reload();
+                },
+                error : (f) => {
+                    console.log(f);
+                }
+            })
+
+        })
+
+    </script>
+{% endblock %}

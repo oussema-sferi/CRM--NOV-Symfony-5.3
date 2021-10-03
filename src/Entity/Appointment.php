@@ -76,6 +76,16 @@ class Appointment
      */
     private $appointmentCall;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isDeleted;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $deletionDate;
+
 
     public function getId(): ?int
     {
@@ -206,6 +216,30 @@ class Appointment
     public function setAppointmentCall(?Call $appointmentCall): self
     {
         $this->appointmentCall = $appointmentCall;
+
+        return $this;
+    }
+
+    public function getIsDeleted(): ?bool
+    {
+        return $this->isDeleted;
+    }
+
+    public function setIsDeleted(bool $isDeleted): self
+    {
+        $this->isDeleted = $isDeleted;
+
+        return $this;
+    }
+
+    public function getDeletionDate(): ?\DateTimeInterface
+    {
+        return $this->deletionDate;
+    }
+
+    public function setDeletionDate(?\DateTimeInterface $deletionDate): self
+    {
+        $this->deletionDate = $deletionDate;
 
         return $this;
     }
