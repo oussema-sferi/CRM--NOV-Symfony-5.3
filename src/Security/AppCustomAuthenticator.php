@@ -21,6 +21,7 @@ class AppCustomAuthenticator extends AbstractLoginFormAuthenticator
     use TargetPathTrait;
 
     public const LOGIN_ROUTE = 'app_login';
+    public const LOGOUT_ROUTE = 'app_logout';
 
     private UrlGeneratorInterface $urlGenerator;
 
@@ -46,6 +47,9 @@ class AppCustomAuthenticator extends AbstractLoginFormAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
+        if ($token->getUser()->getIsDeleted()) {
+            return new RedirectResponse($this->urlGenerator->generate(self::LOGOUT_ROUTE));
+        }
         if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
             return new RedirectResponse($targetPath);
         }
