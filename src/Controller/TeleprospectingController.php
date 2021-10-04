@@ -206,7 +206,7 @@ class TeleprospectingController extends AbstractController
             }*/
         }
         $loggedUserId = $this->getUser()->getId();
-        $clients = $this->getDoctrine()->getRepository(Client::class)->findAll();
+        $clients = $this->getDoctrine()->getRepository(Client::class)->getNotDeletedClients();
         if($appointmentForm->isSubmitted()) {
             $validationStartTime = $directAppointment->getStart();
             $validationEndTime = $directAppointment->getEnd();
@@ -356,8 +356,26 @@ class TeleprospectingController extends AbstractController
                     $dateFilterValue
                 );
                 return new JsonResponse(['message'=> 'Task Success!']);
-        } else {
-            return new JsonResponse(['message'=> 'Task Fails!']);
+        } elseif ($request->isMethod('Post')) {
+            /*dd($request->request->all());*/
+
+            /*return new JsonResponse(['message'=> 'Task Fails!']);*/
+            $startDate = new \DateTime($request->request->get("start_date"));
+            $endDate = new \DateTime($request->request->get("end_date"));
+            /*dd($startDate);
+            dd($request->request->get("end_date"));*/
+            $dateFilterValue = $request->request->get('dateFilterValue');
+            $session->set('date_filter_value',
+                $dateFilterValue
+            );
+            $session->set('date_filter_start',
+                $startDate
+            );
+            $session->set('date_filter_end',
+                $endDate
+            );
+            $this->flashy->success('Filtre mis à jour avec succès !');
+            return $this->redirectToRoute('teleprospecting_stats');
         }
     }
 
@@ -368,6 +386,8 @@ class TeleprospectingController extends AbstractController
     {
         $session = $request->getSession();
         $session->remove('date_filter_value');
+        if($session->get('date_filter_start')) $session->remove('date_filter_start');
+        if($session->get('date_filter_end')) $session->remove('date_filter_end');
         $this->flashy->success('Filtre réinitialisé avec succès !');
         return $this->redirectToRoute('teleprospecting_stats');
     }

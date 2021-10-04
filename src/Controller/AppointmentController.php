@@ -34,7 +34,7 @@ class AppointmentController extends AbstractController
         $loggedUserId = $this->getUser()->getId();
         /*dd($this->getUser()->getRoles());*/
         if(in_array("ROLE_SUPERADMIN", $this->getUser()->getRoles())) {
-            $clients = $this->getDoctrine()->getRepository(Client::class)->findAll();
+            $clients = $this->getDoctrine()->getRepository(Client::class)->getNotDeletedClients();
             $data = $this->getDoctrine()->getRepository(User::class)->findUsersByCommercialRole("ROLE_COMMERCIAL");
         } elseif (in_array("ROLE_TELEPRO", $this->getUser()->getRoles())) {
             $teleproGeographicAreasArray = $this->getUser()->getGeographicAreas();
@@ -160,7 +160,8 @@ class AppointmentController extends AbstractController
     public function showMyCalendar(Request $request, AppointmentRepository $appointment): Response
     {
         $manager = $this->getDoctrine()->getManager();
-        $events = $appointment->findBy(['user' => $this->getUser()->getId()]);
+        /*$events = $appointment->findBy(['user' => $this->getUser()->getId()]);*/
+        $events = $appointment->getAllAppointmentsOfUser($this->getUser()->getId());
         /*$clients = $this->getDoctrine()->getRepository(Client::class)->findBy(["status" => 1]);*/
 
         /*dd($events);*/
@@ -294,11 +295,12 @@ class AppointmentController extends AbstractController
         if(!$commercialUser) {
             return $this->redirectToRoute('appointment');
         }
-        $events = $appointment->findBy(['user' => $id]);
+        /*$events = $appointment->findBy(['user' => $id]);*/
+        $events = $appointment->getAllAppointmentsOfUser($id);
         /*$clients = $this->getDoctrine()->getRepository(Client::class)->findBy(["status" => 1]);*/
         /*$clients = $this->getDoctrine()->getRepository(Client::class)->findAll();*/
         if(in_array("ROLE_SUPERADMIN", $this->getUser()->getRoles())) {
-            $clients = $this->getDoctrine()->getRepository(Client::class)->findAll();
+            $clients = $this->getDoctrine()->getRepository(Client::class)->getNotDeletedClients();
         } elseif (in_array("ROLE_TELEPRO", $this->getUser()->getRoles())) {
             $teleproGeographicAreasArray = $this->getUser()->getGeographicAreas();
             $teleproGeographicAreasIdsArray = [];
@@ -498,6 +500,7 @@ class AppointmentController extends AbstractController
             $aNewCall->setStatusDetails(7);
             $aNewCall->setCallIfAppointmentNotes($request->request->get('notes'));
             $aNewCall->setCreatedAt(new \DateTime());
+            $aNewCall->setIsDeleted(false);
             /*}*/
             $newAppointment->setAppointmentCall($aNewCall);
 
@@ -535,6 +538,7 @@ class AppointmentController extends AbstractController
                 $aNewCall->setGeneralStatus(2);
                 $aNewCall->setStatusDetails(7);
                 $aNewCall->setCreatedAt(new \DateTime());
+                $aNewCall->setIsDeleted(false);
             }
 
 
