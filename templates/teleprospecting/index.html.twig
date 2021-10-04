@@ -144,9 +144,9 @@
 
                             {% if clients|length != 0 %}
                             <div class="col-md-4 text-right">
+                                <button class="btn btn-sm btn-success" type="submit">Appliquer les filtres</button>
                                 <a class="btn btn-sm btn-primary" href="{{ path('teleprospecting') }}">Réinitialiser les filtres</a>
                                 {#<input type="text" class="form-control " placeholder="Recherche" id="contact-filter">#}
-                                <button class="btn btn-sm btn-success" type="submit">Appliquer les filtres</button>
                             </div>
                             {% else %}
                                 <div class="col-md-4 text-right">

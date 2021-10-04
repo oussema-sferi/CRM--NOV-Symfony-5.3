@@ -103,9 +103,9 @@
                             </div>
                             {% if clients|length != 0 %}
                             <div class="col-md-4 text-right">
+                                <button class="btn btn-sm btn-success" type="submit">Appliquer les filtres</button>
                                 <a class="btn btn-sm btn-primary" href="{{ path('all_contacts') }}">Réinitialiser les filtres</a>
                                 {#<input type="text" class="form-control " placeholder="Recherche" id="contact-filter">#}
-                                <button class="btn btn-sm btn-success" type="submit">Appliquer les filtres</button>
                             </div>
                             {% else %}
                                 <div class="col-md-4 text-right">
@@ -439,7 +439,7 @@
                                         {#<a href="{{ path('show_contact', {'id': client.id}) }}"  class="badge badge-default" >Consulter Fiche</a>#}
                                         <a href="{{ path('show_contact', {'id': client.id}) }}"><i class="fas fa-search-plus text-blue"></i></a>&nbsp;&nbsp;
                                         <a href="{{ path('full_update_contact', {'id': client.id}) }}"><i class="fas fa-edit text-yellow"></i></a>&nbsp;&nbsp;
-                                        <a href="" data-toggle="modal" data-target="#deleteModal"><i class="fas fa-trash-alt text-red"></i></a>
+                                        {#<a href="" data-toggle="modal" data-target="#deleteModal"><i class="fas fa-trash-alt text-red"></i></a>#}
 
                                     </td>
 

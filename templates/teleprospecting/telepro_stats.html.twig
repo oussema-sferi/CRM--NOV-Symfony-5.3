@@ -10,7 +10,7 @@
         <div class="container-fluid">
             <div class="header-body">
                 <div class="row align-items-center py-4">
-                    <div class="col-lg-6 col-7">
+                    <div class="col-lg-3 col-7">
                         <h6 class="h2 text-white d-inline-block mb-0">CRM</h6>
                         <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
                             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
@@ -20,7 +20,7 @@
                             </ol>
                         </nav>
                     </div>
-                    <div class="col-lg-6 col-5 text-right">
+                    <div class="col-lg-9 col-5 text-right">
                         {#{{ dump(app.session.get('date_filter_value')) }}#}
                         {#<a href="#" class="btn btn-sm btn-neutral">Période</a>#}
 
@@ -37,8 +37,8 @@
                                     <option value="90" {% if app.session.get('date_filter_value') is defined and app.session.get('date_filter_value') == "90" %} selected {% endif %}>90 derniers jours</option>
                                     <option value="100" {% if app.session.get('date_filter_value') is defined and app.session.get('date_filter_value') == "100" %} selected {% endif %}>Personalisée</option>
                                 </select>
-                                <a href="{{ path('teleprospecting_stats_filters_initialization') }}" class="btn btn-sm btn-primary">Réinitialiser les filtres</a>
                                 <a href="{{ path('teleprospecting_stats_filters_notifications') }}" class="btn btn-sm btn-success">Appliquer les filtres</a>
+                                <a href="{{ path('teleprospecting_stats_filters_initialization') }}" class="btn btn-sm btn-primary">Réinitialiser les filtres</a>
                             </div>
                         <form action="{{ path('teleprospecting_stats_filters') }}" method="post">
                             <div class="form-group" id="custom_period_block" style="display: none">
@@ -48,7 +48,8 @@
                                 <label for="start_date" style="font-weight: bolder; font-family: Cambria; color: #fff">Jusqu'à: </label>
                                 <input type="date" class="form-control-sm" name="end_date" id="end_date" required>
                                 <a id="retour_period" class="btn btn-sm btn-neutral" style="margin-left: 10px">Retour</a>
-                                <input class="btn btn-sm btn-success" type="submit" value="Confirmer">
+                                <input class="btn btn-sm btn-success" type="submit" value="Appliquer les filtres">
+                                <a href="{{ path('teleprospecting_stats_filters_initialization') }}" class="btn btn-sm btn-primary" id="between-date-initialization" style="display: none">Réinitialiser les filtres</a>
                             </div>
                         </form>
                         {#<a href="#" class="btn btn-sm btn-neutral">Filters</a>#}
@@ -59,6 +60,10 @@
                     <div class="col-xl-4 col-md-6">
                         <div class="card card-stats">
                             <!-- Card body -->
+                            {% if app.session.get('date_filter_value') == "100" %}
+                                {% set start_date = app.session.get('date_filter_start')|date('Y-m-d') %}
+                                {% set end_date = app.session.get('date_filter_end')|date('Y-m-d') %}
+                            {% endif%}
                             {#{{ dump(app.session.get('date_filter_start')|date()) }}#}
                             <div class="card-body">
                                 <div class="row">
@@ -118,10 +123,7 @@
                                             {#{{ dump(processed_clients[2].calls) }}#}
                                             {#{{ processed_clients }}#}
                                             {% if app.session.get('date_filter_value') is not null %}
-                                                {% if app.session.get('date_filter_value') == "100" %}
-                                                    {% set start_date = app.session.get('date_filter_start')|date('Y-m-d') %}
-                                                    {% set end_date = app.session.get('date_filter_end')|date('Y-m-d') %}
-                                                {% endif%}
+
                                                 {% set processed_clients_counter = 0 %}
                                                 {% for client in processed_clients %}
                                                 {% set break = false %}
@@ -214,6 +216,10 @@
                                                     {% set appointment_date = appointment.createdAt | date('Y-m-d') %}
                                                     {% if filter == "0" or filter == "1" %}
                                                         {% if appointment_date == selected_date %}
+                                                            {% set fixed_appointments_counter = fixed_appointments_counter + 1 %}
+                                                        {% endif %}
+                                                    {% elseif filter == "100" %}
+                                                        {% if appointment_date >= start_date and appointment_date <= end_date %}
                                                             {% set fixed_appointments_counter = fixed_appointments_counter + 1 %}
                                                         {% endif %}
                                                     {% else %}
@@ -380,6 +386,10 @@
                                                             {% set processed_counter = processed_counter + 1 %}
                                                             {% set newArray = remove(newArray, call.client.id) %}
                                                         {% endif %}
+                                                    {% elseif filter == "100" %}
+                                                        {% if call_date >= start_date and call_date <= end_date %}
+                                                            {% set processed_counter = processed_counter + 1 %}
+                                                        {% endif %}
                                                     {% else %}
                                                         {% if call_date >= selected_date %}
                                                             {% set processed_counter = processed_counter + 1 %}
@@ -403,6 +413,12 @@
 
                                             {% if filter == "0" or filter == "1" %}
                                                 {% if call_date == selected_date %}
+                                                    {% if call.statusDetails == 7 %}
+                                                        {% set taken_appointments_counter = taken_appointments_counter + 1 %}
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% elseif filter == "100" %}
+                                                {% if call_date >= start_date and call_date <= end_date %}
                                                     {% if call.statusDetails == 7 %}
                                                         {% set taken_appointments_counter = taken_appointments_counter + 1 %}
                                                     {% endif %}
@@ -493,6 +509,7 @@
                 customPeriod.fadeIn(0.1)
                 $("#start_date").val("{{ app.session.get('date_filter_start')|date('Y-m-d') }}")
                 $("#end_date").val("{{ app.session.get('date_filter_end')|date('Y-m-d') }}")
+                $("#between-date-initialization").fadeIn(0.1)
             }
         }
     </script>
