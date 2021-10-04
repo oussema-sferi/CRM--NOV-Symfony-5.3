@@ -53,7 +53,7 @@
                                 <th scope="col">Email</th>
                                 <th scope="col">Rôle</th>
                                 <th scope="col">Date de suppression</th>
-                                {#<th scope="col">Actions</th>#}
+                                <th scope="col">Actions</th>
                                 {#<th scope="col">Consultation</th>
                                 <th scope="col">Modification</th>
                                 <th scope="col">Suppression</th>#}
@@ -102,6 +102,9 @@
                                     <a href="{{ path('new_client') }}" data-href="/admin_resp/ingenieur/oussingenieurref/deleted" class="badge badge-danger" data-toggle="modal" data-target="#deleteModal">Supprimer Contact</a>
                                 </td>#}
 
+                                    <td >
+                                        <a href="{{ path('restore_user', {'id': user.id}) }}"  class="badge badge-success" >Restaurer Utilisateur</a>
+                                    </td>
                                 </tr>
 
                             {% endfor %}

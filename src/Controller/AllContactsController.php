@@ -245,13 +245,28 @@ class AllContactsController extends AbstractController
     public function delete(Request $request, $id): Response
     {
         $manager = $this->getDoctrine()->getManager();
-        $clientToDelete = $this->getDoctrine()->getRepository(Client::class)->find($id);
-        $clientToDelete->setIsDeleted(true);
-        $clientToDelete->setDeletionDate(new \DateTime());
-        $manager->persist($clientToDelete);
+        $contactToDelete = $this->getDoctrine()->getRepository(Client::class)->find($id);
+        $contactToDelete->setIsDeleted(true);
+        $contactToDelete->setDeletionDate(new \DateTime());
+        $manager->persist($contactToDelete);
         $manager->flush();
         $this->flashy->success("Contact supprimé avec succès !");
         return $this->redirectToRoute('all_contacts');
+    }
+
+    /**
+     * @Route("/dashboard/allcontacts/restore/{id}", name="restore_contact")
+     */
+    public function restore(Request $request, $id): Response
+    {
+        $manager = $this->getDoctrine()->getManager();
+        $contactToRestore = $this->getDoctrine()->getRepository(Client::class)->find($id);
+        $contactToRestore->setIsDeleted(false);
+        $contactToRestore->setDeletionDate(null);
+        $manager->persist($contactToRestore);
+        $manager->flush();
+        $this->flashy->success("Contact restauré avec succès !");
+        return $this->redirectToRoute('trash_contacts');
     }
 
     /**

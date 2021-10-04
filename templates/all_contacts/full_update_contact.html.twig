@@ -53,9 +53,10 @@
                         <div class="col-8">
                             <h3 class="mb-0">Fiche Contact</h3>
                         </div>
-                        {#<div class="col-4 text-right">
-                            <a href="{{ path('all_contacts') }}" class="btn btn-sm btn-primary">Retour</a>
-                        </div>#}
+                        <div class="col-4 text-right">
+                            {#<a href="{{ path('all_contacts') }}" class="btn btn-sm btn-primary">Retour</a>#}
+                            <a href="" data-toggle="modal" data-target="#deleteModal" class="btn btn-sm btn-warning">Supprimer</a>
+                        </div>
                     </div>
                 </div>
                 <div class="card-body">
@@ -568,7 +569,29 @@
         </div>
     </div>
 
-    {% endblock %}
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <form action="{{ path('delete_contact', {'id': client_to_update.id}) }}" method="post">
+                <div class="modal-content">
+                    <div class="modal-header" style="margin: 0 auto">
+                        <h5 class="modal-title" id="exampleModalLabel">Avertissement</h5>
+                        {#<button type="button" class="close" data-dismiss="modal" aria-label="Close">#}{#
+                        #}{#<span aria-hidden="true">&times;</span>#}{#
+                        </button>#}
+                    </div>
+                    <div class="modal-body" style="margin: 0 auto">
+                        Êtes-vous sûr de vouloir supprimer "{{ client_to_update.firstName ~ ' ' ~ client_to_update.lastName }}" ?
+                    </div>
+                    <div class="modal-footer" style="margin: 0 auto">
+                        <button type="button" class="btn btn-success" data-dismiss="modal">Annuler</button>
+                        <button type="submit" class="btn btn-danger">Confirmer</button>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
 
 {% block additionalJs %}
 

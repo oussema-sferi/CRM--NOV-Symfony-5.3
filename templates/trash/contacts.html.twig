@@ -63,6 +63,7 @@
                                 <th scope="col">Société</th>
                                 <th scope="col">Sous Contrat</th>
                                 <th scope="col">Date de suppression</th>
+                                <th scope="col">Actions</th>
                                 {#<th scope="col">Traitement</th>#}
                                 {#<th scope="col">état</th>
                                 <th scope="col">Détails</th>
@@ -152,6 +153,9 @@
                                     </td>
                                     <td class="budget">
                                         {{ contact.deletionDate|format_datetime(locale='fr') }}
+                                    </td>
+                                    <td >
+                                        <a href="{{ path('restore_contact', {'id': contact.id}) }}"  class="badge badge-success" >Restaurer Contact</a>
                                     </td>
 
                                     {#<td >

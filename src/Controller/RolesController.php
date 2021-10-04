@@ -61,6 +61,7 @@ class RolesController extends AbstractController
         ]);
     }
 
+
     /**
      * @Route("/dashboard/users/delete/{id}", name="delete_user")
      */
@@ -74,6 +75,21 @@ class RolesController extends AbstractController
         $manager->flush();
         $this->flashy->success("Utilisateur supprimé avec succès !");
         return $this->redirectToRoute('roles');
+    }
+
+    /**
+     * @Route("/dashboard/users/restore/{id}", name="restore_user")
+     */
+    public function restore(Request $request, $id): Response
+    {
+        $manager = $this->getDoctrine()->getManager();
+        $userToRestore = $this->getDoctrine()->getRepository(User::class)->find($id);
+        $userToRestore->setIsDeleted(false);
+        $userToRestore->setDeletionDate(null);
+        $manager->persist($userToRestore);
+        $manager->flush();
+        $this->flashy->success("Utilisateur restauré avec succès !");
+        return $this->redirectToRoute('trash_users');
     }
 
     /**
