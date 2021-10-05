@@ -72,41 +72,25 @@ class StatisticsController extends AbstractController
             return new JsonResponse(['message'=> 'Task Success!']);
             /*}*/
 
-        } else {
-            return new JsonResponse(['message'=> 'Task Fails!']);
-            /*if($request->isMethod('Post')) {
-                $startDate = new \DateTime($request->request->get('start_date'));
-                $endDate = new \DateTime($request->request->get('end_date'));
-                if($startDate > $endDate) {
-                    $this->flashy->warning("Une erreur est survenue, veuillez sélectioonner une période valide !");
-
-                }
-                $session->remove('date_filter_value');
-                $session->set('start_date',
-                    $startDate
-                );
-                $session->set('end_date',
-                    $endDate
-                );
-
-                return $this->redirectToRoute("teleprospecting_stats");
-            }*/
+        } elseif ($request->isMethod('Post')) {
+            /*return new JsonResponse(['message'=> 'Task Fails!']);*/
+            $startDate = new \DateTime($request->request->get("start_date"));
+            $endDate = new \DateTime($request->request->get("end_date"));
+            /*dd($startDate);
+            dd($request->request->get("end_date"));*/
+            $dateFilterValue = $request->request->get('dateFilterValueAllStats');
+            $session->set('date_filter_value_all_stats',
+                $dateFilterValue
+            );
+            $session->set('date_filter_value_all_stats_start',
+                $startDate
+            );
+            $session->set('date_filter_value_all_stats_end',
+                $endDate
+            );
+            $this->flashy->success('Filtre mis à jour avec succès !');
+            return $this->redirectToRoute('all_statistics');
         }
-        /* return new Response('use Ajax');
-         $allTelepros = $this->getDoctrine()->getRepository(User::class)->findUsersByCommercialRole("ROLE_TELEPRO");
-         $allClients = $this->getDoctrine()->getRepository(Client::class)->findAll();
-         $processedClients = $this->getDoctrine()->getRepository(Client::class)->getProcessedClients();
-         $notProcessedClients = $this->getDoctrine()->getRepository(Client::class)->findBy(["status" => 0]);
-         $allAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getAppointmentsWhereClientsExist();
-
-         return $this->render('teleprospecting/telepro_stats.html.twig', [
-             'count_total_telepros' => count($allTelepros),
-             'all_telepros' => $allTelepros,
-             'total_clients' => count($allClients),
-             'processed_clients' => count($processedClients),
-             'not_processed_clients' => count($notProcessedClients),
-             'total_appointments' => count($allAppointments)
-         ]);*/
     }
 
     /**
@@ -116,6 +100,8 @@ class StatisticsController extends AbstractController
     {
         $session = $request->getSession();
         $session->remove('date_filter_value_all_stats');
+        if($session->get('date_filter_value_all_stats_start')) $session->remove('date_filter_value_all_stats_start');
+        if($session->get('date_filter_value_all_stats_end')) $session->remove('date_filter_value_all_stats_end');
         $this->flashy->success('Filtre réinitialisé avec succès !');
         return $this->redirectToRoute('all_statistics');
     }
