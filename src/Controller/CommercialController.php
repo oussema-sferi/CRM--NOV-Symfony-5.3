@@ -211,9 +211,26 @@ class CommercialController extends AbstractController
                 $dateFilterValueCommercialStats
             );
             return new JsonResponse(['message'=> 'Task Success!']);
-        } else {
-            return new JsonResponse(['message'=> 'Task Fails!']);
+        } elseif ($request->isMethod('Post')) {
+            /*dd($request->request->all());*/
 
+            /*return new JsonResponse(['message'=> 'Task Fails!']);*/
+            $startDate = new \DateTime($request->request->get("start_date"));
+            $endDate = new \DateTime($request->request->get("end_date"));
+            /*dd($startDate);
+            dd($request->request->get("end_date"));*/
+            $dateFilterValue = $request->request->get('dateFilterValueCommercialStats');
+            $session->set('date_filter_value_commercial_stats',
+                $dateFilterValue
+            );
+            $session->set('date_filter_commercial_start',
+                $startDate
+            );
+            $session->set('date_filter_commercial_end',
+                $endDate
+            );
+            $this->flashy->success('Filtre mis à jour avec succès !');
+            return $this->redirectToRoute('commercial_stats');
         }
     }
 
@@ -224,6 +241,8 @@ class CommercialController extends AbstractController
     {
         $session = $request->getSession();
         $session->remove('date_filter_value_commercial_stats');
+        if($session->get('date_filter_commercial_start')) $session->remove('date_filter_commercial_start');
+        if($session->get('date_filter_commercial_end')) $session->remove('date_filter_commercial_end');
         $this->flashy->success('Filtre réinitialisé avec succès !');
         return $this->redirectToRoute('commercial_stats');
     }

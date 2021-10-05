@@ -389,6 +389,7 @@
                                                     {% elseif filter == "100" %}
                                                         {% if call_date >= start_date and call_date <= end_date %}
                                                             {% set processed_counter = processed_counter + 1 %}
+                                                            {% set newArray = remove(newArray, call.client.id) %}
                                                         {% endif %}
                                                     {% else %}
                                                         {% if call_date >= selected_date %}
