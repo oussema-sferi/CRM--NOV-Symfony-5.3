@@ -673,6 +673,7 @@
 {% endblock %}
 
 {% block additionalJs %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/chart.min.js" integrity="sha512-Wt1bJGtlnMtGP0dqNFH1xlkLBNpEodaiQ8ZN5JLA5wpc1sUlk/O5uuOMNgvzddzkpvZ9GLyYNa8w2s7rqiTk5Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
 
       /*  let categories = document.querySelector("#categories");
@@ -739,7 +740,7 @@
               $("#between-date-initialization").fadeIn(0.1)
           }
       }
-      let multiBar = $("#multi-bar-chart");
+      let multiBar = document.getElementById("multi-bar-chart").getContext('2d');
       let multiBArChart = new Chart(multiBar, {
           type: 'bar',
           data: {
@@ -750,10 +751,13 @@
               ]
           },
           options: {
+              animation:{
+                  duration: 2500 /* time in ms */
+              },
               scales: {
                   y: {
                       suggestedMin: 0,
-                      suggestedMax: 20
+                      suggestedMax: 8
                   },
               },
               responsive: true,
