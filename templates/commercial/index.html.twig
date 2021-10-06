@@ -240,8 +240,8 @@
                             <tbody class="list">
 
                             {% for commercial_appointment in commercial_appointments %}
-                                <tr>
-                                    <td class="budget">
+                                <tr {% if commercial_appointment.isDone == 1 %}class="clickable-row" data-href="{{ path('show_contact', {'id': commercial_appointment.client.id}) }}"{% endif %}>
+                                    <td>
                                         {{ commercial_appointment.client.firstName }}
                                     </td>
 
@@ -394,6 +394,16 @@
             })
 
         })
+        if($(".clickable-row")) {
+            $(".clickable-row").hover(function () {
+                $(this).css('cursor', 'pointer');
+            });
+
+            $(".clickable-row").dblclick(function () {
+                window.location = $(this).data("href");
+            });
+        }
+
 
     </script>
 {% endblock %}

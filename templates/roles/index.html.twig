@@ -152,7 +152,7 @@
                             <tbody class="list">
 
                                 {% for user in users %}
-                                <tr>
+                                <tr class="clickable-row" data-href="{{ path('show_user', {'id': user.id}) }}">
                                     <td class="budget">
                                         {{ user.firstName }}
                                     </td>
@@ -273,6 +273,14 @@
             })
 
         })
+
+        $(".clickable-row").hover(function () {
+            $(this).css('cursor', 'pointer');
+        });
+
+        $(".clickable-row").dblclick(function () {
+            window.location = $(this).data("href");
+        });
 
     </script>
 {% endblock %}

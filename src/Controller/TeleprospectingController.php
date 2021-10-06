@@ -185,6 +185,7 @@ class TeleprospectingController extends AbstractController
                 $newCall->setClient($client);
                 $newCall->setGeneralStatus($status);
                 $newCall->setCallNotes($newCall->getCallNotes());
+                $newCall->setIsDeleted(false);
                 $client->setStatus($status);
                 if($statusDetailsQ) {
                     $newCall->setStatusDetails($statusDetailsQ);

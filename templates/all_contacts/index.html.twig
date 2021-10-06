@@ -439,7 +439,7 @@
                                         {#<a href="{{ path('show_contact', {'id': client.id}) }}"  class="badge badge-default" >Consulter Fiche</a>#}
                                         <a href="{{ path('show_contact', {'id': client.id}) }}"><i class="fas fa-search-plus text-blue"></i></a>&nbsp;&nbsp;
                                         <a href="{{ path('full_update_contact', {'id': client.id}) }}"><i class="fas fa-edit text-yellow"></i></a>&nbsp;&nbsp;
-                                        {#<a href="" data-toggle="modal" data-target="#deleteModal"><i class="fas fa-trash-alt text-red"></i></a>#}
+                                        <a href="" data-toggle="modal" data-target="#deleteModal{{ client.id }}"><i class="fas fa-trash-alt text-red"></i></a>
 
                                     </td>
 
@@ -454,6 +454,28 @@
                                     </td>#}
 
                                 </tr>
+                                <div class="modal fade" id="deleteModal{{ client.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <form action="{{ path('delete_contact', {'id': client.id}) }}" method="post">
+                                            <div class="modal-content">
+                                                <div class="modal-header" style="margin: 0 auto">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Avertissement</h5>
+                                                    {#<button type="button" class="close" data-dismiss="modal" aria-label="Close">#}{#
+                                                    #}{#<span aria-hidden="true">&times;</span>#}{#
+                                                    </button>#}
+                                                </div>
+                                                <div class="modal-body" style="margin: 0 auto">
+                                                    Êtes-vous sûr de vouloir supprimer "{{ client.firstName ~ ' ' ~ client.lastName }}" ?
+                                                </div>
+                                                <div class="modal-footer" style="margin: 0 auto">
+                                                    <button type="button" class="btn btn-success" data-dismiss="modal">Annuler</button>
+                                                    <button type="submit" class="btn btn-danger">Confirmer</button>
+                                                </div>
+
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
 
                             {% endfor %}
 
@@ -538,7 +560,7 @@
                 $(this).css('cursor', 'pointer');
             });
 
-            $(".clickable-row").click(function() {
+            $(".clickable-row").dblclick(function() {
                 window.location = $(this).data("href");
             });
         })

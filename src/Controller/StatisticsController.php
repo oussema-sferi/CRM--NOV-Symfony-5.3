@@ -37,6 +37,42 @@ class StatisticsController extends AbstractController
             $appointmentsPerformance = 0;
         }
 
+        $allAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getAppointmentsWhereClientsExist();
+        /*$test = new \DateTime();
+        $monthint = 2;*/
+        /*dd(date("F",mktime(0,0,0,$monthint,1,2021)));
+        dd($processedContacts);*/
+        /*dd($test->format("m"));
+        $ouss = new \DateTime();
+        dd(date("F",mktime(0,0,0,1,1,(int)(new \DateTime())->format("Y"))));*/
+        $processedContactsByMonthArray = [];
+        for ($i = 1; $i <13; $i++) {
+            $contactsCounter = 0;
+            foreach ($processedContacts as $contact) {
+                foreach ($contact->getCalls() as $call) {
+                    if (date("F",mktime(0,0,0,(int)($call->getCreatedAt()->format("m")),1,(int)($call->getCreatedAt())->format("Y"))) === date("F",mktime(0,0,0,$i,1,(int)(new \DateTime())->format("Y")))) {
+                        $contactsCounter += 1;
+                        break;
+                    }
+                }
+            }
+            $processedContactsByMonthArray[] = $contactsCounter;
+        }
+        /*dd(json_encode($processedByMonthArray));*/
+
+        $appointmentsByMonthArray = [];
+        for ($j = 1; $j <13; $j++) {
+            $appointmentsCounter = 0;
+            foreach ($allAppointments as $appointment) {
+                    if (date("F",mktime(0,0,0,(int)($appointment->getCreatedAt()->format("m")),1,(int)($call->getCreatedAt())->format("Y"))) === date("F",mktime(0,0,0,$j,1,(int)(new \DateTime())->format("Y")))) {
+                        $appointmentsCounter += 1;
+                    }
+            }
+            $appointmentsByMonthArray[] = $appointmentsCounter;
+        }
+        /*dd($appointmentsByMonthArray);*/
+
+
 
         return $this->render('statistics/index.html.twig', [
             'total_all_contacts' => count($allContacts),
@@ -46,6 +82,8 @@ class StatisticsController extends AbstractController
             'total_appointments' => $allAppointments,
             'count_total_appointments' => count($allAppointments),
             'appointments_performance' => $appointmentsPerformance,
+            'processed_contacts_graph' => json_encode($processedContactsByMonthArray),
+            'fixed_appointments_graph' => json_encode($appointmentsByMonthArray),
         ]);
     }
 
@@ -114,5 +152,6 @@ class StatisticsController extends AbstractController
         $this->flashy->success('Filtre mis à jour avec succès !');
         return $this->redirectToRoute('all_statistics');
     }
+
 
 }

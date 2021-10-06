@@ -131,7 +131,8 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
         $qb = $this->createQueryBuilder('u');
         $qb->select('u')
-            ->where('u.isDeleted = 1');
+            ->where('u.isDeleted = 1')
+            ->orderBy('u.deletionDate', 'DESC');
 
         return $qb->getQuery()->getResult();
     }
