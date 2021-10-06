@@ -336,7 +336,7 @@
                     <div class="card-header bg-transparent">
                         <div class="row align-items-center">
                             <div class="col">
-                                <h6 class="text-light text-uppercase ls-1 mb-1">Aperçu</h6>
+                                <h6 class="text-light text-uppercase ls-1 mb-1">Graphique</h6>
                                 {#<h5 class="h3 text-white mb-0">Evolution</h5>#}
                             </div>
                             {#<div class="col">
@@ -744,8 +744,8 @@
           type: 'bar',
           data: {
               labels: ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"],
-              datasets: [{label: "Contacts Traités", data: {{ processed_contacts_graph|raw }}, backgroundColor: "purple"},
-                  {label: "Nombre de RDV", data: {{ fixed_appointments_graph|raw }}, backgroundColor: "cyan",},
+              datasets: [{label: "Contacts Traités", data: {{ processed_contacts_graph|raw }}, backgroundColor: "#ff6600"},
+                  {label: "Nombre de RDV", data: {{ fixed_appointments_graph|raw }}, backgroundColor: "green",},
 
               ]
           },
@@ -757,7 +757,7 @@
                   },
                   title: {
                       display: true,
-                      text: 'Evolution par Mois'
+                      text: "Evolution pour l'année {{ actual_year }}"
                   }
               }
           },

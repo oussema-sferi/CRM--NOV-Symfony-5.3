@@ -45,28 +45,36 @@ class StatisticsController extends AbstractController
         /*dd($test->format("m"));
         $ouss = new \DateTime();
         dd(date("F",mktime(0,0,0,1,1,(int)(new \DateTime())->format("Y"))));*/
+        /*dd($processedContacts);*/
+        /*dd($processedContacts[0]);*/
         $processedContactsByMonthArray = [];
         for ($i = 1; $i <13; $i++) {
             $contactsCounter = 0;
             foreach ($processedContacts as $contact) {
                 foreach ($contact->getCalls() as $call) {
-                    if (date("F",mktime(0,0,0,(int)($call->getCreatedAt()->format("m")),1,(int)($call->getCreatedAt())->format("Y"))) === date("F",mktime(0,0,0,$i,1,(int)(new \DateTime())->format("Y")))) {
-                        $contactsCounter += 1;
-                        break;
+                    if (((new \DateTime())->format("Y")) === $call->getCreatedAt()->format("Y")) {
+                        if (date("F",mktime(0,0,0,(int)($call->getCreatedAt()->format("m")),1,(int)($call->getCreatedAt())->format("Y"))) === date("F",mktime(0,0,0,$i,1,(int)(new \DateTime())->format("Y")))) {
+                            $contactsCounter += 1;
+                            break;
+                        }
                     }
+
                 }
             }
             $processedContactsByMonthArray[] = $contactsCounter;
         }
         /*dd(json_encode($processedByMonthArray));*/
 
+
         $appointmentsByMonthArray = [];
         for ($j = 1; $j <13; $j++) {
             $appointmentsCounter = 0;
             foreach ($allAppointments as $appointment) {
-                    if (date("F",mktime(0,0,0,(int)($appointment->getCreatedAt()->format("m")),1,(int)($call->getCreatedAt())->format("Y"))) === date("F",mktime(0,0,0,$j,1,(int)(new \DateTime())->format("Y")))) {
+                if (((new \DateTime())->format("Y")) === $appointment->getCreatedAt()->format("Y")) {
+                    if (date("F", mktime(0, 0, 0, (int)($appointment->getCreatedAt()->format("m")), 1, (int)($call->getCreatedAt())->format("Y"))) === date("F", mktime(0, 0, 0, $j, 1, (int)(new \DateTime())->format("Y")))) {
                         $appointmentsCounter += 1;
                     }
+                }
             }
             $appointmentsByMonthArray[] = $appointmentsCounter;
         }
@@ -84,6 +92,7 @@ class StatisticsController extends AbstractController
             'appointments_performance' => $appointmentsPerformance,
             'processed_contacts_graph' => json_encode($processedContactsByMonthArray),
             'fixed_appointments_graph' => json_encode($appointmentsByMonthArray),
+            'actual_year' => (new \DateTime())->format("Y")
         ]);
     }
 
