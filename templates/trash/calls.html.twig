@@ -154,7 +154,7 @@
                                         {{ call.deletionDate|format_datetime(locale='fr') }}
                                     </td>
                                     <td >
-                                        <a href="{{ path('restore_call', {'id': call.id}) }}"  class="badge badge-success" >Restaurer Appel</a>
+                                        <a href="" data-toggle="modal" data-target="#restoreModal{{ call.id }}" class="badge badge-success" >Restaurer Appel</a>
                                     </td>
 
                                     {#<td >
@@ -189,6 +189,29 @@
                                 </td>#}
 
                                 </tr>
+
+                                <div class="modal fade" id="restoreModal{{ call.id }}" tabindex="-1" role="dialog" aria-labelledby="restoreModal" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        {#<form action="{{ path('delete_contact', {'id': client.id}) }}" method="post">#}
+                                        <div class="modal-content">
+                                            <div class="modal-header" style="margin: 0 auto">
+                                                <h5 class="modal-title" id="exampleModalLabel">Avertissement</h5>
+                                                {#<button type="button" class="close" data-dismiss="modal" aria-label="Close">#}{#
+                                                #}{#<span aria-hidden="true">&times;</span>#}{#
+                                                </button>#}
+                                            </div>
+                                            <div class="modal-body" style="margin: 0 auto">
+                                                Êtes-vous sûr de vouloir restaurer cet appel ?
+                                            </div>
+                                            <div class="modal-footer" style="margin: 0 auto">
+                                                <button type="button" class="btn btn-success" data-dismiss="modal">Annuler</button>
+                                                <a href="{{ path('restore_call', {'id': call.id}) }}" class="btn btn-danger">Confirmer</a>
+                                            </div>
+
+                                        </div>
+                                        {#</form>#}
+                                    </div>
+                                </div>
 
                             {% endfor %}
 

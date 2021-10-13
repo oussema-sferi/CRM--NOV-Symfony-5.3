@@ -162,6 +162,45 @@
 
                                             {% endif %}
 
+                                            <li class="nav-item">
+                                                {#<a class="nav-link" href="{{ path('appointment') }}">
+                                        <i class="ni fas fa-calendar-alt text-cyan"></i>
+                                        <span class="nav-link-text">Agendas</span>
+                                    </a>#}
+                                                <a class="nav-link" href="#navbar-dashboards9" data-toggle="collapse" role="button" aria-controls="navbar-dashboards9">
+                                                    <i class="ni fas fa-calendar-alt text-cyan"></i>
+                                                    <span class="nav-link-text">Agendas</span>
+                                                </a>
+                                                <div class="collapse hide" id="navbar-dashboards9">
+                                                    <ul class="nav nav-sm flex-column">
+                                                        {#<li class="nav-item">
+                                                            <a href="{{ path('show_my_calendar') }}" class="nav-link">
+                                                                <i class="ni fas fa-calendar-alt text-cyan"></i>
+                                                                <span class="sidenav-normal"> Mon Agenda </span>
+                                                            </a>
+                                                        </li>#}
+                                                        {% if (is_granted('ROLE_SUPERADMIN') or is_granted('ROLE_TELEPRO')) %}
+                                                            <li class="nav-item">
+                                                                <a href="{{ path('appointment') }}" class="nav-link">
+                                                                    <i class="ni fas fa-calendar-alt text-cyan"></i>
+                                                                    <span class="sidenav-normal"> Agendas des Commerciaux </span>
+                                                                </a>
+                                                            </li>
+                                                        {% endif %}
+                                                    </ul>
+                                                </div>
+                                            </li>
+
+                                            {% if is_granted('ROLE_SUPERADMIN') %}
+
+                                                <li class="nav-item">
+                                                    <a class="nav-link" href="{{ path('all_statistics') }}">
+                                                        <i class="ni fas fa-chart-bar text-pink"></i>
+                                                        <span class="nav-link-text">Statistiques</span>
+                                                    </a>
+                                                </li>
+                                            {% endif %}
+
                                             {#{% if (is_granted('ROLE_COMMERCIAL') or is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPERADMIN')) %}
 
                                             <li class="nav-item">
@@ -331,35 +370,34 @@
                             <!-- Navigation -->
                             <ul class="navbar-nav mb-md-3">
 
-
                                 <li class="nav-item">
                                     {#<a class="nav-link" href="{{ path('appointment') }}">
                                         <i class="ni fas fa-calendar-alt text-cyan"></i>
                                         <span class="nav-link-text">Agendas</span>
                                     </a>#}
-                                    <a class="nav-link" href="#navbar-dashboards9" data-toggle="collapse" role="button" aria-controls="navbar-dashboards9">
-                                        <i class="ni fas fa-calendar-alt text-cyan"></i>
-                                        <span class="nav-link-text">Agendas</span>
+                                    <a class="nav-link" href="#navbar-dashboards30" data-toggle="collapse" role="button" aria-controls="navbar-dashboards30">
+                                        <i class="ni fas fa-id-card text-green"></i>
+                                        <span class="nav-link-text">Mon Profil</span>
                                     </a>
-                                    <div class="collapse hide" id="navbar-dashboards9">
+                                    <div class="collapse hide" id="navbar-dashboards30">
                                         <ul class="nav nav-sm flex-column">
                                             <li class="nav-item">
                                                 <a href="{{ path('show_my_calendar') }}" class="nav-link">
-                                                    <i class="ni fas fa-calendar-alt text-cyan"></i>
+                                                    <i class="ni fas fa-calendar-alt text-green"></i>
                                                     <span class="sidenav-normal"> Mon Agenda </span>
                                                 </a>
                                             </li>
-                                            {% if (is_granted('ROLE_SUPERADMIN') or is_granted('ROLE_TELEPRO')) %}
                                             <li class="nav-item">
-                                                <a href="{{ path('appointment') }}" class="nav-link">
-                                                    <i class="ni fas fa-calendar-alt text-cyan"></i>
-                                                    <span class="sidenav-normal"> Agendas des Commerciaux </span>
+                                                <a href="" class="nav-link">
+                                                    <i class="ni fas fa-calendar-alt text-green"></i>
+                                                    <span class="sidenav-normal"> Mes Statistiques </span>
                                                 </a>
                                             </li>
-                                            {% endif %}
+
                                         </ul>
                                     </div>
                                 </li>
+
 
 
 
@@ -424,15 +462,6 @@
                                 </li>
                                 {% endif %}
 
-                                {% if is_granted('ROLE_SUPERADMIN') %}
-
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{{ path('all_statistics') }}">
-                                            <i class="ni fas fa-chart-bar text-pink"></i>
-                                            <span class="nav-link-text">Statistiques</span>
-                                        </a>
-                                    </li>
-                                {% endif %}
 
                                 {% if is_granted('ROLE_SUPERADMIN') %}
 
@@ -477,6 +506,8 @@
                                     </li>
 
                                 {% endif %}
+
+
 
                                 {#<li class="nav-item">
                                     <a class="nav-link" href="#navbar-dashboards5" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="navbar-dashboards5">
