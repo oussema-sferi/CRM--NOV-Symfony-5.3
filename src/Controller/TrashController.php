@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Appointment;
 use App\Entity\Call;
 use App\Entity\Client;
 use App\Entity\User;
@@ -135,6 +136,51 @@ class TrashController extends AbstractController
      * @Route("/dashboard/trash/calls/pagination", name="deleted_calls_pagination")
      */
     public function deletedCallsPagination(Request $request): Response
+    {
+        $session = $request->getSession();
+        if($request->isXmlHttpRequest()) {
+            $paginationValue = $request->get('paginationValue');
+            $session->set('pagination_value',
+                $paginationValue
+            );
+            return new JsonResponse(['message'=> 'Task Success!']);
+        } else {
+            return new JsonResponse(['message'=> 'Task Fails!']);
+        }
+        /*return new Response('use Ajax');*/
+    }
+
+    /**
+     * @Route("/dashboard/trash/appointments", name="trash_appointments")
+     */
+    public function deletedAppointmentsList(Request $request, PaginatorInterface $paginator): Response
+    {
+        $session = $request->getSession();
+        $data = $this->getDoctrine()->getRepository(Appointment::class)->getDeletedAppointments();
+        if($session->get('pagination_value')) {
+            $deletedAppointments = $paginator->paginate(
+                $data,
+                $request->query->getInt('page', 1),
+                $session->get('pagination_value')
+            );
+        } else {
+            $deletedAppointments = $paginator->paginate(
+                $data,
+                $request->query->getInt('page', 1),
+                10
+            );
+        }
+
+        return $this->render('trash/appointments.html.twig', [
+            'all_deleted_appointments' => $data,
+            'deleted_appointments' => $deletedAppointments
+        ]);
+    }
+
+    /**
+     * @Route("/dashboard/trash/appointments/pagination", name="deleted_appointments_pagination")
+     */
+    public function deletedAppointmentsPagination(Request $request): Response
     {
         $session = $request->getSession();
         if($request->isXmlHttpRequest()) {

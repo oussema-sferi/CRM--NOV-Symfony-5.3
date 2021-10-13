@@ -428,6 +428,11 @@
                                     </div>
 
                                 </div>
+                                <div class="text-right">
+                                    {% if appointment.isDeleted == 1  %}
+                                        <a class="badge bg-gradient-red text-white"><i class="fas fa-times fa-lg"></i> RDV Supprimé</a>
+                                    {% endif %}
+                                </div>
                                 <hr class="my-4" />
                             {% endfor %}
                         </div>

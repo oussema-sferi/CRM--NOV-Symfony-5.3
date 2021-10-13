@@ -83,7 +83,7 @@ class CallController extends AbstractController
     }
 
     /**
-     * @Route("/dashboard/calls/restore/{id}", name="restore_call")
+     * @Route("/dashboard/calls/restore/call/{id}", name="restore_call")
      */
     public function restoreCall(Request $request, $id): Response
     {

@@ -606,4 +606,37 @@ class AppointmentController extends AbstractController
             "id" => $clientId
         ]);
     }
+
+    /**
+     * @Route("/dashboard/appointments/delete/appointment/{id}", name="delete_appointment")
+     */
+    public function deleteCall(Request $request, $id): Response
+    {
+        $manager = $this->getDoctrine()->getManager();
+        $appointmentToDelete = $this->getDoctrine()->getRepository(Appointment::class)->find($id);
+        $clientId = $appointmentToDelete->getClient()->getId();
+        $appointmentToDelete->setIsDeleted(true);
+        $appointmentToDelete->setDeletionDate(new \DateTime());
+        $manager->persist($appointmentToDelete);
+        $manager->flush();
+        $this->flashy->success('RDV supprimé avec succès !');
+        return $this->redirectToRoute('full_update_contact', [
+            "id" => $clientId
+        ]);
+    }
+
+    /**
+     * @Route("/dashboard/appointments/restore/appointment/{id}", name="restore_appointment")
+     */
+    public function restoreCall(Request $request, $id): Response
+    {
+        $manager = $this->getDoctrine()->getManager();
+        $appointmentToRestore = $this->getDoctrine()->getRepository(Appointment::class)->find($id);
+        $appointmentToRestore->setIsDeleted(false);
+        $appointmentToRestore->setDeletionDate(null);
+        $manager->persist($appointmentToRestore);
+        $manager->flush();
+        $this->flashy->success("RDV restauré avec succès !");
+        return $this->redirectToRoute('trash_appointments');
+    }
 }

@@ -1,0 +1,193 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}RDV Supprimés{% endblock %}
+
+{% block body %}
+
+    <div class="header pb-6" style="background-color: #EDA200">
+        <div class="container-fluid">
+            <div class="header-body">
+                <div class="row align-items-center py-4">
+                    <div class="col-lg-6 col-7">
+                        <h6 class="h2 text-white d-inline-block mb-0">CRM</h6>
+                        <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+                            <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                                <li class="breadcrumb-item"><i class="ni fas fa-trash-alt text-teal"></i></li>
+                                <li class="breadcrumb-item">Corbeille</li>
+                                <li class="breadcrumb-item active" aria-current="page">Liste des RDV supprimés</li>
+                            </ol>
+                        </nav>
+                    </div>
+                    <div class="col-lg-6 col-5 text-right">
+                        {#<a href="{{ path('new_user') }}" class="btn btn-sm btn-success">Nouveau utilisateur</a>#}
+                        {#<a href="#" class="btn btn-sm btn-neutral">Filters</a>#}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container-fluid mt--6">
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <!-- Card header -->
+                    <div class="card-header border-0">
+                        <div class="row">
+                            <div class="col-md-9">
+                                <h3 class="mb-0">Total: {{ all_deleted_appointments|length }} RDV</h3>
+                            </div>
+                            <div class="col-md-3">
+                                {#<input type="text" class="form-control " placeholder="Recherche" id="contact-filter">#}
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Light table -->
+                    <div class="table-responsive">
+                        <table class="table align-items-center table-flush">
+                            <thead class="thead-light">
+                            <tr>
+                                <th scope="col">client</th>
+                                <th scope="col">RDV: Date/Heure Début</th>
+                                <th scope="col">RDV: Date/Heure Fin</th>
+                                <th scope="col">Commercial Affecté</th>
+                                <th scope="col">état</th>
+                                <th scope="col">Observations RDV</th>
+                                <th scope="col">Date de suppression</th>
+                                <th scope="col">Actions</th>
+                                {#<th scope="col">Traitement</th>#}
+                                {#<th scope="col">état</th>
+                                <th scope="col">Détails</th>
+                                <th scope="col">Observations Appel</th>
+                                <th scope="col">Observations RDV</th>
+                                <th scope="col">Actions</th>#}
+                                {#<th scope="col">Modification</th>
+                                <th scope="col">Suppression</th>#}
+                            </tr>
+                            </thead>
+                            <tbody class="list">
+
+                            {% for appointment in deleted_appointments %}
+                                <tr>
+                                    <td class="budget">
+                                        {{ appointment.client.firstName ~ ' ' ~ appointment.client.lastName }}
+                                    </td>
+
+                                    <td class="budget">
+                                        {{ appointment.start | format_datetime(locale='fr') }}
+                                    </td>
+
+                                    <td class="budget">
+                                        {{ appointment.end | format_datetime(locale='fr') }}
+                                    </td>
+                                    <td class="budget">
+                                        {{ appointment.user.firstName ~ ' ' ~ appointment.user.lastName }}
+                                    </td>
+
+
+                                    <td class="budget">
+                                        {% if appointment.isDone == 1 %}
+                                            <span class="badge badge-success badge-lg">
+                                                <i class="bg-success"></i>
+                                                effectué
+                                            </span>
+                                        {% else %}
+                                            <span class="badge badge-warning badge-lg">
+                                            <i class="bg-warning"></i>
+                                            à venir
+                                            </span>
+                                        {% endif %}
+                                    </td>
+
+                                    <td class="budget" style="text-align: center">
+                                        {% if appointment.appointmentNotes %}
+                                            <button class="notes" data-container="body" type="button" data-toggle="popover" data-color="info" data-placement="top" data-content= "{{ appointment.appointmentNotes }}">
+                                                <i class="far fa-comment text-cyan"></i>
+                                            </button>
+                                        {% else %}
+                                            Non Défini
+                                        {% endif %}
+                                    </td>
+
+
+
+
+                                    <td class="budget">
+                                        {{ appointment.deletionDate|format_datetime(locale='fr') }}
+                                    </td>
+                                    <td >
+                                        <a href="{{ path('restore_appointment', {'id': appointment.id}) }}"  class="badge badge-success" >Restaurer RDV</a>
+                                    </td>
+
+                                    {#<td >
+                                        <a href="{{ path('call_handle', {'id': client.id}) }}"  class="badge badge-success" >Traiter Contact</a>
+                                    </td>#}
+
+                                    {#{% if client.calls|default %}
+                                    {% if client.calls[client.calls|length - 1].callNotes is not null %}
+                                    <td class="budget" style="text-align: center">
+                                        <button class="notes" data-container="body" type="button" data-toggle="popover" data-color="info" data-placement="top" data-content= "{{ client.calls[client.calls|length -1].callNotes }}">
+                                            <i class="far fa-comment text-cyan"></i>
+                                        </button>
+                                    </td>
+                                    {% else %}
+                                        <td >Non Défini</td>
+                                    {% endif %}
+
+                                    {% else %}
+                                        <td>Non Défini</td>
+                                    {% endif %}#}
+                                    {#{% if client.calls|default %}#}
+                                    {#<td >
+                                    <a href="{{ path('show_client', {'id': client.id}) }}"  class="badge badge-default" >Consulter Fiche</a>
+                                </td>
+
+                                <td >
+                                    <a href="{{ path('update_client', {'id': client.id}) }}"  class="badge badge-info" >Modifier Contact</a>
+                                </td>
+
+                                <td >
+                                    <a href="{{ path('new_client') }}" data-href="/admin_resp/ingenieur/oussingenieurref/deleted" class="badge badge-danger" data-toggle="modal" data-target="#deleteModal">Supprimer Contact</a>
+                                </td>#}
+
+                                </tr>
+
+                            {% endfor %}
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- Card footer -->
+                    {{ knp_pagination_render(deleted_appointments) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block additionalJs %}
+    <script>
+        $('#pagination').hover(function () {
+            $(this).css('cursor','pointer');
+        })
+
+        $('#pagination').change(function () {
+
+            $.ajax({
+                url:"{{ path('deleted_appointments_pagination') }}",
+                method: "POST",
+                dataType: 'json',
+                data : { paginationValue: this.value },
+                success: (e) => {
+                    location.reload();
+                },
+                error : (f) => {
+                    console.log(f);
+                }
+            })
+
+        })
+
+    </script>
+{% endblock %}
