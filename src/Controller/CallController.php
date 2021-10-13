@@ -63,4 +63,37 @@ class CallController extends AbstractController
             "id" => $clientId
         ]);
     }
+
+    /**
+     * @Route("/dashboard/calls/delete/call/{id}", name="delete_call")
+     */
+    public function deleteCall(Request $request, $id): Response
+    {
+        $manager = $this->getDoctrine()->getManager();
+        $callToDelete = $this->getDoctrine()->getRepository(Call::class)->find($id);
+        $clientId = $callToDelete->getClient()->getId();
+        $callToDelete->setIsDeleted(true);
+        $callToDelete->setDeletionDate(new \DateTime());
+        $manager->persist($callToDelete);
+        $manager->flush();
+        $this->flashy->success('Appel supprimé avec succès !');
+        return $this->redirectToRoute('full_update_contact', [
+            "id" => $clientId
+        ]);
+    }
+
+    /**
+     * @Route("/dashboard/calls/restore/{id}", name="restore_call")
+     */
+    public function restoreCall(Request $request, $id): Response
+    {
+        $manager = $this->getDoctrine()->getManager();
+        $callToRestore = $this->getDoctrine()->getRepository(Call::class)->find($id);
+        $callToRestore->setIsDeleted(false);
+        $callToRestore->setDeletionDate(null);
+        $manager->persist($callToRestore);
+        $manager->flush();
+        $this->flashy->success("Appel restauré avec succès !");
+        return $this->redirectToRoute('trash_calls');
+    }
 }

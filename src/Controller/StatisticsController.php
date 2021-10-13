@@ -23,6 +23,7 @@ class StatisticsController extends AbstractController
      */
     public function index(): Response
     {
+        $allAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getAppointmentsWhereClientsExist();
         $allContacts = $this->getDoctrine()->getRepository(Client::class)->getNotDeletedClients();
         $processedContacts = $this->getDoctrine()->getRepository(Client::class)->getProcessedClients();
         if(count($allContacts) !== 0) {
@@ -36,17 +37,6 @@ class StatisticsController extends AbstractController
         } else {
             $appointmentsPerformance = 0;
         }
-
-        $allAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getAppointmentsWhereClientsExist();
-        /*$test = new \DateTime();
-        $monthint = 2;*/
-        /*dd(date("F",mktime(0,0,0,$monthint,1,2021)));
-        dd($processedContacts);*/
-        /*dd($test->format("m"));
-        $ouss = new \DateTime();
-        dd(date("F",mktime(0,0,0,1,1,(int)(new \DateTime())->format("Y"))));*/
-        /*dd($processedContacts);*/
-        /*dd($processedContacts[0]);*/
         $processedContactsByMonthArray = [];
         for ($i = 1; $i <13; $i++) {
             $contactsCounter = 0;
@@ -63,9 +53,6 @@ class StatisticsController extends AbstractController
             }
             $processedContactsByMonthArray[] = $contactsCounter;
         }
-        /*dd(json_encode($processedByMonthArray));*/
-
-
         $appointmentsByMonthArray = [];
         for ($j = 1; $j <13; $j++) {
             $appointmentsCounter = 0;
@@ -78,10 +65,6 @@ class StatisticsController extends AbstractController
             }
             $appointmentsByMonthArray[] = $appointmentsCounter;
         }
-        /*dd($appointmentsByMonthArray);*/
-
-
-
         return $this->render('statistics/index.html.twig', [
             'total_all_contacts' => count($allContacts),
             'total_processed_contacts' => $processedContacts,
@@ -105,26 +88,14 @@ class StatisticsController extends AbstractController
         $session = $request->getSession();
         if($request->isXmlHttpRequest()) {
             $dateFilterValueAllStats = $request->get('dateFilterValueAllStats');
-            /*dd($dateFilterValue);*/
-            /*if($dateFilterValue) {*/
-            /*$session->remove('start_date');
-            $session->remove('end_date');*/
             $session->set('date_filter_value_all_stats',
                 $dateFilterValueAllStats
             );
-            /*$session->remove('invalid_date');*/
-            /*dd($dateFilterValue);*/
-            /*$serializer = new Serializer([new ObjectNormalizer()]);
-            $result = $serializer->normalize($products,'json',['attributes' => ['id','name','price', 'quantityInStock']]);*/
             return new JsonResponse(['message'=> 'Task Success!']);
-            /*}*/
-
         } elseif ($request->isMethod('Post')) {
             /*return new JsonResponse(['message'=> 'Task Fails!']);*/
             $startDate = new \DateTime($request->request->get("start_date"));
             $endDate = new \DateTime($request->request->get("end_date"));
-            /*dd($startDate);
-            dd($request->request->get("end_date"));*/
             $dateFilterValue = $request->request->get('dateFilterValueAllStats');
             $session->set('date_filter_value_all_stats',
                 $dateFilterValue

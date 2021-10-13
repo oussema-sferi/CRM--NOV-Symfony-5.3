@@ -121,7 +121,8 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
         $qb = $this->createQueryBuilder('u');
         $qb->select('u')
-            ->where('u.isDeleted = 0');
+            ->where('u.isDeleted = 0')
+            ->orderBy('u.createdAt', 'DESC');
 
         return $qb->getQuery()->getResult();
     }
@@ -133,6 +134,19 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $qb->select('u')
             ->where('u.isDeleted = 1')
             ->orderBy('u.deletionDate', 'DESC');
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function findUsersTeleproStats($role1, $role2)
+    {
+        $qb = $this->createQueryBuilder('u');
+        $qb->select('u')
+            ->where('u.roles LIKE :role1')
+            ->orWhere('u.roles LIKE :role2')
+            ->andWhere('u.isDeleted = 0')
+            ->setParameter('role1', '%"'.$role1.'"%')
+            ->setParameter('role2', '%"'.$role2.'"%');
 
         return $qb->getQuery()->getResult();
     }

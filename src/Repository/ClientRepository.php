@@ -252,7 +252,8 @@ class ClientRepository extends ServiceEntityRepository
 
         $qb = $this->createQueryBuilder('c');
         $qb->select('c')
-            ->where('c.isDeleted = 0');
+            ->where('c.isDeleted = 0')
+            ->orderBy('c.createdAt', 'DESC');
 
         return $qb->getQuery()->getResult();
     }

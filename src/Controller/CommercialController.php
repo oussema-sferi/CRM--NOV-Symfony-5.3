@@ -175,7 +175,8 @@ class CommercialController extends AbstractController
      */
     public function commercialStats(): Response
     {
-        $allCommercials = $this->getDoctrine()->getRepository(User::class)->findUsersByCommercialRole("ROLE_COMMERCIAL");
+        $justCommercials = $this->getDoctrine()->getRepository(User::class)->findUsersByCommercialRole("ROLE_COMMERCIAL");
+        $allCommercials = $this->getDoctrine()->getRepository(User::class)->findUsersTeleproStats("ROLE_COMMERCIAL", "ROLE_SUPERADMIN");
         $allAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getAppointmentsWhereClientsExist();
         $doneAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getDoneAppointments();
         $upcomingAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getUpcomingAppointments();
@@ -188,7 +189,7 @@ class CommercialController extends AbstractController
         dd($appointments[3]);*/
 
         return $this->render('commercial/commercial_stats.html.twig', [
-            'count_total_commercials' => count($allCommercials),
+            'count_total_commercials' => count($justCommercials),
             'all_commercials' => $allCommercials,
             'total_appointments' => $allAppointments,
             'total_appointments_count' => count($allAppointments),

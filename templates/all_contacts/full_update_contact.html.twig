@@ -248,7 +248,7 @@
                             {% set calls_counter = 0 %}
                             <hr class="my-4" />
 
-                            <h6 class="heading-small text-muted mb-4">Liste des Appels</h6>
+                            <h6 class="heading-small text-muted mb-4">Historique des Appels</h6>
                             {#{{ dump(client_form.calls) }}#}
                                     {% for call in client_to_update.calls %}
                                         {#{{ dump(client_form.calls) }}#}
@@ -329,14 +329,18 @@
                                         </div>
                                         {#{% if not (is_granted('ROLE_TELEPRO')) %}#}
                                         <div class="text-right">
-                                            <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal-call-form{{ call.id }}">Editer Appel {{ calls_counter }}</button>
+                                            {% if call.isDeleted != 1  %}
+                                            <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal-edit-call-form{{ call.id }}">Editer Appel {{ calls_counter }}</button>
                                             <button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#modal-delete-call-form{{ call.id }}">Supprimer Appel {{ calls_counter }}</button>
                                             {#<button type="button" data-toggle="modal" data-target="#deleteModal" class="btn btn-sm btn-warning">Supprimer</button>#}
+                                                {% else %}
+                                                    <a class="badge bg-gradient-red text-white"><i class="fas fa-times fa-lg"></i> Appel Supprimé</a>
+                                            {% endif %}
                                         </div>
                                         {#{% endif %}#}
                                         <hr class="my-4" />
 
-                                        <div class="modal fade" id="modal-call-form{{ call.id }}" tabindex="-1" role="dialog" aria-labelledby="modal-call-form{{ call.id }}" aria-hidden="true">
+                                        <div class="modal fade" id="modal-edit-call-form{{ call.id }}" tabindex="-1" role="dialog" aria-labelledby="modal-edit-call-form{{ call.id }}" aria-hidden="true">
                                             <div class="modal-dialog modal- modal-dialog-centered modal-sm" role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-body">
@@ -412,6 +416,30 @@
                                                 </div>
                                             </div>
                                         </div>
+
+
+                                        <div class="modal fade" id="modal-delete-call-form{{ call.id }}" tabindex="-1" role="dialog" aria-labelledby="emodal-delete-call-form" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                                {#<form action="{{ path('delete_contact', {'id': client.id}) }}" method="post">#}
+                                                <div class="modal-content">
+                                                    <div class="modal-header" style="margin: 0 auto">
+                                                        <h5 class="modal-title" id="exampleModalLabel">Avertissement</h5>
+                                                        {#<button type="button" class="close" data-dismiss="modal" aria-label="Close">#}{#
+                                                        #}{#<span aria-hidden="true">&times;</span>#}{#
+                                                        </button>#}
+                                                    </div>
+                                                    <div class="modal-body" style="margin: 0 auto">
+                                                        Êtes-vous sûr de vouloir supprimer cet appel?
+                                                    </div>
+                                                    <div class="modal-footer" style="margin: 0 auto">
+                                                        <button type="button" class="btn btn-success" data-dismiss="modal">Annuler</button>
+                                                        <a href="{{ path('delete_call', {'id': call.id}) }}" class="btn btn-danger">Confirmer</a>
+                                                    </div>
+
+                                                </div>
+                                                {#</form>#}
+                                            </div>
+                                        </div>
                                     {% endfor %}
                         {% endif %}
 
@@ -420,7 +448,7 @@
 
                         <div class="row align-items-center py-4">
                             <div class="col-lg-6 col-7">
-                                <h6 class="heading-small text-muted mb-4">Liste des RDV</h6>
+                                <h6 class="heading-small text-muted mb-4">Historique des RDV</h6>
                             </div>
                         </div>
                             {% set appointments_counter = 0 %}

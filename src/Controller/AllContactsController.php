@@ -257,7 +257,7 @@ class AllContactsController extends AbstractController
     /**
      * @Route("/dashboard/allcontacts/restore/{id}", name="restore_contact")
      */
-    public function restore(Request $request, $id): Response
+    public function restoreContact(Request $request, $id): Response
     {
         $manager = $this->getDoctrine()->getManager();
         $contactToRestore = $this->getDoctrine()->getRepository(Client::class)->find($id);
@@ -278,7 +278,9 @@ class AllContactsController extends AbstractController
     {
         $file = $request->files->get('excelcontactsfile'); // get the file from the sent request
         // check the type of the uploaded file
-        $mimes = array('application/vnd.ms-excel','text/plain','text/csv','text/tsv');
+        /*$mimes = array('application/vnd.ms-excel','text/plain','text/csv','text/tsv');*/
+        $mimes = array('application/vnd.oasis.opendocument.spreadsheet','application/vnd.ms-excel','text/plain','text/csv','text/tsv');
+        /*dd($_FILES['excelcontactsfile']['type']);*/
         if(in_array($_FILES['excelcontactsfile']['type'],$mimes)){
 
             /*dd($file);*/
@@ -295,109 +297,134 @@ class AllContactsController extends AbstractController
             $reader = IOFactory::createReader($inputFileType);
             /**  Advise the Reader that we only want to load cell data  **/
             $reader->setReadDataOnly(true);
-            $reader->setInputEncoding('CP1252');
+            /*$reader->setInputEncoding('CP1252');*/
 
             /*dd($reader);*/
             /**  Load $inputFileName to a Spreadsheet Object  **/
             $spreadsheet = $reader->load($fileFolder . $filePathName);
-            /*dd($spreadsheet);*/
+            /*dd((($spreadsheet->getAllSheets())[2]->toArray(null, true, true, true, true))[4]);*/
             //Check if the template of the uploaded excel file is correct
             $activeSheet = $spreadsheet->getActiveSheet();
-            if(!($activeSheet->getCellByColumnAndRow(1,1)->getValue() === "Numéro de téléphone" &&
+            /*if(!($activeSheet->getCellByColumnAndRow(1,1)->getValue() === "Numéro de téléphone" &&
                 $activeSheet->getCellByColumnAndRow(2,1)->getValue() === "Nom du professionnel" &&
                 $activeSheet->getCellByColumnAndRow(3,1)->getValue() === "Adresse" &&
                 $activeSheet->getCellByColumnAndRow(4,1)->getValue() === "Commune" &&
                 $activeSheet->getCellByColumnAndRow(5,1)->getValue() === "Code Postal")
             ) {
                 $this->flashy->warning("Désolé! Ce fichier ne suit pas les normes du modèle !");
-                /*dd("yes");*/
-                /*$this->addFlash(
-                    'import_file_template_error',
-                    "Désolé! Ce fichier ne suit pas les normes du modèle!"
-                );*/
                 return $this->redirectToRoute('all_contacts');
-            }
+            }*/
 
             /*$spreadsheet = IOFactory::load($fileFolder . $filePathName);*/ // Here we are able to read from the excel file
-            $row = $spreadsheet->getActiveSheet()->removeRow(1); // I added this to be able to remove the first file line
 
-            $sheetData = $spreadsheet->getActiveSheet()-> toArray(null, true, true, true, true); // here, the read data is turned into an array
+            /*$row = $spreadsheet->getActiveSheet()->removeRow(1); // I added this to be able to remove the first file line
+
+            $sheetData = $spreadsheet->getActiveSheet()-> toArray(null, true, true, true, true); // here, the read data is turned into an array*/
             /*dd($sheetData);*/
 
             //Save imported contacts in the database
-
             $entityManager = $this->getDoctrine()->getManager();
-
             $counterOfAdded = 0;
             $counterOfNonAdded = 0;
-            foreach ($sheetData as $Row)
-            {
-                $allTheName = $Row['B'];
-                $SplitedNameArray = explode(" ", $allTheName, 2);
-                $firstName = $SplitedNameArray[0]; // store the first_name on each iteration
-                $lastName = $SplitedNameArray[1]; // store the last_name on each iteration
-                /*$email= $Row['C'];*/     // store the email on each iteration
-                /*$companyName= $Row['D'];*/
-                $address= $Row['C'];
-                $postalCode= $Row['E'];
-                $city = $Row['D'];
-                /*$country= $Row['G'];*/
-                $phoneNumber= $Row['A'];
-                /*  $mobileNumber= $Row['I'];
-                  $category= $Row['J'];*/
+            /*dd($spreadsheet->getAllSheets()[2]->toArray(null, true, true, true, true));*/
+            /*set_time_limit(3600);*/
+            /*dd(($spreadsheet->getAllSheets())[1]);
+            (($spreadsheet->getAllSheets())[1])->removeRow(1);
+            dd(($spreadsheet->getAllSheets())[1]);*/
+            foreach ($spreadsheet->getAllSheets() as $sheet) {
+                /*dd($sheet);*/
+                $row = $sheet->removeRow(1);
+                $sheetData = $sheet-> toArray(null, true, true, true, true); // here, the read data is turned into an array*
 
-                /*if(strtolower($Row['K']) === 'non') {
-                    $isUnderContract = false;
-                } else {
-                    $isUnderContract = true;
-                }*/
+                /*dd($sheetData);*/
 
-                //
-
-                /*$providedEquipment = $this->getDoctrine()->getRepository(Equipment::class)->find($Row['L']);*/
-
-
-                /*$geographicArea = $this->getDoctrine()->getRepository(GeographicArea::class)->findOneBy(array('code' => $Row['M']));*/
-                $geographicArea = $this->getDoctrine()->getRepository(GeographicArea::class)->findOneBy(array('code' => (int)substr($postalCode,0,2)));
-
-                /*dd($geographicArea);*/
-
-
-                $existingContact = $entityManager->getRepository(Client::class)->findOneBy(array('lastName' => $lastName));
-
-                // make sure that the user does not already exists in your db
-                if (!$existingContact)
+                foreach ($sheetData as $Row)
                 {
+                    $allTheName = $Row['B'];
+                    $SplitedNameArray = explode(" ", $allTheName, 2);
+                    $firstName = $SplitedNameArray[0]; // store the first_name on each iteration
+                    $lastName = $SplitedNameArray[1]; // store the last_name on each iteration
+                    /*$email= $Row['C'];*/     // store the email on each iteration
+                    /*$companyName= $Row['D'];*/
+                    $address= $Row['C'];
+                    $postalCode= $Row['E'];
+                    $city = $Row['D'];
+                    /*$country= $Row['G'];*/
+                    if ($Row['A']) {
+                        $phoneNumber= $Row['A'];
+                    } else {
+                        $phoneNumber = "";
+                    }
 
-                    $contact = new Client();
-                    $contact->setFirstName($firstName);
-                    $contact->setLastName($lastName);
-                    /* $contact->setEmail($email);
-                     $contact->setCompanyName($companyName);*/
-                    $contact->setAddress($address);
-                    $contact->setPostalCode($postalCode);
-                    $contact->setCity($city);
-                    $contact->setCountry('France');
-                    $contact->setPhoneNumber($phoneNumber);
-                    /* $contact->setMobileNumber($mobileNumber);
-                     $contact->setCategory($category);*/
-                    /*$contact->setIsUnderContract(false);*/
-                    $contact->setStatus(0);
-                    $contact->setStatusDetail(0);
-                    /*$contact->setProvidedEquipment($providedEquipment);*/
-                    $contact->setGeographicArea($geographicArea);
-                    $contact->setCreatedAt(new \DateTime());
-                    $contact->setUpdatedAt(new \DateTime());
-                    $contact->setIsDeleted(false);
-                    $entityManager->persist($contact);
-                    $entityManager->flush();
-                    // here Doctrine checks all the fields of all fetched data and make a transaction to the database.
-                    $counterOfAdded++;
-                } else {
-                    $counterOfNonAdded++;
+                    $geographicArea = $this->getDoctrine()->getRepository(GeographicArea::class)->findOneBy(array('code' => (int)substr($postalCode,0,2)));
+                    $existingContactByLastName = $entityManager->getRepository(Client::class)->findOneBy(array('lastName' => $lastName));
+                    $existingContactByFirstName = $entityManager->getRepository(Client::class)->findOneBy(array('firstName' => $firstName));
+                    if ($phoneNumber !== "" && !($entityManager->getRepository(Client::class)->findOneBy(['phoneNumber' => $phoneNumber]))) {
+                        /*dd("1");*/
+                        $contact = new Client();
+                        $contact->setFirstName($firstName);
+                        $contact->setLastName($lastName);
+                        $contact->setAddress($address);
+                        $contact->setPostalCode($postalCode);
+                        $contact->setCity($city);
+                        $contact->setCountry('France');
+                        $contact->setPhoneNumber($phoneNumber);
+                        $contact->setStatus(0);
+                        $contact->setStatusDetail(0);
+                        $contact->setGeographicArea($geographicArea);
+                        $contact->setCreatedAt(new \DateTime());
+                        $contact->setUpdatedAt(new \DateTime());
+                        $contact->setIsDeleted(false);
+                        $entityManager->persist($contact);
+                        $entityManager->flush();
+                        // here Doctrine checks all the fields of all fetched data and make a transaction to the database.
+                        $counterOfAdded++;
+                    } elseif (!$existingContactByLastName) {
+                        /*dd("2");*/
+                        $contact = new Client();
+                        $contact->setFirstName($firstName);
+                        $contact->setLastName($lastName);
+                        $contact->setAddress($address);
+                        $contact->setPostalCode($postalCode);
+                        $contact->setCity($city);
+                        $contact->setCountry('France');
+                        $contact->setPhoneNumber($phoneNumber);
+                        $contact->setStatus(0);
+                        $contact->setStatusDetail(0);
+                        $contact->setGeographicArea($geographicArea);
+                        $contact->setCreatedAt(new \DateTime());
+                        $contact->setUpdatedAt(new \DateTime());
+                        $contact->setIsDeleted(false);
+                        $entityManager->persist($contact);
+                        $entityManager->flush();
+                        // here Doctrine checks all the fields of all fetched data and make a transaction to the database.
+                        $counterOfAdded++;
+                    } elseif (!$existingContactByFirstName) {
+                        /*dd("3");*/
+                        $contact = new Client();
+                        $contact->setFirstName($firstName);
+                        $contact->setLastName($lastName);
+                        $contact->setAddress($address);
+                        $contact->setPostalCode($postalCode);
+                        $contact->setCity($city);
+                        $contact->setCountry('France');
+                        $contact->setPhoneNumber($phoneNumber);
+                        $contact->setStatus(0);
+                        $contact->setStatusDetail(0);
+                        $contact->setGeographicArea($geographicArea);
+                        $contact->setCreatedAt(new \DateTime());
+                        $contact->setUpdatedAt(new \DateTime());
+                        $contact->setIsDeleted(false);
+                        $entityManager->persist($contact);
+                        $entityManager->flush();
+                        // here Doctrine checks all the fields of all fetched data and make a transaction to the database.
+                        $counterOfAdded++;
+                    } else {
+                        /*dd($lastName);*/
+                        $counterOfNonAdded++;
+                    }
                 }
             }
-            /*dd($counter);*/
 
             if($counterOfAdded === 0) {
                 $this->addFlash(
@@ -424,11 +451,6 @@ class AllContactsController extends AbstractController
 
         } else {
             $this->flashy->warning("Désolé! Ce type de fichier n'est pas autorisé !");
-            /*$this->addFlash(
-                'import_file_type_error',
-                "Désolé! Ce type de fichier n'est pas autorisé!"
-            );*/
-
         }
 
         return $this->redirectToRoute('all_contacts');

@@ -47,4 +47,14 @@ class CallRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function getDeletedCalls()
+    {
+
+        $qb = $this->createQueryBuilder('c');
+        $qb->select('c')
+            ->where('c.isDeleted = 1')
+            ->orderBy('c.deletionDate', 'DESC');
+        return $qb->getQuery()->getResult();
+    }
 }

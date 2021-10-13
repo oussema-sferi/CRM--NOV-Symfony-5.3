@@ -102,6 +102,7 @@
                             <h3 class="mb-0">Fiche Contact</h3>
                         </div>
                         <div class="col-4 text-right">
+                            <a href="{{ path('call_handle', {'id': client_to_show.id}) }}" class="btn btn-sm btn-slack">Traiter Fiche</a>
                             <a href="{{ path('full_update_contact', {'id': client_to_show.id}) }}" class="btn btn-sm btn-info">Editer</a>
                             {#<a href="{{ path('full_update_contact', {'id': client_to_show.id}) }}" class="btn btn-sm btn-warning">Supprimer</a>#}
                             <a href="" data-toggle="modal" data-target="#deleteModal" class="btn btn-sm btn-warning">Supprimer</a>
@@ -323,7 +324,7 @@
                             {% set calls_counter = 0 %}
                         <hr class="my-4" />
 
-                        <h6 class="heading-small text-muted mb-4">Liste des Appels</h6>
+                        <h6 class="heading-small text-muted mb-4">Historique des Appels</h6>
 
                             {% for call in client_to_show.calls %}
                             <div class="pl-lg-4">
@@ -366,6 +367,11 @@
 
                                 </div>
                             </div>
+                                <div class="text-right">
+                                    {% if call.isDeleted == 1  %}
+                                        <a class="badge bg-gradient-red text-white"><i class="fas fa-times fa-lg"></i> Appel Supprimé</a>
+                                    {% endif %}
+                                </div>
                                 <hr class="my-4" />
                             {% endfor %}
                         {% endif %}
@@ -373,7 +379,7 @@
                         <hr class="my-4" />
                         <div class="row align-items-center py-4">
                             <div class="col-lg-6 col-7">
-                                <h6 class="heading-small text-muted mb-4">Liste des RDV</h6>
+                                <h6 class="heading-small text-muted mb-4">Historique des RDV</h6>
                             </div>
                         </div>
                             {% set appointments_counter = 0 %}
@@ -422,7 +428,6 @@
                                     </div>
 
                                 </div>
-
                                 <hr class="my-4" />
                             {% endfor %}
                         </div>
