@@ -260,7 +260,7 @@ class AppointmentRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    /*public function getAppointmentsWhereClientsExistCommercialStats()
+    public function getAppointmentsWhereClientsExistCommercialStats()
     {
 
         $qb = $this->createQueryBuilder('a');
@@ -268,5 +268,5 @@ class AppointmentRepository extends ServiceEntityRepository
             ->where('a.client IS NOT NULL');
 
         return $qb->orderBy('a.start', 'DESC')->getQuery()->getResult();
-    }*/
+    }
 }

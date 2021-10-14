@@ -133,5 +133,66 @@ class StatisticsController extends AbstractController
         return $this->redirectToRoute('all_statistics');
     }
 
+    /**
+     * @Route("/dashboard/myprofile/mystatistics", name="my_statistics")
+     */
+    public function myStatistics(): Response
+    {
+        $allAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getAppointmentsWhereClientsExist();
+        $allContacts = $this->getDoctrine()->getRepository(Client::class)->getNotDeletedClients();
+        $processedContacts = $this->getDoctrine()->getRepository(Client::class)->getProcessedClients();
+        if(count($allContacts) !== 0) {
+            $contactsPerformance = number_format(((count($processedContacts) / count($allContacts)) * 100), 2);
+        } else {
+            $contactsPerformance = 0;
+        }
+        $allAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getAppointmentsWhereClientsExist();
+        if(count($processedContacts) !== 0) {
+            $appointmentsPerformance = number_format(((count($allAppointments) / count($processedContacts)) * 100), 2);
+        } else {
+            $appointmentsPerformance = 0;
+        }
+        $processedContactsByMonthArray = [];
+        for ($i = 1; $i <13; $i++) {
+            $contactsCounter = 0;
+            foreach ($processedContacts as $contact) {
+                foreach ($contact->getCalls() as $call) {
+                    if (((new \DateTime())->format("Y")) === $call->getCreatedAt()->format("Y")) {
+                        if (date("F",mktime(0,0,0,(int)($call->getCreatedAt()->format("m")),1,(int)($call->getCreatedAt())->format("Y"))) === date("F",mktime(0,0,0,$i,1,(int)(new \DateTime())->format("Y")))) {
+                            $contactsCounter += 1;
+                            break;
+                        }
+                    }
+
+                }
+            }
+            $processedContactsByMonthArray[] = $contactsCounter;
+        }
+        $appointmentsByMonthArray = [];
+        for ($j = 1; $j <13; $j++) {
+            $appointmentsCounter = 0;
+            foreach ($allAppointments as $appointment) {
+                if (((new \DateTime())->format("Y")) === $appointment->getCreatedAt()->format("Y")) {
+                    if (date("F", mktime(0, 0, 0, (int)($appointment->getCreatedAt()->format("m")), 1, (int)($call->getCreatedAt())->format("Y"))) === date("F", mktime(0, 0, 0, $j, 1, (int)(new \DateTime())->format("Y")))) {
+                        $appointmentsCounter += 1;
+                    }
+                }
+            }
+            $appointmentsByMonthArray[] = $appointmentsCounter;
+        }
+        return $this->render('statistics/my_stats.html.twig', [
+            'total_all_contacts' => count($allContacts),
+            'total_processed_contacts' => $processedContacts,
+            'count_total_processed_contacts' => count($processedContacts),
+            'contacts_performance' => $contactsPerformance,
+            'total_appointments' => $allAppointments,
+            'count_total_appointments' => count($allAppointments),
+            'appointments_performance' => $appointmentsPerformance,
+            'processed_contacts_graph' => json_encode($processedContactsByMonthArray),
+            'fixed_appointments_graph' => json_encode($appointmentsByMonthArray),
+            'actual_year' => (new \DateTime())->format("Y")
+        ]);
+    }
+
 
 }

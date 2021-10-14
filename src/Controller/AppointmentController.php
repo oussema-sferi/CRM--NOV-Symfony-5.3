@@ -240,6 +240,7 @@ class AppointmentController extends AbstractController
                         $newEvent->setEnd($validationEndTime);
                         $newEvent->setIsDone(0);
                         $newEvent->setAppointmentNotes($request->request->get('notes'));
+                        $newEvent->setIsDeleted(false);
                         $manager->persist($newEvent);
                         $manager->flush();
                         $this->flashy->success("Evénement fixé avec succès !");

@@ -147,7 +147,7 @@
                                             {% if app.session.get('date_filter_value_commercial_stats') is not null %}
                                                 {% set done_appointments_counter = 0 %}
                                                 {% for appointment in total_appointments %}
-                                                    {% if appointment.doneAt is not null %}
+                                                    {% if appointment.isDone == 1 and appointment.isDeleted == 0 %}
                                                     {% set appointment_date = appointment.doneAt | date('Y-m-d') %}
                                                     {% if filter == "0" or filter == "1" %}
                                                         {% if appointment_date == selected_date %}
@@ -195,6 +195,32 @@
                                         <h5 class="card-title text-uppercase text-muted mb-0">Total RDV à Venir</h5>
                                         <span class="h2 font-weight-bold mb-0">
                                             {#{{ upcoming_appointments }}#}
+                                            {#{% if app.session.get('date_filter_value_commercial_stats') is not null %}
+                                                {% set not_done_appointments_counter = 0 %}
+                                                {% for appointment in total_appointments %}
+                                                    {% if appointment.isDone == 0 and appointment.isDeleted == 0 %}
+                                                        {% set appointment_date = appointment.doneAt | date('Y-m-d') %}
+                                                        {% if filter == "0" or filter == "1" %}
+                                                            {% if appointment_date == selected_date %}
+                                                                {% set not_done_appointments_counter = not_done_appointments_counter + 1 %}
+                                                            {% endif %}
+                                                        {% elseif filter == "100" %}
+                                                            {% if appointment_date >= start_date and appointment_date <= end_date %}
+                                                                {% set not_done_appointments_counter = not_done_appointments_counter + 1 %}
+                                                            {% endif %}
+                                                        {% else %}
+                                                            {% if appointment_date >= selected_date %}
+                                                                {% set not_done_appointments_counter = not_done_appointments_counter + 1 %}
+                                                            {% endif%}
+                                                        {% endif %}
+                                                    {% endif %}
+                                                {% endfor %}
+                                                {{ not_done_appointments_counter }}
+                                            {% else %}
+                                                {{ upcoming_appointments }}
+                                            {% endif %}#}
+
+
                                             {% if app.session.get('date_filter_value_commercial_stats') is not null %}
                                                 {{ fixed_appointments_counter - done_appointments_counter }}
                                             {% else %}
@@ -223,7 +249,32 @@
                                     <div class="col">
                                         <h5 class="card-title text-uppercase text-muted mb-0">Total RDV Annulés</h5>
                                         <span class="h2 font-weight-bold mb-0">
-                                            N/A
+
+                                            {% if app.session.get('date_filter_value_commercial_stats') is not null %}
+                                                {% set deleted_appointments_counter = 0 %}
+                                                {% for appointment in total_appointments %}
+                                                    {% if appointment.isDeleted == 1 %}
+                                                        {% set appointment_date = appointment.doneAt | date('Y-m-d') %}
+                                                        {% if filter == "0" or filter == "1" %}
+                                                            {% if appointment_date == selected_date %}
+                                                                {% set deleted_appointments_counter = deleted_appointments_counter + 1 %}
+                                                            {% endif %}
+                                                        {% elseif filter == "100" %}
+                                                            {% if appointment_date >= start_date and appointment_date <= end_date %}
+                                                                {% set deleted_appointments_counter = deleted_appointments_counter + 1 %}
+                                                            {% endif %}
+                                                        {% else %}
+                                                            {% if appointment_date >= selected_date %}
+                                                                {% set deleted_appointments_counter = deleted_appointments_counter + 1 %}
+                                                            {% endif%}
+                                                        {% endif %}
+                                                    {% endif %}
+                                                {% endfor %}
+                                                {{ deleted_appointments_counter }}
+                                            {% else %}
+                                                {{ deleted_appointments_count }}
+                                            {% endif %}
+
                                         </span>
                                     </div>
                                     <div class="col-auto">
@@ -329,7 +380,7 @@
                     <div class="card-header border-0">
                         <div class="row align-items-center">
                             <div class="col">
-                                <h3 class="mb-0">Liste des Commerciaux</h3>
+                                <h3 class="mb-0">Liste des Utilisateurs</h3>
                             </div>
                             <div class="col text-right">
                                 <a href="#!" class="btn btn-sm btn-info">Afficher Tout</a>

@@ -177,8 +177,9 @@ class CommercialController extends AbstractController
     {
         $justCommercials = $this->getDoctrine()->getRepository(User::class)->findUsersByCommercialRole("ROLE_COMMERCIAL");
         $allCommercials = $this->getDoctrine()->getRepository(User::class)->findUsersTeleproStats("ROLE_COMMERCIAL", "ROLE_SUPERADMIN");
-        $allAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getAppointmentsWhereClientsExist();
+        $allAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getAppointmentsWhereClientsExistCommercialStats();
         $doneAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getDoneAppointments();
+        $deletedAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getDeletedAppointments();
         $upcomingAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getUpcomingAppointments();
         $processedClients = $this->getDoctrine()->getRepository(Client::class)->getProcessedClients();
         /*$notProcessedClients = $this->getDoctrine()->getRepository(Client::class)->findBy(["status" => 0]);*/
@@ -195,6 +196,7 @@ class CommercialController extends AbstractController
             'total_appointments_count' => count($allAppointments),
             'done_appointments' => $doneAppointments,
             'done_appointments_count' => count($doneAppointments),
+            'deleted_appointments_count' => count($deletedAppointments),
             'upcoming_appointments' => count($upcomingAppointments),
             'processed_clients' => count($processedClients),
         ]);

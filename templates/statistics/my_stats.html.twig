@@ -1,0 +1,776 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes Statistiques{% endblock %}
+
+
+
+{% block body %}
+{#{{ dump() }}#}
+    <div class="header pb-6" style="background-color: #EDA200">
+        <div class="container-fluid">
+            <div class="header-body">
+                <div class="row align-items-center py-4">
+                    <div class="col-lg-3 col-7">
+                        <h6 class="h2 text-white d-inline-block mb-0">CRM</h6>
+                        <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+                            <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                                <li class="breadcrumb-item"><i class="ni fas fa-id-card text-green"></i></li>
+                                <li class="breadcrumb-item">Mon Profil</li>
+                                <li class="breadcrumb-item active" aria-current="page">Mes Statistiques</li>
+                                {#<li class="breadcrumb-item active" aria-current="page">Default</li>#}
+                            </ol>
+                        </nav>
+                    </div>
+                    <div class="col-lg-9 col-5 text-right">
+                        {#<a href="#" class="btn btn-sm btn-neutral">Période</a>#}
+                            <div class="form-group" id="normal_period_block">
+                                <label for="period" style="color: #fff; font-weight: bold; font-family: 'Times New Roman'">Période : </label>
+                                <select class="form-control-sm" name="normal_period" id="normal_period">
+                                    <option value="" {% if app.session.get('date_filter_value_all_stats') is not defined or app.session.get('date_filter_value_all_stats') is null %} selected {% endif %}>Choisir...</option>
+                                    <option value="0" {% if app.session.get('date_filter_value_all_stats') is defined and app.session.get('date_filter_value_all_stats') == "0" %} selected {% endif %}>Aujourd'hui</option>
+                                    <option value="1" {% if app.session.get('date_filter_value_all_stats') is defined and app.session.get('date_filter_value_all_stats') == "1" %} selected {% endif %}>Hier</option>
+                                    <option value="7" {% if app.session.get('date_filter_value_all_stats') is defined and app.session.get('date_filter_value_all_stats') == "7" %} selected {% endif %}>7 derniers jours</option>
+                                    <option value="14" {% if app.session.get('date_filter_value_all_stats') is defined and app.session.get('date_filter_value_all_stats') == "14" %} selected {% endif %}>14 derniers jours</option>
+                                    <option value="30" {% if app.session.get('date_filter_value_all_stats') is defined and app.session.get('date_filter_value_all_stats') == "30" %} selected {% endif %}>30 derniers jours</option>
+                                    <option value="60" {% if app.session.get('date_filter_value_all_stats') is defined and app.session.get('date_filter_value_all_stats') == "60" %} selected {% endif %}>60 derniers jours</option>
+                                    <option value="90" {% if app.session.get('date_filter_value_all_stats') is defined and app.session.get('date_filter_value_all_stats') == "90" %} selected {% endif %}>90 derniers jours</option>
+                                    <option value="100" {% if app.session.get('date_filter_value_all_stats') is defined and app.session.get('date_filter_value_all_stats') == "100" %} selected {% endif %}>Personalisée</option>
+                                </select>
+                                <a href="{{ path('all_stats_filters_notifications') }}" class="btn btn-sm btn-success">Appliquer les filtres</a>
+                                <a href="{{ path('all_stats_filters_initialization') }}" class="btn btn-sm btn-primary">Réinitialiser les filtres</a>
+                            </div>
+
+                            <form action="{{ path('all_stats_filters') }}" method="post">
+                                <div class="form-group" id="custom_period_block" style="display: none">
+                                    <input type="text" name="dateFilterValueAllStats" value="100" hidden>
+                                    <label for="start_date" style="font-weight: bolder; font-family: Cambria; color: #fff">De: </label>
+                                    <input type="date" class="form-control-sm" name="start_date" id="start_date" required>
+                                    <label for="start_date" style="font-weight: bolder; font-family: Cambria; color: #fff">Jusqu'à: </label>
+                                    <input type="date" class="form-control-sm" name="end_date" id="end_date" required>
+                                    <a id="retour_period" class="btn btn-sm btn-neutral" style="margin-left: 10px">Retour</a>
+                                    <input class="btn btn-sm btn-success" type="submit" value="Appliquer les filtres">
+                                    <a href="{{ path('all_stats_filters_initialization') }}" class="btn btn-sm btn-primary" id="between-date-initialization" style="display: none">Réinitialiser les filtres</a>
+                                </div>
+                            </form>
+                        {#<a href="#" class="btn btn-sm btn-neutral">Filters</a>#}
+                    </div>
+                </div>
+                <!-- Card stats -->
+
+                <div class="row">
+                    <div class="col-xl-4 col-md-6">
+                        <div class="card card-stats">
+                            <!-- Card body -->
+                            {% if app.session.get('date_filter_value_all_stats') == "100" %}
+                                {% set start_date = app.session.get('date_filter_value_all_stats_start')|date('Y-m-d') %}
+                                {% set end_date = app.session.get('date_filter_value_all_stats_end')|date('Y-m-d') %}
+                            {% endif%}
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Mes fiches de contact traités</h5>
+                                        <span class="h2 font-weight-bold mb-0">
+
+                                        </span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-gradient-cyan text-white rounded-circle shadow">
+                                            <i class="fas fa-user-friends"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                {#<p class="mt-3 mb-0 text-sm">
+                                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
+                                    <span class="text-nowrap">Since last month</span>
+                                </p>#}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-md-6">
+                        <div class="card card-stats">
+                            <!-- Card body -->
+                            {% if app.session.get('date_filter_value_all_stats') is not null %}
+                                {% set filter = app.session.get('date_filter_value_all_stats') %}
+                                {% set selected_date = "now"|date_modify("-" ~ filter ~ " day")| date('Y-m-d') %}
+                            {% endif %}
+                            {#{{ dump(selected_date) }}#}
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Mes appels effectués</h5>
+                                        <span class="h2 font-weight-bold mb-0">
+
+                                        </span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-gradient-green text-white rounded-circle shadow">
+                                            <i class="fas fa-list-alt"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                               {# <p class="mt-3 mb-0 text-sm">
+                                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
+                                    <span class="text-nowrap">Since last month</span>
+                                </p>#}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-md-6">
+                        <div class="card card-stats">
+                            <!-- Card body -->
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Mes appels supprimés</h5>
+                                        <span class="h2 font-weight-bold mb-0">
+
+                                        </span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-gradient-info text-white rounded-circle shadow">
+                                            <i class="ni ni-chart-bar-32"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                               {# <p class="mt-3 mb-0 text-sm">
+                                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
+                                    <span class="text-nowrap">Since last month</span>
+                                </p>#}
+                            </div>
+                        </div>
+                    </div>
+                    {#<div class="col-xl-3 col-md-6">
+                        <div class="card card-stats">
+                            <!-- Card body -->
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Total Projets</h5>
+                                        <span class="h2 font-weight-bold mb-0">18</span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-gradient-green text-white rounded-circle shadow">
+                                            <i class="ni ni-money-coins"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                #}{# <p class="mt-3 mb-0 text-sm">
+                                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
+                                    <span class="text-nowrap">Since last month</span>
+                                </p>#}{#
+                            </div>
+                        </div>
+                    </div>#}
+                </div>
+
+                <div class="row">
+                    <div class="col-xl-4 col-md-6">
+                        <div class="card card-stats">
+                            <!-- Card body -->
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Mes RDV fixés</h5>
+                                        <span class="h2 font-weight-bold mb-0">
+
+                                        </span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-gradient-info text-white rounded-circle shadow">
+                                            <i class="fas fa-list-alt"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                {#<p class="mt-3 mb-0 text-sm">
+                                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
+                                    <span class="text-nowrap">Since last month</span>
+                                </p>#}
+                            </div>
+                        </div>
+                    </div>
+                   {# <div class="col-xl-3 col-md-6">
+                        <div class="card card-stats">
+                            <!-- Card body -->
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Total Contacts Traités</h5>
+                                        <span class="h2 font-weight-bold mb-0">{{ total_processed_contacts }}</span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-gradient-green text-white rounded-circle shadow">
+                                            <i class="fas fa-list-alt"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                #}{# <p class="mt-3 mb-0 text-sm">
+                                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
+                                    <span class="text-nowrap">Since last month</span>
+                                </p>#}{#
+                            </div>
+                        </div>
+                    </div>#}
+                    <div class="col-xl-4 col-md-6">
+                        <div class="card card-stats">
+                            <!-- Card body -->
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Mes RDV effectués</h5>
+                                        <span class="h2 font-weight-bold mb-0">
+
+                                        </span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-gradient-info text-white rounded-circle shadow">
+                                            <i class="ni ni-chart-bar-32"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                {# <p class="mt-3 mb-0 text-sm">
+                                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
+                                    <span class="text-nowrap">Since last month</span>
+                                </p>#}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-4 col-md-6">
+                        <div class="card card-stats">
+                            <!-- Card body -->
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Mes RDV à venir</h5>
+                                        <span class="h2 font-weight-bold mb-0">
+
+                                        </span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-gradient-info text-white rounded-circle shadow">
+                                            <i class="ni ni-chart-bar-32"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                {# <p class="mt-3 mb-0 text-sm">
+                                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
+                                    <span class="text-nowrap">Since last month</span>
+                                </p>#}
+                            </div>
+                        </div>
+                    </div>
+                    {#<div class="col-xl-3 col-md-6">
+                        <div class="card card-stats">
+                            <!-- Card body -->
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Total Projets</h5>
+                                        <span class="h2 font-weight-bold mb-0">18</span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-gradient-green text-white rounded-circle shadow">
+                                            <i class="ni ni-money-coins"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                    #}{# <p class="mt-3 mb-0 text-sm">
+                                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
+                                    <span class="text-nowrap">Since last month</span>
+                                </p>#}{#
+                    </div>
+                    </div>
+                    </div>#}
+                </div>
+
+                <div class="row">
+                    <div class="col-xl-4 col-md-6">
+                        <div class="card card-stats">
+                            <!-- Card body -->
+                            {% if app.session.get('date_filter_value_all_stats') == "100" %}
+                                {% set start_date = app.session.get('date_filter_value_all_stats_start')|date('Y-m-d') %}
+                                {% set end_date = app.session.get('date_filter_value_all_stats_end')|date('Y-m-d') %}
+                            {% endif%}
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Mes RDV annulés</h5>
+                                        <span class="h2 font-weight-bold mb-0">
+
+                                        </span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-gradient-cyan text-white rounded-circle shadow">
+                                            <i class="fas fa-user-friends"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                {#<p class="mt-3 mb-0 text-sm">
+                                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
+                                    <span class="text-nowrap">Since last month</span>
+                                </p>#}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-4 col-md-6">
+                        <div class="card card-stats">
+                            <!-- Card body -->
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Performance RDV</h5>
+                                        <span class="h2 font-weight-bold mb-0">
+
+                                        </span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-gradient-info text-white rounded-circle shadow">
+                                            <i class="ni ni-chart-bar-32"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                {# <p class="mt-3 mb-0 text-sm">
+                                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
+                                    <span class="text-nowrap">Since last month</span>
+                                </p>#}
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Page content -->
+
+    {#<div class="container-fluid mt--6">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="card bg-gradient-white">
+                    <div class="card-header bg-transparent">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <h6 class="text-light text-uppercase ls-1 mb-1">Graphique</h6>
+                                #}{#<h5 class="h3 text-white mb-0">Evolution</h5>#}{#
+                            </div>
+                            #}{#<div class="col">
+                                <ul class="nav nav-pills justify-content-end">
+                                    <li class="nav-item mr-2 mr-md-0" data-toggle="chart" data-target="#chart-sales-dark" data-update='{"data":{"datasets":[{"data":[0, 20, 10, 30, 15, 40, 20, 60, 60]}]}}' data-prefix="$" data-suffix="k">
+                                        <a href="#" class="nav-link py-2 px-3 active" data-toggle="tab">
+                                            <span class="d-none d-md-block">Mois</span>
+                                            <span class="d-md-none">M</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item" data-toggle="chart" data-target="#chart-sales-dark" data-update='{"data":{"datasets":[{"data":[0, 20, 5, 25, 10, 30, 15, 40, 40]}]}}' data-prefix="$" data-suffix="k">
+                                        <a href="#" class="nav-link py-2 px-3" data-toggle="tab">
+                                            <span class="d-none d-md-block">Semaine</span>
+                                            <span class="d-md-none">W</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>#}{#
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <!-- Chart -->
+                        <div class="chart">
+                            <!-- Chart wrapper -->
+                            <canvas#}{#id="chart-sales-dark" class="chart-canvas"#}{# id="multi-bar-chart" width="400" height="90"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            #}{#<div class="col-xl-4">
+                <div class="card">
+                    <div class="card-header bg-transparent">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <h6 class="text-uppercase text-muted ls-1 mb-1">Performance</h6>
+                                <h5 class="h3 mb-0">Total RDVs</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <!-- Chart -->
+                        <div class="chart">
+                            <canvas id="chart-bars" class="chart-canvas"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>#}{#
+            #}{#<div class="col-xl-6">
+                <div class="card bg-default">
+                    <div class="card-header bg-transparent">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <h6 class="text-light text-uppercase ls-1 mb-1">Aperçu</h6>
+                                <h5 class="h3 text-white mb-0">Evaluation des RDV</h5>
+                            </div>
+                            <div class="col">
+                                <ul class="nav nav-pills justify-content-end">
+                                    <li class="nav-item mr-2 mr-md-0" data-toggle="chart" data-target="#chart-sales-dark" data-update='{"data":{"datasets":[{"data":[0, 20, 10, 30, 15, 40, 20, 60, 60]}]}}' data-prefix="$" data-suffix="k">
+                                        <a href="#" class="nav-link py-2 px-3 active" data-toggle="tab">
+                                            <span class="d-none d-md-block">Mois</span>
+                                            <span class="d-md-none">M</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item" data-toggle="chart" data-target="#chart-sales-dark" data-update='{"data":{"datasets":[{"data":[0, 20, 5, 25, 10, 30, 15, 40, 40]}]}}' data-prefix="$" data-suffix="k">
+                                        <a href="#" class="nav-link py-2 px-3" data-toggle="tab">
+                                            <span class="d-none d-md-block">Semaine</span>
+                                            <span class="d-md-none">W</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <!-- Chart -->
+                        <div class="chart">
+                            <!-- Chart wrapper -->
+                            <canvas id="chart-sales-dark" class="chart-canvas"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>#}{#
+        </div>
+        #}{#<div class="row">
+            <div class="col-xl-8">
+                <div class="card">
+                    <div class="card-header border-0">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <h3 class="mb-0">Page visits</h3>
+                            </div>
+                            <div class="col text-right">
+                                <a href="#!" class="btn btn-sm btn-primary">See all</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <!-- Projects table -->
+                        <table class="table align-items-center table-flush">
+                            <thead class="thead-light">
+                            <tr>
+                                <th scope="col">Page name</th>
+                                <th scope="col">Visitors</th>
+                                <th scope="col">Unique users</th>
+                                <th scope="col">Bounce rate</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <th scope="row">
+                                    /argon/
+                                </th>
+                                <td>
+                                    4,569
+                                </td>
+                                <td>
+                                    340
+                                </td>
+                                <td>
+                                    <i class="fas fa-arrow-up text-success mr-3"></i> 46,53%
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    /argon/index.html
+                                </th>
+                                <td>
+                                    3,985
+                                </td>
+                                <td>
+                                    319
+                                </td>
+                                <td>
+                                    <i class="fas fa-arrow-down text-warning mr-3"></i> 46,53%
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    /argon/charts.html
+                                </th>
+                                <td>
+                                    3,513
+                                </td>
+                                <td>
+                                    294
+                                </td>
+                                <td>
+                                    <i class="fas fa-arrow-down text-warning mr-3"></i> 36,49%
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    /argon/tables.html
+                                </th>
+                                <td>
+                                    2,050
+                                </td>
+                                <td>
+                                    147
+                                </td>
+                                <td>
+                                    <i class="fas fa-arrow-up text-success mr-3"></i> 50,87%
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    /argon/profile.html
+                                </th>
+                                <td>
+                                    1,795
+                                </td>
+                                <td>
+                                    190
+                                </td>
+                                <td>
+                                    <i class="fas fa-arrow-down text-danger mr-3"></i> 46,53%
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-4">
+                <div class="card">
+                    <div class="card-header border-0">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <h3 class="mb-0">Social traffic</h3>
+                            </div>
+                            <div class="col text-right">
+                                <a href="#!" class="btn btn-sm btn-primary">See all</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <!-- Projects table -->
+                        <table class="table align-items-center table-flush">
+                            <thead class="thead-light">
+                            <tr>
+                                <th scope="col">Referral</th>
+                                <th scope="col">Visitors</th>
+                                <th scope="col"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <th scope="row">
+                                    Facebook
+                                </th>
+                                <td>
+                                    1,480
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <span class="mr-2">60%</span>
+                                        <div>
+                                            <div class="progress">
+                                                <div class="progress-bar bg-gradient-danger" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    Facebook
+                                </th>
+                                <td>
+                                    5,480
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <span class="mr-2">70%</span>
+                                        <div>
+                                            <div class="progress">
+                                                <div class="progress-bar bg-gradient-success" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width: 70%;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    Google
+                                </th>
+                                <td>
+                                    4,807
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <span class="mr-2">80%</span>
+                                        <div>
+                                            <div class="progress">
+                                                <div class="progress-bar bg-gradient-primary" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    Instagram
+                                </th>
+                                <td>
+                                    3,678
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <span class="mr-2">75%</span>
+                                        <div>
+                                            <div class="progress">
+                                                <div class="progress-bar bg-gradient-info" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    twitter
+                                </th>
+                                <td>
+                                    2,645
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <span class="mr-2">30%</span>
+                                        <div>
+                                            <div class="progress">
+                                                <div class="progress-bar bg-gradient-warning" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="width: 30%;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>#}{#
+        <!-- Footer -->
+        #}{#<footer class="footer pt-0">
+            <div class="row align-items-center justify-content-lg-between">
+                <div class="col-lg-6">
+                    <div class="copyright text-center  text-lg-left  text-muted">
+                        &copy; 2020 <a href="https://www.creative-tim.com" class="font-weight-bold ml-1" target="_blank">Creative Tim</a>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <ul class="nav nav-footer justify-content-center justify-content-lg-end">
+                        <li class="nav-item">
+                            <a href="https://www.creative-tim.com" class="nav-link" target="_blank">Creative Tim</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="https://www.creative-tim.com/presentation" class="nav-link" target="_blank">About Us</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="http://blog.creative-tim.com" class="nav-link" target="_blank">Blog</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="https://github.com/creativetimofficial/argon-dashboard/blob/master/LICENSE.md" class="nav-link" target="_blank">MIT License</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </footer>#}{#
+    </div>#}
+
+
+
+
+{% endblock %}
+
+{% block additionalJs %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/chart.min.js" integrity="sha512-Wt1bJGtlnMtGP0dqNFH1xlkLBNpEodaiQ8ZN5JLA5wpc1sUlk/O5uuOMNgvzddzkpvZ9GLyYNa8w2s7rqiTk5Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+      window.onload = () => {
+
+          let normalPeriod =  $("#normal_period");
+          let normalPeriodBlock =  $("#normal_period_block");
+          let customPeriod = $("#custom_period_block");
+          normalPeriod.on('change', function() {
+              if($(this).val() === "100") {
+                  $(this).parent().fadeOut(50)
+                  customPeriod.fadeIn(1000)
+              }
+          })
+          $('#retour_period').click(function () {
+              $(this).parent().fadeOut(50)
+              normalPeriodBlock.fadeIn(1000);
+              normalPeriod.val({{ app.session.get('date_filter_value_all_stats') }});
+              if(normalPeriod.val() === "100") {
+                  normalPeriod.val("");
+              }
+          })
+          //date
+          $('#normal_period').hover(function () {
+              $(this).css('cursor','pointer');
+          })
+          $('#normal_period').change(function () {
+              console.log(this.value == "14")
+              if(this.value && this.value != "100") {
+                  $.ajax({
+                      url:"{{ path('all_stats_filters') }}",
+                      method: "POST",
+                      dataType: 'json',
+                      data : { dateFilterValueAllStats: this.value },
+                      success: (e) => {
+                          /*location.reload();*/
+                          /*console.log(e);*/
+                      },
+                      error : (f) => {
+                          console.log(f);
+                      }
+                  })
+              }
+
+          })
+          if(normalPeriod.val() === "100") {
+              normalPeriodBlock.fadeOut(0.05)
+              customPeriod.fadeIn(0.1)
+              $("#start_date").val("{{ app.session.get('date_filter_value_all_stats_start')|date('Y-m-d') }}")
+              $("#end_date").val("{{ app.session.get('date_filter_value_all_stats_end')|date('Y-m-d') }}")
+              $("#between-date-initialization").fadeIn(0.1)
+          }
+      }
+      let multiBar = document.getElementById("multi-bar-chart").getContext('2d');
+      let multiBArChart = new Chart(multiBar, {
+          type: 'bar',
+          data: {
+              labels: ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"],
+              datasets: [{label: "Contacts Traités", data: {{ processed_contacts_graph|raw }}, backgroundColor: "#ff00ff"},
+                  {label: "Nombre de RDV", data: {{ fixed_appointments_graph|raw }}, backgroundColor: "#33ccff",},
+
+              ]
+          },
+          options: {
+              animation:{
+                  duration: 2500 /* time in ms */
+              },
+              scales: {
+                  y: {
+                      suggestedMin: 0,
+                      suggestedMax: 8
+                  },
+              },
+              responsive: true,
+              plugins: {
+                  legend: {
+                      position: 'top',
+                  },
+                  title: {
+                      display: true,
+                      text: "Evolution pour l'année {{ actual_year }}"
+                  }
+              }
+          },
+      })
+    </script>
+{% endblock %}
