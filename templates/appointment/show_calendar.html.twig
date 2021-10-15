@@ -289,7 +289,7 @@
                 headerToolbar: {
                     start: "prev,next today",
                     center: "title",
-                    end: "dayGridMonth,timeGridWeek"
+                    end: "dayGridMonth,timeGridWeek,timeGridDay"
                 },
                 events: {{ data['data']|raw }},
                 eventClick: function(info) {
@@ -306,13 +306,17 @@
                     $("#notes-show").val(info.event.extendedProps.description)
                     // change the border color just for fun
                     /*info.el.style.borderColor = 'red';*/
-                }
+                },
+               /* dayClick: function(date, allDay, jsEvent, view) {
+                    console.log(date)
+                }*/
             })
             calendar.render()
             calendar.on("dateClick", function (info) {
+                /*console.log(moment(info.dateStr).format('DD/MM/YYYY'))*/
                 $("#test").click()
-                $("#appointment_form_start_date").val(info.dateStr)
-                $("#appointment_form_end_date").val(info.dateStr)
+                $("#appointment_form_start_date").val(moment(info.dateStr).format('YYYY-MM-DD'))
+                $("#appointment_form_end_date").val(moment(info.dateStr).format('YYYY-MM-DD'))
             })
             let d = new Date();
             let month = d.getMonth()+1;
@@ -329,6 +333,7 @@
                 $("#appointment_form_end_time_hour").val(10)
 
             })
+            /*$(".fc-today-button").prop('disabled', false);*/
 
         }
 
