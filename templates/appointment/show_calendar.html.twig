@@ -286,10 +286,13 @@
                 initialView: "dayGridMonth",
                 locale: "fr",
                 timeZone: "Europe/Paris",
+               /* views: {
+                    listWeek: { buttonText: 'test' },
+                },*/
                 headerToolbar: {
                     start: "prev,next today",
                     center: "title",
-                    end: "dayGridMonth,timeGridWeek,timeGridDay"
+                    end: "dayGridMonth,timeGridWeek,timeGridDay,listWeek"
                 },
                 events: {{ data['data']|raw }},
                 eventClick: function(info) {
