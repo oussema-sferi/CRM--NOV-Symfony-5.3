@@ -194,8 +194,8 @@
                                         <option value="2">Congès</option>
                                         <option value="3">Formation</option>
                                         <option value="4">RDV</option>
-                                        <option value="5">Atelier Phoning</option>
-                                        <option value="6">Séance Patient</option>
+                                        <option value="5">Séance Patient</option>
+                                        <option value="6">Atelier Phoning</option>
                                     </select>
                                 </div>
                             </div>
@@ -332,9 +332,12 @@
                     if(info.event.title !== "RDV") {
                         $('#client_show-block').hide();
                         $('#notes_label').text('Observations ' + info.event.title);
+                    } else {
+                        $('#client_show-block').show();
+                        $('#notes_label').text('Observations Appel');
                     }
                     /*console.log(info.event.title)*/
-                    $("#client-show").val(info.event.title)
+                    $("#client-show").val(info.event.extendedProps.client)
                     $("#start-show").val((moment(info.event.start).format('DD/MM/YYYY hh:mm')))
                     $("#end-show").val((moment(info.event.end).format('DD/MM/YYYY hh:mm')))
                     $("#notes-show").val(info.event.extendedProps.description)

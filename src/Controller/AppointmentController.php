@@ -324,7 +324,7 @@ class AppointmentController extends AbstractController
             if ($event->getClient()) {
                 $appointments[] = [
                     'id' => $event->getId(),
-                    /*'title' => $event->getClient()->getFirstName() . " " . $event->getClient()->getLastName(),*/
+                    'client' => $event->getClient()->getFirstName() . " " . $event->getClient()->getLastName(),
                     'title' => $event->getEventType()->getDesignation(),
                     'start' => $event->getStart()->format('Y-m-d H:i:s'),
                     'end' => $event->getEnd()->format('Y-m-d H:i:s'),
