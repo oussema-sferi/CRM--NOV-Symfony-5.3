@@ -301,7 +301,7 @@
                 headerToolbar: {
                     start: "prev,next today",
                     center: "title",
-                    end: "dayGridMonth,timeGridWeek"
+                    end: "dayGridMonth,timeGridWeek,timeGridDay,listWeek"
                 },
                 events: {{ data['data']|raw }},
                 eventClick: function(info) {
@@ -323,8 +323,8 @@
             calendar.render()
             calendar.on("dateClick", function (info) {
                 $("#test").click()
-                $("#appointment_form_start_date").val(info.dateStr)
-                $("#appointment_form_end_date").val(info.dateStr)
+                $("#appointment_form_start_date").val((moment(info.dateStr).format('YYYY-MM-DD')))
+                $("#appointment_form_end_date").val((moment(info.dateStr).format('YYYY-MM-DD')))
             })
             let d = new Date();
             let month = d.getMonth()+1;

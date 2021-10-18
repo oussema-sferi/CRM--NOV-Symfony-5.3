@@ -86,6 +86,12 @@ class Appointment
      */
     private $deletionDate;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=EventType::class, inversedBy="appointments")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $eventType;
+
 
     public function getId(): ?int
     {
@@ -240,6 +246,18 @@ class Appointment
     public function setDeletionDate(?\DateTimeInterface $deletionDate): self
     {
         $this->deletionDate = $deletionDate;
+
+        return $this;
+    }
+
+    public function getEventType(): ?EventType
+    {
+        return $this->eventType;
+    }
+
+    public function setEventType(?EventType $eventType): self
+    {
+        $this->eventType = $eventType;
 
         return $this;
     }

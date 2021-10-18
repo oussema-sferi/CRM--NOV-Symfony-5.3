@@ -181,7 +181,24 @@
                                 </div>
                             </div>
 
+
+
+
                             {{ form_start(appointment_form) }}
+                            <div>
+                                <div class="form-group">
+                                    <label class="form-control-label" for="input-username">Type</label>
+                                    <select class="form-control" name="event_type" required>
+                                        <option value="" selected>Choisir...</option>
+                                        <option value="1">Réunion</option>
+                                        <option value="2">Congès</option>
+                                        <option value="3">Formation</option>
+                                        <option value="4">RDV</option>
+                                        <option value="5">Atelier Phoning</option>
+                                        <option value="6">Séance Patient</option>
+                                    </select>
+                                </div>
+                            </div>
                             <div class="form-group">
                                 <label for="example-datetime-local-input" class="form-control-label">Date et heure de Début</label>
                                 {{ form_widget(appointment_form.start) }}
@@ -233,6 +250,21 @@
                         </div>
                     </div>
 
+                    {#<div>
+                        <div class="form-group">
+                            <label class="form-control-label" for="input-username">Type</label>
+                            <select class="form-control">
+                                <option value="" selected>Choisir...</option>
+                                <option value="1">Réunion</option>
+                                <option value="2">Congès</option>
+                                <option value="3">Formation</option>
+                                <option value="4">RDV</option>
+                                <option value="5">Atelier Phoning</option>
+                                <option value="6">Séance Patient</option>
+                            </select>
+                        </div>
+                    </div>
+#}
                     <div>
                         <div class="form-group">
                             <label class="form-control-label" for="input-username">Date et heure de Début</label>
@@ -249,7 +281,7 @@
 
                     <div>
                         <div class="form-group">
-                            <label class="form-control-label" for="input-username">Observations Appel</label>
+                            <label ID="notes_label" class="form-control-label" for="input-username">Observations Appel</label>
                             <textarea id="notes-show" class="form-control" name="notes" id="notes" cols="30" rows="6" placeholder="..." resize="none" disabled></textarea>
                         </div>
                     </div>
@@ -297,10 +329,9 @@
                 events: {{ data['data']|raw }},
                 eventClick: function(info) {
                     $("#test2").click()
-                    if(info.event.title === "Evénement perso") {
+                    if(info.event.title !== "RDV") {
                         $('#client_show-block').hide();
-                    } else {
-                        $('#client_show-block').show();
+                        $('#notes_label').text('Observations ' + info.event.title);
                     }
                     /*console.log(info.event.title)*/
                     $("#client-show").val(info.event.title)

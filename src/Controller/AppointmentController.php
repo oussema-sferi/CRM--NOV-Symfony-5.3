@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Appointment;
 use App\Entity\Call;
 use App\Entity\Client;
+use App\Entity\EventType;
 use App\Entity\User;
 use App\Form\AppointmentFormType;
 use App\Repository\AppointmentRepository;
@@ -173,15 +174,19 @@ class AppointmentController extends AbstractController
                     'title' => $event->getClient()->getFirstName() . " " . $event->getClient()->getLastName(),
                     'start' => $event->getStart()->format('Y-m-d H:i:s'),
                     'end' => $event->getEnd()->format('Y-m-d H:i:s'),
-                    'description' => $event->getAppointmentCall()->getCallIfAppointmentNotes()
+                    'description' => $event->getAppointmentCall()->getCallIfAppointmentNotes(),
+                    'backgroundColor' => $event->getEventType()->getBackgroundColor(),
+                    'allDay' => false
                 ];
             } else {
                 $appointments[] = [
                     'id' => $event->getId(),
-                    'title' => "Evénement perso",
+                    'title' => $event->getEventType()->getDesignation(),
                     'start' => $event->getStart()->format('Y-m-d H:i:s'),
                     'end' => $event->getEnd()->format('Y-m-d H:i:s'),
-                    'description' => $event->getAppointmentNotes()
+                    'description' => $event->getAppointmentNotes(),
+                    'backgroundColor' => $event->getEventType()->getBackgroundColor(),
+                    'allDay' => false
                 ];
             }
         }
@@ -319,18 +324,23 @@ class AppointmentController extends AbstractController
             if ($event->getClient()) {
                 $appointments[] = [
                     'id' => $event->getId(),
-                    'title' => $event->getClient()->getFirstName() . " " . $event->getClient()->getLastName(),
+                    /*'title' => $event->getClient()->getFirstName() . " " . $event->getClient()->getLastName(),*/
+                    'title' => $event->getEventType()->getDesignation(),
                     'start' => $event->getStart()->format('Y-m-d H:i:s'),
                     'end' => $event->getEnd()->format('Y-m-d H:i:s'),
-                    'description' => $event->getAppointmentCall()->getCallIfAppointmentNotes()
+                    'description' => $event->getAppointmentCall()->getCallIfAppointmentNotes(),
+                    'backgroundColor' => $event->getEventType()->getBackgroundColor(),
+                    'allDay' => false
                 ];
             } else {
                 $appointments[] = [
                     'id' => $event->getId(),
-                    'title' => "Evénement perso",
+                    'title' => $event->getEventType()->getDesignation(),
                     'start' => $event->getStart()->format('Y-m-d H:i:s'),
                     'end' => $event->getEnd()->format('Y-m-d H:i:s'),
-                    'description' => $event->getAppointmentNotes()
+                    'description' => $event->getAppointmentNotes(),
+                    'backgroundColor' => $event->getEventType()->getBackgroundColor(),
+                    'allDay' => false
                 ];
             }
         }
@@ -347,6 +357,7 @@ class AppointmentController extends AbstractController
 
         if($appointmentForm->isSubmitted()) {
 
+            $eventTypeId = (int)($request->request->get("event_type"));
             $validationStartTime = $newAppointment->getStart();
             $validationEndTime = $newAppointment->getEnd();
             $appointmentDuration = date_diff($validationEndTime,$validationStartTime);
@@ -367,6 +378,7 @@ class AppointmentController extends AbstractController
             ) {
                 $startTime = $newAppointment->getStart()->format('Y-m-d H:i:s');
                 $endTime = $newAppointment->getEnd()->format('Y-m-d H:i:s');
+                /*dd($request->request->get("event_type"));*/
                 $busyAppointmentsTime = $this->getDoctrine()->getRepository(Appointment::class)->getAppointmentsBetweenByDate($startTime, $endTime);
                 /*dd($busyAppointmentsTime);*/
                 if($busyAppointmentsTime) {
@@ -385,12 +397,22 @@ class AppointmentController extends AbstractController
                    /* $busyCommercialId = $busyAppointmentsTime[0]->getUser()->getId();*/
 
                     } else {
-                        return $this->render('/appointment/free_commercial_client_assignment.html.twig', [
-                            'commercial_user' => $commercialUser,
-                            'clients' => $clients,
-                            'start' => $startTime,
-                            'end' => $endTime
-                        ]);
+
+                        if($eventTypeId === 4) {
+                            return $this->render('/appointment/free_commercial_client_assignment.html.twig', [
+                                'commercial_user' => $commercialUser,
+                                'clients' => $clients,
+                                'start' => $startTime,
+                                'end' => $endTime
+                            ]);
+                        } else {
+                            return $this->render('/appointment/event_set_notes.html.twig', [
+                                'eventTypeId' =>  $eventTypeId,
+                                'commercial_user' => $commercialUser,
+                                'start' => $startTime,
+                                'end' => $endTime
+                            ]);
+                        }
                     }
 
                 }
@@ -442,6 +464,9 @@ class AppointmentController extends AbstractController
         ]);
     }
 
+
+
+
     /**
      * @Route("/dashboard/appointments/fixappointment/", name="fix_appointment")
      */
@@ -449,6 +474,27 @@ class AppointmentController extends AbstractController
     {
         $manager = $this->getDoctrine()->getManager();
         if($request->isMethod('Post')) {
+            /*dd($request->request->get("event_type_id"));*/
+            if($request->request->get("event_type_id") !== null) {
+                $eventType = $this->getDoctrine()->getRepository(EventType::class)->find($request->request->get("event_type_id"));
+                $commercial = $this->getDoctrine()->getRepository(User::class)->find($request->request->get('commercial'));
+                $newEvent = new Appointment();
+                $newEvent->setCreatedAt(new \DateTime());
+                $newEvent->setUser($commercial);
+                $newEvent->setEventType($eventType);
+                $newEvent->setStatus(0);
+                $newEvent->setStart(new \DateTime($request->request->get('start')));
+                $newEvent->setEnd(new \DateTime($request->request->get('end')));
+                $newEvent->setIsDone(0);
+                $newEvent->setAppointmentNotes($request->request->get('event_notes'));
+                $newEvent->setIsDeleted(false);
+                $manager->persist($newEvent);
+                $manager->flush();
+                $this->flashy->success("Evénement fixé avec succès !");
+                return $this->redirectToRoute('show_calendar', [
+                    'id' => $request->request->get('commercial'),
+                ]);
+            }
             $client = $this->getDoctrine()->getRepository(Client::class)->find($request->request->get('client'));
             /*dd($client->getCalls());*/
             /*dd($client);*/
@@ -479,6 +525,7 @@ class AppointmentController extends AbstractController
             $newAppointment->setClient($client);
             $newAppointment->setUser($commercial);
             $newAppointment->setIsDeleted(false);
+            $newAppointment->setEventType($this->getDoctrine()->getRepository(EventType::class)->find(4));
             /*$newAppointment->setAppointmentCallNotes($request->request->get('notes'));*/
             /*$call->setCallNotes($request->request->get('notes'));*/
             /*$newAppointment->setAppointmentNotes($request->request->get('notes'));*/
@@ -524,24 +571,21 @@ class AppointmentController extends AbstractController
         $manager = $this->getDoctrine()->getManager();
         if($request->isMethod('Post')) {
             $client = $this->getDoctrine()->getRepository(Client::class)->find($request->request->get('client'));
+            /*dd($client->getCalls());*/
             /*dd($client);*/
-            $value = false;
+            /*$value = false;
             foreach ($client->getCalls() as $call) {
-                if ($call->getStatusDetails() == 7) {
+                if ($call->getStatusDetails() === 7) {
                     $value = true;
                     break;
                 }
             }
-            if(!$value) {
-                $aNewCall = new Call();
-                $aNewCall->setUser($this->getUser());
-                $aNewCall->setClient($client);
-                $aNewCall->setGeneralStatus(2);
-                $aNewCall->setStatusDetails(7);
-                $aNewCall->setCreatedAt(new \DateTime());
-                $aNewCall->setIsDeleted(false);
-            }
-
+            if(in_array("ROLE_TELEPRO", $this->getUser()->getRoles())) {
+                if (!$value) {
+                    $this->flashy->warning("Désolé! Ce client doit être traité avant l'affectation un RDV !");
+                    return $this->redirectToRoute('appointment');
+                }
+            }*/
 
             /*dd($call);*/
             /*dd($client->getId());*/
@@ -555,13 +599,34 @@ class AppointmentController extends AbstractController
             $newAppointment->setCreatedAt(new \DateTime());
             $newAppointment->setClient($client);
             $newAppointment->setUser($commercial);
-            $newAppointment->setAppointmentCallNotes($request->request->get('notes'));
             $newAppointment->setIsDeleted(false);
+            $newAppointment->setEventType($this->getDoctrine()->getRepository(EventType::class)->find(4));
+            /*$newAppointment->setAppointmentCallNotes($request->request->get('notes'));*/
             /*$call->setCallNotes($request->request->get('notes'));*/
             /*$newAppointment->setAppointmentNotes($request->request->get('notes'));*/
-            $client->setStatus(2);
+            /*$client->setStatus(2);*/
             $client->setStatus(2);
             $client->setStatusDetail(7);
+
+            /*$value = false;
+            foreach ($client->getCalls() as $call) {
+                if ($call->getStatus() == 2 && $call->getStatusDetails() == 7) {
+                    $value = true;
+                    break;
+                }
+            }*/
+            /*if(!$value) {*/
+            $aNewCall = new Call();
+            $aNewCall->setUser($this->getUser());
+            $aNewCall->setClient($client);
+            $aNewCall->setGeneralStatus(2);
+            $aNewCall->setStatusDetails(7);
+            $aNewCall->setCallIfAppointmentNotes($request->request->get('notes'));
+            $aNewCall->setCreatedAt(new \DateTime());
+            $aNewCall->setIsDeleted(false);
+            /*}*/
+            $newAppointment->setAppointmentCall($aNewCall);
+
             $manager->persist($newAppointment);
             $manager->persist($aNewCall);
             $manager->flush();
