@@ -321,27 +321,41 @@ class AppointmentController extends AbstractController
         $appointments = [];
         /*dd($events[0]->getClient());*/
         foreach ($events as $event) {
-            if ($event->getClient()) {
+            if ($event->getEventType()->getId() === 7) {
+                /*dd($event->getEnd()->add(new \DateInterval('P1D'))->format('Y-m-d H:i:s'));*/
                 $appointments[] = [
                     'id' => $event->getId(),
-                    'client' => $event->getClient()->getFirstName() . " " . $event->getClient()->getLastName(),
-                    'title' => $event->getEventType()->getDesignation(),
+                    'title' => $event->getAppointmentNotes(),
                     'start' => $event->getStart()->format('Y-m-d H:i:s'),
-                    'end' => $event->getEnd()->format('Y-m-d H:i:s'),
-                    'description' => $event->getAppointmentCall()->getCallIfAppointmentNotes(),
-                    'backgroundColor' => $event->getEventType()->getBackgroundColor(),
-                    'allDay' => false
-                ];
-            } else {
-                $appointments[] = [
-                    'id' => $event->getId(),
-                    'title' => $event->getEventType()->getDesignation(),
-                    'start' => $event->getStart()->format('Y-m-d H:i:s'),
-                    'end' => $event->getEnd()->format('Y-m-d H:i:s'),
+                    /*'end' => $event->getEnd()->format('Y-m-d H:i:s'),*/
+                    'end' => $event->getEnd()->add(new \DateInterval('P1D'))->format('Y-m-d H:i:s'),
                     'description' => $event->getAppointmentNotes(),
                     'backgroundColor' => $event->getEventType()->getBackgroundColor(),
-                    'allDay' => false
+                    'allDay' => true,
                 ];
+            } else {
+                if ($event->getClient()) {
+                    $appointments[] = [
+                        'id' => $event->getId(),
+                        'client' => $event->getClient()->getFirstName() . " " . $event->getClient()->getLastName(),
+                        'title' => $event->getEventType()->getDesignation(),
+                        'start' => $event->getStart()->format('Y-m-d H:i:s'),
+                        'end' => $event->getEnd()->format('Y-m-d H:i:s'),
+                        'description' => $event->getAppointmentCall()->getCallIfAppointmentNotes(),
+                        'backgroundColor' => $event->getEventType()->getBackgroundColor(),
+                        'allDay' => false
+                    ];
+                } else {
+                    $appointments[] = [
+                        'id' => $event->getId(),
+                        'title' => $event->getEventType()->getDesignation(),
+                        'start' => $event->getStart()->format('Y-m-d H:i:s'),
+                        'end' => $event->getEnd()->format('Y-m-d H:i:s'),
+                        'description' => $event->getAppointmentNotes(),
+                        'backgroundColor' => $event->getEventType()->getBackgroundColor(),
+                        'allDay' => false
+                    ];
+                }
             }
         }
 
