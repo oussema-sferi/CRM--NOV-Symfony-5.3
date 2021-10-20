@@ -109,6 +109,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $updatedAt;
 
+    /**
+     * @ORM\OneToMany(targetEntity=GeographicZoneEvent::class, mappedBy="calendarUser")
+     */
+    private $geographicZoneEvents;
+
 
     public function __construct()
     {
@@ -117,6 +122,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->commercials = new ArrayCollection();
         $this->geographicAreas = new ArrayCollection();
         $this->clients = new ArrayCollection();
+        $this->geographicZoneEvents = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -438,6 +444,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setUpdatedAt($updatedAt): void
     {
         $this->updatedAt = $updatedAt;
+    }
+
+    /**
+     * @return Collection|GeographicZoneEvent[]
+     */
+    public function getGeographicZoneEvents(): Collection
+    {
+        return $this->geographicZoneEvents;
+    }
+
+    public function addGeographicZoneEvent(GeographicZoneEvent $geographicZoneEvent): self
+    {
+        if (!$this->geographicZoneEvents->contains($geographicZoneEvent)) {
+            $this->geographicZoneEvents[] = $geographicZoneEvent;
+            $geographicZoneEvent->setCalendarUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGeographicZoneEvent(GeographicZoneEvent $geographicZoneEvent): self
+    {
+        if ($this->geographicZoneEvents->removeElement($geographicZoneEvent)) {
+            // set the owning side to null (unless already changed)
+            if ($geographicZoneEvent->getCalendarUser() === $this) {
+                $geographicZoneEvent->setCalendarUser(null);
+            }
+        }
+
+        return $this;
     }
 
 

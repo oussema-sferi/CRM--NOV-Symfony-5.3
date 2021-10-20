@@ -39,10 +39,16 @@ class GeographicArea
      */
     private $users;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=GeographicZoneEvent::class, mappedBy="geographicAreas")
+     */
+    private $geographicZoneEvents;
+
     public function __construct()
     {
         $this->clients = new ArrayCollection();
         $this->users = new ArrayCollection();
+        $this->geographicZoneEvents = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -133,6 +139,33 @@ class GeographicArea
     {
         if ($this->users->removeElement($user)) {
             $user->removeGeographicArea($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|GeographicZoneEvent[]
+     */
+    public function getGeographicZoneEvents(): Collection
+    {
+        return $this->geographicZoneEvents;
+    }
+
+    public function addGeographicZoneEvent(GeographicZoneEvent $geographicZoneEvent): self
+    {
+        if (!$this->geographicZoneEvents->contains($geographicZoneEvent)) {
+            $this->geographicZoneEvents[] = $geographicZoneEvent;
+            $geographicZoneEvent->addGeographicArea($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGeographicZoneEvent(GeographicZoneEvent $geographicZoneEvent): self
+    {
+        if ($this->geographicZoneEvents->removeElement($geographicZoneEvent)) {
+            $geographicZoneEvent->removeGeographicArea($this);
         }
 
         return $this;

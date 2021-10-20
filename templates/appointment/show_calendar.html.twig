@@ -330,9 +330,15 @@
                 events: {{ data['data']|raw }},
                 eventClick: function(info) {
                     $("#test2").click()
+                    /*console.log(info.event.backgroundColor)*/
                     if(info.event.title !== "RDV") {
-                        $('#client_show-block').hide();
-                        $('#notes_label').text('Observations ' + info.event.title);
+                        if (info.event.backgroundColor === "#cc0099") {
+                            $('#client_show-block').hide();
+                            $('#notes_label').text('Observations zones géo');
+                        } else {
+                            $('#client_show-block').hide();
+                            $('#notes_label').text('Observations ' + info.event.title);
+                        }
                     } else {
                         $('#client_show-block').show();
                         $('#notes_label').text('Observations Appel');

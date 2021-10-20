@@ -6,6 +6,7 @@ use App\Entity\Appointment;
 use App\Entity\Call;
 use App\Entity\Client;
 use App\Entity\EventType;
+use App\Entity\GeographicZoneEvent;
 use App\Entity\User;
 use App\Form\AppointmentFormType;
 use App\Repository\AppointmentRepository;
@@ -315,25 +316,26 @@ class AppointmentController extends AbstractController
             }
             $clients = $this->getDoctrine()->getRepository(Client::class)->findClientsByTeleproDepartments($teleproGeographicAreasIdsArray, $this->getUser()->getId());
         }
+        $geographicZoneEvents = $this->getDoctrine()->getRepository(GeographicZoneEvent::class)->getUserGeographicZoneEvents($id);
+        /*dd($geographicZoneEvents);*/
 
 
         /*dd($events);*/
         $appointments = [];
         /*dd($events[0]->getClient());*/
         foreach ($events as $event) {
-            if ($event->getEventType()->getId() === 7) {
-                /*dd($event->getEnd()->add(new \DateInterval('P1D'))->format('Y-m-d H:i:s'));*/
+            /*if ($event->getEventType()->getId() === 7) {
+
                 $appointments[] = [
                     'id' => $event->getId(),
                     'title' => $event->getAppointmentNotes(),
-                    'start' => $event->getStart()->format('Y-m-d H:i:s'),
-                    /*'end' => $event->getEnd()->format('Y-m-d H:i:s'),*/
-                    'end' => $event->getEnd()->add(new \DateInterval('P1D'))->format('Y-m-d H:i:s'),
+                    'start' => $event->getStart()->format('Y-m-d'),
+                    'end' => $event->getEnd()->add(new \DateInterval('P1D'))->format('Y-m-d'),
                     'description' => $event->getAppointmentNotes(),
                     'backgroundColor' => $event->getEventType()->getBackgroundColor(),
                     'allDay' => true,
                 ];
-            } else {
+            }*/
                 if ($event->getClient()) {
                     $appointments[] = [
                         'id' => $event->getId(),
@@ -356,8 +358,25 @@ class AppointmentController extends AbstractController
                         'allDay' => false
                     ];
                 }
-            }
+
         }
+
+        foreach ($geographicZoneEvents as $geographicZoneEvent) {
+            $title = "";
+            foreach ($geographicZoneEvent->getGeographicAreas() as $geographicArea) {
+                $title = $title . " | " . $geographicArea->getDesignation();
+            }
+            $appointments[] = [
+                'id' => $geographicZoneEvent->getId(),
+                'title' => $title,
+                'start' => $geographicZoneEvent->getStart()->format('Y-m-d'),
+                'end' => $geographicZoneEvent->getEnd()->add(new \DateInterval('P1D'))->format('Y-m-d'),
+                'description' => "geo zone obs test",
+                'backgroundColor' => "#cc0099",
+                'allDay' => true,
+            ];
+        }
+
 
         $data = json_encode($appointments);
         /*dd(compact('data'));*/
