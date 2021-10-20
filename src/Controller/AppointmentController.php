@@ -365,14 +365,17 @@ class AppointmentController extends AbstractController
 
         foreach ($geographicZoneEvents as $geographicZoneEvent) {
             $title = "";
+            $geoAreasIdsArray = [];
             foreach ($geographicZoneEvent->getGeographicAreas() as $geographicArea) {
                 $title = $title . " | " . $geographicArea->getDesignation();
+                $geoAreasIdsArray[] = $geographicArea->getId();
             }
             $appointments[] = [
                 'id' => $geographicZoneEvent->getId(),
                 'title' => $title,
                 'start' => $geographicZoneEvent->getStart()->format('Y-m-d'),
                 'end' => $geographicZoneEvent->getEnd()->add(new \DateInterval('P1D'))->format('Y-m-d'),
+                'geoareasid' => $geoAreasIdsArray,
                 'description' => "geo zone obs test",
                 'backgroundColor' => "#cc0099",
                 'allDay' => true,
@@ -771,6 +774,22 @@ class AppointmentController extends AbstractController
         }
         return $this->redirectToRoute('show_calendar', [
             'id' => $request->request->get('commercial_id'),
+        ]);
+    }
+
+    /**
+     * @Route("/dashboard/appointments/showcalendar/deletegeozoneevent/{id}", name="delete_geo_zone_event")
+     */
+    public function deleteGeoZoneEvent(Request $request, $id): Response
+    {
+        $manager = $this->getDoctrine()->getManager();
+        $eventToDelete = $this->getDoctrine()->getRepository(GeographicZoneEvent::class)->find($id);
+        $calendarUserId = $eventToDelete->getCalendarUser()->getId();
+        $manager->remove($eventToDelete);
+        $manager->flush();
+        $this->flashy->success('Zone Géographique supprimée avec succès !');
+        return $this->redirectToRoute('show_calendar', [
+            "id" => $calendarUserId
         ]);
     }
 }

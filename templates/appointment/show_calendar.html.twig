@@ -47,11 +47,12 @@
                         </nav>
                     </div>
                     <div class="col-lg-4 col-5 text-right">
-                        <button id="add-geo" type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#add-geo-modal-form">Zones Géographiques</button>
+                        <button id="add-geo" type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#add-geo-modal-form">Ajout Zones Géographiques</button>
                         <button id="test" type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal-form">Nouvelle Entrée</button>
                         {#<a href="" class="btn btn-sm btn-success">Fixer un RDV à {{ commercial_user.firstName ~ ' ' ~ commercial_user.lastName }}</a>#}
                         {#<button id="test" type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal-form">Fixer un RDV à {{ commercial_user.firstName ~ ' ' ~ commercial_user.lastName }}</button>#}
                         <button id="test2" type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal-show-form" style="display: none">show</button>
+                        <button id="geozone-info" type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#geozone-info-modal" style="display: none">geo zone</button>
                         {#<a href="{{ path('new_client') }}" class="btn btn-sm btn-success">Nouveau prospect</a>#}
                         {#<a href="#" class="btn btn-sm btn-neutral">Filters</a>#}
                     </div>
@@ -177,7 +178,7 @@
                                 </div>#}
                             <div>
                                 <div class="form-group">
-                                    <label class="form-control-label" for="input-username">Agent Commercial</label>
+                                    <label class="form-control-label" for="input-username">Utilisateur</label>
                                     <input type="text" id="input-username" class="form-control" value="{{ commercial_user.firstName ~ ' ' ~ commercial_user.lastName }}" disabled>
                                 </div>
                             </div>
@@ -251,21 +252,6 @@
                         </div>
                     </div>
 
-                    {#<div>
-                        <div class="form-group">
-                            <label class="form-control-label" for="input-username">Type</label>
-                            <select class="form-control">
-                                <option value="" selected>Choisir...</option>
-                                <option value="1">Réunion</option>
-                                <option value="2">Congès</option>
-                                <option value="3">Formation</option>
-                                <option value="4">RDV</option>
-                                <option value="5">Atelier Phoning</option>
-                                <option value="6">Séance Patient</option>
-                            </select>
-                        </div>
-                    </div>
-#}
                     <div>
                         <div class="form-group">
                             <label class="form-control-label" for="input-username">Date et heure de Début</label>
@@ -323,7 +309,7 @@
 
                                 <div>
                                     <div class="form-group">
-                                        <label class="form-control-label" for="input-username">Agent Commercial</label>
+                                        <label class="form-control-label" for="input-username">Utilisateur</label>
                                         <input type="text" id="input-username" class="form-control" value="{{ commercial_user.firstName ~ ' ' ~ commercial_user.lastName }}" disabled>
                                         <input type="text" id="commercial_id" value="{{ commercial_user.id}}" name="commercial_id" class="form-control" hidden>
                                         <input type="text" id="departments" name="departments" class="form-control" hidden>
@@ -332,7 +318,7 @@
 
                                 <div class="form-group">
                                     <label class="form-control-label" for="department">Départements</label><br>
-                                    <select id="department" name="department" multiple>
+                                    <select id="department" name="department" required multiple>
                                         {% for department in departments %}
                                             <option value="{{ department.id }}">{{ department.designation }}</option>
                                         {% endfor %}
@@ -342,12 +328,12 @@
 
                             <div class="form-group">
                                 <label for="example-datetime-local-input" class="form-control-label">Date de Début</label>
-                                <input type="date" class="form-control" name="start">
+                                <input type="date" id="start-geo" class="form-control" name="start" required>
                             </div>
 
                             <div class="form-group">
                                 <label for="example-datetime-local-input" class="form-control-label">Date de Fin</label>
-                                <input type="date" class="form-control" name="end">
+                                <input type="date" id="end-geo" class="form-control" name="end" required>
                             </div>
                             <hr class="my-3">
 
@@ -363,6 +349,83 @@
 
 
                 </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="geozone-info-modal" tabindex="-1" role="dialog" aria-labelledby="geozone-info-modal" aria-hidden="true">
+        <div class="modal-dialog modal- modal-dialog-centered modal-sm" role="document">
+            <div class="modal-content">
+
+                {#<div class="modal-header text-center">
+                    <h6 class="modal-title" id="modal-title-default">Détails RDV</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>#}
+
+                <div class="modal-body">
+
+                    <div>
+                        <div class="form-group">
+                            <label class="form-control-label" for="input-username">Utilisateur</label>
+                            <input type="text" id="input-username" class="form-control" value="{{ commercial_user.firstName ~ ' ' ~ commercial_user.lastName }}" disabled>
+                            <input type="text" id="commercial_id" value="{{ commercial_user.id}}" name="commercial_id" class="form-control" hidden>
+                            <input type="text" id="departmentstest" name="departmentstest" class="form-control" hidden>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-control-label" for="department">Départements</label><br>
+                        <select id="departmenttest" name="departmenttest" multiple>
+                            {% for department in departments %}
+                                <option value="{{ department.id }}">{{ department.designation }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+
+                    <div>
+                        <div class="form-group">
+                            <label class="form-control-label" for="input-username">Date de Début</label>
+                            <input type="text" id="start-geozone" class="form-control" value="" disabled>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="form-group">
+                            <label class="form-control-label" for="input-username">Date de Fin</label>
+                            <input type="text" id="end-geozone" class="form-control" value="" disabled>
+                        </div>
+                    </div>
+
+                    {#<div>
+                        <div class="form-group">
+                            <label ID="notes_label" class="form-control-label" for="input-username">Observations Geo</label>
+                            <textarea id="notes-geozone" class="form-control" name="notes-geozone" id="notes" cols="30" rows="6" placeholder="..." resize="none" disabled></textarea>
+                        </div>
+                    </div>#}
+
+
+
+                    {# <div>
+                        <div class="form-group">
+                            <label class="form-control-label" for="input-username">Description</label>
+                            <input type="text" id="description-show" class="form-control" value="{{ commercial_user.firstName ~ ' ' ~ commercial_user.lastName }}" disabled>
+                        </div>
+                    </div>#}
+
+                    <hr class="my-3">
+
+                    <div class="text-center">
+                        <button type="button" class="btn btn-link  ml-auto" data-dismiss="modal">Retour</button>
+                        <a id="delete-geozone" class="btn btn-warning" href="">Supprimer</a>
+                    </div>
+                </div>
+
+
 
             </div>
         </div>
@@ -389,24 +452,54 @@
                 /*nextDayThreshold: '08:00:00',*/
                 events: {{ data['data']|raw }},
                 eventClick: function(info) {
-                    $("#test2").click()
-                    /*console.log(info.event.backgroundColor)*/
+                    console.log(info.event.id)
                     if(info.event.title !== "RDV") {
                         if (info.event.backgroundColor === "#cc0099") {
+                            $("#geozone-info").click()
+                            console.log(info.event.extendedProps.geoareasid[0])
                             $('#client_show-block').hide();
                             $('#notes_label').text('Observations zones géo');
+                            $("#start-geozone").val((moment(info.event.start).format('DD/MM/YYYY')))
+                            $("#end-geozone").val((moment(info.event.end).subtract(1, "days").format('DD/MM/YYYY')))
+
+                            let deleteGeoZone = $("#delete-geozone")
+                            let deleteUrl = '{{ path("delete_geo_zone_event", {'id': 'event_id'}) }}';
+                            deleteUrl = deleteUrl.replace("event_id", info.event.id);
+                            deleteGeoZone.attr("href",deleteUrl)
+                            /*console.log(editDepartment.find('option')[0].prop())*/
+                            /*$("#departmenttest").find('option').each(function() {
+                                let testing = this.value
+                                let that = this
+                                $.each(info.event.extendedProps.geoareasid, function (index,val) {
+                                    if(that.value == val) {
+                                        console.log($(that))
+                                        $(that).attr('selected', true);
+                                    }
+
+                                })
+                            })*/
+                                /*console.log(this.value);*/
+
+
+
+                           /* console.log(editDepartment.val())*/
                         } else {
+                            $("#test2").click()
                             $('#client_show-block').hide();
                             $('#notes_label').text('Observations ' + info.event.title);
+                            $("#start-show").val((moment(info.event.start).format('DD/MM/YYYY hh:mm')))
+                            $("#end-show").val((moment(info.event.end).format('DD/MM/YYYY hh:mm')))
                         }
                     } else {
+                        $("#test2").click()
                         $('#client_show-block').show();
+                        $("#start-show").val((moment(info.event.start).format('DD/MM/YYYY hh:mm')))
+                        $("#end-show").val((moment(info.event.end).format('DD/MM/YYYY hh:mm')))
                         $('#notes_label').text('Observations Appel');
                     }
                     /*console.log(info.event.title)*/
                     $("#client-show").val(info.event.extendedProps.client)
-                    $("#start-show").val((moment(info.event.start).format('DD/MM/YYYY hh:mm')))
-                    $("#end-show").val((moment(info.event.end).format('DD/MM/YYYY hh:mm')))
+
                     $("#notes-show").val(info.event.extendedProps.description)
                     // change the border color just for fun
                     /*info.el.style.borderColor = 'red';*/
@@ -437,6 +530,8 @@
                 $("#appointment_form_end_time_hour").val(10)
 
             })
+            $("#start-geo").val(today)
+            $("#end-geo").val(today)
             /*$(".fc-today-button").prop('disabled', false);*/
             $('#departments').val($('#department').val());
             let department = new SlimSelect({
@@ -451,6 +546,21 @@
 
                 }
             })
+
+            $('#departmentstest').val($('#departmenttest').val());
+            let departmenttest = new SlimSelect({
+                select: '#departmenttest',
+                placeholder: 'Choisissez les départements',
+                searchText: 'Aucun Résultat',
+                searchPlaceholder: 'Rechercher',
+                onChange: () => {
+
+                    $('#departmentstest').val($('#departmenttest').val());
+
+
+                }
+            })
+
 
         }
 
