@@ -378,12 +378,16 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="form-control-label" for="department">Départements</label><br>
+                        {#<label class="form-control-label" for="department">Départements</label><br>
                         <select id="departmenttest" name="departmenttest" multiple>
                             {% for department in departments %}
                                 <option value="{{ department.id }}">{{ department.designation }}</option>
                             {% endfor %}
-                        </select>
+                        </select>#}
+                        <div class="form-group">
+                            <label ID="notes_label" class="form-control-label" for="input-username">Départements</label>
+                            <textarea id="departments-geozone" class="form-control" name="departments-geozone" cols="30" rows="6" placeholder="..." resize="none" disabled></textarea>
+                        </div>
                     </div>
 
 
@@ -420,8 +424,8 @@
                     <hr class="my-3">
 
                     <div class="text-center">
-                        <button type="button" class="btn btn-link  ml-auto" data-dismiss="modal">Retour</button>
-                        <a id="delete-geozone" class="btn btn-warning" href="">Supprimer</a>
+                        <button type="button" class="btn btn-link btn-sm ml-auto" data-dismiss="modal">Retour</button>
+                        <a id="delete-geozone" class="btn btn-sm btn-warning" href="">Supprimer</a>
                     </div>
                 </div>
 
@@ -461,6 +465,7 @@
                             $('#notes_label').text('Observations zones géo');
                             $("#start-geozone").val((moment(info.event.start).format('DD/MM/YYYY')))
                             $("#end-geozone").val((moment(info.event.end).subtract(1, "days").format('DD/MM/YYYY')))
+                            $("#departments-geozone").val(info.event.title)
 
                             let deleteGeoZone = $("#delete-geozone")
                             let deleteUrl = '{{ path("delete_geo_zone_event", {'id': 'event_id'}) }}';
