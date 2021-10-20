@@ -47,6 +47,7 @@
                         </nav>
                     </div>
                     <div class="col-lg-4 col-5 text-right">
+                        <button id="add-geo" type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#add-geo-modal-form">Zones Géographiques</button>
                         <button id="test" type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal-form">Nouvelle Entrée</button>
                         {#<a href="" class="btn btn-sm btn-success">Fixer un RDV à {{ commercial_user.firstName ~ ' ' ~ commercial_user.lastName }}</a>#}
                         {#<button id="test" type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal-form">Fixer un RDV à {{ commercial_user.firstName ~ ' ' ~ commercial_user.lastName }}</button>#}
@@ -307,6 +308,65 @@
             </div>
         </div>
     </div>
+
+
+    <div class="modal fade" id="add-geo-modal-form" tabindex="-1" role="dialog" aria-labelledby="add-geo-modal-form" aria-hidden="true">
+        <div class="modal-dialog modal- modal-dialog-centered modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-body p-0">
+                    <div class="card bg-secondary border-0 mb-0">
+                        <div class="card-body px-lg-5 py-lg-5">
+                            {#<div class="text-muted mb-4">
+                                    <small>Veuillez sélectionner la date et l'heure du RDV:</small>
+                                </div>#}
+                            <form action="{{ path('add_geo_zone_event', {'id': commercial_user.id}) }}" method="post">
+
+                                <div>
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-username">Agent Commercial</label>
+                                        <input type="text" id="input-username" class="form-control" value="{{ commercial_user.firstName ~ ' ' ~ commercial_user.lastName }}" disabled>
+                                        <input type="text" id="commercial_id" value="{{ commercial_user.id}}" name="commercial_id" class="form-control" hidden>
+                                        <input type="text" id="departments" name="departments" class="form-control" hidden>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-control-label" for="department">Départements</label><br>
+                                    <select id="department" name="department" multiple>
+                                        {% for department in departments %}
+                                            <option value="{{ department.id }}">{{ department.designation }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+
+                            <div class="form-group">
+                                <label for="example-datetime-local-input" class="form-control-label">Date de Début</label>
+                                <input type="date" class="form-control" name="start">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="example-datetime-local-input" class="form-control-label">Date de Fin</label>
+                                <input type="date" class="form-control" name="end">
+                            </div>
+                            <hr class="my-3">
+
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-success mt-4">Confirmer</button>
+                            </div>
+                            </form>
+
+                        </div>
+                    </div>
+
+
+
+
+                </div>
+
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block additionalJs %}
@@ -378,6 +438,19 @@
 
             })
             /*$(".fc-today-button").prop('disabled', false);*/
+            $('#departments').val($('#department').val());
+            let department = new SlimSelect({
+                select: '#department',
+                placeholder: 'Choisissez les départements',
+                searchText: 'Aucun Résultat',
+                searchPlaceholder: 'Rechercher',
+                onChange: () => {
+
+                    $('#departments').val($('#department').val());
+
+
+                }
+            })
 
         }
 

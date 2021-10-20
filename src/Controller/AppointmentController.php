@@ -6,6 +6,7 @@ use App\Entity\Appointment;
 use App\Entity\Call;
 use App\Entity\Client;
 use App\Entity\EventType;
+use App\Entity\GeographicArea;
 use App\Entity\GeographicZoneEvent;
 use App\Entity\User;
 use App\Form\AppointmentFormType;
@@ -317,6 +318,7 @@ class AppointmentController extends AbstractController
             $clients = $this->getDoctrine()->getRepository(Client::class)->findClientsByTeleproDepartments($teleproGeographicAreasIdsArray, $this->getUser()->getId());
         }
         $geographicZoneEvents = $this->getDoctrine()->getRepository(GeographicZoneEvent::class)->getUserGeographicZoneEvents($id);
+        $geographicAreas = $this->getDoctrine()->getRepository(GeographicArea::class)->findAll();
         /*dd($geographicZoneEvents);*/
 
 
@@ -476,6 +478,7 @@ class AppointmentController extends AbstractController
         return $this->render('/appointment/show_calendar.html.twig', [
             /*'calendar_to_show' => $calendarToShow,*/
             'data' => compact('data'),
+            'departments' => $geographicAreas,
             'appointment_form' => $appointmentForm->createView(),
             'commercial_user' => $commercialUser
         ]);
@@ -737,5 +740,37 @@ class AppointmentController extends AbstractController
         $manager->flush();
         $this->flashy->success("RDV restauré avec succès !");
         return $this->redirectToRoute('trash_appointments');
+    }
+
+    /**
+     * @Route("/dashboard/appointments/showcalendar/{id}/addgeozoneevent", name="add_geo_zone_event")
+     */
+    public function addGeoZoneEvent(Request $request, $id): Response
+    {
+        $manager = $this->getDoctrine()->getManager();
+        if($request->isMethod('Post')) {
+            /*dd($request->request->all());*/
+            $commercial = $this->getDoctrine()->getRepository(User::class)->find($request->request->get('commercial_id'));
+            $myString = $request->request->get('departments');
+            $departmentsArray = explode(',', $myString);
+            /*dd($departmentsArray);*/
+            $newGeoegraphicZoneEvent = new GeographicZoneEvent();
+            $newGeoegraphicZoneEvent->setCalendarUser($commercial);
+            $newGeoegraphicZoneEvent->setStart(new \DateTime($request->request->get('start')));
+            $newGeoegraphicZoneEvent->setEnd(new \DateTime($request->request->get('end')));
+            if($departmentsArray) {
+                foreach ($departmentsArray as $department) {
+                    if($department) {
+                        $newGeoegraphicZoneEvent->addGeographicArea($this->getDoctrine()->getRepository(GeographicArea::class)->find($department));
+                    }
+                }
+            }
+            $manager->persist($newGeoegraphicZoneEvent);
+            $manager->flush();
+            $this->flashy->success("Zone Géographique attribuée avec succès !");
+        }
+        return $this->redirectToRoute('show_calendar', [
+            'id' => $request->request->get('commercial_id'),
+        ]);
     }
 }
