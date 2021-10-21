@@ -333,6 +333,10 @@ class TeleprospectingController extends AbstractController
         $processedClients = $this->getDoctrine()->getRepository(Client::class)->getProcessedClients();
         $notProcessedClients = $this->getDoctrine()->getRepository(Client::class)->getNotProcessedClients();
         $allAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getAppointmentsWhereClientsExist();
+        $allCalls = $this->getDoctrine()->getRepository(Call::class)->getAllNotDeletedCalls();
+        $qualifiedCalls = $this->getDoctrine()->getRepository(Call::class)->getQualifiedCalls();
+        $notQualifiedCalls = $this->getDoctrine()->getRepository(Call::class)->getNotQualifiedCalls();
+        /*dd($processedCalls);*/
         /*dd($allTelepros);*/
 
         return $this->render('teleprospecting/telepro_stats.html.twig', [
@@ -344,7 +348,11 @@ class TeleprospectingController extends AbstractController
             'processed_clients_count' => count($processedClients),
             'not_processed_clients' => count($notProcessedClients),
             'total_appointments' => $allAppointments,
-            'total_appointments_count' => count($allAppointments)
+            'total_appointments_count' => count($allAppointments),
+            'total_calls' => $allCalls,
+            'total_calls_count' => count($allCalls),
+            'qualified_calls_count' => count($qualifiedCalls),
+            'not_qualified_calls_count' => count($notQualifiedCalls)
         ]);
     }
 

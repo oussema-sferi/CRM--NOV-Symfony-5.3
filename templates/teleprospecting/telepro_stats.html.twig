@@ -200,6 +200,125 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="col-xl-4 col-md-6">
+                        <div class="card card-stats">
+                            <!-- Card body -->
+                            {% if app.session.get('date_filter_value') is not null %}
+                                {% set filter = app.session.get('date_filter_value') %}
+                                {% set selected_date = "now"|date_modify("-" ~ filter ~ " day")| date('Y-m-d') %}
+                            {% endif %}
+                            <div class="card-body">
+                                {#{{ dump(selected_date) }}#}
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Total Appels Qualifiés</h5>
+                                        <span class="h2 font-weight-bold mb-0">
+                                            {#{{ dump(processed_clients) }}#}
+                                            {#{{ dump(processed_clients[2].calls) }}#}
+                                            {#{{ processed_clients }}#}
+                                            {% if app.session.get('date_filter_value') is not null %}
+                                                {% set qualified_calls_counter = 0 %}
+                                                    {% for call in total_calls %}
+                                                            {% set call_date = call.createdAt | date('Y-m-d') %}
+                                                            {% if filter == "0" or filter == "1" %}
+                                                                {% if call_date == selected_date %}
+                                                                    {% if call.generalStatus == "2" %}
+                                                                        {% set qualified_calls_counter = qualified_calls_counter + 1 %}
+                                                                    {% endif %}
+                                                                {% endif %}
+                                                            {% elseif filter == "100" %}
+                                                                {% if call_date >= start_date and call_date <= end_date %}
+                                                                    {% if call.generalStatus == "2" %}
+                                                                        {% set qualified_calls_counter = qualified_calls_counter + 1 %}
+                                                                    {% endif %}
+                                                                {% endif %}
+                                                            {% else %}
+                                                                {% if call_date >= selected_date %}
+                                                                    {% if call.generalStatus == "2" %}
+                                                                        {% set qualified_calls_counter = qualified_calls_counter + 1 %}
+                                                                    {% endif %}
+                                                                {% endif%}
+                                                            {% endif %}
+                                                    {% endfor %}
+                                                {{ qualified_calls_counter }}
+                                            {% else %}
+                                                {{ qualified_calls_count }}
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-gradient-green text-white rounded-circle shadow">
+                                            <i class="fas fa-list-alt"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                {# <p class="mt-3 mb-0 text-sm">
+                                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
+                                    <span class="text-nowrap">Since last month</span>
+                                </p>#}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-4 col-md-6">
+                        <div class="card card-stats">
+                            <!-- Card body -->
+                            {% if app.session.get('date_filter_value') is not null %}
+                                {% set filter = app.session.get('date_filter_value') %}
+                                {% set selected_date = "now"|date_modify("-" ~ filter ~ " day")| date('Y-m-d') %}
+                            {% endif %}
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Total Appels Non Qualifiés</h5>
+                                        <span class="h2 font-weight-bold mb-0">
+                                            {% if app.session.get('date_filter_value') is not null %}
+                                                {% set not_qualified_calls_counter = 0 %}
+                                                {% for call in total_calls %}
+                                                    {% set call_date = call.createdAt | date('Y-m-d') %}
+                                                    {% if filter == "0" or filter == "1" %}
+                                                        {% if call_date == selected_date %}
+                                                            {% if call.generalStatus == "1" %}
+                                                                {% set not_qualified_calls_counter = not_qualified_calls_counter + 1 %}
+                                                            {% endif %}
+                                                        {% endif %}
+                                                    {% elseif filter == "100" %}
+                                                        {% if call_date >= start_date and call_date <= end_date %}
+                                                            {% if call.generalStatus == "1" %}
+                                                                {% set not_qualified_calls_counter = not_qualified_calls_counter + 1 %}
+                                                            {% endif %}
+                                                        {% endif %}
+                                                    {% else %}
+                                                        {% if call_date >= selected_date %}
+                                                            {% if call.generalStatus == "1" %}
+                                                                {% set not_qualified_calls_counter = not_qualified_calls_counter + 1 %}
+                                                            {% endif %}
+                                                        {% endif%}
+                                                    {% endif %}
+                                                {% endfor %}
+                                                {{ not_qualified_calls_counter }}
+                                            {% else %}
+                                                {{ not_qualified_calls_count }}
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-gradient-red text-white rounded-circle shadow">
+                                            <i class="fas fa-list-alt"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                {# <p class="mt-3 mb-0 text-sm">
+                                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
+                                    <span class="text-nowrap">Since last month</span>
+                                </p>#}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
                     <div class="col-xl-4 col-md-6">
                         <div class="card card-stats">
                             <!-- Card body -->

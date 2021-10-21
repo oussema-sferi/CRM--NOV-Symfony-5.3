@@ -376,8 +376,8 @@ class AppointmentController extends AbstractController
                 'start' => $geographicZoneEvent->getStart()->format('Y-m-d'),
                 'end' => $geographicZoneEvent->getEnd()->add(new \DateInterval('P1D'))->format('Y-m-d'),
                 'geoareasid' => $geoAreasIdsArray,
-                'description' => "geo zone obs test",
-                'backgroundColor' => "#cc0099",
+                /*'description' => "geo zone obs test",*/
+                'backgroundColor' => "#800000",
                 'allDay' => true,
             ];
         }
