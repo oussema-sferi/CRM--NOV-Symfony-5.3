@@ -373,7 +373,7 @@
                             <label class="form-control-label" for="input-username">Utilisateur</label>
                             <input type="text" id="input-username" class="form-control" value="{{ commercial_user.firstName ~ ' ' ~ commercial_user.lastName }}" disabled>
                             <input type="text" id="commercial_id" value="{{ commercial_user.id}}" name="commercial_id" class="form-control" hidden>
-                            <input type="text" id="departmentstest" name="departmentstest" class="form-control" hidden>
+                            {#<input type="text" id="departmentstest" name="departmentstest" class="form-control" hidden>#}
                         </div>
                     </div>
 
@@ -458,9 +458,9 @@
                 eventClick: function(info) {
                     console.log(info.event.id)
                     if(info.event.title !== "RDV") {
-                        if (info.event.backgroundColor === "#800000") {
+                        if (info.event.backgroundColor === "#008000") {
                             $("#geozone-info").click()
-                            console.log(info.event.extendedProps.geoareasid[0])
+                            /*console.log(info.event.extendedProps.geoareasid[0])*/
                             $('#client_show-block').hide();
                             $('#notes_label').text('Observations zones géo');
                             $("#start-geozone").val((moment(info.event.start).format('DD/MM/YYYY')))
@@ -535,6 +535,9 @@
                 $("#appointment_form_end_time_hour").val(10)
 
             })
+            $("#appointment_form_start_time_hour").on("change", function () {
+                $("#appointment_form_end_time_hour").val(parseInt(this.value) + 1)
+            })
             $("#start-geo").val(today)
             $("#end-geo").val(today)
             /*$(".fc-today-button").prop('disabled', false);*/
@@ -552,7 +555,7 @@
                 }
             })
 
-            $('#departmentstest').val($('#departmenttest').val());
+            /*$('#departmentstest').val($('#departmenttest').val());
             let departmenttest = new SlimSelect({
                 select: '#departmenttest',
                 placeholder: 'Choisissez les départements',
@@ -564,7 +567,7 @@
 
 
                 }
-            })
+            })*/
 
 
         }
