@@ -122,32 +122,25 @@
                                             {#{{ dump(processed_clients) }}#}
                                             {#{{ dump(processed_clients[2].calls) }}#}
                                             {#{{ processed_clients }}#}
+                                            {#{{ dump(selected_date) }}#}
                                             {% if app.session.get('date_filter_value') is not null %}
-
                                                 {% set processed_clients_counter = 0 %}
                                                 {% for client in processed_clients %}
-                                                {% set break = false %}
-                                                    {% for call in client.calls %}
-                                                        {% if break == false %}
-                                                            {% set call_date = call.createdAt | date('Y-m-d') %}
+                                                            {% set update_date = client.updatedAt | date('Y-m-d') %}
+
                                                             {% if filter == "0" or filter == "1" %}
-                                                                {% if call_date == selected_date %}
+                                                                {% if update_date == selected_date %}
                                                                     {% set processed_clients_counter = processed_clients_counter + 1 %}
-                                                                    {% set break = true %}
                                                                 {% endif %}
                                                             {% elseif filter == "100" %}
-                                                                {% if call_date >= start_date and call_date <= end_date %}
+                                                                {% if update_date >= start_date and call_date <= end_date %}
                                                                     {% set processed_clients_counter = processed_clients_counter + 1 %}
-                                                                    {% set break = true %}
                                                                 {% endif %}
                                                             {% else %}
-                                                                {% if call_date >= selected_date %}
+                                                                {% if update_date >= selected_date %}
                                                                     {% set processed_clients_counter = processed_clients_counter + 1 %}
-                                                                    {% set break = true %}
                                                                 {% endif%}
                                                             {% endif %}
-                                                        {% endif %}
-                                                    {% endfor %}
                                                 {% endfor %}
                                                 {{ processed_clients_counter }}
                                             {% else %}

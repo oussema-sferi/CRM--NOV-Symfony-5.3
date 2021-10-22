@@ -579,8 +579,8 @@ class AppointmentController extends AbstractController
                     break;
                 }
             }*/
-            /*if(!$value) {*/
-            $aNewCall = new Call();
+
+            /*$aNewCall = new Call();
             $aNewCall->setUser($this->getUser());
             $aNewCall->setClient($client);
             $aNewCall->setGeneralStatus(2);
@@ -588,11 +588,11 @@ class AppointmentController extends AbstractController
             $aNewCall->setCallIfAppointmentNotes($request->request->get('notes'));
             $aNewCall->setCreatedAt(new \DateTime());
             $aNewCall->setIsDeleted(false);
-            /*}*/
-            $newAppointment->setAppointmentCall($aNewCall);
+
+            $newAppointment->setAppointmentCall($aNewCall);*/
 
             $manager->persist($newAppointment);
-            $manager->persist($aNewCall);
+            /*$manager->persist($aNewCall);*/
             $manager->flush();
             $this->flashy->success("RDV fixé avec succès !");
         }
@@ -654,8 +654,8 @@ class AppointmentController extends AbstractController
                     break;
                 }
             }*/
-            /*if(!$value) {*/
-            $aNewCall = new Call();
+
+            /*$aNewCall = new Call();
             $aNewCall->setUser($this->getUser());
             $aNewCall->setClient($client);
             $aNewCall->setGeneralStatus(2);
@@ -663,11 +663,11 @@ class AppointmentController extends AbstractController
             $aNewCall->setCallIfAppointmentNotes($request->request->get('notes'));
             $aNewCall->setCreatedAt(new \DateTime());
             $aNewCall->setIsDeleted(false);
-            /*}*/
-            $newAppointment->setAppointmentCall($aNewCall);
+
+            $newAppointment->setAppointmentCall($aNewCall);*/
 
             $manager->persist($newAppointment);
-            $manager->persist($aNewCall);
+            /*$manager->persist($aNewCall);*/
             $manager->flush();
             $this->flashy->success("RDV fixé avec succès !");
         }
