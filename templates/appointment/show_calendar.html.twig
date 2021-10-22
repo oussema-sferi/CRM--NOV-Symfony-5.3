@@ -135,7 +135,15 @@
                     </div>#}
                     <!-- Card footer -->
                     <div class="card-footer py-4">
-                        <nav aria-label="...">
+                        <nav>
+                            <label for="">Légende:&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                            <i class="fas fa-circle fa-xs" style="color: #6699ff"></i><span class="status"> RDV </span>|
+                            <i class="fas fa-circle fa-xs" style="color: #ff0000"></i><span class="status"> Réunion </span>|
+                            <i class="fas fa-circle fa-xs" style="color: #ace600"></i><span class="status"> Congès </span>|
+                            <i class="fas fa-circle fa-xs" style="color: #ffcc66"></i><span class="status"> Formation </span>|
+                            <i class="fas fa-circle fa-xs" style="color: #e6e600"></i><span class="status"> Séance Patient </span>|
+                            <i class="fas fa-circle fa-xs" style="color: #888844"></i><span class="status"> Atelier Phoning </span>
+
                             {#<ul class="pagination justify-content-end mb-0">
                                 <li class="page-item disabled">
                                     <a class="page-link" href="#" tabindex="-1">
@@ -516,9 +524,11 @@
             calendar.render()
             calendar.on("dateClick", function (info) {
                 /*console.log(moment(info.dateStr).format('DD/MM/YYYY'))*/
-                $("#test").click()
+                /*$("#test").click()
                 $("#appointment_form_start_date").val(moment(info.dateStr).format('YYYY-MM-DD'))
-                $("#appointment_form_end_date").val(moment(info.dateStr).format('YYYY-MM-DD'))
+                $("#appointment_form_end_date").val(moment(info.dateStr).format('YYYY-MM-DD'))*/
+                calendar.gotoDate(moment(info.dateStr).format('YYYY-MM-DD'));
+                calendar.changeView('timeGridDay');
             })
             let d = new Date();
             let month = d.getMonth()+1;
