@@ -536,7 +536,11 @@
 
             })
             $("#appointment_form_start_time_hour").on("change", function () {
-                $("#appointment_form_end_time_hour").val(parseInt(this.value) + 1)
+                if(this.value == "23") {
+                    $("#appointment_form_end_time_hour").val(0)
+                } else {
+                    $("#appointment_form_end_time_hour").val(parseInt(this.value) + 1)
+                }
             })
             $("#start-geo").val(today)
             $("#end-geo").val(today)
