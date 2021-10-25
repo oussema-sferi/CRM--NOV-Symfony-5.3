@@ -195,7 +195,7 @@
                                         <h5 class="card-title text-uppercase text-muted mb-0">Total RDV à Venir</h5>
                                         <span class="h2 font-weight-bold mb-0">
                                             {#{{ upcoming_appointments }}#}
-                                            {#{% if app.session.get('date_filter_value_commercial_stats') is not null %}
+                                            {% if app.session.get('date_filter_value_commercial_stats') is not null %}
                                                 {% set not_done_appointments_counter = 0 %}
                                                 {% for appointment in total_appointments %}
                                                     {% if appointment.isDone == 0 and appointment.isDeleted == 0 %}
@@ -218,14 +218,14 @@
                                                 {{ not_done_appointments_counter }}
                                             {% else %}
                                                 {{ upcoming_appointments }}
-                                            {% endif %}#}
+                                            {% endif %}
 
 
-                                            {% if app.session.get('date_filter_value_commercial_stats') is not null %}
+                                            {#{% if app.session.get('date_filter_value_commercial_stats') is not null %}
                                                 {{ fixed_appointments_counter - done_appointments_counter }}
                                             {% else %}
                                                 {{ upcoming_appointments }}
-                                            {% endif %}
+                                            {% endif %}#}
                                         </span>
                                     </div>
                                     <div class="col-auto">
@@ -254,17 +254,17 @@
                                                 {% set deleted_appointments_counter = 0 %}
                                                 {% for appointment in total_appointments %}
                                                     {% if appointment.isDeleted == 1 %}
-                                                        {% set appointment_date = appointment.doneAt | date('Y-m-d') %}
+                                                        {% set appointment_deletion_date = appointment.deletionDate | date('Y-m-d') %}
                                                         {% if filter == "0" or filter == "1" %}
-                                                            {% if appointment_date == selected_date %}
+                                                            {% if appointment_deletion_date == selected_date %}
                                                                 {% set deleted_appointments_counter = deleted_appointments_counter + 1 %}
                                                             {% endif %}
                                                         {% elseif filter == "100" %}
-                                                            {% if appointment_date >= start_date and appointment_date <= end_date %}
+                                                            {% if appointment_deletion_date >= start_date and appointment_deletion_date <= end_date %}
                                                                 {% set deleted_appointments_counter = deleted_appointments_counter + 1 %}
                                                             {% endif %}
                                                         {% else %}
-                                                            {% if appointment_date >= selected_date %}
+                                                            {% if appointment_deletion_date >= selected_date %}
                                                                 {% set deleted_appointments_counter = deleted_appointments_counter + 1 %}
                                                             {% endif%}
                                                         {% endif %}

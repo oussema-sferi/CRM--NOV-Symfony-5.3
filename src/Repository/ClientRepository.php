@@ -269,4 +269,15 @@ class ClientRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    /*public function getProcessedClientsByUser($id)
+    {
+        $qb = $this->createQueryBuilder('c');
+        $qb->select('c')
+            ->where('c.status != 0')
+            ->andWhere('c.isDeleted = 0')
+            ->andWhere("c.")
+
+        return $qb->getQuery()->getResult();
+    }*/
+
 }

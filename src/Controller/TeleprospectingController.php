@@ -186,6 +186,18 @@ class TeleprospectingController extends AbstractController
                 $newCall->setGeneralStatus($status);
                 $newCall->setCallNotes($newCall->getCallNotes());
                 $newCall->setIsDeleted(false);
+                $usersWhoCalled = $client->getCallersUsers();
+                $userCounter = 0;
+                foreach ($usersWhoCalled as $user) {
+                    if ($user->getId() == $this->getUser()->getId()) {
+                        $userCounter += 1;
+                        break;
+                    }
+                }
+                if ($userCounter === 0) {
+                    $client->addCallersUser($loggedUser);
+                }
+                $client->setUpdatedAt(new \DateTime());
                 $client->setStatus($status);
                 if($statusDetailsQ) {
                     $newCall->setStatusDetails($statusDetailsQ);
@@ -336,6 +348,7 @@ class TeleprospectingController extends AbstractController
         $allCalls = $this->getDoctrine()->getRepository(Call::class)->getAllNotDeletedCalls();
         $qualifiedCalls = $this->getDoctrine()->getRepository(Call::class)->getQualifiedCalls();
         $notQualifiedCalls = $this->getDoctrine()->getRepository(Call::class)->getNotQualifiedCalls();
+        $deletedCalls = $this->getDoctrine()->getRepository(Call::class)->findBy(["isDeleted" => 1]);
         /*dd($processedCalls);*/
         /*dd($allTelepros);*/
 
@@ -352,7 +365,8 @@ class TeleprospectingController extends AbstractController
             'total_calls' => $allCalls,
             'total_calls_count' => count($allCalls),
             'qualified_calls_count' => count($qualifiedCalls),
-            'not_qualified_calls_count' => count($notQualifiedCalls)
+            'not_qualified_calls_count' => count($notQualifiedCalls),
+            'deleted_calls_count' => count($deletedCalls)
         ]);
     }
 

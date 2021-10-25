@@ -26,18 +26,18 @@
                             <div class="form-group" id="normal_period_block">
                                 <label for="period" style="color: #fff; font-weight: bold; font-family: 'Times New Roman'">Période : </label>
                                 <select class="form-control-sm" name="normal_period" id="normal_period">
-                                    <option value="" {% if app.session.get('date_filter_value_all_stats') is not defined or app.session.get('date_filter_value_all_stats') is null %} selected {% endif %}>Choisir...</option>
-                                    <option value="0" {% if app.session.get('date_filter_value_all_stats') is defined and app.session.get('date_filter_value_all_stats') == "0" %} selected {% endif %}>Aujourd'hui</option>
-                                    <option value="1" {% if app.session.get('date_filter_value_all_stats') is defined and app.session.get('date_filter_value_all_stats') == "1" %} selected {% endif %}>Hier</option>
-                                    <option value="7" {% if app.session.get('date_filter_value_all_stats') is defined and app.session.get('date_filter_value_all_stats') == "7" %} selected {% endif %}>7 derniers jours</option>
-                                    <option value="14" {% if app.session.get('date_filter_value_all_stats') is defined and app.session.get('date_filter_value_all_stats') == "14" %} selected {% endif %}>14 derniers jours</option>
-                                    <option value="30" {% if app.session.get('date_filter_value_all_stats') is defined and app.session.get('date_filter_value_all_stats') == "30" %} selected {% endif %}>30 derniers jours</option>
-                                    <option value="60" {% if app.session.get('date_filter_value_all_stats') is defined and app.session.get('date_filter_value_all_stats') == "60" %} selected {% endif %}>60 derniers jours</option>
-                                    <option value="90" {% if app.session.get('date_filter_value_all_stats') is defined and app.session.get('date_filter_value_all_stats') == "90" %} selected {% endif %}>90 derniers jours</option>
-                                    <option value="100" {% if app.session.get('date_filter_value_all_stats') is defined and app.session.get('date_filter_value_all_stats') == "100" %} selected {% endif %}>Personalisée</option>
+                                    <option value="" {% if app.session.get('date_filter_value_my_stats') is not defined or app.session.get('date_filter_value_my_stats') is null %} selected {% endif %}>Choisir...</option>
+                                    <option value="0" {% if app.session.get('date_filter_value_my_stats') is defined and app.session.get('date_filter_value_my_stats') == "0" %} selected {% endif %}>Aujourd'hui</option>
+                                    <option value="1" {% if app.session.get('date_filter_value_my_stats') is defined and app.session.get('date_filter_value_my_stats') == "1" %} selected {% endif %}>Hier</option>
+                                    <option value="7" {% if app.session.get('date_filter_value_my_stats') is defined and app.session.get('date_filter_value_my_stats') == "7" %} selected {% endif %}>7 derniers jours</option>
+                                    <option value="14" {% if app.session.get('date_filter_value_my_stats') is defined and app.session.get('date_filter_value_my_stats') == "14" %} selected {% endif %}>14 derniers jours</option>
+                                    <option value="30" {% if app.session.get('date_filter_value_my_stats') is defined and app.session.get('date_filter_value_my_stats') == "30" %} selected {% endif %}>30 derniers jours</option>
+                                    <option value="60" {% if app.session.get('date_filter_value_my_stats') is defined and app.session.get('date_filter_value_my_stats') == "60" %} selected {% endif %}>60 derniers jours</option>
+                                    <option value="90" {% if app.session.get('date_filter_value_my_stats') is defined and app.session.get('date_filter_value_my_stats') == "90" %} selected {% endif %}>90 derniers jours</option>
+                                    <option value="100" {% if app.session.get('date_filter_value_my_stats') is defined and app.session.get('date_filter_value_my_stats') == "100" %} selected {% endif %}>Personalisée</option>
                                 </select>
-                                <a href="{{ path('all_stats_filters_notifications') }}" class="btn btn-sm btn-success">Appliquer les filtres</a>
-                                <a href="{{ path('all_stats_filters_initialization') }}" class="btn btn-sm btn-primary">Réinitialiser les filtres</a>
+                                <a href="{{ path('my_stats_filters_notifications') }}" class="btn btn-sm btn-success">Appliquer les filtres</a>
+                                <a href="{{ path('my_stats_filters_initialization') }}" class="btn btn-sm btn-primary">Réinitialiser les filtres</a>
                             </div>
 
                             <form action="{{ path('all_stats_filters') }}" method="post">
@@ -61,16 +61,45 @@
                     <div class="col-xl-4 col-md-6">
                         <div class="card card-stats">
                             <!-- Card body -->
-                            {% if app.session.get('date_filter_value_all_stats') == "100" %}
-                                {% set start_date = app.session.get('date_filter_value_all_stats_start')|date('Y-m-d') %}
-                                {% set end_date = app.session.get('date_filter_value_all_stats_end')|date('Y-m-d') %}
+                            {% if app.session.get('date_filter_value_my_stats') is not null %}
+                                {% set filter = app.session.get('date_filter_value_my_stats') %}
+                                {% set selected_date = "now"|date_modify("-" ~ filter ~ " day")| date('Y-m-d') %}
                             {% endif%}
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col">
-                                        <h5 class="card-title text-uppercase text-muted mb-0">Mes fiches de contact traités</h5>
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Fiches de contact traités</h5>
                                         <span class="h2 font-weight-bold mb-0">
-
+                                            {% if app.session.get('date_filter_value_my_stats') is not null %}
+                                                {% set processed_clients_counter = 0 %}
+                                                {% for client in processed_clients %}
+                                                    {% set break = false %}
+                                                    {% for call in client.calls %}
+                                                        {% if break == false %}
+                                                            {% set call_date = call.createdAt | date('Y-m-d') %}
+                                                            {% if filter == "0" or filter == "1" %}
+                                                                {% if call_date == selected_date %}
+                                                                    {% set processed_clients_counter = processed_clients_counter + 1 %}
+                                                                    {% set break = true %}
+                                                                {% endif %}
+                                                            {% elseif filter == "100" %}
+                                                                {% if call_date >= start_date and call_date <= end_date %}
+                                                                    {% set processed_clients_counter = processed_clients_counter + 1 %}
+                                                                    {% set break = true %}
+                                                                {% endif %}
+                                                            {% else %}
+                                                                {% if call_date >= selected_date %}
+                                                                    {% set processed_clients_counter = processed_clients_counter + 1 %}
+                                                                    {% set break = true %}
+                                                                {% endif%}
+                                                            {% endif %}
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                {% endfor %}
+                                                {{ processed_clients_counter }}
+                                            {% else %}
+                                                {{ processed_clients_count }}
+                                            {% endif %}
                                         </span>
                                     </div>
                                     <div class="col-auto">
@@ -89,17 +118,38 @@
                     <div class="col-xl-4 col-md-6">
                         <div class="card card-stats">
                             <!-- Card body -->
-                            {% if app.session.get('date_filter_value_all_stats') is not null %}
-                                {% set filter = app.session.get('date_filter_value_all_stats') %}
+                            {% if app.session.get('date_filter_value_my_stats') is not null %}
+                                {% set filter = app.session.get('date_filter_value_my_stats') %}
                                 {% set selected_date = "now"|date_modify("-" ~ filter ~ " day")| date('Y-m-d') %}
                             {% endif %}
                             {#{{ dump(selected_date) }}#}
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col">
-                                        <h5 class="card-title text-uppercase text-muted mb-0">Mes appels effectués</h5>
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Appels Qualifiés</h5>
                                         <span class="h2 font-weight-bold mb-0">
-
+                                            {% if app.session.get('date_filter_value_my_stats') is not null %}
+                                                {% set qualified_calls_counter = 0 %}
+                                                {% for call in qualified_calls %}
+                                                    {% set call_date = call.createdAt | date('Y-m-d') %}
+                                                    {% if filter == "0" or filter == "1" %}
+                                                        {% if call_date == selected_date %}
+                                                                {% set qualified_calls_counter = qualified_calls_counter + 1 %}
+                                                        {% endif %}
+                                                    {% elseif filter == "100" %}
+                                                        {% if call_date >= start_date and call_date <= end_date %}
+                                                                {% set qualified_calls_counter = qualified_calls_counter + 1 %}
+                                                        {% endif %}
+                                                    {% else %}
+                                                        {% if call_date >= selected_date %}
+                                                                {% set qualified_calls_counter = qualified_calls_counter + 1 %}
+                                                        {% endif%}
+                                                    {% endif %}
+                                                {% endfor %}
+                                                {{ qualified_calls_counter }}
+                                            {% else %}
+                                                {{ qualified_calls_count }}
+                                            {% endif %}
                                         </span>
                                     </div>
                                     <div class="col-auto">
@@ -121,9 +171,30 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col">
-                                        <h5 class="card-title text-uppercase text-muted mb-0">Mes appels supprimés</h5>
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Appels Non Qualifiés</h5>
                                         <span class="h2 font-weight-bold mb-0">
-
+                                            {% if app.session.get('date_filter_value_my_stats') is not null %}
+                                                {% set not_qualified_calls_counter = 0 %}
+                                                {% for call in not_qualified_calls %}
+                                                    {% set call_date = call.createdAt | date('Y-m-d') %}
+                                                    {% if filter == "0" or filter == "1" %}
+                                                        {% if call_date == selected_date %}
+                                                            {% set not_qualified_calls_counter = not_qualified_calls_counter + 1 %}
+                                                        {% endif %}
+                                                    {% elseif filter == "100" %}
+                                                        {% if call_date >= start_date and call_date <= end_date %}
+                                                            {% set not_qualified_calls_counter = not_qualified_calls_counter + 1 %}
+                                                        {% endif %}
+                                                    {% else %}
+                                                        {% if call_date >= selected_date %}
+                                                            {% set not_qualified_calls_counter = not_qualified_calls_counter + 1 %}
+                                                        {% endif%}
+                                                    {% endif %}
+                                                {% endfor %}
+                                                {{ not_qualified_calls_counter }}
+                                            {% else %}
+                                                {{ not_qualified_calls_count }}
+                                            {% endif %}
                                         </span>
                                     </div>
                                     <div class="col-auto">
@@ -170,7 +241,7 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col">
-                                        <h5 class="card-title text-uppercase text-muted mb-0">Mes RDV fixés</h5>
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Appels Supprimés</h5>
                                         <span class="h2 font-weight-bold mb-0">
 
                                         </span>
@@ -216,7 +287,7 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col">
-                                        <h5 class="card-title text-uppercase text-muted mb-0">Mes RDV effectués</h5>
+                                        <h5 class="card-title text-uppercase text-muted mb-0">RDV Fixés</h5>
                                         <span class="h2 font-weight-bold mb-0">
 
                                         </span>
@@ -241,9 +312,30 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col">
-                                        <h5 class="card-title text-uppercase text-muted mb-0">Mes RDV à venir</h5>
+                                        <h5 class="card-title text-uppercase text-muted mb-0">RDV effectués</h5>
                                         <span class="h2 font-weight-bold mb-0">
-
+                                            {% if app.session.get('date_filter_value_my_stats') is not null %}
+                                                {% set done_appointments_counter = 0 %}
+                                                {% for appointment in done_appointments %}
+                                                    {% set appointment_date = appointment.doneAt | date('Y-m-d') %}
+                                                    {% if filter == "0" or filter == "1" %}
+                                                        {% if appointment_date == selected_date %}
+                                                            {% set done_appointments_counter = done_appointments_counter + 1 %}
+                                                        {% endif %}
+                                                    {% elseif filter == "100" %}
+                                                        {% if appointment_date >= start_date and appointment_date <= end_date %}
+                                                            {% set done_appointments_counter = done_appointments_counter + 1 %}
+                                                        {% endif %}
+                                                    {% else %}
+                                                        {% if appointment_date >= selected_date %}
+                                                            {% set done_appointments_counter = done_appointments_counter + 1 %}
+                                                        {% endif%}
+                                                    {% endif %}
+                                                {% endfor %}
+                                                {{ done_appointments_counter }}
+                                            {% else %}
+                                                {{ done_appointments_count }}
+                                            {% endif %}
                                         </span>
                                     </div>
                                     <div class="col-auto">
@@ -288,13 +380,42 @@
                         <div class="card card-stats">
                             <!-- Card body -->
                             {% if app.session.get('date_filter_value_all_stats') == "100" %}
-                                {% set start_date = app.session.get('date_filter_value_all_stats_start')|date('Y-m-d') %}
-                                {% set end_date = app.session.get('date_filter_value_all_stats_end')|date('Y-m-d') %}
+                                {% set start_date = app.session.get('date_filter_value_my_stats_start')|date('Y-m-d') %}
+                                {% set end_date = app.session.get('date_filter_value_my_stats_end')|date('Y-m-d') %}
                             {% endif%}
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col">
-                                        <h5 class="card-title text-uppercase text-muted mb-0">Mes RDV annulés</h5>
+                                        <h5 class="card-title text-uppercase text-muted mb-0">RDV à venir</h5>
+                                        <span class="h2 font-weight-bold mb-0">
+
+                                        </span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-gradient-cyan text-white rounded-circle shadow">
+                                            <i class="fas fa-user-friends"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                {#<p class="mt-3 mb-0 text-sm">
+                                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
+                                    <span class="text-nowrap">Since last month</span>
+                                </p>#}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-4 col-md-6">
+                        <div class="card card-stats">
+                            <!-- Card body -->
+                            {% if app.session.get('date_filter_value_all_stats') == "100" %}
+                                {% set start_date = app.session.get('date_filter_value_my_stats_start')|date('Y-m-d') %}
+                                {% set end_date = app.session.get('date_filter_value_my_stats_end')|date('Y-m-d') %}
+                            {% endif%}
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">RDV annulés</h5>
                                         <span class="h2 font-weight-bold mb-0">
 
                                         </span>
@@ -704,7 +825,7 @@
           $('#retour_period').click(function () {
               $(this).parent().fadeOut(50)
               normalPeriodBlock.fadeIn(1000);
-              normalPeriod.val({{ app.session.get('date_filter_value_all_stats') }});
+              normalPeriod.val({{ app.session.get('date_filter_value_my_stats') }});
               if(normalPeriod.val() === "100") {
                   normalPeriod.val("");
               }
@@ -717,10 +838,10 @@
               console.log(this.value == "14")
               if(this.value && this.value != "100") {
                   $.ajax({
-                      url:"{{ path('all_stats_filters') }}",
+                      url:"{{ path('my_stats_filters') }}",
                       method: "POST",
                       dataType: 'json',
-                      data : { dateFilterValueAllStats: this.value },
+                      data : { dateFilterValueMyStats: this.value },
                       success: (e) => {
                           /*location.reload();*/
                           /*console.log(e);*/
@@ -735,42 +856,11 @@
           if(normalPeriod.val() === "100") {
               normalPeriodBlock.fadeOut(0.05)
               customPeriod.fadeIn(0.1)
-              $("#start_date").val("{{ app.session.get('date_filter_value_all_stats_start')|date('Y-m-d') }}")
-              $("#end_date").val("{{ app.session.get('date_filter_value_all_stats_end')|date('Y-m-d') }}")
+              $("#start_date").val("{{ app.session.get('date_filter_value_my_stats_start')|date('Y-m-d') }}")
+              $("#end_date").val("{{ app.session.get('date_filter_value_my_stats_end')|date('Y-m-d') }}")
               $("#between-date-initialization").fadeIn(0.1)
           }
       }
-      let multiBar = document.getElementById("multi-bar-chart").getContext('2d');
-      let multiBArChart = new Chart(multiBar, {
-          type: 'bar',
-          data: {
-              labels: ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"],
-              datasets: [{label: "Contacts Traités", data: {{ processed_contacts_graph|raw }}, backgroundColor: "#ff00ff"},
-                  {label: "Nombre de RDV", data: {{ fixed_appointments_graph|raw }}, backgroundColor: "#33ccff",},
 
-              ]
-          },
-          options: {
-              animation:{
-                  duration: 2500 /* time in ms */
-              },
-              scales: {
-                  y: {
-                      suggestedMin: 0,
-                      suggestedMax: 8
-                  },
-              },
-              responsive: true,
-              plugins: {
-                  legend: {
-                      position: 'top',
-                  },
-                  title: {
-                      display: true,
-                      text: "Evolution pour l'année {{ actual_year }}"
-                  }
-              }
-          },
-      })
     </script>
 {% endblock %}

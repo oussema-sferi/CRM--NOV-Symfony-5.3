@@ -114,6 +114,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $geographicZoneEvents;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Client::class, mappedBy="callersUsers")
+     */
+    private $calledClients;
+
 
     public function __construct()
     {
@@ -123,6 +128,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->geographicAreas = new ArrayCollection();
         $this->clients = new ArrayCollection();
         $this->geographicZoneEvents = new ArrayCollection();
+        $this->calledClients = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -471,6 +477,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             if ($geographicZoneEvent->getCalendarUser() === $this) {
                 $geographicZoneEvent->setCalendarUser(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Client[]
+     */
+    public function getCalledClients(): Collection
+    {
+        return $this->calledClients;
+    }
+
+    public function addCalledClient(Client $calledClient): self
+    {
+        if (!$this->calledClients->contains($calledClient)) {
+            $this->calledClients[] = $calledClient;
+            $calledClient->addCallersUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCalledClient(Client $calledClient): self
+    {
+        if ($this->calledClients->removeElement($calledClient)) {
+            $calledClient->removeCallersUser($this);
         }
 
         return $this;

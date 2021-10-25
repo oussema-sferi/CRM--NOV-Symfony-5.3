@@ -136,12 +136,18 @@ class Client
      */
     private $deletionDate;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=User::class, inversedBy="calledClients")
+     */
+    private $callersUsers;
+
 
 
     public function __construct()
     {
         $this->calls = new ArrayCollection();
         $this->appointments = new ArrayCollection();
+        $this->callersUsers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -452,6 +458,30 @@ class Client
     public function setDeletionDate(?\DateTimeInterface $deletionDate): self
     {
         $this->deletionDate = $deletionDate;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|User[]
+     */
+    public function getCallersUsers(): Collection
+    {
+        return $this->callersUsers;
+    }
+
+    public function addCallersUser(User $callersUser): self
+    {
+        if (!$this->callersUsers->contains($callersUser)) {
+            $this->callersUsers[] = $callersUser;
+        }
+
+        return $this;
+    }
+
+    public function removeCallersUser(User $callersUser): self
+    {
+        $this->callersUsers->removeElement($callersUser);
 
         return $this;
     }

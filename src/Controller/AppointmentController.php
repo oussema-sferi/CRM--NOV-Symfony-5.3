@@ -571,6 +571,8 @@ class AppointmentController extends AbstractController
             /*$client->setStatus(2);*/
             $client->setStatus(2);
             $client->setStatusDetail(7);
+            /*if($this->getDoctrine()->getRepository(User::class)->getCalledClients()->find)
+            $client->addCallersUser($this->getUser());*/
 
             /*$value = false;
             foreach ($client->getCalls() as $call) {

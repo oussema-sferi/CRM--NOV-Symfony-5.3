@@ -85,4 +85,28 @@ class CallRepository extends ServiceEntityRepository
             ->orderBy('c.deletionDate', 'DESC');
         return $qb->getQuery()->getResult();
     }
+
+    public function getQualifiedCallsByUser($id)
+    {
+        $qb = $this->createQueryBuilder('c');
+        $qb->select('c')
+            ->join('c.user', 'u')
+            ->where('c.isDeleted = 0')
+            ->andWhere('c.generalStatus = 2')
+            ->andWhere("u.id = $id")
+            ->orderBy('c.deletionDate', 'DESC');
+        return $qb->getQuery()->getResult();
+    }
+
+    public function getNotQualifiedCallsByUser($id)
+    {
+        $qb = $this->createQueryBuilder('c');
+        $qb->select('c')
+            ->join('c.user', 'u')
+            ->where('c.isDeleted = 0')
+            ->andWhere('c.generalStatus = 1')
+            ->andWhere("u.id = $id")
+            ->orderBy('c.deletionDate', 'DESC');
+        return $qb->getQuery()->getResult();
+    }
 }
