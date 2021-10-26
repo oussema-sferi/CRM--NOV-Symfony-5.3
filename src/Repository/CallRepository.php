@@ -109,4 +109,15 @@ class CallRepository extends ServiceEntityRepository
             ->orderBy('c.deletionDate', 'DESC');
         return $qb->getQuery()->getResult();
     }
+
+    public function getDeletedCallsByUser($id)
+    {
+        $qb = $this->createQueryBuilder('c');
+        $qb->select('c')
+            ->join('c.user', 'u')
+            ->where('c.isDeleted = 1')
+            ->andWhere("u.id = $id")
+            ->orderBy('c.deletionDate', 'DESC');
+        return $qb->getQuery()->getResult();
+    }
 }

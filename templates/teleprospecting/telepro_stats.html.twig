@@ -505,7 +505,7 @@
 
                             {#{% set today = "now"|format_datetime('short', 'none') %}#}
                             {% for telepro in all_telepros %}
-                            <tr class="clickable-row" data-href="{{ path('show_user', {'id': telepro.id}) }}">
+                            <tr class="clickable-row" data-href="{{ path('statistics_per_user', {'id': telepro.id}) }}">
                                 <th scope="row">
                                     {{ telepro.firstName ~ ' ' ~ telepro.lastName }}
                                 </th>

@@ -92,6 +92,12 @@ class Appointment
      */
     private $eventType;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="fixedAppointments")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $appointmentFixer;
+
 
     public function getId(): ?int
     {
@@ -258,6 +264,18 @@ class Appointment
     public function setEventType(?EventType $eventType): self
     {
         $this->eventType = $eventType;
+
+        return $this;
+    }
+
+    public function getAppointmentFixer(): ?User
+    {
+        return $this->appointmentFixer;
+    }
+
+    public function setAppointmentFixer(?User $appointmentFixer): self
+    {
+        $this->appointmentFixer = $appointmentFixer;
 
         return $this;
     }

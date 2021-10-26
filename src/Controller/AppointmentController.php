@@ -345,7 +345,7 @@ class AppointmentController extends AbstractController
                         'title' => $event->getEventType()->getDesignation(),
                         'start' => $event->getStart()->format('Y-m-d H:i:s'),
                         'end' => $event->getEnd()->format('Y-m-d H:i:s'),
-                        'description' => $event->getAppointmentCall()->getCallIfAppointmentNotes(),
+                        'description' => $event->getAppointmentNotes(),
                         'backgroundColor' => $event->getEventType()->getBackgroundColor(),
                         'allDay' => false
                     ];
@@ -527,6 +527,7 @@ class AppointmentController extends AbstractController
                 $newEvent->setIsDone(0);
                 $newEvent->setAppointmentNotes($request->request->get('event_notes'));
                 $newEvent->setIsDeleted(false);
+                $newEvent->setAppointmentFixer($this->getUser());
                 $manager->persist($newEvent);
                 $manager->flush();
                 $this->flashy->success("Evénement fixé avec succès !");
@@ -564,6 +565,8 @@ class AppointmentController extends AbstractController
             $newAppointment->setClient($client);
             $newAppointment->setUser($commercial);
             $newAppointment->setIsDeleted(false);
+            $newAppointment->setAppointmentFixer($this->getUser());
+            $newAppointment->setAppointmentNotes($request->request->get('notes'));
             $newAppointment->setEventType($this->getDoctrine()->getRepository(EventType::class)->find(4));
             /*$newAppointment->setAppointmentCallNotes($request->request->get('notes'));*/
             /*$call->setCallNotes($request->request->get('notes'));*/
@@ -641,6 +644,8 @@ class AppointmentController extends AbstractController
             $newAppointment->setClient($client);
             $newAppointment->setUser($commercial);
             $newAppointment->setIsDeleted(false);
+            $newAppointment->setAppointmentFixer($this->getUser());
+            $newAppointment->setAppointmentNotes($request->request->get('notes'));
             $newAppointment->setEventType($this->getDoctrine()->getRepository(EventType::class)->find(4));
             /*$newAppointment->setAppointmentCallNotes($request->request->get('notes'));*/
             /*$call->setCallNotes($request->request->get('notes'));*/

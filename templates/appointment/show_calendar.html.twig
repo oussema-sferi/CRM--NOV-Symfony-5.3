@@ -1,7 +1,11 @@
 {% extends 'base.html.twig' %}
-
-{% block title %}Agenda{% endblock %}
-
+{% block title %}
+{%  if app.user.id != commercial_user.id %}
+    Agenda
+{% else %}
+    Mon Agenda
+{% endif %}
+{% endblock %}
 {% block head %}
 
     <style>
@@ -39,10 +43,16 @@
                         <h6 class="h2 text-white d-inline-block mb-0">CRM</h6>
                         <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
                             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
-                                <li class="breadcrumb-item"><i class="fas fa-calendar-alt text-cyan"></i></li>
-                                <li class="breadcrumb-item">Agendas</li>
-                                <li class="breadcrumb-item"><a href="{{ path('appointment') }}">Agendas des Commerciaux</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">{{ commercial_user.firstName ~ ' ' ~ commercial_user.lastName }}</li>
+                                {%  if app.user.id == commercial_user.id %}
+                                    <li class="breadcrumb-item"><i class="ni fas fa-id-card text-green"></i></li>
+                                    <li class="breadcrumb-item">Mon Profil</li>
+                                    <li class="breadcrumb-item active" aria-current="page">Mon Agenda</li>
+                                {% else %}
+                                    <li class="breadcrumb-item"><i class="fas fa-calendar-alt text-cyan"></i></li>
+                                    <li class="breadcrumb-item">Agendas</li>
+                                    <li class="breadcrumb-item"><a href="{{ path('appointment') }}">Agendas des Commerciaux</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">{{ commercial_user.firstName ~ ' ' ~ commercial_user.lastName }}</li>
+                                {% endif %}
                             </ol>
                         </nav>
                     </div>

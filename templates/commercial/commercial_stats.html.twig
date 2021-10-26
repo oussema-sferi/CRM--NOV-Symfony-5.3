@@ -399,7 +399,7 @@
                             </thead>
                             <tbody>
                             {% for commercial in all_commercials %}
-                            <tr class="clickable-row" data-href="{{ path('show_user', {'id': commercial.id}) }}">
+                            <tr class="clickable-row" data-href="{{ path('statistics_per_user', {'id': commercial.id}) }}">
                                 <th scope="row">
                                     {{ commercial.firstName ~ ' ' ~ commercial.lastName }}
                                 </th>

@@ -136,20 +136,25 @@ class StatisticsController extends AbstractController
     }
 
     /**
-     * @Route("/dashboard/myprofile/mystatistics", name="my_statistics")
+     * @Route("/dashboard/statisticsperuser/{id}", name="statistics_per_user")
      */
-    public function myStatistics(): Response
+    public function statsPerUser($id): Response
     {
         $userId = $this->getUser()->getId();
-        $user = $this->getDoctrine()->getRepository(User::class)->find($userId);
+        $user = $this->getDoctrine()->getRepository(User::class)->find($id);
         $myProcessedContacts = $user->getCalledClients();
-        $myQualifiedCalls = $this->getDoctrine()->getRepository(Call::class)->getQualifiedCallsByUser($userId);
-        $myNotQualifiedCalls = $this->getDoctrine()->getRepository(Call::class)->getNotQualifiedCallsByUser($userId);
-        $myDoneAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getDoneAppointmentsByUser($userId);
-        /*dd($myQualifiedCalls);*/
+        $myQualifiedCalls = $this->getDoctrine()->getRepository(Call::class)->getQualifiedCallsByUser($id);
+        $myNotQualifiedCalls = $this->getDoctrine()->getRepository(Call::class)->getNotQualifiedCallsByUser($id);
+        $myDoneAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getDoneAppointmentsByUser($id);
+        $myDeletedCalls = $this->getDoctrine()->getRepository(Call::class)->getDeletedCallsByUser($id);
+        $myFixedAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getFixedAppointmentsByUser($id);
+        $myAssignedAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getMyAssignedAppointmentsByUser($id);
+        $myUpcomingAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getUpcomingAppointmentsByUser($id);
+        /*dd($myFixedAppointments);*/
 
         /*dd(count($myProcessedContacts));*/
-        return $this->render('statistics/my_stats.html.twig', [
+        return $this->render('statistics/stats_per_user.html.twig', [
+            'user' => $user,
             'processed_clients' => $myProcessedContacts,
             'processed_clients_count' => count($myProcessedContacts),
             'qualified_calls' =>$myQualifiedCalls,
@@ -158,61 +163,77 @@ class StatisticsController extends AbstractController
             'not_qualified_calls_count' =>count($myNotQualifiedCalls),
             'done_appointments' =>$myDoneAppointments,
             'done_appointments_count' =>count($myDoneAppointments),
+            'upcoming_appointments' =>$myUpcomingAppointments,
+            'upcoming_appointments_count' =>count($myUpcomingAppointments),
+            'my_assigned_appointments' =>$myAssignedAppointments,
+            'my_assigned_appointments_count' =>count($myAssignedAppointments),
+            'deleted_calls' =>$myDeletedCalls,
+            'deleted_calls_count' =>count($myDeletedCalls),
+            'fixed_appointments' =>$myFixedAppointments,
+            'fixed_appointments_count' =>count($myFixedAppointments),
         ]);
     }
 
     /**
-     * @Route("/dashboard/myprofile/mystatistics/filters", name="my_stats_filters")
+     * @Route("/dashboard/statisticsperuser/{id}/filters", name="statistics_per_user_filters")
      */
-    public function myStatsFilters(Request $request): Response
+    public function statsPerUserFilters(Request $request, $id): Response
     {
 
         $session = $request->getSession();
         if($request->isXmlHttpRequest()) {
-            $dateFilterValueMyStats = $request->get('dateFilterValueMyStats');
-            $session->set('date_filter_value_my_stats',
-                $dateFilterValueMyStats
+            $dateFilterValueStatsPerUser = $request->get('dateFilterValueStatsPerUser');
+            /*$id = $request->get('userId');*/
+            $session->set('date_filter_value_stats_per_user',
+                $dateFilterValueStatsPerUser
             );
             return new JsonResponse(['message'=> 'Task Success!']);
         } elseif ($request->isMethod('Post')) {
+            /*$id = $request->request->get('user_id');*/
             /*return new JsonResponse(['message'=> 'Task Fails!']);*/
             $startDate = new \DateTime($request->request->get("start_date"));
             $endDate = new \DateTime($request->request->get("end_date"));
-            $dateFilterValue = $request->request->get('dateFilterValueMyStats');
-            $session->set('date_filter_value_my_stats',
+            $dateFilterValue = $request->request->get('dateFilterValueStatsPerUser');
+            $session->set('date_filter_value_stats_per_user',
                 $dateFilterValue
             );
-            $session->set('date_filter_value_my_stats_start',
+            $session->set('date_filter_value_stats_per_user_start',
                 $startDate
             );
-            $session->set('date_filter_value_my_stats_end',
+            $session->set('date_filter_value_stats_per_user_end',
                 $endDate
             );
             $this->flashy->success('Filtre mis à jour avec succès !');
-            return $this->redirectToRoute('my_statistics');
+            return $this->redirectToRoute('statistics_per_user', [
+                'id' => $id
+            ]);
         }
     }
 
     /**
-     * @Route("/dashboard/myprofile/mystatistics/filters/Initialization", name="my_stats_filters_initialization")
+     * @Route("/dashboard/statisticsperuser/{id}/filters/Initialization", name="statistics_per_user_filters_initialization")
      */
-    public function myStatsFiltersInitialization(Request $request): Response
+    public function statsPerUserFiltersInitialization(Request $request, $id): Response
     {
         $session = $request->getSession();
-        $session->remove('date_filter_value_my_stats');
-        if($session->get('date_filter_value_my_stats_start')) $session->remove('date_filter_value_my_stats_start');
-        if($session->get('date_filter_value_my_stats_end')) $session->remove('date_filter_value_my_stats_end');
+        $session->remove('date_filter_value_stats_per_user');
+        if($session->get('date_filter_value_stats_per_user_start')) $session->remove('date_filter_value_stats_per_user_start');
+        if($session->get('date_filter_value_stats_per_user_end')) $session->remove('date_filter_value_stats_per_user_end');
         $this->flashy->success('Filtre réinitialisé avec succès !');
-        return $this->redirectToRoute('my_statistics');
+        return $this->redirectToRoute('statistics_per_user', [
+            'id' => $id
+        ]);
     }
 
     /**
-     * @Route("/dashboard/myprofile/mystatistics/filters/notifications", name="my_stats_filters_notifications")
+     * @Route("/dashboard/statisticsperuser/{id}filters/notifications", name="statistics_per_user_filters_notifications")
      */
-    public function myStatsFilterssNotifications(): Response
+    public function statsPerUserFilterssNotifications($id): Response
     {
         $this->flashy->success('Filtre mis à jour avec succès !');
-        return $this->redirectToRoute('my_statistics');
+        return $this->redirectToRoute('statistics_per_user', [
+            'id' => $id
+        ]);
     }
 
 

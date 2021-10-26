@@ -119,6 +119,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $calledClients;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Appointment::class, mappedBy="appointmentFixer")
+     */
+    private $fixedAppointments;
+
 
     public function __construct()
     {
@@ -129,6 +134,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->clients = new ArrayCollection();
         $this->geographicZoneEvents = new ArrayCollection();
         $this->calledClients = new ArrayCollection();
+        $this->fixedAppointments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -504,6 +510,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->calledClients->removeElement($calledClient)) {
             $calledClient->removeCallersUser($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Appointment[]
+     */
+    public function getFixedAppointments(): Collection
+    {
+        return $this->fixedAppointments;
+    }
+
+    public function addFixedAppointment(Appointment $fixedAppointment): self
+    {
+        if (!$this->fixedAppointments->contains($fixedAppointment)) {
+            $this->fixedAppointments[] = $fixedAppointment;
+            $fixedAppointment->setAppointmentFixer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFixedAppointment(Appointment $fixedAppointment): self
+    {
+        if ($this->fixedAppointments->removeElement($fixedAppointment)) {
+            // set the owning side to null (unless already changed)
+            if ($fixedAppointment->getAppointmentFixer() === $this) {
+                $fixedAppointment->setAppointmentFixer(null);
+            }
         }
 
         return $this;
