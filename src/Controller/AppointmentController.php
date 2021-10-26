@@ -799,4 +799,20 @@ class AppointmentController extends AbstractController
             "id" => $calendarUserId
         ]);
     }
+
+    /**
+     * @Route("/dashboard/appointments/showcalendar/deleteevent/{id}", name="delete_event")
+     */
+    public function deleteEvent(Request $request, $id): Response
+    {
+        $manager = $this->getDoctrine()->getManager();
+        $eventToDelete = $this->getDoctrine()->getRepository(Appointment::class)->find($id);
+        $calendarUserId = $eventToDelete->getUser()->getId();
+        $manager->remove($eventToDelete);
+        $manager->flush();
+        $this->flashy->success('Entrée supprimée avec succès !');
+        return $this->redirectToRoute('show_calendar', [
+            "id" => $calendarUserId
+        ]);
+    }
 }
