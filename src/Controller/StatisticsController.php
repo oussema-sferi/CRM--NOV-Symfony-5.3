@@ -150,7 +150,8 @@ class StatisticsController extends AbstractController
         $myFixedAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getFixedAppointmentsByUser($id);
         $myAssignedAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getMyAssignedAppointmentsByUser($id);
         $myUpcomingAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getUpcomingAppointmentsByUser($id);
-        /*dd($myFixedAppointments);*/
+        $myDeletedAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getDeletedAppointmentsByUser($id);
+        /*dd($myDeletedAppointments);*/
 
         /*dd(count($myProcessedContacts));*/
         return $this->render('statistics/stats_per_user.html.twig', [
@@ -171,6 +172,8 @@ class StatisticsController extends AbstractController
             'deleted_calls_count' =>count($myDeletedCalls),
             'fixed_appointments' =>$myFixedAppointments,
             'fixed_appointments_count' =>count($myFixedAppointments),
+            'deleted_appointments' =>$myDeletedAppointments,
+            'deleted_appointments_count' =>count($myDeletedAppointments),
         ]);
     }
 

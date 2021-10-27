@@ -1,6 +1,12 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Statistiques par utilisateur{% endblock %}
+{% block title %}
+    {% if app.user.id != user.id %}
+    Statistiques par utilisateur
+    {% else %}
+        Mes Statistiques
+    {% endif %}
+{% endblock %}
 
 
 
@@ -209,8 +215,8 @@
                                         </span>
                                     </div>
                                     <div class="col-auto">
-                                        <div class="icon icon-shape bg-gradient-info text-white rounded-circle shadow">
-                                            <i class="ni ni-chart-bar-32"></i>
+                                        <div class="icon icon-shape bg-gradient-red text-white rounded-circle shadow">
+                                            <i class="fas fa-list-alt"></i>
                                         </div>
                                     </div>
                                 </div>
@@ -281,7 +287,7 @@
                                         </span>
                                     </div>
                                     <div class="col-auto">
-                                        <div class="icon icon-shape bg-gradient-info text-white rounded-circle shadow">
+                                        <div class="icon icon-shape bg-gradient-orange text-white rounded-circle shadow">
                                             <i class="fas fa-list-alt"></i>
                                         </div>
                                     </div>
@@ -321,7 +327,7 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col">
-                                        <h5 class="card-title text-uppercase text-muted mb-0">RDV Fixés</h5>
+                                        <h5 class="card-title text-uppercase text-muted mb-0">RDV Pris</h5>
                                         <span class="h2 font-weight-bold mb-0">
 
                                             {% if app.session.get('date_filter_value_stats_per_user') is not null %}
@@ -350,8 +356,8 @@
                                         </span>
                                     </div>
                                     <div class="col-auto">
-                                        <div class="icon icon-shape bg-gradient-info text-white rounded-circle shadow">
-                                            <i class="ni ni-chart-bar-32"></i>
+                                        <div class="icon icon-shape bg-gradient-yellow text-white rounded-circle shadow">
+                                            <i class="fas fa-list-alt"></i>
                                         </div>
                                     </div>
                                 </div>
@@ -396,8 +402,8 @@
                                         </span>
                                     </div>
                                     <div class="col-auto">
-                                        <div class="icon icon-shape bg-gradient-info text-white rounded-circle shadow">
-                                            <i class="ni ni-chart-bar-32"></i>
+                                        <div class="icon icon-shape bg-gradient-blue text-white rounded-circle shadow">
+                                            <i class="fas fa-list-alt"></i>
                                         </div>
                                     </div>
                                 </div>
@@ -468,8 +474,8 @@
                                         </span>
                                     </div>
                                     <div class="col-auto">
-                                        <div class="icon icon-shape bg-gradient-info text-white rounded-circle shadow">
-                                            <i class="ni ni-chart-bar-32"></i>
+                                        <div class="icon icon-shape bg-gradient-green text-white rounded-circle shadow">
+                                            <i class="fas fa-list-alt"></i>
                                         </div>
                                     </div>
                                 </div>
@@ -481,7 +487,7 @@
                         </div>
                     </div>
 
-                    <div class="col-xl-4 col-md-6">
+                    {#<div class="col-xl-4 col-md-6">
                         <div class="card card-stats">
                             <!-- Card body -->
 
@@ -491,11 +497,7 @@
                                         <h5 class="card-title text-uppercase text-muted mb-0">RDV à venir</h5>
                                         <span class="h2 font-weight-bold mb-0">
 
-                                            {#{% if app.session.get('date_filter_value') is not null %}
-                                                {{ total_clients - processed_clients_counter }}
-                                            {% else %}
-                                                {{ not_processed_clients }}
-                                            {% endif %}#}
+
 
                                         </span>
                                     </div>
@@ -505,13 +507,13 @@
                                         </div>
                                     </div>
                                 </div>
-                                {#<p class="mt-3 mb-0 text-sm">
+                                #}{#<p class="mt-3 mb-0 text-sm">
                                     <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
                                     <span class="text-nowrap">Since last month</span>
-                                </p>#}
+                                </p>#}{#
                             </div>
                         </div>
-                    </div>
+                    </div>#}
 
                     <div class="col-xl-4 col-md-6">
                         <div class="card card-stats">
@@ -525,12 +527,33 @@
                                     <div class="col">
                                         <h5 class="card-title text-uppercase text-muted mb-0">RDV annulés</h5>
                                         <span class="h2 font-weight-bold mb-0">
-
+                                            {% if app.session.get('date_filter_value_stats_per_user') is not null %}
+                                                {% set deleted_appointments_counter = 0 %}
+                                                {% for appointment in deleted_appointments %}
+                                                    {% set appointment_delete_date = appointment.deletionDate | date('Y-m-d') %}
+                                                    {% if filter == "0" or filter == "1" %}
+                                                        {% if appointment_delete_date == selected_date %}
+                                                            {% set deleted_appointments_counter = deleted_appointments_counter + 1 %}
+                                                        {% endif %}
+                                                    {% elseif filter == "100" %}
+                                                        {% if appointment_delete_date >= start_date and appointment_delete_date <= end_date %}
+                                                            {% set deleted_appointments_counter = deleted_appointments_counter + 1 %}
+                                                        {% endif %}
+                                                    {% else %}
+                                                        {% if appointment_delete_date >= selected_date %}
+                                                            {% set deleted_appointments_counter = deleted_appointments_counter + 1 %}
+                                                        {% endif%}
+                                                    {% endif %}
+                                                {% endfor %}
+                                                {{ deleted_appointments_counter }}
+                                            {% else %}
+                                                {{ deleted_appointments_count }}
+                                            {% endif %}
                                         </span>
                                     </div>
                                     <div class="col-auto">
-                                        <div class="icon icon-shape bg-gradient-cyan text-white rounded-circle shadow">
-                                            <i class="fas fa-user-friends"></i>
+                                        <div class="icon icon-shape bg-gradient-orange text-white rounded-circle shadow">
+                                            <i class="fas fa-list-alt"></i>
                                         </div>
                                     </div>
                                 </div>
