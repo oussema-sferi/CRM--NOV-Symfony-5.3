@@ -263,6 +263,7 @@
                 </div>#}
 
                 <div class="modal-body">
+                    <form id="edit-event-form" action="" method="post">
 
                     <div id="client_show-block">
                         <div class="form-group">
@@ -274,21 +275,37 @@
                     <div>
                         <div class="form-group">
                             <label class="form-control-label" for="input-username">Date et heure de Début</label>
-                            <input type="text" id="start-show" class="form-control" value="" disabled>
+                            <div id="edit_form_start"><input type="date" id="edit_form_start_date" name="edit_form[start][date]" required="required">
+                                <div id="edit_form_start_time">
+                                    <select id="edit_form_start_time_hour" name="edit_form[start][time][hour]">
+                                        <option value="0">00</option><option value="1">01</option><option value="2">02</option><option value="3">03</option><option value="4">04</option><option value="5">05</option><option value="6">06</option><option value="7">07</option><option value="8">08</option><option value="9">09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option>
+                                    </select>:
+                                    <select id="edit_form_start_time_minute" name="edit_form[start][time][minute]"><option value="0">00</option><option value="1">01</option><option value="2">02</option><option value="3">03</option><option value="4">04</option><option value="5">05</option><option value="6">06</option><option value="7">07</option><option value="8">08</option><option value="9">09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option><option value="26">26</option><option value="27">27</option><option value="28">28</option><option value="29">29</option><option value="30">30</option><option value="31">31</option><option value="32">32</option><option value="33">33</option><option value="34">34</option><option value="35">35</option><option value="36">36</option><option value="37">37</option><option value="38">38</option><option value="39">39</option><option value="40">40</option><option value="41">41</option><option value="42">42</option><option value="43">43</option><option value="44">44</option><option value="45">45</option><option value="46">46</option><option value="47">47</option><option value="48">48</option><option value="49">49</option><option value="50">50</option><option value="51">51</option><option value="52">52</option><option value="53">53</option><option value="54">54</option><option value="55">55</option><option value="56">56</option><option value="57">57</option><option value="58">58</option><option value="59">59</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
                     <div>
                         <div class="form-group">
                             <label class="form-control-label" for="input-username">Date et heure de Fin</label>
-                            <input type="text" id="end-show" class="form-control" value="" disabled>
+                            <div id="edit_form_end"><input type="date" id="edit_form_end_date" name="edit_form[end][date]" required="required">
+                                <div id="edit_form_end_time">
+                                    <select id="edit_form_end_time_hour" name="edit_form[end][time][hour]">
+                                        <option value="0">00</option><option value="1">01</option><option value="2">02</option><option value="3">03</option><option value="4">04</option><option value="5">05</option><option value="6">06</option><option value="7">07</option><option value="8">08</option><option value="9">09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option>
+                                    </select>:
+                                    <select id="edit_form_end_time_minute" name="edit_form[end][time][minute]"><option value="0">00</option><option value="1">01</option><option value="2">02</option><option value="3">03</option><option value="4">04</option><option value="5">05</option><option value="6">06</option><option value="7">07</option><option value="8">08</option><option value="9">09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option><option value="26">26</option><option value="27">27</option><option value="28">28</option><option value="29">29</option><option value="30">30</option><option value="31">31</option><option value="32">32</option><option value="33">33</option><option value="34">34</option><option value="35">35</option><option value="36">36</option><option value="37">37</option><option value="38">38</option><option value="39">39</option><option value="40">40</option><option value="41">41</option><option value="42">42</option><option value="43">43</option><option value="44">44</option><option value="45">45</option><option value="46">46</option><option value="47">47</option><option value="48">48</option><option value="49">49</option><option value="50">50</option><option value="51">51</option><option value="52">52</option><option value="53">53</option><option value="54">54</option><option value="55">55</option><option value="56">56</option><option value="57">57</option><option value="58">58</option><option value="59">59</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
                     <div>
                         <div class="form-group">
                             <label ID="notes_label" class="form-control-label" for="input-username">Observations Appel</label>
-                            <textarea id="notes-show" class="form-control" name="notes" id="notes" cols="30" rows="6" placeholder="..." resize="none" disabled></textarea>
+                            <textarea id="notes-show" class="form-control" name="notes" id="notes" cols="30" rows="6" placeholder="..." resize="none"></textarea>
                         </div>
                     </div>
 
@@ -304,11 +321,12 @@
                     <hr class="my-3">
 
                     <div class="text-center">
-                        <a id="edit-event" href="" class="btn btn-sm btn-info">Editer</a>
+                        <button type="submit" class="btn btn-sm btn-info">Editer</button>
                         <a id="delete-event" class="btn btn-sm btn-warning" href="">Supprimer</a>
                         {#<button type="button" class="btn btn-link  ml-auto" data-dismiss="modal">Retour</button>#}
 
                     </div>
+                    </form>
                 </div>
 
 
@@ -478,7 +496,7 @@
                 /*nextDayThreshold: '08:00:00',*/
                 events: {{ data['data']|raw }},
                 eventClick: function(info) {
-                    console.log(info.event.id)
+                    /*console.log(info.event.id)*/
                     if(info.event.title !== "RDV") {
                         if (info.event.backgroundColor === "#008000") {
                             $("#geozone-info").click()
@@ -531,6 +549,18 @@
                     $("#notes-show").val(info.event.extendedProps.description)
                     // change the border color just for fun
                     /*info.el.style.borderColor = 'red';*/
+                    $("#edit_form_start_date").val((moment(info.event.start).startOf('day').format('YYYY-MM-DD')))
+                    $("#edit_form_start_time_hour").val(parseInt(moment(info.event.start).format('HH')))
+                    $("#edit_form_start_time_minute").val(parseInt(moment(info.event.start).format('mm')))
+
+                    $("#edit_form_end_date").val((moment(info.event.end).startOf('day').format('YYYY-MM-DD')))
+                    $("#edit_form_end_time_hour").val((moment(info.event.end).format('HH')))
+                    $("#edit_form_end_time_minute").val(parseInt(moment(info.event.end).format('mm')))
+                    let editEventUrl = '{{ path("edit_event", {'id': 'the_event_to_edit_id'}) }}';
+                    editEventUrl = editEventUrl.replace("the_event_to_edit_id", info.event.id);
+                    $('#edit-event-form').attr('action', editEventUrl);
+
+
 
                     let deleteEvent = $("#delete-event")
                     let deleteEventUrl = '{{ path("delete_event", {'id': 'the_event_id'}) }}';

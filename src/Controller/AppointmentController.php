@@ -397,6 +397,7 @@ class AppointmentController extends AbstractController
 
             $eventTypeId = (int)($request->request->get("event_type"));
             $validationStartTime = $newAppointment->getStart();
+            /*dd($validationStartTime);*/
             $validationEndTime = $newAppointment->getEnd();
             $appointmentDuration = date_diff($validationEndTime,$validationStartTime);
             if($validationEndTime < $validationStartTime) {
@@ -766,6 +767,7 @@ class AppointmentController extends AbstractController
             /*dd($departmentsArray);*/
             $newGeoegraphicZoneEvent = new GeographicZoneEvent();
             $newGeoegraphicZoneEvent->setCalendarUser($commercial);
+
             $newGeoegraphicZoneEvent->setStart(new \DateTime($request->request->get('start')));
             $newGeoegraphicZoneEvent->setEnd(new \DateTime($request->request->get('end')));
             if($departmentsArray) {
@@ -814,5 +816,99 @@ class AppointmentController extends AbstractController
         return $this->redirectToRoute('show_calendar', [
             "id" => $calendarUserId
         ]);
+    }
+
+    /**
+     * @Route("/dashboard/appointments/showcalendar/editevent/{id}", name="edit_event")
+     */
+    public function editEvent(Request $request, $id): Response
+    {
+        $manager = $this->getDoctrine()->getManager();
+        $eventToEdit = $this->getDoctrine()->getRepository(Appointment::class)->find($id);
+        $calendarUserId = $eventToEdit->getUser()->getId();
+        /*$s = '2009-02-15 15:6';
+        $date = \DateTime::createFromFormat('Y-m-d H:i',$s);
+        dd($date);*/
+        $startDay = (($request->request->get('edit_form'))["start"])["date"];
+        $startHour = ((($request->request->get('edit_form'))["start"])["time"])["hour"];
+        $startMinute = ((($request->request->get('edit_form'))["start"])["time"])["minute"];
+        $endDay = (($request->request->get('edit_form'))["end"])["date"];
+        $endHour = ((($request->request->get('edit_form'))["end"])["time"])["hour"];
+        $endMinute = ((($request->request->get('edit_form'))["end"])["time"])["minute"];
+        if (strlen($startMinute) === 1) {
+            $startMinute = "0" . $startMinute;
+        }
+        if (strlen($endMinute) === 1) {
+            $endMinute = "0" . $endMinute;
+        }
+        $fullStartDate = $startDay . " " . $startHour . ":" . $startMinute;
+        $fullStartDateFormatted = \DateTime::createFromFormat('Y-m-d H:i',$fullStartDate);
+        $fullEndtDate = $endDay . " " . $endHour . ":" . $endMinute;
+        $fullEndDateFormatted = \DateTime::createFromFormat('Y-m-d H:i',$fullEndtDate);
+        $editedNotes = $request->request->get('notes');
+        /*dd($fullStartDateFormatted->format('Y-m-d H:i:s'));*/
+
+        //check availability
+        $validationStartTime = $fullStartDateFormatted;
+        $validationEndTime = $fullEndDateFormatted;
+        $appointmentDuration = date_diff($validationEndTime,$validationStartTime);
+        if($validationEndTime < $validationStartTime) {
+            $this->flashy->warning("Veuillez revérifier vos entrées! L'heure de début doit être avant l'heure de fin !");
+            /*$this->addFlash(
+                'event_duration_warning',
+                "Veuillez revérifier vos entrées! L'heure de début doit être avant l'heure de fin!"
+            );*/
+            return $this->redirectToRoute('show_my_calendar');
+        }
+
+        if((($validationEndTime > $validationStartTime) && ($appointmentDuration->days === 0) && ($appointmentDuration->h <= 2)) ||
+            (($validationEndTime > $validationStartTime) && ($appointmentDuration->days === 0) && ($appointmentDuration->h === 3)
+                && ($appointmentDuration->i === 0) && ($appointmentDuration->s === 0))
+        ) {
+            $startTime = $fullStartDateFormatted->format('Y-m-d H:i:s');
+            $endTime = $fullEndDateFormatted->format('Y-m-d H:i:s');
+            $busyAppointmentsTime = $this->getDoctrine()->getRepository(Appointment::class)->getAppointmentsBetweenByDate($startTime, $endTime);
+            $newBusyAppointmentsTime = [];
+            foreach ($busyAppointmentsTime as $appointment) {
+                if ($appointment->getId() !== $eventToEdit->getId())
+                    $newBusyAppointmentsTime[] = $appointment;
+            }
+            if ($newBusyAppointmentsTime) {
+                foreach ($newBusyAppointmentsTime as $appointment) {
+                    if ($appointment->getUser()->getId() === $calendarUserId) {
+                        $this->flashy->info("Aucune disponibilité à l'intervalle de temps choisi, Veuillez sélectionner d'autres dates !");
+                        return $this->redirectToRoute('show_calendar', [
+                            'id' => $calendarUserId,
+                        ]);
+                    }
+                }
+            } else {
+                $eventToEdit->setStart($validationStartTime);
+                $eventToEdit->setEnd($validationEndTime);
+                $eventToEdit->setAppointmentNotes($editedNotes);
+                $manager->persist($eventToEdit);
+                $manager->flush();
+                $this->flashy->success("Entrée éditée avec succès !");
+                return $this->redirectToRoute('show_calendar', [
+                    'id' => $calendarUserId,
+                ]);
+            }
+
+        }
+        else {
+            if(($appointmentDuration->days === 0) && ($appointmentDuration->h === 0)
+                && ($appointmentDuration->i === 0) && ($appointmentDuration->s === 0)) {
+                $this->flashy->warning("Veuillez revérifier vos entrées! La durée de l'événement ne doit pas être nulle !");
+            } else {
+                $this->flashy->warning("Veuillez revérifier vos entrées! La durée de l'événement ne doit pas dépasser trois heures !");
+            }
+            return $this->redirectToRoute('show_calendar', [
+                'id' => $calendarUserId,
+            ]);
+        }
+        /*$this->flashy->success('Entrée éditée avec succès !');
+        return $this->redirectToRoute('show_calendar', [
+            "id" => $calendarUserId
+        ]);*/
     }
 }
