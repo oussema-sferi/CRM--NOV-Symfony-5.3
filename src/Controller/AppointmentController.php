@@ -911,4 +911,45 @@ class AppointmentController extends AbstractController
             "id" => $calendarUserId
         ]);*/
     }
+
+
+    /**
+     * @Route("/dashboard/appointments/showcalendar/editgeozoneevent/{id}", name="edit_geo_zone_event")
+     */
+    public function editGeoZoneEvent(Request $request, $id): Response
+    {
+        $manager = $this->getDoctrine()->getManager();
+        $startDay = (($request->request->get('edit_geo_zone_form'))["start"])["date"];
+        $fullStartDate = $startDay . "00:00";
+        $fullStartDateFormatted = \DateTime::createFromFormat('Y-m-d H:i',$fullStartDate);
+        $endDay = (($request->request->get('edit_geo_zone_form'))["end"])["date"];
+        $fullEndDate = $endDay . "00:00";
+        $fullEndDateFormatted = \DateTime::createFromFormat('Y-m-d H:i',$fullEndDate);
+        $geoZoneEventToEdit = $this->getDoctrine()->getRepository(GeographicZoneEvent::class)->find($id);
+        $calendarUserId = $geoZoneEventToEdit->getCalendarUser()->getId();
+        $myString = $request->request->get('edit-departments-values');
+        $departmentsArray = explode(',', $myString);
+        $existingDepartments = $geoZoneEventToEdit->getGeographicAreas();
+        if($existingDepartments) {
+            foreach ($existingDepartments as $existingDepartment) {
+                /*dd($existingDepartment);*/
+                $geoZoneEventToEdit->removeGeographicArea($existingDepartment);
+            }
+        }
+        if($departmentsArray) {
+            foreach ($departmentsArray as $department) {
+                if($department) {
+                    $geoZoneEventToEdit->addGeographicArea($this->getDoctrine()->getRepository(GeographicArea::class)->find($department));
+                }
+            }
+        }
+        $geoZoneEventToEdit->setStart($fullStartDateFormatted);
+        $geoZoneEventToEdit->setEnd($fullEndDateFormatted);
+        $manager->persist($geoZoneEventToEdit);
+        $manager->flush();
+        $this->flashy->success("Zone Géographique éditée avec succès !");
+        return $this->redirectToRoute('show_calendar', [
+            "id" => $calendarUserId
+        ]);
+    }
 }

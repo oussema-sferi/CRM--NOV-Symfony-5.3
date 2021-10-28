@@ -408,6 +408,7 @@
 
                 <div class="modal-body">
 
+                    <form id="edit-geo-zone-event-form" action="" method="post">
                     <div>
                         <div class="form-group">
                             <label class="form-control-label" for="input-username">Utilisateur</label>
@@ -417,21 +418,21 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        {#<label class="form-control-label" for="department">Départements</label><br>
+                    {#<div class="form-group">
+                        #}{#<label class="form-control-label" for="department">Départements</label><br>
                         <select id="departmenttest" name="departmenttest" multiple>
                             {% for department in departments %}
                                 <option value="{{ department.id }}">{{ department.designation }}</option>
                             {% endfor %}
-                        </select>#}
+                        </select>#}{#
                         <div class="form-group">
                             <label ID="notes_label" class="form-control-label" for="input-username">Départements</label>
                             <textarea id="departments-geozone" class="form-control" name="departments-geozone" cols="30" rows="6" placeholder="..." resize="none" disabled></textarea>
                         </div>
-                    </div>
+                    </div>#}
 
                     <div class="form-group">
-                        <label class="form-control-label" for="edit-department">Départements test</label><br>
+                        <label class="form-control-label" for="edit-department">Départements</label><br>
                         <select id="edit-department" name="edit-department" required multiple>
                             {% for department in departments %}
                                 <option value="{{ department.id }}">{{ department.designation }}</option>
@@ -440,7 +441,8 @@
                     </div>
 
 
-                    <div>
+                        <input type="text" id="edit-departments-values" name="edit-departments-values" class="form-control" hidden>
+                    {#<div>
                         <div class="form-group">
                             <label class="form-control-label" for="input-username">Date de Début</label>
                             <input type="text" id="start-geozone" class="form-control" value="" disabled>
@@ -452,7 +454,23 @@
                             <label class="form-control-label" for="input-username">Date de Fin</label>
                             <input type="text" id="end-geozone" class="form-control" value="" disabled>
                         </div>
-                    </div>
+                    </div>#}
+
+                        <div>
+                            <div class="form-group">
+                                <label class="form-control-label" for="input-username">Date de Début</label>
+                                <div id="edit_geo_zone_form_start"><input type="date" id="edit_geo_zone_form_start_date" name="edit_geo_zone_form[start][date]" required="required" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="form-group">
+                                <label class="form-control-label" for="input-username">Date de Fin</label>
+                                <div id="edit_geo_zone_form_end"><input type="date" id="edit_geo_zone_form_end_date" name="edit_geo_zone_form[end][date]" required="required" class="form-control">
+                                </div>
+                            </div>
+                        </div>
 
                     {#<div>
                         <div class="form-group">
@@ -473,12 +491,12 @@
                     <hr class="my-3">
 
                     <div class="text-center">
-                        <button type="button" class="btn btn-link btn-sm ml-auto" data-dismiss="modal">Retour</button>
+                        <button type="submit" class="btn btn-sm btn-info">Editer</button>
                         <a id="delete-geozone" class="btn btn-sm btn-warning" href="">Supprimer</a>
                     </div>
+
+                    </form>
                 </div>
-
-
 
             </div>
         </div>
@@ -520,9 +538,19 @@
                             /*console.log(info.event.extendedProps.geoareasid[0])*/
                             $('#client_show-block').hide();
                             $('#notes_label').text('Observations zones géo');
-                            $("#start-geozone").val((moment(info.event.start).format('DD/MM/YYYY')))
-                            $("#end-geozone").val((moment(info.event.end).subtract(1, "days").format('DD/MM/YYYY')))
+                            /*$("#start-geozone").val((moment(info.event.start).format('DD/MM/YYYY')))
+                            $("#end-geozone").val((moment(info.event.end).subtract(1, "days").format('DD/MM/YYYY')))*/
                             $("#departments-geozone").val(info.event.title)
+
+                            $("#edit_geo_zone_form_start_date").val((moment(info.event.start).format('YYYY-MM-DD')))
+                            $("#edit_geo_zone_form_end_date").val((moment(info.event.end).subtract(1, "days").format('YYYY-MM-DD')))
+
+
+
+
+                            let editGeoZoneUrl = '{{ path("edit_geo_zone_event", {'id': 'the_geo_zone_event_to_edit_id'}) }}';
+                            editGeoZoneUrl = editGeoZoneUrl.replace("the_geo_zone_event_to_edit_id", info.event.id);
+                            $('#edit-geo-zone-event-form').attr('action', editGeoZoneUrl);
 
                             let deleteGeoZone = $("#delete-geozone")
                             let deleteUrl = '{{ path("delete_geo_zone_event", {'id': 'event_id'}) }}';
@@ -552,7 +580,8 @@
                             })
                                 /*console.log(this.value);*/
 
-
+                            /*console.log($('#edit-department').val())*/
+                            $('#edit-departments-values').val($('#edit-department').val());
 
                            /* console.log(editDepartment.val())*/
                         } else {
@@ -646,7 +675,7 @@
                 }
             })
 
-            /*$('#departmentstest').val($('#departmenttest').val());*/
+
             let departmenttest = new SlimSelect({
                 select: '#edit-department',
                 placeholder: 'Choisissez les départements',
@@ -654,7 +683,7 @@
                 searchPlaceholder: 'Rechercher',
                 onChange: () => {
 
-                    /*$('#departmentstest').val($('#departmenttest').val());*/
+                    $('#edit-departments-values').val($('#edit-department').val());
 
 
                 }
