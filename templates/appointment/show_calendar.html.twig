@@ -430,6 +430,15 @@
                         </div>
                     </div>
 
+                    <div class="form-group">
+                        <label class="form-control-label" for="edit-department">Départements test</label><br>
+                        <select id="edit-department" name="edit-department" required multiple>
+                            {% for department in departments %}
+                                <option value="{{ department.id }}">{{ department.designation }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
 
                     <div>
                         <div class="form-group">
@@ -500,6 +509,14 @@
                     if(info.event.title !== "RDV") {
                         if (info.event.backgroundColor === "#008000") {
                             $("#geozone-info").click()
+                            $("#edit-department  > option").each(function() {
+                                $(this).attr("selected",false);
+                            })
+                            departmenttest.selectedIndex = 0;
+                            $("#edit-department").attr('class', 'edit' + info.event.id)
+                            /*if(departmenttest) {
+                                departmenttest.destroy()
+                            }*/
                             /*console.log(info.event.extendedProps.geoareasid[0])*/
                             $('#client_show-block').hide();
                             $('#notes_label').text('Observations zones géo');
@@ -512,17 +529,27 @@
                             deleteUrl = deleteUrl.replace("event_id", info.event.id);
                             deleteGeoZone.attr("href",deleteUrl)
                             /*console.log(editDepartment.find('option')[0].prop())*/
-                            /*$("#departmenttest").find('option').each(function() {
-                                let testing = this.value
+
+
+
+                            /*departmenttest.setData([{ value: '25', text: 'test'}])*/
+                            $(".edit" + info.event.id).find('option').each(function() {
+                               /* console.log(this)*/
+                                /*let testing = this.value*/
                                 let that = this
+
                                 $.each(info.event.extendedProps.geoareasid, function (index,val) {
                                     if(that.value == val) {
-                                        console.log($(that))
-                                        $(that).attr('selected', true);
+                                        /*console.log(info.event.extendedProps.geoareasid)*/
+
+                                        $(that).attr("selected",true);
+                                        let test = that
+                                        /*$(that).remove()
+                                        $(".edit" + info.event.id).append(test)*/
                                     }
 
                                 })
-                            })*/
+                            })
                                 /*console.log(this.value);*/
 
 
@@ -619,19 +646,19 @@
                 }
             })
 
-            /*$('#departmentstest').val($('#departmenttest').val());
+            /*$('#departmentstest').val($('#departmenttest').val());*/
             let departmenttest = new SlimSelect({
-                select: '#departmenttest',
+                select: '#edit-department',
                 placeholder: 'Choisissez les départements',
                 searchText: 'Aucun Résultat',
                 searchPlaceholder: 'Rechercher',
                 onChange: () => {
 
-                    $('#departmentstest').val($('#departmenttest').val());
+                    /*$('#departmentstest').val($('#departmenttest').val());*/
 
 
                 }
-            })*/
+            })
 
 
         }
