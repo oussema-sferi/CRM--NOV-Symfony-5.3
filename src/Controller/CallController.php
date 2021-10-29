@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Appointment;
 use App\Entity\Call;
+use App\Entity\Client;
 use App\Entity\User;
 use MercurySeries\FlashyBundle\FlashyNotifier;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -72,9 +73,19 @@ class CallController extends AbstractController
         $manager = $this->getDoctrine()->getManager();
         $callToDelete = $this->getDoctrine()->getRepository(Call::class)->find($id);
         $clientId = $callToDelete->getClient()->getId();
+        $client = $this->getDoctrine()->getRepository(Client::class)->find($clientId);
         $callToDelete->setIsDeleted(true);
         $callToDelete->setDeletionDate(new \DateTime());
         $manager->persist($callToDelete);
+        $manager->flush();
+        $allClientNotDeletedCalls = $this->getDoctrine()->getRepository(Call::class)->getNotDeletedCallsByClient($clientId);
+        $allClientNotDeletedAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getNotDeletedAppointmentsByClient($clientId);
+        /*dd($allClientNotDeletedCalls);*/
+        if ((count($allClientNotDeletedCalls) === 0) && (count($allClientNotDeletedAppointments) === 0)) {
+            $client->setStatus(0);
+            $client->setStatusDetail(0);
+        }
+        $manager->persist($client);
         $manager->flush();
         $this->flashy->success('Appel supprimé avec succès !');
         return $this->redirectToRoute('full_update_contact', [

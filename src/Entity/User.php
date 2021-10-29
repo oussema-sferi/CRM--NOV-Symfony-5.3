@@ -124,6 +124,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $fixedAppointments;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Client::class, inversedBy="processingUsers")
+     */
+    private $processedClients;
+
 
     public function __construct()
     {
@@ -135,6 +140,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->geographicZoneEvents = new ArrayCollection();
         $this->calledClients = new ArrayCollection();
         $this->fixedAppointments = new ArrayCollection();
+        $this->processedClients = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -541,6 +547,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $fixedAppointment->setAppointmentFixer(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Client[]
+     */
+    public function getProcessedClients(): Collection
+    {
+        return $this->processedClients;
+    }
+
+    public function addProcessedClient(Client $processedClient): self
+    {
+        if (!$this->processedClients->contains($processedClient)) {
+            $this->processedClients[] = $processedClient;
+        }
+
+        return $this;
+    }
+
+    public function removeProcessedClient(Client $processedClient): self
+    {
+        $this->processedClients->removeElement($processedClient);
 
         return $this;
     }

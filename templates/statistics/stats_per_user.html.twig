@@ -87,7 +87,7 @@
                                     <div class="col">
                                         <h5 class="card-title text-uppercase text-muted mb-0">Fiches de contact traités</h5>
                                         <span class="h2 font-weight-bold mb-0">
-                                            {% if app.session.get('date_filter_value_stats_per_user') is not null %}
+                                            {#{% if app.session.get('date_filter_value_stats_per_user') is not null %}
                                                 {% set processed_clients_counter = 0 %}
                                                 {% for client in processed_clients %}
                                                     {% set break = false %}
@@ -114,6 +114,28 @@
                                                     {% endfor %}
                                                 {% endfor %}
                                                 {{ processed_clients_counter }}
+                                            {% else %}
+                                                {{ processed_clients_count }}
+                                            {% endif %}#}
+                                            {% if app.session.get('date_filter_value_stats_per_user') is not null %}
+                                                {% set my_processed_clients_counter = 0 %}
+                                                {% for client in processed_clients  %}
+                                                    {% set process_date = client.updatedAt | date('Y-m-d') %}
+                                                    {% if filter == "0" or filter == "1" %}
+                                                        {% if process_date == selected_date %}
+                                                            {% set my_processed_clients_counter = my_processed_clients_counter + 1 %}
+                                                        {% endif %}
+                                                    {% elseif filter == "100" %}
+                                                        {% if process_date >= start_date and process_date <= end_date %}
+                                                            {% set my_processed_clients_counter = my_processed_clients_counter + 1 %}
+                                                        {% endif %}
+                                                    {% else %}
+                                                        {% if process_date >= selected_date %}
+                                                            {% set my_processed_clients_counter = my_processed_clients_counter + 1 %}
+                                                        {% endif%}
+                                                    {% endif %}
+                                                {% endfor %}
+                                                {{ my_processed_clients_counter }}
                                             {% else %}
                                                 {{ processed_clients_count }}
                                             {% endif %}

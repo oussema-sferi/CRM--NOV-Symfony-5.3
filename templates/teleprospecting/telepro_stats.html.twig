@@ -123,25 +123,79 @@
                                             {#{{ dump(processed_clients[2].calls) }}#}
                                             {#{{ processed_clients }}#}
                                             {#{{ dump(selected_date) }}#}
-                                            {% if app.session.get('date_filter_value') is not null %}
+                                            {#{% if app.session.get('date_filter_value') is not null %}
                                                 {% set processed_clients_counter = 0 %}
                                                 {% for client in processed_clients %}
-                                                            {% set update_date = client.updatedAt | date('Y-m-d') %}
-
-                                                            {% if filter == "0" or filter == "1" %}
-                                                                {% if update_date == selected_date and client.status != 0 %}
-                                                                    {% set processed_clients_counter = processed_clients_counter + 1 %}
+                                                    {% if client.calls is null %}
+                                                        {% set break_appointment = false %}
+                                                        {% for appointment in client.appointments %}
+                                                            {% if break_appointment == false %}
+                                                                {% set appointment_date = appointment.createdAt | date('Y-m-d') %}
+                                                                {% if filter == "0" or filter == "1" %}
+                                                                    {% if appointment_date == selected_date %}
+                                                                        {% set processed_clients_counter = processed_clients_counter + 1 %}
+                                                                        {% set break_appointment = true %}
+                                                                    {% endif %}
+                                                                {% elseif filter == "100" %}
+                                                                    {% if appointment_date >= start_date and appointment_date <= end_date %}
+                                                                        {% set processed_clients_counter = processed_clients_counter + 1 %}
+                                                                        {% set break_appointment = true %}
+                                                                    {% endif %}
+                                                                {% else %}
+                                                                    {% if appointment_date >= selected_date %}
+                                                                        {% set processed_clients_counter = processed_clients_counter + 1 %}
+                                                                        {% set break_appointment = true %}
+                                                                    {% endif%}
                                                                 {% endif %}
-                                                            {% elseif filter == "100" %}
-                                                                {% if update_date >= start_date and call_date <= end_date and client.status != 0 %}
-                                                                    {% set processed_clients_counter = processed_clients_counter + 1 %}
-                                                                {% endif %}
-                                                            {% else %}
-                                                                {% if update_date >= selected_date and client.status != 0 %}
-                                                                    {% set processed_clients_counter = processed_clients_counter + 1 %}
-                                                                {% endif%}
                                                             {% endif %}
+                                                        {% endfor %}
+                                                    {% else %}
+                                                        {% set break = false %}
+                                                        {% for call in client.calls %}
+                                                            {% if break == false %}
+                                                                {% set call_date = call.createdAt | date('Y-m-d') %}
+                                                                {% if filter == "0" or filter == "1" %}
+                                                                    {% if call_date == selected_date %}
+                                                                        {% set processed_clients_counter = processed_clients_counter + 1 %}
+                                                                        {% set break = true %}
+                                                                    {% endif %}
+                                                                {% elseif filter == "100" %}
+                                                                    {% if call_date >= start_date and call_date <= end_date %}
+                                                                        {% set processed_clients_counter = processed_clients_counter + 1 %}
+                                                                        {% set break = true %}
+                                                                    {% endif %}
+                                                                {% else %}
+                                                                    {% if call_date >= selected_date %}
+                                                                        {% set processed_clients_counter = processed_clients_counter + 1 %}
+                                                                        {% set break = true %}
+                                                                    {% endif%}
+                                                                {% endif %}
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    {% endif %}
                                                 {% endfor %}
+                                                {{ processed_clients_counter }}
+                                            {% else %}
+                                                {{ processed_clients_count }}
+                                            {% endif %}#}
+                                            {% if app.session.get('date_filter_value') is not null %}
+                                                {% set processed_clients_counter = 0 %}
+                                                    {% for processedClient in processed_clients %}
+                                                        {% set process_date = processedClient.updatedAt | date('Y-m-d') %}
+                                                        {% if filter == "0" or filter == "1" %}
+                                                            {% if process_date == selected_date %}
+                                                                {% set processed_clients_counter = processed_clients_counter + 1 %}
+                                                            {% endif %}
+                                                        {% elseif filter == "100" %}
+                                                            {% if process_date >= start_date and process_date <= end_date %}
+                                                                {% set processed_clients_counter = processed_clients_counter + 1 %}
+                                                            {% endif %}
+                                                        {% else %}
+                                                            {% if process_date >= selected_date %}
+                                                                {% set processed_clients_counter = processed_clients_counter + 1 %}
+                                                            {% endif%}
+                                                        {% endif %}
+                                                    {% endfor %}
                                                 {{ processed_clients_counter }}
                                             {% else %}
                                                 {{ processed_clients_count }}
@@ -510,103 +564,52 @@
                                     {{ telepro.firstName ~ ' ' ~ telepro.lastName }}
                                 </th>
                                 <td>
-                                {#{{ dump(app.session.get('date_filter_value')) }}#}
-                                    {#{% if app.session.get('date_filter_value') is not null %}
-                                        {% set processed_counter = 0 %}
-                                        {% for call in telepro.calls  %}
-                                            {% set call_date = call.createdAt | format_datetime('short', 'none') %}
-                                                {% if filter == "0" or filter == "1" %}
-                                                    {% if call_date == selected_date %}
-                                                        {% set processed_counter = processed_counter + 1 %}
-                                                    {% endif %}
-                                                {% else %}
-                                                    {% if call_date >= selected_date %}
-                                                        {% set processed_counter = processed_counter + 1 %}
-                                                    {% endif%}
-                                                {% endif %}
-                                        {% endfor %}
-                                        {{ processed_counter }}
-                                    {% else %}
-                                        {{ telepro.calls | length }}
-                                    {% endif %}#}
                                     {% if app.session.get('date_filter_value') is not null %}
-                                        {% set processed_counter = 0 %}
-                                        {% set calls_clients_ids_array = [] %}
-                                            {% for call in telepro.calls  %}
-                                            {% set calls_clients_ids_array = calls_clients_ids_array|merge([call.client.id]) %}
-                                            {% endfor %}
-
-                                            {% set newArray = [] %}
-                                            {% for id in calls_clients_ids_array %}
-                                                {% if id not in newArray %}
-                                                    {% set newArray = newArray|merge([id]) %}
-                                                {% endif %}
-                                            {% endfor %}
-
-                                            {% for call in telepro.calls  %}
-                                                {% set call_date = call.createdAt | date('Y-m-d') %}
-                                                {% if call.client.id in newArray %}
+                                        {% set processed_clients_counter_by_user = 0 %}
+                                            {% for processedClient in telepro.processedClients  %}
+                                                {% set process_date = processedClient.updatedAt | date('Y-m-d') %}
                                                     {% if filter == "0" or filter == "1" %}
-                                                        {% if call_date == selected_date %}
-                                                            {% set processed_counter = processed_counter + 1 %}
-                                                            {% set newArray = remove(newArray, call.client.id) %}
+                                                        {% if process_date == selected_date %}
+                                                            {% set processed_clients_counter_by_user = processed_clients_counter_by_user + 1 %}
                                                         {% endif %}
                                                     {% elseif filter == "100" %}
-                                                        {% if call_date >= start_date and call_date <= end_date %}
-                                                            {% set processed_counter = processed_counter + 1 %}
-                                                            {% set newArray = remove(newArray, call.client.id) %}
+                                                        {% if process_date >= start_date and process_date <= end_date %}
+                                                            {% set processed_clients_counter_by_user = processed_clients_counter_by_user + 1 %}
                                                         {% endif %}
                                                     {% else %}
-                                                        {% if call_date >= selected_date %}
-                                                            {% set processed_counter = processed_counter + 1 %}
-                                                            {% set newArray = remove(newArray, call.client.id) %}
+                                                        {% if process_date >= selected_date %}
+                                                            {% set processed_clients_counter_by_user = processed_clients_counter_by_user + 1 %}
                                                         {% endif%}
                                                     {% endif %}
-
-                                                {% endif %}
                                             {% endfor %}
-                                        {#{{ dump(newArray) }}#}
-                                        {{ processed_counter }}
+                                        {{ processed_clients_counter_by_user }}
                                     {% else %}
-                                        {{ telepro.calls | length }}
+                                        {{ telepro.processedClients | length }}
                                     {% endif %}
                                 </td>
                                 <td>
                                     {% set taken_appointments_counter = 0 %}
                                     {% if app.session.get('date_filter_value') is not null %}
-                                        {% for call in telepro.calls  %}
-                                                {% set call_date = call.createdAt | date('Y-m-d') %}
-
+                                        {% for appointment in telepro.fixedAppointments  %}
+                                            {% set appointment_date = appointment.createdAt | date('Y-m-d') %}
                                             {% if filter == "0" or filter == "1" %}
-                                                {% if call_date == selected_date %}
-                                                    {% if call.statusDetails == 7 %}
+                                                {% if appointment_date == selected_date %}
                                                         {% set taken_appointments_counter = taken_appointments_counter + 1 %}
-                                                    {% endif %}
                                                 {% endif %}
                                             {% elseif filter == "100" %}
-                                                {% if call_date >= start_date and call_date <= end_date %}
-                                                    {% if call.statusDetails == 7 %}
+                                                {% if appointment_date >= start_date and appointment_date <= end_date %}
                                                         {% set taken_appointments_counter = taken_appointments_counter + 1 %}
-                                                    {% endif %}
                                                 {% endif %}
                                             {% else %}
-                                                {% if call_date >= selected_date %}
-                                                    {% if call.statusDetails == 7 %}
+                                                {% if appointment_date >= selected_date %}
                                                         {% set taken_appointments_counter = taken_appointments_counter + 1 %}
-                                                    {% endif %}
                                                 {% endif %}
                                             {% endif %}
                                         {% endfor %}
-
+                                        {{ taken_appointments_counter }}
                                     {% else %}
-                                        {% for call in telepro.calls  %}
-                                                {% if call.statusDetails == 7 %}
-                                                    {% set taken_appointments_counter = taken_appointments_counter + 1 %}
-                                                {% endif %}
-
-                                        {% endfor %}
+                                        {{ telepro.fixedAppointments | length }}
                                     {% endif %}
-                                    {{ taken_appointments_counter }}
                                 </td>
                             </tr>
                             {% endfor %}

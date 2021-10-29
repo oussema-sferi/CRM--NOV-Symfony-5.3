@@ -60,7 +60,7 @@ class StatisticsController extends AbstractController
             $appointmentsCounter = 0;
             foreach ($allAppointments as $appointment) {
                 if (((new \DateTime())->format("Y")) === $appointment->getCreatedAt()->format("Y")) {
-                    if (date("F", mktime(0, 0, 0, (int)($appointment->getCreatedAt()->format("m")), 1, (int)($call->getCreatedAt())->format("Y"))) === date("F", mktime(0, 0, 0, $j, 1, (int)(new \DateTime())->format("Y")))) {
+                    if (date("F", mktime(0, 0, 0, (int)($appointment->getCreatedAt()->format("m")), 1, (int)($appointment->getCreatedAt())->format("Y"))) === date("F", mktime(0, 0, 0, $j, 1, (int)(new \DateTime())->format("Y")))) {
                         $appointmentsCounter += 1;
                     }
                 }
@@ -142,7 +142,7 @@ class StatisticsController extends AbstractController
     {
         $userId = $this->getUser()->getId();
         $user = $this->getDoctrine()->getRepository(User::class)->find($id);
-        $myProcessedContacts = $user->getCalledClients();
+        $myProcessedContacts = $user->getProcessedClients();
         $myQualifiedCalls = $this->getDoctrine()->getRepository(Call::class)->getQualifiedCallsByUser($id);
         $myNotQualifiedCalls = $this->getDoctrine()->getRepository(Call::class)->getNotQualifiedCallsByUser($id);
         $myDoneAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getDoneAppointmentsByUser($id);

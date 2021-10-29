@@ -598,8 +598,11 @@ class AppointmentController extends AbstractController
             $newAppointment->setAppointmentCall($aNewCall);*/
 
             $manager->persist($newAppointment);
+            $client->setUpdatedAt(new \DateTime());
             /*$manager->persist($aNewCall);*/
+            $this->getUser()->addProcessedClient($client);
             $manager->flush();
+
             $this->flashy->success("RDV fixé avec succès !");
         }
         return $this->redirectToRoute('show_calendar', [
@@ -674,9 +677,13 @@ class AppointmentController extends AbstractController
 
             $newAppointment->setAppointmentCall($aNewCall);*/
 
+
             $manager->persist($newAppointment);
             /*$manager->persist($aNewCall);*/
+            $client->setUpdatedAt(new \DateTime());
+            $this->getUser()->addProcessedClient($client);
             $manager->flush();
+
             $this->flashy->success("RDV fixé avec succès !");
         }
         return $this->redirectToRoute('show_calendar', [

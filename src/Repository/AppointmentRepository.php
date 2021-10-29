@@ -335,5 +335,14 @@ class AppointmentRepository extends ServiceEntityRepository
         return $qb->orderBy('a.start', 'DESC')->getQuery()->getResult();
     }
 
+    public function getNotDeletedAppointmentsByClient($id)
+    {
+        $qb = $this->createQueryBuilder('a');
+        $qb->select('a')
+            ->join('a.client', 'c')
+            ->where('a.isDeleted = 0')
+            ->andWhere("c.id = $id");
+        return $qb->getQuery()->getResult();
+    }
 
 }

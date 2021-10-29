@@ -141,6 +141,11 @@ class Client
      */
     private $callersUsers;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=User::class, mappedBy="processedClients")
+     */
+    private $processingUsers;
+
 
 
     public function __construct()
@@ -148,6 +153,7 @@ class Client
         $this->calls = new ArrayCollection();
         $this->appointments = new ArrayCollection();
         $this->callersUsers = new ArrayCollection();
+        $this->processingUsers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -482,6 +488,33 @@ class Client
     public function removeCallersUser(User $callersUser): self
     {
         $this->callersUsers->removeElement($callersUser);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|User[]
+     */
+    public function getProcessingUsers(): Collection
+    {
+        return $this->processingUsers;
+    }
+
+    public function addProcessingUser(User $processingUser): self
+    {
+        if (!$this->processingUsers->contains($processingUser)) {
+            $this->processingUsers[] = $processingUser;
+            $processingUser->addProcessedClient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProcessingUser(User $processingUser): self
+    {
+        if ($this->processingUsers->removeElement($processingUser)) {
+            $processingUser->removeProcessedClient($this);
+        }
 
         return $this;
     }

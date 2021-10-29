@@ -179,6 +179,7 @@ class TeleprospectingController extends AbstractController
                 ]);
 
             } else {
+                /*dd($loggedUser->getProcessedClients());*/
                 /*$client->setStatusDetail($statusDetailsQ);*/
                 $newCall->setCreatedAt(new  \DateTime());
                 $newCall->setUser($loggedUser);
@@ -197,7 +198,7 @@ class TeleprospectingController extends AbstractController
                 if ($userCounter === 0) {
                     $client->addCallersUser($loggedUser);
                 }
-                $client->setUpdatedAt(new \DateTime());
+
                 $client->setStatus($status);
                 if($statusDetailsQ) {
                     $newCall->setStatusDetails($statusDetailsQ);
@@ -206,6 +207,17 @@ class TeleprospectingController extends AbstractController
                     $newCall->setStatusDetails($statusDetailsNQ);
                     $client->setStatusDetail($statusDetailsNQ);
                 }
+                /*$myProcessedClients = $loggedUser->getProcessedClients();
+                $myProcessedClientsIdsArray = [];
+                foreach ($myProcessedClients as $processedClient) {
+                    $myProcessedClientsIdsArray[] = $processedClient->getId();
+                }
+                if(!in_array($client->getId(), $myProcessedClientsIdsArray)) {
+                    $loggedUser->addProcessedClient($client);
+                }*/
+                $client->setUpdatedAt(new \DateTime());
+                $loggedUser->addProcessedClient($client);
+
                 $manager->persist($newCall);
                 $manager->flush();
                 $this->flashy->success("Fiche contact traitée avec succès !");
@@ -342,7 +354,27 @@ class TeleprospectingController extends AbstractController
         $justTelepros = $this->getDoctrine()->getRepository(User::class)->findUsersByCommercialRole("ROLE_TELEPRO");
         $allTelepros = $this->getDoctrine()->getRepository(User::class)->findUsersTeleproStats("ROLE_TELEPRO", "ROLE_SUPERADMIN");
         $allClients = $this->getDoctrine()->getRepository(Client::class)->getNotDeletedClients();
-        $processedClients = $this->getDoctrine()->getRepository(Client::class)->getProcessedClients();
+
+        $processedClientsArray = [];
+        foreach ($allTelepros as $user) {
+            foreach ($user->getProcessedClients() as $client) {
+                $processedClientsArray[] = $client->getId();
+            }
+        }
+        /*dd($clientsIdsArray);*/
+        $uniqueProcessedClientsArray = array_unique($processedClientsArray);
+        $processedClients = [];
+        foreach ($uniqueProcessedClientsArray as $clientId) {
+            foreach ($allClients as $clientObject) {
+                if($clientObject->getId() === $clientId) {
+                    $processedClients[] = $clientObject;
+                    break;
+                }
+            }
+        }
+        /*dd(count($processedClients));*/
+        /*dd($data);
+        $processedClients = $this->getDoctrine()->getRepository(User::class)->getProcessedClients();*/
         $notProcessedClients = $this->getDoctrine()->getRepository(Client::class)->getNotProcessedClients();
         $allAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getAppointmentsWhereClientsExist();
         $allCalls = $this->getDoctrine()->getRepository(Call::class)->getAllNotDeletedCalls();
