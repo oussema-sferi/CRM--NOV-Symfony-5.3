@@ -53,7 +53,7 @@
                     <form action="{{ path('all_contacts_search_filters') }}" method="post">
                     <div class="card-header border-0">
                         <div class="row">
-                            <div class="col-md-8">
+                            <div class="col-md-6">
                                 {% if app.session.get('total_contacts_search_results') and app.session.get('total_contacts_search_results') != "nothing" %}
                                     <h3 class="mb-0">Nombre de résultats: {{ app.session.get('total_contacts_search_results')}}</h3>
                                 {% elseif app.session.get('total_contacts_search_results') and app.session.get('total_contacts_search_results') == "nothing" %}
@@ -102,7 +102,7 @@
                                 </span>
                             </div>
                             {% if clients|length != 0 %}
-                            <div class="col-md-4 text-right">
+                            <div class="col-md-6 text-right">
                                 <button class="btn btn-sm btn-success" type="submit">Appliquer les filtres</button>
                                 <a class="btn btn-sm btn-primary" href="{{ path('all_contacts') }}">Réinitialiser les filtres</a>
                                 {#<input type="text" class="form-control " placeholder="Recherche" id="contact-filter">#}
