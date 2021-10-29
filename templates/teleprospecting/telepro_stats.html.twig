@@ -594,21 +594,33 @@
                                             {% set appointment_date = appointment.createdAt | date('Y-m-d') %}
                                             {% if filter == "0" or filter == "1" %}
                                                 {% if appointment_date == selected_date %}
+                                                    {% if appointment.eventType.id == 4 %}
                                                         {% set taken_appointments_counter = taken_appointments_counter + 1 %}
+                                                    {% endif %}
                                                 {% endif %}
                                             {% elseif filter == "100" %}
                                                 {% if appointment_date >= start_date and appointment_date <= end_date %}
+                                                    {% if appointment.eventType.id == 4 %}
                                                         {% set taken_appointments_counter = taken_appointments_counter + 1 %}
+                                                    {% endif %}
                                                 {% endif %}
                                             {% else %}
                                                 {% if appointment_date >= selected_date %}
+                                                    {% if appointment.eventType.id == 4 %}
                                                         {% set taken_appointments_counter = taken_appointments_counter + 1 %}
+                                                    {% endif %}
                                                 {% endif %}
                                             {% endif %}
                                         {% endfor %}
                                         {{ taken_appointments_counter }}
                                     {% else %}
-                                        {{ telepro.fixedAppointments | length }}
+                                        {% set taken_appointments_counter_no_filter = 0 %}
+                                        {% for appointment in telepro.fixedAppointments  %}
+                                            {% if appointment.eventType.id == 4 %}
+                                                {% set taken_appointments_counter_no_filter = taken_appointments_counter_no_filter + 1 %}
+                                            {% endif %}
+                                        {% endfor %}
+                                        {{ taken_appointments_counter_no_filter }}
                                     {% endif %}
                                 </td>
                             </tr>
