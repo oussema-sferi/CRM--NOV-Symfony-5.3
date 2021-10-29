@@ -97,7 +97,7 @@
                                         <h5 class="card-title text-uppercase text-muted mb-0">Total Contacts Traités</h5>
                                         <span class="h2 font-weight-bold mb-0">
                                             {#{{ total_processed_contacts }}#}
-                                            {% if app.session.get('date_filter_value_all_stats') is not null %}
+                                            {#{% if app.session.get('date_filter_value_all_stats') is not null %}
                                                 {% set processed_contacts_counter = 0 %}
                                                 {% for client in total_processed_contacts %}
                                                     {% set break = false %}
@@ -124,6 +124,28 @@
                                                     {% endfor %}
                                                 {% endfor %}
                                                 {{ processed_contacts_counter }}
+                                            {% else %}
+                                                {{ count_total_processed_contacts }}
+                                            {% endif %}#}
+                                            {% if app.session.get('date_filter_value_all_stats') is not null %}
+                                                {% set processed_clients_counter = 0 %}
+                                                {% for processedClient in total_processed_contacts %}
+                                                    {% set process_date = processedClient.updatedAt | date('Y-m-d') %}
+                                                    {% if filter == "0" or filter == "1" %}
+                                                        {% if process_date == selected_date %}
+                                                            {% set processed_clients_counter = processed_clients_counter + 1 %}
+                                                        {% endif %}
+                                                    {% elseif filter == "100" %}
+                                                        {% if process_date >= start_date and process_date <= end_date %}
+                                                            {% set processed_clients_counter = processed_clients_counter + 1 %}
+                                                        {% endif %}
+                                                    {% else %}
+                                                        {% if process_date >= selected_date %}
+                                                            {% set processed_clients_counter = processed_clients_counter + 1 %}
+                                                        {% endif%}
+                                                    {% endif %}
+                                                {% endfor %}
+                                                {{ processed_clients_counter }}
                                             {% else %}
                                                 {{ count_total_processed_contacts }}
                                             {% endif %}
@@ -153,7 +175,7 @@
                                             {#{{ contacts_performance }}%#}
                                             {% if app.session.get('date_filter_value_all_stats') is not null %}
                                                 {% if  total_all_contacts != 0 %}
-                                                    {{ ((processed_contacts_counter / total_all_contacts) * 100)|number_format(2) }}%
+                                                    {{ ((processed_clients_counter / total_all_contacts) * 100)|number_format(2) }}%
                                                 {% else %}
                                                     0.00%
                                                 {% endif %}
@@ -278,8 +300,8 @@
                                         <span class="h2 font-weight-bold mb-0">
                                             {#{{ appointments_performance }}%#}
                                             {% if app.session.get('date_filter_value_all_stats') is not null %}
-                                                {% if  processed_contacts_counter != 0 %}
-                                                    {{ ((fixed_appointments_counter / processed_contacts_counter) * 100)|number_format(2) }}%
+                                                {% if  processed_clients_counter != 0 %}
+                                                    {{ ((fixed_appointments_counter / processed_clients_counter) * 100)|number_format(2) }}%
                                                 {% else %}
                                                     0.00%
                                                 {% endif %}
