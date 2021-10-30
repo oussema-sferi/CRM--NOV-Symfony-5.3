@@ -525,6 +525,21 @@
                                     </div>
                                 </div>
 
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="input-city">Pris Par</label>
+                                            <input type="text" id="input-city" class="form-control" value="{{ appointment.appointmentFixer.firstName ~ ' ' ~ appointment.appointmentFixer.lastName }}" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="input-country">Date</label>
+                                            <input type="text" id="input-country" class="form-control" value="{{ appointment.createdAt | format_datetime(locale='fr') }}" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+
 
                                 <div class="row">
                                     <div class="col-lg-12">
