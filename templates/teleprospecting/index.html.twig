@@ -272,7 +272,7 @@
                             </thead>
                             <tbody class="list" id="teleproBody">
                             {% for client in clients %}
-                            <tr class="clickable-row" data-href="{{ path('show_client', {'id': client.id}) }}">
+                            <tr class="clickable-row" data-href="{{ path('show_contact', {'id': client.id}) }}">
                                 <td class="budget">
                                     {{ client.firstName }}
                                 </td>
@@ -359,7 +359,7 @@
                                     {% if client.status == 0 %}
                                         <a href="{{ path('call_handle', {'id': client.id}) }}"  class="badge badge-default" >Traiter Fiche</a>
                                     {% else %}
-                                        <a href="{{ path('show_client', {'id': client.id}) }}"><i class="fas fa-search-plus text-blue"></i></a>&nbsp;&nbsp;
+                                        <a href="{{ path('show_contact', {'id': client.id}) }}"><i class="fas fa-search-plus text-blue"></i></a>&nbsp;&nbsp;
                                         <a href="{{ path('full_update_contact', {'id': client.id}) }}"><i class="fas fa-edit text-yellow"></i></a>
                                         {#<a href="" data-toggle="modal" data-target="#deleteModal"><i class="fas fa-trash-alt text-red"></i></a>#}
                                     {% endif %}
