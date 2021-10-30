@@ -513,6 +513,7 @@ class AppointmentController extends AbstractController
     public function fixAppointment(Request $request): Response
     {
         $manager = $this->getDoctrine()->getManager();
+        $loggedUser = $this->getUser();
         if($request->isMethod('Post')) {
             /*dd($request->request->get("event_type_id"));*/
             if($request->request->get("event_type_id") !== null) {
@@ -535,79 +536,62 @@ class AppointmentController extends AbstractController
                 return $this->redirectToRoute('show_calendar', [
                     'id' => $request->request->get('commercial'),
                 ]);
+            } else {
+                $client = $this->getDoctrine()->getRepository(Client::class)->find($request->request->get('client'));
+                $commercial = $this->getDoctrine()->getRepository(User::class)->find($request->request->get('commercial'));
+                $newAppointment = new Appointment();
+                $newAppointment->setStatus(0);
+                $newAppointment->setIsDone(0);
+                $newAppointment->setStart(new \DateTime($request->request->get('start')));
+                $newAppointment->setEnd(new \DateTime($request->request->get('end')));
+                $newAppointment->setCreatedAt(new \DateTime());
+                $newAppointment->setClient($client);
+                $newAppointment->setUser($commercial);
+                $newAppointment->setIsDeleted(false);
+                $newAppointment->setAppointmentFixer($this->getUser());
+                $newAppointment->setAppointmentNotes($request->request->get('notes'));
+                $newAppointment->setEventType($this->getDoctrine()->getRepository(EventType::class)->find(4));
+                /*$newAppointment->setAppointmentCallNotes($request->request->get('notes'));*/
+                /*$call->setCallNotes($request->request->get('notes'));*/
+                /*$newAppointment->setAppointmentNotes($request->request->get('notes'));*/
+                /*$client->setStatus(2);*/
+                $client->setStatus(2);
+                $client->setStatusDetail(7);
+                $manager->persist($newAppointment);
+                $client->setUpdatedAt(new \DateTime());
+                /*$manager->persist($aNewCall);*/
+                $loggedUser->addProcessedClient($client);
+
+                if($request->request->get("not_direct_appointment") !== null) {
+                    /*$newAppointment->setAppointmentNotes($request->request->get('notes'));*/
+                    $newCall = new Call();
+                    $newCall->setCreatedAt(new  \DateTime());
+                    $newCall->setUser($loggedUser);
+                    $newCall->setClient($client);
+                    $newCall->setGeneralStatus(2);
+                    $newCall->setStatusDetails(7);
+                    $newCall->setCallNotes($request->request->get('call_notes'));
+                    $newCall->setIsDeleted(false);
+                    $usersWhoCalled = $client->getCallersUsers();
+                    $userCounter = 0;
+                    foreach ($usersWhoCalled as $user) {
+                        if ($user->getId() == $loggedUser->getId()) {
+                            $userCounter += 1;
+                            break;
+                        }
+                    }
+                    if ($userCounter === 0) {
+                        $client->addCallersUser($loggedUser);
+                    }
+                    $manager->persist($newCall);
+                }
+                $manager->flush();
+                $this->flashy->success("RDV fixé avec succès !");
             }
-            $client = $this->getDoctrine()->getRepository(Client::class)->find($request->request->get('client'));
-            /*dd($client->getCalls());*/
-            /*dd($client);*/
-            /*$value = false;
-            foreach ($client->getCalls() as $call) {
-                if ($call->getStatusDetails() === 7) {
-                    $value = true;
-                    break;
-                }
+            return $this->redirectToRoute('show_calendar', [
+                'id' => $request->request->get('commercial'),
+            ]);
             }
-            if(in_array("ROLE_TELEPRO", $this->getUser()->getRoles())) {
-                if (!$value) {
-                    $this->flashy->warning("Désolé! Ce client doit être traité avant l'affectation un RDV !");
-                    return $this->redirectToRoute('appointment');
-                }
-            }*/
-
-            /*dd($call);*/
-            /*dd($client->getId());*/
-            $commercial = $this->getDoctrine()->getRepository(User::class)->find($request->request->get('commercial'));
-
-            $newAppointment = new Appointment();
-            $newAppointment->setStatus(0);
-            $newAppointment->setIsDone(0);
-            $newAppointment->setStart(new \DateTime($request->request->get('start')));
-            $newAppointment->setEnd(new \DateTime($request->request->get('end')));
-            $newAppointment->setCreatedAt(new \DateTime());
-            $newAppointment->setClient($client);
-            $newAppointment->setUser($commercial);
-            $newAppointment->setIsDeleted(false);
-            $newAppointment->setAppointmentFixer($this->getUser());
-            $newAppointment->setAppointmentNotes($request->request->get('notes'));
-            $newAppointment->setEventType($this->getDoctrine()->getRepository(EventType::class)->find(4));
-            /*$newAppointment->setAppointmentCallNotes($request->request->get('notes'));*/
-            /*$call->setCallNotes($request->request->get('notes'));*/
-            /*$newAppointment->setAppointmentNotes($request->request->get('notes'));*/
-            /*$client->setStatus(2);*/
-            $client->setStatus(2);
-            $client->setStatusDetail(7);
-            /*if($this->getDoctrine()->getRepository(User::class)->getCalledClients()->find)
-            $client->addCallersUser($this->getUser());*/
-
-            /*$value = false;
-            foreach ($client->getCalls() as $call) {
-                if ($call->getStatus() == 2 && $call->getStatusDetails() == 7) {
-                    $value = true;
-                    break;
-                }
-            }*/
-
-            /*$aNewCall = new Call();
-            $aNewCall->setUser($this->getUser());
-            $aNewCall->setClient($client);
-            $aNewCall->setGeneralStatus(2);
-            $aNewCall->setStatusDetails(7);
-            $aNewCall->setCallIfAppointmentNotes($request->request->get('notes'));
-            $aNewCall->setCreatedAt(new \DateTime());
-            $aNewCall->setIsDeleted(false);
-
-            $newAppointment->setAppointmentCall($aNewCall);*/
-
-            $manager->persist($newAppointment);
-            $client->setUpdatedAt(new \DateTime());
-            /*$manager->persist($aNewCall);*/
-            $this->getUser()->addProcessedClient($client);
-            $manager->flush();
-
-            $this->flashy->success("RDV fixé avec succès !");
-        }
-        return $this->redirectToRoute('show_calendar', [
-            'id' => $request->request->get('commercial'),
-        ]);
     }
 
 
@@ -619,24 +603,7 @@ class AppointmentController extends AbstractController
         $manager = $this->getDoctrine()->getManager();
         if($request->isMethod('Post')) {
             $client = $this->getDoctrine()->getRepository(Client::class)->find($request->request->get('client'));
-            /*dd($client->getCalls());*/
-            /*dd($client);*/
-            /*$value = false;
-            foreach ($client->getCalls() as $call) {
-                if ($call->getStatusDetails() === 7) {
-                    $value = true;
-                    break;
-                }
-            }
-            if(in_array("ROLE_TELEPRO", $this->getUser()->getRoles())) {
-                if (!$value) {
-                    $this->flashy->warning("Désolé! Ce client doit être traité avant l'affectation un RDV !");
-                    return $this->redirectToRoute('appointment');
-                }
-            }*/
 
-            /*dd($call);*/
-            /*dd($client->getId());*/
             $commercial = $this->getDoctrine()->getRepository(User::class)->find($request->request->get('commercial'));
 
             $newAppointment = new Appointment();

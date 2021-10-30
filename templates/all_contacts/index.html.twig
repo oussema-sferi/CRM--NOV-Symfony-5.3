@@ -127,7 +127,7 @@
                                 <th scope="col">état</th>
                                 <th scope="col">Détails</th>
                                 <th scope="col">Observations Appel</th>
-                                <th scope="col">Observations RDV</th>
+                                <th scope="col">Observations avant RDV</th>
                                 <th scope="col">Actions</th>
 
                                 <th scope="col">Email</th>
@@ -310,36 +310,6 @@
                                         </span>
                                         {% endif %}
                                     </td>
-                                    {#{% if client.calls|default %}
-                                    {% if client.calls[client.calls|length - 1].callNotes is not null %}
-                                    <td class="budget" style="text-align: center">
-                                        <button class="notes" data-container="body" type="button" data-toggle="popover" data-color="info" data-placement="top" data-content= "{{ client.calls[client.calls|length -1].callNotes }}">
-                                            <i class="far fa-comment text-cyan"></i>
-                                        </button>
-                                    </td>
-                                    {% else %}
-                                        <td >Non Défini</td>
-                                    {% endif %}
-
-                                    {% else %}
-                                        <td>Non Défini</td>
-                                    {% endif %}#}
-                                    {#{% if client.calls|default %}#}
-                                    {% if client.statusDetail == 7 %}
-                                        {% if client.calls|default %}
-                                            {% if client.calls[client.calls|length - 1].callIfAppointmentNotes is not null %}
-                                                <td class="budget" style="text-align: center">
-                                                    <button class="notes" data-container="body" type="button" data-toggle="popover" data-color="info" data-placement="top" data-content= "{{ client.calls[client.calls|length - 1].callIfAppointmentNotes }}">
-                                                        <i class="far fa-comment text-cyan"></i>
-                                                    </button>
-                                                </td>
-                                            {% else %}
-                                                <td >Non Défini</td>
-                                            {% endif %}
-                                        {% else %}
-                                            <td >Non Défini</td>
-                                        {% endif %}
-                                    {% else %}
                                         {% if client.calls|default %}
                                             {% if client.calls[client.calls|length - 1].callNotes is not null %}
                                                 <td class="budget" style="text-align: center">
@@ -353,7 +323,6 @@
                                         {% else %}
                                             <td >Non Défini</td>
                                         {% endif %}
-                                    {% endif %}
 
                                     {% if client.appointments|default %}
                                         {% if client.appointments[client.appointments|length -1].appointmentNotes is not null %}
@@ -362,7 +331,6 @@
                                                     <i class="far fa-comment text-cyan"></i>
                                                 </button>
                                             </td>
-
                                         {% else %}
                                             <td>Non Défini</td>
                                         {% endif %}

@@ -139,15 +139,14 @@
                             </div>
 
                             <form action="{{ path('fix_appointment') }}" method="post">
+                                <input id="not_direct_appointment" type="text" name="not_direct_appointment" value="1" hidden>
                                 <div class="form-group">
-
                                     <label class="form-control-label" for="commercial">Commerciaux Disponibles</label>
                                     <select id="commercial" name="commercial">
                                         {% for free_commercial in free_commercials %}
                                             <option value="{{ free_commercial.id }}">{{ free_commercial.firstName ~ ' ' ~ free_commercial.lastName }}</option>
                                         {% endfor %}
                                     </select>
-
                                 </div>
                                 {% if clients is iterable %}
                                     <div class="form-group">
@@ -178,7 +177,17 @@
                                 <div class="form-group">
 
                                     <div>
-                                        <label class="form-control-label" for="notes">Observations Appel</label>
+                                        <label class="form-control-label" for="call_notes">Observations Appel</label>
+                                    </div>
+
+                                    <textarea class="form-control" name="call_notes" id="call_notes" cols="30" rows="6" placeholder="..." resize="none"></textarea>
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    <div>
+                                        <label class="form-control-label" for="not_direct_appointment_notes">Observations avant RDV</label>
                                     </div>
 
                                     <textarea class="form-control" name="notes" id="notes" cols="30" rows="6" placeholder="..." resize="none"></textarea>
