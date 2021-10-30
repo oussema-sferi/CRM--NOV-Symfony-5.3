@@ -232,10 +232,15 @@ class AllContactsController extends AbstractController
     {
         $clientToShow = $this->getDoctrine()->getRepository(Client::class)->find($id);
         $clientAppointmentsList = $clientToShow->getAppointments();
-        /*dd($clientAppointmentsList);*/
+
+        $newAppointment = new Appointment();
+        $addAppointmentForm = $this->createForm(AppointmentFormType::class, $newAppointment);
+        $addAppointmentForm->handleRequest($request);
+
         return $this->render('/all_contacts/show.html.twig', [
             'client_to_show' => $clientToShow,
             'client_appointments_list' => $clientAppointmentsList,
+            'add_appointment_form' => $addAppointmentForm->createView(),
         ]);
     }
 

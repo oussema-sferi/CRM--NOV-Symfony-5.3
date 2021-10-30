@@ -103,7 +103,7 @@
                         </div>
                         <div class="col-6 text-right">
                             <a href="{{ path('call_handle', {'id': client_to_show.id}) }}" class="btn btn-sm btn-slack">Ajouter Appel</a>
-                            <a href="" class="btn btn-sm btn-slack">Ajouter RDV</a>
+                            <button type="button" class="btn btn-sm btn-slack" data-toggle="modal" data-target="#add-appointment-form">Ajouter RDV</button>
                             <a href="" class="btn btn-sm btn-slack">Ajouter projet</a>
                             <a href="{{ path('full_update_contact', {'id': client_to_show.id}) }}" class="btn btn-sm btn-info">Editer</a>
                             {#<a href="{{ path('full_update_contact', {'id': client_to_show.id}) }}" class="btn btn-sm btn-warning">Supprimer</a>#}
@@ -470,6 +470,44 @@
 
             </div>
             </form>
+        </div>
+    </div>
+
+    <div class="modal fade" id="add-appointment-form" tabindex="-1" role="dialog" aria-labelledby="add-appointment-form" aria-hidden="true">
+        <div class="modal-dialog modal- modal-dialog-centered modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-body p-0">
+                    <div class="card bg-secondary border-0 mb-0">
+                        <div class="card-body px-lg-5 py-lg-5">
+                            <div>
+                                <div class="form-group">
+                                    <label class="form-control-label" for="input-username">Client</label>
+                                    <input type="text" id="input-username" class="form-control" value="{{ client_to_show.firstName ~ ' ' ~ client_to_show.lastName }}" disabled>
+                                </div>
+                            </div>
+
+                            {{ form_start(add_appointment_form) }}
+
+                            <div class="form-group">
+                                <label for="example-datetime-local-input" class="form-control-label">Date et heure de Début</label>
+                                {{ form_widget(add_appointment_form.start) }}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="example-datetime-local-input" class="form-control-label">Date et heure de Fin</label>
+                                {{ form_widget(add_appointment_form.end) }}
+                            </div>
+                            <hr class="my-3">
+
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary mt-4">Vérifier la disponibilité</button>
+                            </div>
+                            {{ form_end(add_appointment_form)}}
+
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
