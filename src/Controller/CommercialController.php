@@ -152,7 +152,7 @@ class CommercialController extends AbstractController
                 $manager = $this->getDoctrine()->getManager();
                 $appointmentToProcess->setIsDone(true);
                 $appointmentToProcess->setDoneAt(new \DateTime());
-                $appointmentToProcess->setAppointmentNotes($request->request->get('notes'));
+                $appointmentToProcess->setPostAppointmentNotes($request->request->get('notes'));
                 $manager->persist($appointmentToProcess);
                 $manager->flush();
                 $this->flashy->success("RDV traité avec succès !");

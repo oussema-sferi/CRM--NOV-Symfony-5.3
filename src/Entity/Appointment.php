@@ -103,6 +103,11 @@ class Appointment
      */
     private $whoDeletedIt;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $postAppointmentNotes;
+
 
     public function getId(): ?int
     {
@@ -293,6 +298,18 @@ class Appointment
     public function setWhoDeletedIt(?User $whoDeletedIt): self
     {
         $this->whoDeletedIt = $whoDeletedIt;
+
+        return $this;
+    }
+
+    public function getPostAppointmentNotes(): ?string
+    {
+        return $this->postAppointmentNotes;
+    }
+
+    public function setPostAppointmentNotes(?string $postAppointmentNotes): self
+    {
+        $this->postAppointmentNotes = $postAppointmentNotes;
 
         return $this;
     }

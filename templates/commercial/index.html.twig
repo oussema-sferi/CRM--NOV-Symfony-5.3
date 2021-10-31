@@ -310,7 +310,13 @@
                                     </td>
 
                                     <td class="budget">
-                                        test
+                                        {% if commercial_appointment.postAppointmentNotes %}
+                                            <button class="post_appointment_notes" data-container="body" type="button" data-toggle="popover" data-color="info" data-placement="top" data-content= "{{ commercial_appointment.postAppointmentNotes }}">
+                                                <i class="far fa-comment text-cyan"></i>
+                                            </button>
+                                        {% else %}
+                                            Non Défini
+                                        {% endif %}
                                     </td>
 
                                     <td >
