@@ -527,3 +527,34 @@
     </div>
 
     {% endblock %}
+
+{% block additionalJs %}
+    <script>
+        window.onload = () => {
+
+            let d = new Date();
+            let month = d.getMonth()+1;
+            let day = d.getDate();
+            let today = d.getFullYear() + '-' +
+                ((''+month).length<2 ? '0' : '') + month + '-' +
+                ((''+day).length<2 ? '0' : '') + day;
+
+            $("#appointment_form_start_date").val(today)
+            $("#appointment_form_end_date").val(today)
+            $("#appointment_form_start_time_hour").val(9)
+            $("#appointment_form_end_time_hour").val(10)
+
+            $("#appointment_form_start_time_hour").on("change", function () {
+                if(this.value == "23") {
+                    $("#appointment_form_end_time_hour").val(0)
+                } else {
+                    $("#appointment_form_end_time_hour").val(parseInt(this.value) + 1)
+                }
+            })
+
+
+
+        }
+
+    </script>
+{% endblock %}
