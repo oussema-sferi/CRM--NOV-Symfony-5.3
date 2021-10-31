@@ -733,8 +733,29 @@ class AppointmentController extends AbstractController
         $appointmentToDelete->setWhoDeletedIt($loggedUser);
         $manager->persist($appointmentToDelete);
         $manager->flush();
+
         $allClientNotDeletedCalls = $this->getDoctrine()->getRepository(Call::class)->getNotDeletedCallsByClient($clientId);
         $allClientNotDeletedAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getNotDeletedAppointmentsByClient($clientId);
+        $allItems = array_merge($allClientNotDeletedCalls,$allClientNotDeletedAppointments);
+        function compare($a, $b)
+        {
+            if ($a->getCreatedAt() < $b->getCreatedAt())
+                return 1;
+            else if ($a->getCreatedAt() > $b->getCreatedAt())
+                return -1;
+            else
+                return 0;
+        }
+        usort($allItems, "App\Controller\compare");
+        if ($allItems) {
+            if ($allItems[0] instanceof Call) {
+                $client->setStatus($allItems[0]->getGeneralStatus());
+                $client->setStatusDetail($allItems[0]->getStatusDetails());
+            } elseif ($allItems[0] instanceof Appointment) {
+                $client->setStatus(2);
+                $client->setStatusDetail(7);
+            }
+        }
         if ((count($allClientNotDeletedCalls) === 0) && (count($allClientNotDeletedAppointments) === 0)) {
             $client->setStatus(0);
             $client->setStatusDetail(0);
@@ -754,9 +775,38 @@ class AppointmentController extends AbstractController
     {
         $manager = $this->getDoctrine()->getManager();
         $appointmentToRestore = $this->getDoctrine()->getRepository(Appointment::class)->find($id);
+        $clientId = $appointmentToRestore->getClient()->getId();
+        $client = $this->getDoctrine()->getRepository(Client::class)->find($clientId);
         $appointmentToRestore->setIsDeleted(false);
         $appointmentToRestore->setDeletionDate(null);
         $manager->persist($appointmentToRestore);
+        $manager->flush();
+
+        $allClientNotDeletedCalls = $this->getDoctrine()->getRepository(Call::class)->getNotDeletedCallsByClient($clientId);
+        $allClientNotDeletedAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getNotDeletedAppointmentsByClient($clientId);
+        $allItems = array_merge($allClientNotDeletedCalls,$allClientNotDeletedAppointments);
+
+        function compare($a, $b)
+        {
+            if ($a->getCreatedAt() < $b->getCreatedAt())
+                return 1;
+            else if ($a->getCreatedAt() > $b->getCreatedAt())
+                return -1;
+            else
+                return 0;
+        }
+        usort($allItems, "App\Controller\compare");
+
+        if ($allItems) {
+            if ($allItems[0] instanceof Call) {
+                $client->setStatus($allItems[0]->getGeneralStatus());
+                $client->setStatusDetail($allItems[0]->getStatusDetails());
+            } elseif ($allItems[0] instanceof Appointment) {
+                $client->setStatus(2);
+                $client->setStatusDetail(7);
+            }
+        }
+        $manager->persist($client);
         $manager->flush();
         $this->flashy->success("RDV restauré avec succès !");
         return $this->redirectToRoute('trash_appointments');
