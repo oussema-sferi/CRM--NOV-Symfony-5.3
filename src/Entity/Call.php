@@ -77,6 +77,11 @@ class Call
      */
     private $whoDeletedIt;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $updatedAt;
+
     public function __construct()
     {
         $this->appointments = new ArrayCollection();
@@ -246,6 +251,18 @@ class Call
     public function setWhoDeletedIt(?User $whoDeletedIt): self
     {
         $this->whoDeletedIt = $whoDeletedIt;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }

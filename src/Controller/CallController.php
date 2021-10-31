@@ -6,6 +6,7 @@ use App\Entity\Appointment;
 use App\Entity\Call;
 use App\Entity\Client;
 use App\Entity\User;
+use Doctrine\ORM\Mapping\Driver\DatabaseDriver;
 use MercurySeries\FlashyBundle\FlashyNotifier;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -80,9 +81,29 @@ class CallController extends AbstractController
         $callToDelete->setWhoDeletedIt($loggedUser);
         $manager->persist($callToDelete);
         $manager->flush();
+
         $allClientNotDeletedCalls = $this->getDoctrine()->getRepository(Call::class)->getNotDeletedCallsByClient($clientId);
         $allClientNotDeletedAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getNotDeletedAppointmentsByClient($clientId);
-        /*dd($allClientNotDeletedCalls);*/
+        $allItems = array_merge($allClientNotDeletedCalls,$allClientNotDeletedAppointments);
+        function compare($a, $b)
+        {
+            if ($a->getCreatedAt() < $b->getCreatedAt())
+                return 1;
+            else if ($a->getCreatedAt() > $b->getCreatedAt())
+                return -1;
+            else
+                return 0;
+        }
+        usort($allItems, "App\Controller\compare");
+        if ($allItems) {
+            if ($allItems[0] instanceof Call) {
+                $client->setStatus($allItems[0]->getGeneralStatus());
+                $client->setStatusDetail($allItems[0]->getStatusDetails());
+            } elseif ($allItems[0] instanceof Appointment) {
+                $client->setStatus(2);
+                $client->setStatusDetail(7);
+            }
+        }
         if ((count($allClientNotDeletedCalls) === 0) && (count($allClientNotDeletedAppointments) === 0)) {
             $client->setStatus(0);
             $client->setStatusDetail(0);
@@ -102,10 +123,42 @@ class CallController extends AbstractController
     {
         $manager = $this->getDoctrine()->getManager();
         $callToRestore = $this->getDoctrine()->getRepository(Call::class)->find($id);
+        $clientId = $callToRestore->getClient()->getId();
+        $client = $this->getDoctrine()->getRepository(Client::class)->find($clientId);
         $callToRestore->setIsDeleted(false);
         $callToRestore->setDeletionDate(null);
         $manager->persist($callToRestore);
         $manager->flush();
+
+        $allClientNotDeletedCalls = $this->getDoctrine()->getRepository(Call::class)->getNotDeletedCallsByClient($clientId);
+        $allClientNotDeletedAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getNotDeletedAppointmentsByClient($clientId);
+        $allItems = array_merge($allClientNotDeletedCalls,$allClientNotDeletedAppointments);
+        function compare($a, $b)
+        {
+            if ($a->getCreatedAt() < $b->getCreatedAt())
+                return 1;
+            else if ($a->getCreatedAt() > $b->getCreatedAt())
+                return -1;
+            else
+                return 0;
+        }
+        usort($allItems, "App\Controller\compare");
+        if ($allItems) {
+            if ($allItems[0] instanceof Call) {
+                $client->setStatus($allItems[0]->getGeneralStatus());
+                $client->setStatusDetail($allItems[0]->getStatusDetails());
+            } elseif ($allItems[0] instanceof Appointment) {
+                $client->setStatus(2);
+                $client->setStatusDetail(7);
+            }
+        }
+        if ((count($allClientNotDeletedCalls) === 0) && (count($allClientNotDeletedAppointments) === 0)) {
+            $client->setStatus(0);
+            $client->setStatusDetail(0);
+        }
+        $manager->persist($client);
+        $manager->flush();
+
         $this->flashy->success("Appel restauré avec succès !");
         return $this->redirectToRoute('trash_calls');
     }

@@ -108,6 +108,11 @@ class Appointment
      */
     private $postAppointmentNotes;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $updatedAt;
+
 
     public function getId(): ?int
     {
@@ -310,6 +315,18 @@ class Appointment
     public function setPostAppointmentNotes(?string $postAppointmentNotes): self
     {
         $this->postAppointmentNotes = $postAppointmentNotes;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }
