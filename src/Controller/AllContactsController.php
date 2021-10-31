@@ -236,6 +236,65 @@ class AllContactsController extends AbstractController
         $newAppointment = new Appointment();
         $addAppointmentForm = $this->createForm(AppointmentFormType::class, $newAppointment);
         $addAppointmentForm->handleRequest($request);
+        if($addAppointmentForm->isSubmitted()) {
+            $validationStartTime = $newAppointment->getStart();
+            $validationEndTime = $newAppointment->getEnd();
+            $appointmentDuration = date_diff($validationEndTime,$validationStartTime);
+
+            if($validationEndTime < $validationStartTime) {
+                $this->flashy->warning("Veuillez revérifier vos entrées! L'heure de début doit être avant l'heure de fin !");
+                return $this->render('/all_contacts/show.html.twig', [
+                    'client_to_show' => $clientToShow,
+                    'client_appointments_list' => $clientAppointmentsList,
+                    'add_appointment_form' => $addAppointmentForm->createView(),
+                ]);
+            }
+            if((($validationEndTime > $validationStartTime) && ($appointmentDuration->days === 0) && ($appointmentDuration->h <= 2)) ||
+                (($validationEndTime > $validationStartTime) && ($appointmentDuration->days === 0) && ($appointmentDuration->h === 3)
+                    && ($appointmentDuration->i === 0) && ($appointmentDuration->s === 0))
+            ) {
+                $startTime = $newAppointment->getStart()->format('Y-m-d H:i:s');
+                $endTime = $newAppointment->getEnd()->format('Y-m-d H:i:s');
+                $busyAppointmentsTime = $this->getDoctrine()->getRepository(Appointment::class)->getAppointmentsBetweenByDate($startTime, $endTime);
+                /*dd($busyAppointmentsTime);*/
+                if($busyAppointmentsTime) {
+                    $busyCommercialsIdsArray = [];
+                    foreach ($busyAppointmentsTime as $busyAppointment) {
+                        $busyCommercialsIdsArray[] = $busyAppointment->getUser()->getId();
+                    }
+                    if(in_array("ROLE_SUPERADMIN", $this->getUser()->getRoles())) {
+                        $freeCommercials = $this->getDoctrine()->getRepository(User::class)->findFreeCommercialsForSuperAdmin($busyCommercialsIdsArray, "ROLE_COMMERCIAL");
+                    } else {
+                        $freeCommercials = $this->getDoctrine()->getRepository(User::class)->findFreeCommercials($busyCommercialsIdsArray, "ROLE_COMMERCIAL", $this->getUser()->getId());
+                    }
+
+                } else {
+                    if(in_array("ROLE_SUPERADMIN", $this->getUser()->getRoles())) {
+                        $freeCommercials = $this->getDoctrine()->getRepository(User::class)->findUsersByCommercialRole("ROLE_COMMERCIAL");
+                    } else {
+                        $freeCommercials = $this->getDoctrine()->getRepository(User::class)->findAssignedUsersByCommercialRole($loggedUserId,"ROLE_COMMERCIAL");
+                    }
+                }
+                return $this->render('/all_contacts/appointment_free_commercials_check.html.twig', [
+                    /*'free_appointments' => $freeAppointmentsTime*/
+                    'free_commercials' => $freeCommercials,
+                    'clients' => $clientToShow,
+                    'start' => $startTime,
+                    'end' => $endTime
+                ]);
+            } else {
+                if(($appointmentDuration->days === 0) && ($appointmentDuration->h === 0)
+                    && ($appointmentDuration->i === 0) && ($appointmentDuration->s === 0)) {
+                    $this->flashy->warning("Veuillez revérifier vos entrées! La durée du RDV ne doit pas être nulle !");
+                }
+                return $this->render('/all_contacts/show.html.twig', [
+                    'client_to_show' => $clientToShow,
+                    'client_appointments_list' => $clientAppointmentsList,
+                    'add_appointment_form' => $addAppointmentForm->createView(),
+                ]);
+            }
+        }
+
 
         return $this->render('/all_contacts/show.html.twig', [
             'client_to_show' => $clientToShow,

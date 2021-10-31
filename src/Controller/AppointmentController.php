@@ -445,8 +445,10 @@ class AppointmentController extends AbstractController
                                 'end' => $endTime
                             ]);
                         } else {
+                            $theEvent = $this->getDoctrine()->getRepository(EventType::class)->find($eventTypeId);
                             return $this->render('/appointment/event_set_notes.html.twig', [
                                 'eventTypeId' =>  $eventTypeId,
+                                'eventDesignation' =>  $theEvent->getDesignation(),
                                 'commercial_user' => $commercialUser,
                                 'start' => $startTime,
                                 'end' => $endTime
@@ -588,10 +590,16 @@ class AppointmentController extends AbstractController
                 $manager->flush();
                 $this->flashy->success("RDV fixé avec succès !");
             }
-            return $this->redirectToRoute('show_calendar', [
-                'id' => $request->request->get('commercial'),
-            ]);
+            if($request->request->get("add_appointment_from_contact") !== null) {
+                return $this->redirectToRoute('show_contact', [
+                    'id' => $client->getId(),
+                ]);
+            } else {
+                return $this->redirectToRoute('show_calendar', [
+                    'id' => $request->request->get('commercial'),
+                ]);
             }
+        }
     }
 
 
@@ -906,10 +914,11 @@ class AppointmentController extends AbstractController
         $existingDepartments = $geoZoneEventToEdit->getGeographicAreas();
         if($existingDepartments) {
             foreach ($existingDepartments as $existingDepartment) {
-                /*dd($existingDepartment);*/
                 $geoZoneEventToEdit->removeGeographicArea($existingDepartment);
             }
         }
+        $geoZoneEventToEdit->setStart($fullStartDateFormatted);
+        $geoZoneEventToEdit->setEnd($fullEndDateFormatted);
         if($departmentsArray) {
             foreach ($departmentsArray as $department) {
                 if($department) {
@@ -917,8 +926,6 @@ class AppointmentController extends AbstractController
                 }
             }
         }
-        $geoZoneEventToEdit->setStart($fullStartDateFormatted);
-        $geoZoneEventToEdit->setEnd($fullEndDateFormatted);
         $manager->persist($geoZoneEventToEdit);
         $manager->flush();
         $this->flashy->success("Zone Géographique éditée avec succès !");
