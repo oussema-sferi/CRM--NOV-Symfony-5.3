@@ -68,9 +68,11 @@ class RolesController extends AbstractController
     public function delete(Request $request, $id): Response
     {
         $manager = $this->getDoctrine()->getManager();
+        $loggedUser = $this->getUser();
         $userToDelete = $this->getDoctrine()->getRepository(User::class)->find($id);
         $userToDelete->setIsDeleted(true);
         $userToDelete->setDeletionDate(new \DateTime());
+        $userToDelete->setWhoDeletedIt($loggedUser);
         $manager->persist($userToDelete);
         $manager->flush();
         $this->flashy->success("Utilisateur supprimé avec succès !");

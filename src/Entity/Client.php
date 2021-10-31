@@ -146,6 +146,11 @@ class Client
      */
     private $processingUsers;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="deletedClients")
+     */
+    private $whoDeletedIt;
+
 
 
     public function __construct()
@@ -515,6 +520,18 @@ class Client
         if ($this->processingUsers->removeElement($processingUser)) {
             $processingUser->removeProcessedClient($this);
         }
+
+        return $this;
+    }
+
+    public function getWhoDeletedIt(): ?User
+    {
+        return $this->whoDeletedIt;
+    }
+
+    public function setWhoDeletedIt(?User $whoDeletedIt): self
+    {
+        $this->whoDeletedIt = $whoDeletedIt;
 
         return $this;
     }

@@ -54,6 +54,7 @@
                                 <th scope="col">détails appel</th>
                                 <th scope="col">observations appel</th>
                                 <th scope="col">Date de suppression</th>
+                                <th scope="col">Supprimé par</th>
                                 <th scope="col">Actions</th>
                                 {#<th scope="col">Traitement</th>#}
                                 {#<th scope="col">état</th>
@@ -152,6 +153,9 @@
 
                                     <td class="budget">
                                         {{ call.deletionDate|format_datetime(locale='fr') }}
+                                    </td>
+                                    <td class="budget">
+                                        {{ call.whoDeletedIt.firstName ~ ' ' ~ call.whoDeletedIt.lastName }}
                                     </td>
                                     <td >
                                         <a href="" data-toggle="modal" data-target="#restoreModal{{ call.id }}" class="badge badge-success" >Restaurer Appel</a>

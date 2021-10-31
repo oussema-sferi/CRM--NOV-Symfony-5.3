@@ -74,10 +74,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?User $teleprospector=null;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="teleprospector")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="commercials")
+     * @var User $whoDeletedIt
+     */
+    private ?User $whoDeletedIt=null;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="deletedUsers")
      * @var ArrayCollection<User> $commercials
      */
     private Collection $commercials;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="whoDeletedIt")
+     * @var ArrayCollection<User> $deletedUsers
+     */
+    private Collection $deletedUsers;
 
     /**
      * @ORM\ManyToMany(targetEntity=GeographicArea::class, inversedBy="users")
@@ -129,18 +141,37 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $processedClients;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Client::class, mappedBy="whoDeletedIt")
+     */
+    private $deletedClients;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Call::class, mappedBy="whoDeletedIt")
+     */
+    private $deletedCalls;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Appointment::class, mappedBy="whoDeletedIt")
+     */
+    private $deletedAppointments;
+
 
     public function __construct()
     {
         $this->calls = new ArrayCollection();
         $this->appointments = new ArrayCollection();
         $this->commercials = new ArrayCollection();
+        $this->deletedUsers = new ArrayCollection();
         $this->geographicAreas = new ArrayCollection();
         $this->clients = new ArrayCollection();
         $this->geographicZoneEvents = new ArrayCollection();
         $this->calledClients = new ArrayCollection();
         $this->fixedAppointments = new ArrayCollection();
         $this->processedClients = new ArrayCollection();
+        $this->deletedClients = new ArrayCollection();
+        $this->deletedCalls = new ArrayCollection();
+        $this->deletedAppointments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -323,12 +354,29 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->teleprospector;
     }
 
+
     /**
      * @param User $teleprospector
      */
     public function setTeleprospector(?User $teleprospector): void
     {
         $this->teleprospector = $teleprospector;
+    }
+
+    /**
+     * @return User
+     */
+    public function getWhoDeletedIt(): ?User
+    {
+        return $this->whoDeletedIt;
+    }
+
+    /**
+     * @param User $whoDeletedIt
+     */
+    public function setWhoDeletedIt(?User $whoDeletedIt): void
+    {
+        $this->whoDeletedIt = $whoDeletedIt;
     }
 
     /**
@@ -350,6 +398,29 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeCommercial(User $commercial): self
     {
         $this->commercials->removeElement($commercial);
+
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getDeletedUsers()
+    {
+        return $this->deletedUsers;
+    }
+
+    /**
+     * @param ArrayCollection $deletedUsers
+     */
+    public function setDeletedUsers($deletedUsers): void
+    {
+        $this->deletedUsers = $deletedUsers;
+    }
+
+    public function removeDeletedUsers(User $deletedUser): self
+    {
+        $this->deletedUsers->removeElement($deletedUser);
 
         return $this;
     }
@@ -575,5 +646,93 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    /**
+     * @return Collection|Client[]
+     */
+    public function getDeletedClients(): Collection
+    {
+        return $this->deletedClients;
+    }
+
+    public function addDeletedClient(Client $deletedClient): self
+    {
+        if (!$this->deletedClients->contains($deletedClient)) {
+            $this->deletedClients[] = $deletedClient;
+            $deletedClient->setWhoDeletedIt($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDeletedClient(Client $deletedClient): self
+    {
+        if ($this->deletedClients->removeElement($deletedClient)) {
+            // set the owning side to null (unless already changed)
+            if ($deletedClient->getWhoDeletedIt() === $this) {
+                $deletedClient->setWhoDeletedIt(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Call[]
+     */
+    public function getDeletedCalls(): Collection
+    {
+        return $this->deletedCalls;
+    }
+
+    public function addDeletedCall(Call $deletedCall): self
+    {
+        if (!$this->deletedCalls->contains($deletedCall)) {
+            $this->deletedCalls[] = $deletedCall;
+            $deletedCall->setWhoDeletedIt($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDeletedCall(Call $deletedCall): self
+    {
+        if ($this->deletedCalls->removeElement($deletedCall)) {
+            // set the owning side to null (unless already changed)
+            if ($deletedCall->getWhoDeletedIt() === $this) {
+                $deletedCall->setWhoDeletedIt(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Appointment[]
+     */
+    public function getDeletedAppointments(): Collection
+    {
+        return $this->deletedAppointments;
+    }
+
+    public function addDeletedAppointment(Appointment $deletedAppointment): self
+    {
+        if (!$this->deletedAppointments->contains($deletedAppointment)) {
+            $this->deletedAppointments[] = $deletedAppointment;
+            $deletedAppointment->setWhoDeletedIt($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDeletedAppointment(Appointment $deletedAppointment): self
+    {
+        if ($this->deletedAppointments->removeElement($deletedAppointment)) {
+            // set the owning side to null (unless already changed)
+            if ($deletedAppointment->getWhoDeletedIt() === $this) {
+                $deletedAppointment->setWhoDeletedIt(null);
+            }
+        }
+        return $this;
+    }
 
 }

@@ -71,11 +71,13 @@ class CallController extends AbstractController
     public function deleteCall(Request $request, $id): Response
     {
         $manager = $this->getDoctrine()->getManager();
+        $loggedUser = $this->getUser();
         $callToDelete = $this->getDoctrine()->getRepository(Call::class)->find($id);
         $clientId = $callToDelete->getClient()->getId();
         $client = $this->getDoctrine()->getRepository(Client::class)->find($clientId);
         $callToDelete->setIsDeleted(true);
         $callToDelete->setDeletionDate(new \DateTime());
+        $callToDelete->setWhoDeletedIt($loggedUser);
         $manager->persist($callToDelete);
         $manager->flush();
         $allClientNotDeletedCalls = $this->getDoctrine()->getRepository(Call::class)->getNotDeletedCallsByClient($clientId);

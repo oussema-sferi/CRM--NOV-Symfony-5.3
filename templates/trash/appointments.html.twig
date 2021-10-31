@@ -55,6 +55,7 @@
                                 <th scope="col">état</th>
                                 <th scope="col">Observations RDV</th>
                                 <th scope="col">Date de suppression</th>
+                                <th scope="col">Supprimé par</th>
                                 <th scope="col">Actions</th>
                                 {#<th scope="col">Traitement</th>#}
                                 {#<th scope="col">état</th>
@@ -110,11 +111,11 @@
                                         {% endif %}
                                     </td>
 
-
-
-
                                     <td class="budget">
                                         {{ appointment.deletionDate|format_datetime(locale='fr') }}
+                                    </td>
+                                    <td class="budget">
+                                        {{ appointment.whoDeletedIt.firstName ~ ' ' ~ appointment.whoDeletedIt.lastName }}
                                     </td>
                                     <td >
                                         <a href="" data-toggle="modal" data-target="#restoreModal{{ appointment.id }}" class="badge badge-success" >Restaurer RDV</a>

@@ -72,6 +72,11 @@ class Call
      */
     private $deletionDate;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="deletedCalls")
+     */
+    private $whoDeletedIt;
+
     public function __construct()
     {
         $this->appointments = new ArrayCollection();
@@ -229,6 +234,18 @@ class Call
     public function setDeletionDate(?\DateTimeInterface $deletionDate): self
     {
         $this->deletionDate = $deletionDate;
+
+        return $this;
+    }
+
+    public function getWhoDeletedIt(): ?User
+    {
+        return $this->whoDeletedIt;
+    }
+
+    public function setWhoDeletedIt(?User $whoDeletedIt): self
+    {
+        $this->whoDeletedIt = $whoDeletedIt;
 
         return $this;
     }

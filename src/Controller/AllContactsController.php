@@ -309,9 +309,11 @@ class AllContactsController extends AbstractController
     public function delete(Request $request, $id): Response
     {
         $manager = $this->getDoctrine()->getManager();
+        $loggedUser = $this->getUser();
         $contactToDelete = $this->getDoctrine()->getRepository(Client::class)->find($id);
         $contactToDelete->setIsDeleted(true);
         $contactToDelete->setDeletionDate(new \DateTime());
+        $contactToDelete->setWhoDeletedIt($loggedUser);
         $manager->persist($contactToDelete);
         $manager->flush();
         $this->flashy->success("Contact supprimé avec succès !");

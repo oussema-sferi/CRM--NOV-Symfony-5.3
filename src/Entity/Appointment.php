@@ -98,6 +98,11 @@ class Appointment
      */
     private $appointmentFixer;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="deletedAppointments")
+     */
+    private $whoDeletedIt;
+
 
     public function getId(): ?int
     {
@@ -276,6 +281,18 @@ class Appointment
     public function setAppointmentFixer(?User $appointmentFixer): self
     {
         $this->appointmentFixer = $appointmentFixer;
+
+        return $this;
+    }
+
+    public function getWhoDeletedIt(): ?User
+    {
+        return $this->whoDeletedIt;
+    }
+
+    public function setWhoDeletedIt(?User $whoDeletedIt): self
+    {
+        $this->whoDeletedIt = $whoDeletedIt;
 
         return $this;
     }

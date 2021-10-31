@@ -708,11 +708,22 @@ class AppointmentController extends AbstractController
     public function deleteCall(Request $request, $id): Response
     {
         $manager = $this->getDoctrine()->getManager();
+        $loggedUser = $this->getUser();
         $appointmentToDelete = $this->getDoctrine()->getRepository(Appointment::class)->find($id);
         $clientId = $appointmentToDelete->getClient()->getId();
+        $client = $this->getDoctrine()->getRepository(Client::class)->find($clientId);
         $appointmentToDelete->setIsDeleted(true);
         $appointmentToDelete->setDeletionDate(new \DateTime());
+        $appointmentToDelete->setWhoDeletedIt($loggedUser);
         $manager->persist($appointmentToDelete);
+        $manager->flush();
+        $allClientNotDeletedCalls = $this->getDoctrine()->getRepository(Call::class)->getNotDeletedCallsByClient($clientId);
+        $allClientNotDeletedAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getNotDeletedAppointmentsByClient($clientId);
+        if ((count($allClientNotDeletedCalls) === 0) && (count($allClientNotDeletedAppointments) === 0)) {
+            $client->setStatus(0);
+            $client->setStatusDetail(0);
+        }
+        $manager->persist($client);
         $manager->flush();
         $this->flashy->success('RDV supprimé avec succès !');
         return $this->redirectToRoute('full_update_contact', [

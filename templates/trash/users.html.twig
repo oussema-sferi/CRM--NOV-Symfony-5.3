@@ -53,6 +53,7 @@
                                 <th scope="col">Email</th>
                                 <th scope="col">Rôle</th>
                                 <th scope="col">Date de suppression</th>
+                                <th scope="col">Supprimé par</th>
                                 <th scope="col">Actions</th>
                                 {#<th scope="col">Consultation</th>
                                 <th scope="col">Modification</th>
@@ -81,6 +82,10 @@
 
                                     <td class="budget">
                                         {{ user.deletionDate|format_datetime(locale='fr') }}
+                                    </td>
+
+                                    <td class="budget">
+                                        {{ user.whoDeletedIt.firstName ~ ' ' ~ user.whoDeletedIt.lastName }}
                                     </td>
 
                                     {#<td >
