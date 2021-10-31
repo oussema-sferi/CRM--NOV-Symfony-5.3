@@ -683,12 +683,28 @@ class AppointmentController extends AbstractController
     public function fullUpdateAppointment(Request $request, $id): Response
     {
         $manager = $this->getDoctrine()->getManager();
+        $startDay = (($request->request->get('edit_form'))["start"])["date"];
+        $startHour = ((($request->request->get('edit_form'))["start"])["time"])["hour"];
+        $startMinute = ((($request->request->get('edit_form'))["start"])["time"])["minute"];
+        $endDay = (($request->request->get('edit_form'))["end"])["date"];
+        $endHour = ((($request->request->get('edit_form'))["end"])["time"])["hour"];
+        $endMinute = ((($request->request->get('edit_form'))["end"])["time"])["minute"];
+        if (strlen($startMinute) === 1) {
+            $startMinute = "0" . $startMinute;
+        }
+        if (strlen($endMinute) === 1) {
+            $endMinute = "0" . $endMinute;
+        }
+        $fullStartDate = $startDay . " " . $startHour . ":" . $startMinute;
+        $fullStartDateFormatted = \DateTime::createFromFormat('Y-m-d H:i',$fullStartDate);
+        $fullEndtDate = $endDay . " " . $endHour . ":" . $endMinute;
+        $fullEndDateFormatted = \DateTime::createFromFormat('Y-m-d H:i',$fullEndtDate);
         $appointmentToUpdate = $this->getDoctrine()->getRepository(Appointment::class)->find($id);
         $selectedCommercial = $this->getDoctrine()->getRepository(User::class)->find((int)$request->request->get('assigned_commercial_appointment'));
         /*$clientToUpdate = $this->getDoctrine()->getRepository(Client::class)->find($appointmentToUpdate->getClient()->getId());*/
         $clientId = $appointmentToUpdate->getClient()->getId();
-        $appointmentToUpdate->setStart(new \DateTime($request->request->get('start_appointment')));
-        $appointmentToUpdate->setEnd(new \DateTime($request->request->get('end_appointment')));
+        $appointmentToUpdate->setStart($fullStartDateFormatted);
+        $appointmentToUpdate->setEnd($fullEndDateFormatted);
         $appointmentToUpdate->setAppointmentNotes($request->request->get('notes_appointment'));
         $appointmentToUpdate->setUser($selectedCommercial);
         $manager->persist($appointmentToUpdate);
