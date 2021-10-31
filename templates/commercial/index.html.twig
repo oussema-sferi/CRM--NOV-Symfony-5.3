@@ -161,9 +161,7 @@
                             <tr>
                                 <th scope="col">Prénom</th>
                                 <th scope="col">Nom</th>
-                                <th scope="col">Société</th>
-                                <th scope="col">Catégorie</th>
-                                <th scope="col">Département</th>
+
                                 {#<th scope="col">Sous Contrat</th>#}
                                 <th scope="col">RDV: Date/Heure Début</th>
                                 <th scope="col">RDV: Date/Heure Fin</th>
@@ -172,8 +170,13 @@
                                     <th scope="col">Commercial Affecté</th>
                                 {% endif %}
                                 <th scope="col">état</th>
-                                <th scope="col">Observations RDV</th>
+                                <th scope="col">Observations avant RDV</th>
+                                <th scope="col">Observations post RDV</th>
                                 <th scope="col">Traitement</th>
+                                <th scope="col">Département</th>
+                                {#<th scope="col">Commune</th>#}
+                                <th scope="col">Société</th>
+                                <th scope="col">Catégorie</th>
                                 {#<th scope="col">Consultation</th>
                                 <th scope="col">Modification</th>
                                 <th scope="col">Suppression</th>#}
@@ -186,26 +189,9 @@
                                 <td>
                                     <input id="lastName" name="lastName" class="test" type="text">
                                 </td>
-                                <td>
-                                    <input id="companyName" name="companyName" class="test" type="text">
-                                </td>
-                                <td>
-                                    <select id="category" name="category" class="form-control-sm">
-                                        <option value="" selected>--- Choisir ---</option>
-                                        <option value="Médecin">Médecin</option>
-                                        <option value="Vétérinaire">Vétérinaire</option>
-                                        <option value="Chirurgien">Chirurgien</option>
-                                    </select>
-                                </td>
 
-                                <td>
-                                    <select id="geographicArea" name="geographicArea" class="form-control-sm">
-                                        <option value="" selected>--- Choisir ---</option>
-                                        {% for geographic_area in geographic_areas %}
-                                            <option value="{{ geographic_area.id }}">{{ geographic_area.designation }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </td>
+
+
                                 <td>
                                     <input id="start" name="start" class="test" type="datetime-local">
                                 </td>
@@ -230,9 +216,31 @@
                                         <option value="1">Effectué</option>
                                     </select>
                                 </td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
 
-                                <td></td>
-                                <td></td>
+                                <td>
+                                    <select id="geographicArea" name="geographicArea" class="form-control-sm">
+                                        <option value="" selected>--- Choisir ---</option>
+                                        {% for geographic_area in geographic_areas %}
+                                            <option value="{{ geographic_area.id }}">{{ geographic_area.designation }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </td>
+
+                                <td>
+                                    <input id="companyName" name="companyName" class="test" type="text">
+                                </td>
+                                <td>
+                                    <select id="category" name="category" class="form-control-sm">
+                                        <option value="" selected>--- Choisir ---</option>
+                                        <option value="Médecin">Médecin</option>
+                                        <option value="Vétérinaire">Vétérinaire</option>
+                                        <option value="Chirurgien">Chirurgien</option>
+                                    </select>
+                                </td>
+
                             </tr>
 
 
@@ -240,7 +248,7 @@
                             <tbody class="list">
 
                             {% for commercial_appointment in commercial_appointments %}
-                                <tr {% if commercial_appointment.isDone == 1 %}class="clickable-row" data-href="{{ path('show_contact', {'id': commercial_appointment.client.id}) }}"{% endif %}>
+                                <tr class="clickable-row" data-href="{{ path('show_contact', {'id': commercial_appointment.client.id}) }}">
                                     <td>
                                         {{ commercial_appointment.client.firstName }}
                                     </td>
@@ -250,17 +258,9 @@
                                     </td>
 
 
-                                    <td class="budget">
-                                        {{ commercial_appointment.client.companyName }}
-                                    </td>
 
-                                    <td class="budget">
-                                        {{ commercial_appointment.client.category }}
-                                    </td>
 
-                                    <td class="budget">
-                                        {{ commercial_appointment.client.geographicArea.designation }}
-                                    </td>
+
 
                                     {#<td class="budget">
                                         {% if  commercial_appointment.client.isUnderContract %}
@@ -309,6 +309,10 @@
                                             {% endif %}
                                     </td>
 
+                                    <td class="budget">
+                                        test
+                                    </td>
+
                                     <td >
                                         {% if commercial_appointment.isDone != 1 %}
                                             <a href="{{ path('appointment_handle', {'id': commercial_appointment.id}) }}"  class="badge badge-default" >Traiter RDV</a>
@@ -317,6 +321,18 @@
                                             <a href="{{ path('full_update_contact', {'id': commercial_appointment.client.id}) }}"><i class="fas fa-edit text-yellow"></i></a>
                                             <a href="" data-toggle="modal" data-target="#deleteModal"><i class="fas fa-trash-alt text-red"></i></a>
                                         {% endif %}
+                                    </td>
+
+                                    <td class="budget">
+                                        {{ commercial_appointment.client.geographicArea.designation }}
+                                    </td>
+
+                                    <td class="budget">
+                                        {{ commercial_appointment.client.companyName }}
+                                    </td>
+
+                                    <td class="budget">
+                                        {{ commercial_appointment.client.category }}
                                     </td>
 
                                     {#<td >
