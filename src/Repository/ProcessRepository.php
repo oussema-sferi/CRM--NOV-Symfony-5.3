@@ -47,4 +47,12 @@ class ProcessRepository extends ServiceEntityRepository
         ;
     }
     */
+    public function getProcessesByUser($Id)
+    {
+        $qb = $this->createQueryBuilder('p');
+        $qb->select('p')
+            ->join('p.processorUser', 'u')
+            ->where("u.id =$Id" );
+        return $qb->getQuery()->getResult();
+    }
 }

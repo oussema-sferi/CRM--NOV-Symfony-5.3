@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Appointment;
 use App\Entity\Call;
 use App\Entity\Client;
+use App\Entity\Process;
 use App\Entity\User;
 use MercurySeries\FlashyBundle\FlashyNotifier;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -170,9 +171,22 @@ class StatisticsController extends AbstractController
         $myAssignedAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getMyAssignedAppointmentsByUser($id);
         $myUpcomingAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getUpcomingAppointmentsByUser($id);
         $myDeletedAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getDeletedAppointmentsByUser($id);
-        /*dd($myDeletedAppointments);*/
 
-        /*dd(count($myProcessedContacts));*/
+        $allProcesses = $this->getDoctrine()->getRepository(Process::class)->getProcessesByUser($id);
+        $allClientsIdsArray = [];
+        foreach ($allProcesses as $process) {
+            $allClientsIdsArray[] = $process->getClient()->getId();
+        }
+        $uniqueClientsIdsArray = array_unique($allClientsIdsArray);
+        $uniqueClientsArray = [];
+        foreach ($uniqueClientsIdsArray as $id) {
+            foreach ($allProcesses as $process) {
+                if ($process->getClient()->getId() == $id) {
+                    $uniqueClientsArray[$id][] = $process->getCreatedAt();
+                }
+            }
+        }
+
         return $this->render('statistics/stats_per_user.html.twig', [
             'user' => $user,
             'processed_clients' => $myProcessedContacts,
@@ -193,6 +207,8 @@ class StatisticsController extends AbstractController
             'fixed_appointments_count' =>count($myFixedAppointments),
             'deleted_appointments' =>$myDeletedAppointments,
             'deleted_appointments_count' =>count($myDeletedAppointments),
+            'single_clients_processes' => $uniqueClientsArray,
+            'single_clients_processes_count' => count($uniqueClientsArray)
         ]);
     }
 
