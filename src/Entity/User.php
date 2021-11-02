@@ -156,6 +156,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $deletedAppointments;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Process::class, mappedBy="processorUser")
+     */
+    private $processes;
+
 
     public function __construct()
     {
@@ -172,6 +177,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->deletedClients = new ArrayCollection();
         $this->deletedCalls = new ArrayCollection();
         $this->deletedAppointments = new ArrayCollection();
+        $this->processes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -732,6 +738,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $deletedAppointment->setWhoDeletedIt(null);
             }
         }
+        return $this;
+    }
+
+    /**
+     * @return Collection|Process[]
+     */
+    public function getProcesses(): Collection
+    {
+        return $this->processes;
+    }
+
+    public function addProcess(Process $process): self
+    {
+        if (!$this->processes->contains($process)) {
+            $this->processes[] = $process;
+            $process->setProcessorUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProcess(Process $process): self
+    {
+        if ($this->processes->removeElement($process)) {
+            // set the owning side to null (unless already changed)
+            if ($process->getProcessorUser() === $this) {
+                $process->setProcessorUser(null);
+            }
+        }
+
         return $this;
     }
 

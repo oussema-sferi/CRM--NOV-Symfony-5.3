@@ -6,6 +6,7 @@ use App\Entity\Appointment;
 use App\Entity\Call;
 use App\Entity\Client;
 use App\Entity\GeographicArea;
+use App\Entity\Process;
 use App\Entity\UniqueClientProcess;
 use App\Entity\User;
 use App\Form\AppointmentFormType;
@@ -219,9 +220,12 @@ class TeleprospectingController extends AbstractController
                 $client->setUpdatedAt(new \DateTime());
                 $loggedUser->addProcessedClient($client);
                 $manager->persist($newCall);
-
+                $newProcess = new Process();
+                $newProcess->setClient($client);
+                $newProcess->setProcessorUser($loggedUser);
+                $newProcess->setCreatedAt(new \DateTime());
+                $manager->persist($newProcess);
                 /*$test = $this->getDoctrine()->getRepository(UniqueClientProcess::class)->findAll();*/
-
                 $manager->flush();
                 $this->flashy->success("Fiche contact traitée avec succès !");
                 return $this->redirectToRoute('teleprospecting');

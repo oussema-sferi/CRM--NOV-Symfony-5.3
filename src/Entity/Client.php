@@ -151,6 +151,11 @@ class Client
      */
     private $whoDeletedIt;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Process::class, mappedBy="client")
+     */
+    private $processes;
+
 
 
     public function __construct()
@@ -159,6 +164,7 @@ class Client
         $this->appointments = new ArrayCollection();
         $this->callersUsers = new ArrayCollection();
         $this->processingUsers = new ArrayCollection();
+        $this->processes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -532,6 +538,36 @@ class Client
     public function setWhoDeletedIt(?User $whoDeletedIt): self
     {
         $this->whoDeletedIt = $whoDeletedIt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Process[]
+     */
+    public function getProcesses(): Collection
+    {
+        return $this->processes;
+    }
+
+    public function addProcess(Process $process): self
+    {
+        if (!$this->processes->contains($process)) {
+            $this->processes[] = $process;
+            $process->setClient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProcess(Process $process): self
+    {
+        if ($this->processes->removeElement($process)) {
+            // set the owning side to null (unless already changed)
+            if ($process->getClient() === $this) {
+                $process->setClient(null);
+            }
+        }
 
         return $this;
     }

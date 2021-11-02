@@ -8,6 +8,7 @@ use App\Entity\Client;
 use App\Entity\EventType;
 use App\Entity\GeographicArea;
 use App\Entity\GeographicZoneEvent;
+use App\Entity\Process;
 use App\Entity\User;
 use App\Form\AppointmentFormType;
 use App\Repository\AppointmentRepository;
@@ -587,6 +588,12 @@ class AppointmentController extends AbstractController
                     }
                     $manager->persist($newCall);
                 }
+
+                $newProcess = new Process();
+                $newProcess->setClient($client);
+                $newProcess->setProcessorUser($loggedUser);
+                $newProcess->setCreatedAt(new \DateTime());
+                $manager->persist($newProcess);
                 $manager->flush();
                 $this->flashy->success("RDV fixé avec succès !");
             }
