@@ -564,19 +564,21 @@
                             $('#client_show-block').hide();
                             /*$("#notes_block").show()*/
                             $('#notes_label').text('Observations ' + info.event.title);
-                            $("#start-show").val((moment(info.event.start).format('DD/MM/YYYY hh:mm')))
-                            $("#end-show").val((moment(info.event.end).format('DD/MM/YYYY hh:mm')))
+                            /*$("#start-show").val((moment(info.event.start).format('DD/MM/YYYY hh:mm')))
+                            $("#end-show").val((moment(info.event.end).format('DD/MM/YYYY hh:mm')))*/
                             $("#notes-show").val(info.event.extendedProps.description)
                         }
                     } else {
                         $("#test2").click()
                         $('#client_show-block').show();
                         /*$("#notes_block").show()*/
-                        $("#start-show").val((moment(info.event.start).format('DD/MM/YYYY hh:mm')))
-                        $("#end-show").val((moment(info.event.end).format('DD/MM/YYYY hh:mm')))
+                        /*$("#start-show").val((moment(info.event.start).format('DD/MM/YYYY hh:mm')))
+                        $("#end-show").val((moment(info.event.end).format('DD/MM/YYYY hh:mm')))*/
                         $('#notes_label').text('Observations avant RDV');
                         $("#client-show").val(info.event.extendedProps.client)
                         $("#notes-show").val(info.event.extendedProps.description)
+                        /*console.log((moment(info.event.start).startOf('day').format('YYYY-MM-DD')))
+                        console.log(info.event.end)*/
                         /*if (info.event.extendedProps.description === null) {
                             $("#notes_block").hide()
                         }*/
@@ -588,11 +590,11 @@
                     // change the border color just for fun
                     /*info.el.style.borderColor = 'red';*/
                     $("#edit_form_start_date").val((moment(info.event.start).startOf('day').format('YYYY-MM-DD')))
-                    $("#edit_form_start_time_hour").val(parseInt(moment(info.event.start).format('HH')))
+                    $("#edit_form_start_time_hour").val(parseInt(moment.parseZone(info.event.start).utcOffset(0).format('HH')))
                     $("#edit_form_start_time_minute").val(parseInt(moment(info.event.start).format('mm')))
 
                     $("#edit_form_end_date").val((moment(info.event.end).startOf('day').format('YYYY-MM-DD')))
-                    $("#edit_form_end_time_hour").val((moment(info.event.end).format('HH')))
+                    $("#edit_form_end_time_hour").val(parseInt(moment.parseZone(info.event.end).utcOffset(0).format('HH')))
                     $("#edit_form_end_time_minute").val(parseInt(moment(info.event.end).format('mm')))
                     let editEventUrl = '{{ path("edit_event", {'id': 'the_event_to_edit_id'}) }}';
                     editEventUrl = editEventUrl.replace("the_event_to_edit_id", info.event.id);
