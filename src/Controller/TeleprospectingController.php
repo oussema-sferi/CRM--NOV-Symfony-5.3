@@ -250,10 +250,7 @@ class TeleprospectingController extends AbstractController
                 ]);
             }
 
-            if((($validationEndTime > $validationStartTime) && ($appointmentDuration->days === 0) && ($appointmentDuration->h <= 2)) ||
-                (($validationEndTime > $validationStartTime) && ($appointmentDuration->days === 0) && ($appointmentDuration->h === 3)
-                    && ($appointmentDuration->i === 0) && ($appointmentDuration->s === 0))
-            ) {
+            if($validationEndTime > $validationStartTime) {
                 $startTime = $directAppointment->getStart()->format('Y-m-d H:i:s');
                 $endTime = $directAppointment->getEnd()->format('Y-m-d H:i:s');
                 $busyAppointmentsTime = $this->getDoctrine()->getRepository(Appointment::class)->getAppointmentsBetweenByDate($startTime, $endTime);
@@ -296,13 +293,9 @@ class TeleprospectingController extends AbstractController
                         'appointment_duration_warning',
                         "Veuillez revérifier vos entrées! La durée du RDV doit pas être nulle!"
                     );*/
-                } else {
+                } /*else {
                     $this->flashy->warning("Veuillez revérifier vos entrées! La durée du RDV ne doit pas dépasser trois heures !");
-                   /* $this->addFlash(
-                        'appointment_duration_warning',
-                        "Veuillez revérifier vos entrées! La durée du RDV ne doit pas dépasser trois heures!"
-                    );*/
-                }
+                }*/
                 return $this->render('/teleprospecting/direct_appointment.html.twig', [
                     'appointment_form' => $appointmentForm->createView(),
                 ]);

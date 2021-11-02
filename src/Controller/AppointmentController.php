@@ -87,10 +87,7 @@ class AppointmentController extends AbstractController
                     'appointment_form' => $appointmentForm->createView(),
                 ]);
             }
-            if((($validationEndTime > $validationStartTime) && ($appointmentDuration->days === 0) && ($appointmentDuration->h <= 2)) ||
-                (($validationEndTime > $validationStartTime) && ($appointmentDuration->days === 0) && ($appointmentDuration->h === 3)
-                    && ($appointmentDuration->i === 0) && ($appointmentDuration->s === 0))
-            ) {
+            if($validationEndTime > $validationStartTime) {
                 $startTime = $newAppointment->getStart()->format('Y-m-d H:i:s');
                 $endTime = $newAppointment->getEnd()->format('Y-m-d H:i:s');
                 $busyAppointmentsTime = $this->getDoctrine()->getRepository(Appointment::class)->getAppointmentsBetweenByDate($startTime, $endTime);
@@ -134,13 +131,9 @@ class AppointmentController extends AbstractController
                         'appointment_duration_warning',
                         "Veuillez revérifier vos entrées! La durée du RDV doit pas être nulle!"
                     );*/
-                } else {
+                } /*else {
                     $this->flashy->warning("Veuillez revérifier vos entrées! La durée du RDV ne doit pas dépasser trois heures !");
-                    /*$this->addFlash(
-                        'appointment_duration_warning',
-                        "Veuillez revérifier vos entrées! La durée du RDV ne doit pas dépasser trois heures!"
-                    );*/
-                }
+                }*/
                 return $this->render('/appointment/index.html.twig', [
                     'all_commercial_agents' => $data,
                     'commercial_agents' => $commercial_agents,
@@ -149,7 +142,6 @@ class AppointmentController extends AbstractController
             }
 
         }
-
 
         return $this->render('appointment/index.html.twig', [
             'all_commercial_agents' => $data,
@@ -216,10 +208,7 @@ class AppointmentController extends AbstractController
                     return $this->redirectToRoute('show_my_calendar');
                 }
 
-                if((($validationEndTime > $validationStartTime) && ($appointmentDuration->days === 0) && ($appointmentDuration->h <= 2)) ||
-                    (($validationEndTime > $validationStartTime) && ($appointmentDuration->days === 0) && ($appointmentDuration->h === 3)
-                        && ($appointmentDuration->i === 0) && ($appointmentDuration->s === 0))
-                ) {
+                if($validationEndTime > $validationStartTime) {
                     $startTime = $myPersonalEvent->getStart()->format('Y-m-d H:i:s');
                     $endTime = $myPersonalEvent->getEnd()->format('Y-m-d H:i:s');
                     $busyAppointmentsTime = $this->getDoctrine()->getRepository(Appointment::class)->getAppointmentsBetweenByDate($startTime, $endTime);
@@ -260,8 +249,7 @@ class AppointmentController extends AbstractController
                         return $this->redirectToRoute('show_my_calendar');
                     }
 
-                }
-                else {
+                } else {
                     if(($appointmentDuration->days === 0) && ($appointmentDuration->h === 0)
                         && ($appointmentDuration->i === 0) && ($appointmentDuration->s === 0)) {
                         /*dd($appointmentDuration);*/
@@ -270,20 +258,12 @@ class AppointmentController extends AbstractController
                             'event_duration_warning',
                             "Veuillez revérifier vos entrées! La durée de l'événement ne doit pas être nulle!"
                         );*/
-                    } else {
+                    } /*else {
                         $this->flashy->warning("Veuillez revérifier vos entrées! La durée de l'événement ne doit pas dépasser trois heures !");
-                        /*$this->addFlash(
-                            'event_duration_warning',
-                            "Veuillez revérifier vos entrées! La durée de l'événement ne doit pas dépasser trois heures!"
-                        );*/
-                    }
+                    }*/
                     return $this->redirectToRoute('show_my_calendar');
                 }
-
-                }
-
-
-
+            }
 
             return $this->render('/appointment/show_my_calendar.html.twig', [
                 /*'calendar_to_show' => $calendarToShow,*/
@@ -412,10 +392,7 @@ class AppointmentController extends AbstractController
                 ]);
             }
 
-            if((($validationEndTime > $validationStartTime) && ($appointmentDuration->days === 0) && ($appointmentDuration->h <= 2)) ||
-                (($validationEndTime > $validationStartTime) && ($appointmentDuration->days === 0) && ($appointmentDuration->h === 3)
-                    && ($appointmentDuration->i === 0) && ($appointmentDuration->s === 0))
-            ) {
+            if($validationEndTime > $validationStartTime) {
                 $startTime = $newAppointment->getStart()->format('Y-m-d H:i:s');
                 $endTime = $newAppointment->getEnd()->format('Y-m-d H:i:s');
                 /*dd($request->request->get("event_type"));*/
@@ -468,13 +445,9 @@ class AppointmentController extends AbstractController
                         'appointment_duration_warning',
                         "Veuillez revérifier vos entrées! La durée du RDV ne doit pas être nulle!"
                     );*/
-                } else {
+                } /*else {
                     $this->flashy->warning("Veuillez revérifier vos entrées! La durée du RDV ne doit pas dépasser trois heures !");
-                    /*$this->addFlash(
-                        'appointment_duration_warning',
-                        "Veuillez revérifier vos entrées! La durée du RDV ne doit pas dépasser trois heures!"
-                    );*/
-                }
+                }*/
                 return $this->redirectToRoute('show_calendar', [
                     'id' => $id,
                 ]);
@@ -927,10 +900,7 @@ class AppointmentController extends AbstractController
             return $this->redirectToRoute('show_my_calendar');
         }
 
-        if((($validationEndTime > $validationStartTime) && ($appointmentDuration->days === 0) && ($appointmentDuration->h <= 2)) ||
-            (($validationEndTime > $validationStartTime) && ($appointmentDuration->days === 0) && ($appointmentDuration->h === 3)
-                && ($appointmentDuration->i === 0) && ($appointmentDuration->s === 0))
-        ) {
+        if($validationEndTime > $validationStartTime) {
             $startTime = $fullStartDateFormatted->format('Y-m-d H:i:s');
             $endTime = $fullEndDateFormatted->format('Y-m-d H:i:s');
             $busyAppointmentsTime = $this->getDoctrine()->getRepository(Appointment::class)->getAppointmentsBetweenByDate($startTime, $endTime);
@@ -965,9 +935,9 @@ class AppointmentController extends AbstractController
             if(($appointmentDuration->days === 0) && ($appointmentDuration->h === 0)
                 && ($appointmentDuration->i === 0) && ($appointmentDuration->s === 0)) {
                 $this->flashy->warning("Veuillez revérifier vos entrées! La durée de l'événement ne doit pas être nulle !");
-            } else {
+            } /*else {
                 $this->flashy->warning("Veuillez revérifier vos entrées! La durée de l'événement ne doit pas dépasser trois heures !");
-            }
+            }*/
             return $this->redirectToRoute('show_calendar', [
                 'id' => $calendarUserId,
             ]);

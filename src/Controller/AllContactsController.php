@@ -249,10 +249,7 @@ class AllContactsController extends AbstractController
                     'add_appointment_form' => $addAppointmentForm->createView(),
                 ]);
             }
-            if((($validationEndTime > $validationStartTime) && ($appointmentDuration->days === 0) && ($appointmentDuration->h <= 2)) ||
-                (($validationEndTime > $validationStartTime) && ($appointmentDuration->days === 0) && ($appointmentDuration->h === 3)
-                    && ($appointmentDuration->i === 0) && ($appointmentDuration->s === 0))
-            ) {
+            if($validationEndTime > $validationStartTime) {
                 $startTime = $newAppointment->getStart()->format('Y-m-d H:i:s');
                 $endTime = $newAppointment->getEnd()->format('Y-m-d H:i:s');
                 $busyAppointmentsTime = $this->getDoctrine()->getRepository(Appointment::class)->getAppointmentsBetweenByDate($startTime, $endTime);
