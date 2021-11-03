@@ -500,6 +500,16 @@
                 events: {{ data['data']|raw }},
                 eventClick: function(info) {
                     /*console.log(info.event.id)*/
+                    $("#edit_form_start_date").prop("disabled", true)
+                    $("#edit_form_start_time_hour").prop("disabled", true)
+                    $("#edit_form_start_time_minute").prop("disabled", true)
+                    $("#edit_form_end_date").prop("disabled", true)
+                    $("#edit_form_end_time_hour").prop("disabled", true)
+                    $("#edit_form_end_time_minute").prop("disabled", true)
+                    $("#notes-show").prop("disabled", true)
+                    $("#edit-submit-button").hide()
+                    $("#edit-button").show()
+
                     if(info.event.title !== "RDV") {
                         if (info.event.backgroundColor === "#008000") {
                             $("#geozone-info").click()
