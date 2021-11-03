@@ -406,8 +406,12 @@
                             <textarea id="departments-geozone" class="form-control" name="departments-geozone" cols="30" rows="6" placeholder="..." resize="none" disabled></textarea>
                         </div>
                     </div>#}
+                    <div id="departments-title-block" class="form-group">
+                        <label class="form-control-label" for="edit-department0">Départements</label><br>
+                        <textarea id="departments-title" class="form-control" cols="30" rows="6" placeholder="..." resize="none" disabled></textarea>
+                    </div>
 
-                    <div class="form-group">
+                    <div id="departments-select-block" class="form-group" style="display: none">
                         <label class="form-control-label" for="edit-department">Départements</label><br>
                         <select id="edit-department" name="edit-department" required multiple>
                             {% for department in departments %}
@@ -435,7 +439,7 @@
                         <div>
                             <div class="form-group">
                                 <label class="form-control-label" for="input-username">Date de Début</label>
-                                <div id="edit_geo_zone_form_start"><input type="date" id="edit_geo_zone_form_start_date" name="edit_geo_zone_form[start][date]" required="required" class="form-control">
+                                <div id="edit_geo_zone_form_start"><input type="date" id="edit_geo_zone_form_start_date" name="edit_geo_zone_form[start][date]" required="required" class="form-control" disabled>
                                 </div>
                             </div>
                         </div>
@@ -443,7 +447,7 @@
                         <div>
                             <div class="form-group">
                                 <label class="form-control-label" for="input-username">Date de Fin</label>
-                                <div id="edit_geo_zone_form_end"><input type="date" id="edit_geo_zone_form_end_date" name="edit_geo_zone_form[end][date]" required="required" class="form-control">
+                                <div id="edit_geo_zone_form_end"><input type="date" id="edit_geo_zone_form_end_date" name="edit_geo_zone_form[end][date]" required="required" class="form-control" disabled>
                                 </div>
                             </div>
                         </div>
@@ -467,7 +471,11 @@
                     <hr class="my-3">
 
                     <div class="text-center">
-                        <button type="submit" class="btn btn-sm btn-info">Editer</button>
+                        {#<button type="submit" class="btn btn-sm btn-info">Editer</button>
+                        <a id="delete-geozone" class="btn btn-sm btn-warning" href="">Supprimer</a>#}
+
+                        <a id="edit-geozone-button" class="btn btn-sm btn-info">Editer</a>
+                        <button id="edit-geozone-submit-button" type="submit" class="btn btn-sm btn-success" style="display: none">Sauvegarder</button>
                         <a id="delete-geozone" class="btn btn-sm btn-warning" href="">Supprimer</a>
                     </div>
 
@@ -499,6 +507,13 @@
                 /*nextDayThreshold: '08:00:00',*/
                 events: {{ data['data']|raw }},
                 eventClick: function(info) {
+                    $("#departments-select-block").hide()
+                    $("#departments-title-block").show()
+                    $("#edit_geo_zone_form_start_date").prop("disabled", true)
+                    $("#edit_geo_zone_form_end_date").prop("disabled", true)
+                    $("#edit-geozone-submit-button").hide()
+                    $("#edit-geozone-button").show()
+
                     /*console.log(info.event.id)*/
                     $("#edit_form_start_date").prop("disabled", true)
                     $("#edit_form_start_time_hour").prop("disabled", true)
@@ -516,13 +531,16 @@
                             $("#edit-department  > option").each(function() {
                                 $(this).attr("selected",false);
                             })
+                            /*console.log(info.event.title)*/
                             departmenttest.selectedIndex = 0;
                             $("#edit-department").attr('class', 'edit' + info.event.id)
+                            $("#edit-department").prop("disabled", true)
                             /*if(departmenttest) {
                                 departmenttest.destroy()
                             }*/
                             /*console.log(info.event.extendedProps.geoareasid[0])*/
                             $('#client_show-block').hide();
+                            $('#departments-title').val(info.event.title);
                             $('#notes_label').text('Observations zones géo');
                             /*$("#start-geozone").val((moment(info.event.start).format('DD/MM/YYYY')))
                             $("#end-geozone").val((moment(info.event.end).subtract(1, "days").format('DD/MM/YYYY')))*/
@@ -532,6 +550,15 @@
                             $("#edit_geo_zone_form_end_date").val((moment(info.event.end).subtract(1, "days").format('YYYY-MM-DD')))
 
 
+                            $("#edit-geozone-button").on("click", function () {
+                                $(this).hide()
+                                $("#departments-title-block").hide()
+                                $("#departments-select-block").show()
+                                $("#edit_geo_zone_form_start_date").prop("disabled", false)
+                                $("#edit_geo_zone_form_end_date").prop("disabled", false)
+
+                                $("#edit-geozone-submit-button").show()
+                            })
 
 
                             let editGeoZoneUrl = '{{ path("edit_geo_zone_event", {'id': 'the_geo_zone_event_to_edit_id'}) }}';
