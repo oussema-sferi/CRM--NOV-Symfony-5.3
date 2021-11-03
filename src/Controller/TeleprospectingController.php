@@ -93,6 +93,8 @@ class TeleprospectingController extends AbstractController
             $newClient->setCreatedAt(new \DateTime());
             $newClient->setUpdatedAt(new \DateTime());
             $newClient->setCreatorUser($loggedUser);
+            $newClient->setIsDeleted(false);
+            $newClient->setDeletionDate(null);
             $manager->persist($newClient);
             $manager->flush();
             $this->flashy->success("Contact créé avec succès !");
@@ -147,6 +149,23 @@ class TeleprospectingController extends AbstractController
             'client_to_show' => $clientToShow,
             'client_appointments_list' => $clientAppointmentsList
         ]);
+    }
+
+    /**
+     * @Route("/dashboard/teleprospecting/delete/{id}", name="delete_telepro")
+     */
+    public function delete(Request $request, $id): Response
+    {
+        $manager = $this->getDoctrine()->getManager();
+        $loggedUser = $this->getUser();
+        $contactToDelete = $this->getDoctrine()->getRepository(Client::class)->find($id);
+        $contactToDelete->setIsDeleted(true);
+        $contactToDelete->setDeletionDate(new \DateTime());
+        $contactToDelete->setWhoDeletedIt($loggedUser);
+        $manager->persist($contactToDelete);
+        $manager->flush();
+        $this->flashy->success("Contact supprimé avec succès !");
+        return $this->redirectToRoute('teleprospecting');
     }
 
     /**
@@ -229,6 +248,7 @@ class TeleprospectingController extends AbstractController
         $loggedUserId = $this->getUser()->getId();
         $clients = $this->getDoctrine()->getRepository(Client::class)->getNotDeletedClients();
         if($appointmentForm->isSubmitted()) {
+            $previousReferer = $request->request->get('call_referer');
             $validationStartTime = $directAppointment->getStart();
             $validationEndTime = $directAppointment->getEnd();
             $appointmentDuration = date_diff($validationEndTime,$validationStartTime);
@@ -271,7 +291,8 @@ class TeleprospectingController extends AbstractController
                     'free_commercials' => $freeCommercials,
                     'clients' => $client,
                     'start' => $startTime,
-                    'end' => $endTime
+                    'end' => $endTime,
+                    'appointment_referer_teleprospecting' => $previousReferer
                 ]);
             } else {
                 if(($appointmentDuration->days === 0) && ($appointmentDuration->h === 0)

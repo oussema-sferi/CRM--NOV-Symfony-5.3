@@ -117,7 +117,7 @@
                                 {#{{ dump(selected_date) }}#}
                                 <div class="row">
                                     <div class="col">
-                                        <h5 class="card-title text-uppercase text-muted mb-0">Fiches de contact Traités</h5>
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Total Fiches de contact Traitées</h5>
                                         <span class="h2 font-weight-bold mb-0">
                                             {#{{ dump(processed_clients) }}#}
                                             {#{{ dump(processed_clients[2].calls) }}#}
@@ -224,7 +224,7 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col">
-                                        <h5 class="card-title text-uppercase text-muted mb-0">Fiches de contact Non Traités</h5>
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Total Fiches de contact Non Traitées</h5>
                                         <span class="h2 font-weight-bold mb-0">
                                             {#{{ not_processed_clients }}#}
                                             {% if app.session.get('date_filter_value') is not null %}
@@ -259,7 +259,7 @@
                                 {#{{ dump(selected_date) }}#}
                                 <div class="row">
                                     <div class="col">
-                                        <h5 class="card-title text-uppercase text-muted mb-0">Total Appels Qualifiés</h5>
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Total Fiches Qualifiées</h5>
                                         <span class="h2 font-weight-bold mb-0">
                                             {#{{ dump(processed_clients) }}#}
                                             {#{{ dump(processed_clients[2].calls) }}#}
@@ -318,7 +318,7 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col">
-                                        <h5 class="card-title text-uppercase text-muted mb-0">Total Appels Non Qualifiés</h5>
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Total Fiches Non Qualifiées</h5>
                                         <span class="h2 font-weight-bold mb-0">
                                             {% if app.session.get('date_filter_value') is not null %}
                                                 {% set not_qualified_calls_counter = 0 %}
@@ -369,7 +369,7 @@
 
 
 
-                    <div class="col-xl-4 col-md-6">
+                    {#<div class="col-xl-4 col-md-6">
                         <div class="card card-stats">
                             <!-- Card body -->
                             <div class="card-body">
@@ -411,13 +411,13 @@
                                         </div>
                                     </div>
                                 </div>
-                                {# <p class="mt-3 mb-0 text-sm">
+                                #}{# <p class="mt-3 mb-0 text-sm">
                                     <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
                                     <span class="text-nowrap">Since last month</span>
-                                </p>#}
+                                </p>#}{#
                             </div>
                         </div>
-                    </div>
+                    </div>#}
 
                     <div class="col-xl-4 col-md-6">
                         <div class="card card-stats">

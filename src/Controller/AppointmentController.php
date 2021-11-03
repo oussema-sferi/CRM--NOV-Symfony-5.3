@@ -574,7 +574,10 @@ class AppointmentController extends AbstractController
                 return $this->redirectToRoute('show_contact', [
                     'id' => $client->getId(),
                 ]);
-            } else {
+            } elseif ($request->request->get("not_direct_appointment") !== null) {
+                return $this->redirectToRoute('teleprospecting');
+            }
+            else {
                 return $this->redirectToRoute('show_calendar', [
                     'id' => $request->request->get('commercial'),
                 ]);
