@@ -704,7 +704,7 @@ class AppointmentController extends AbstractController
     /**
      * @Route("/dashboard/appointments/delete/appointment/{id}", name="delete_appointment")
      */
-    public function deleteCall(Request $request, $id): Response
+    public function deleteAppointment(Request $request, $id): Response
     {
         $manager = $this->getDoctrine()->getManager();
         $loggedUser = $this->getUser();
@@ -716,7 +716,6 @@ class AppointmentController extends AbstractController
         $appointmentToDelete->setWhoDeletedIt($loggedUser);
         $manager->persist($appointmentToDelete);
         $manager->flush();
-
         $allClientNotDeletedCalls = $this->getDoctrine()->getRepository(Call::class)->getNotDeletedCallsByClient($clientId);
         $allClientNotDeletedAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getNotDeletedAppointmentsByClient($clientId);
         $allItems = array_merge($allClientNotDeletedCalls,$allClientNotDeletedAppointments);
@@ -746,7 +745,9 @@ class AppointmentController extends AbstractController
         $manager->persist($client);
         $manager->flush();
         $this->flashy->success('RDV supprimé avec succès !');
-        return $this->redirectToRoute('commercial');
+        return $this->redirectToRoute('full_update_contact', [
+            "id" => $clientId
+        ]);
     }
 
     /**
@@ -850,12 +851,57 @@ class AppointmentController extends AbstractController
         $manager = $this->getDoctrine()->getManager();
         $eventToDelete = $this->getDoctrine()->getRepository(Appointment::class)->find($id);
         $calendarUserId = $eventToDelete->getUser()->getId();
-        $manager->remove($eventToDelete);
-        $manager->flush();
-        $this->flashy->success('Entrée supprimée avec succès !');
-        return $this->redirectToRoute('show_calendar', [
-            "id" => $calendarUserId
-        ]);
+        if($eventToDelete->getEventType()->getId() !== 4) {
+            $manager->remove($eventToDelete);
+            $manager->flush();
+            $this->flashy->success('Entrée supprimée avec succès !');
+            return $this->redirectToRoute('show_calendar', [
+                "id" => $calendarUserId
+            ]);
+        } else {
+            $loggedUser = $this->getUser();
+            $appointmentToDelete = $this->getDoctrine()->getRepository(Appointment::class)->find($id);
+            $clientId = $appointmentToDelete->getClient()->getId();
+            $client = $this->getDoctrine()->getRepository(Client::class)->find($clientId);
+            $appointmentToDelete->setIsDeleted(true);
+            $appointmentToDelete->setDeletionDate(new \DateTime());
+            $appointmentToDelete->setWhoDeletedIt($loggedUser);
+            $manager->persist($appointmentToDelete);
+            $manager->flush();
+            $allClientNotDeletedCalls = $this->getDoctrine()->getRepository(Call::class)->getNotDeletedCallsByClient($clientId);
+            $allClientNotDeletedAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getNotDeletedAppointmentsByClient($clientId);
+            $allItems = array_merge($allClientNotDeletedCalls,$allClientNotDeletedAppointments);
+            function compare($a, $b)
+            {
+                if ($a->getCreatedAt() < $b->getCreatedAt())
+                    return 1;
+                else if ($a->getCreatedAt() > $b->getCreatedAt())
+                    return -1;
+                else
+                    return 0;
+            }
+            usort($allItems, "App\Controller\compare");
+            if ($allItems) {
+                if ($allItems[0] instanceof Call) {
+                    $client->setStatus($allItems[0]->getGeneralStatus());
+                    $client->setStatusDetail($allItems[0]->getStatusDetails());
+                } elseif ($allItems[0] instanceof Appointment) {
+                    $client->setStatus(2);
+                    $client->setStatusDetail(7);
+                }
+            }
+            if ((count($allClientNotDeletedCalls) === 0) && (count($allClientNotDeletedAppointments) === 0)) {
+                $client->setStatus(0);
+                $client->setStatusDetail(0);
+            }
+            $manager->persist($client);
+            $manager->flush();
+            $this->flashy->success('RDV supprimé avec succès !');
+            return $this->redirectToRoute('show_calendar', [
+                "id" => $calendarUserId
+            ]);
+        }
+
     }
 
     /**
