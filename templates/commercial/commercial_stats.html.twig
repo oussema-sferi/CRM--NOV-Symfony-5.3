@@ -383,7 +383,7 @@
                                 <h3 class="mb-0">Liste des Utilisateurs</h3>
                             </div>
                             <div class="col text-right">
-                                <a href="#!" class="btn btn-sm btn-info">Afficher Tout</a>
+                                {#<a href="#!" class="btn btn-sm btn-info">Afficher Tout</a>#}
                             </div>
                         </div>
                     </div>
@@ -395,6 +395,7 @@
                                 <th scope="col">Utilisateur</th>
                                 <th scope="col">RDV effectués</th>
                                 <th scope="col">Projets réalisés</th>
+                                <th scope="col">Actions</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -444,6 +445,10 @@
                                 </td>
                                 <td>
                                 N/A
+                                </td>
+                                <td>
+                                    <a href="{{ path('show_user', {'id': commercial.id}) }}"><i class="fas fa-search-plus text-blue"></i></a>&nbsp;&nbsp;
+                                    <a href="{{ path('update_user', {'id': commercial.id}) }}"><i class="fas fa-edit text-yellow"></i></a>&nbsp;&nbsp;
                                 </td>
                             </tr>
                             {% endfor %}

@@ -96,6 +96,10 @@
             $("#appointment_form_start_time_hour").val(9)
             $("#appointment_form_end_time_hour").val(10)
 
+            $("#appointment_form_start_date").on("change", function () {
+                $("#appointment_form_end_date").val(this.value)
+            })
+
             $("#appointment_form_start_time_hour").on("change", function () {
                 if(this.value == "23") {
                     $("#appointment_form_end_time_hour").val(0)

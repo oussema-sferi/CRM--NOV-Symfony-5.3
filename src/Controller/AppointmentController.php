@@ -746,9 +746,7 @@ class AppointmentController extends AbstractController
         $manager->persist($client);
         $manager->flush();
         $this->flashy->success('RDV supprimé avec succès !');
-        return $this->redirectToRoute('full_update_contact', [
-            "id" => $clientId
-        ]);
+        return $this->redirectToRoute('commercial');
     }
 
     /**
@@ -900,7 +898,9 @@ class AppointmentController extends AbstractController
                 'event_duration_warning',
                 "Veuillez revérifier vos entrées! L'heure de début doit être avant l'heure de fin!"
             );*/
-            return $this->redirectToRoute('show_my_calendar');
+            return $this->redirectToRoute('show_calendar', [
+                'id' => $calendarUserId,
+            ]);
         }
 
         if($validationEndTime > $validationStartTime) {

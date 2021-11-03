@@ -145,20 +145,24 @@ class CommercialController extends AbstractController
      */
     public function appointmentHandleIndex(Request $request, $id): Response
     {
+        $manager = $this->getDoctrine()->getManager();
         $appointmentToProcess = $this->getDoctrine()->getRepository(Appointment::class)->find($id);
         if($request->isMethod('Post')) {
             if($request->request->get('testing') === "on") {
                 /*dd($request->request->get('notes'));*/
-                $manager = $this->getDoctrine()->getManager();
                 $appointmentToProcess->setIsDone(true);
                 $appointmentToProcess->setDoneAt(new \DateTime());
                 $appointmentToProcess->setPostAppointmentNotes($request->request->get('notes'));
-                $manager->persist($appointmentToProcess);
-                $manager->flush();
-                $this->flashy->success("RDV traité avec succès !");
+                /*$this->flashy->success("RDV traité avec succès !");*/
             } else {
-                $this->flashy->info("Aucun traitement n'a été effectué sur le RDV !");
+                $appointmentToProcess->setIsDone(false);
+                $appointmentToProcess->setDoneAt(null);
+                $appointmentToProcess->setPostAppointmentNotes(null);
+                /*$this->flashy->info("Aucun traitement n'a été effectué sur le RDV !");*/
             }
+            $manager->persist($appointmentToProcess);
+            $manager->flush();
+            $this->flashy->success("RDV traité avec succès !");
             return $this->redirectToRoute('commercial');
 
         }
