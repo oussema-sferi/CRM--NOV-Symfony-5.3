@@ -74,6 +74,7 @@
                                 {{ form_widget(call_form.statusDetails, {'attr': {'class': 'form-control form-control-sm' }}) }}
 
                             </div>#}
+                            <input type="hidden" name="call_referer" value="{{app.request.headers.get('referer')}}"/>
 
 
                                 <div class="form-group">

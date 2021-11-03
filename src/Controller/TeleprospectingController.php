@@ -7,7 +7,6 @@ use App\Entity\Call;
 use App\Entity\Client;
 use App\Entity\GeographicArea;
 use App\Entity\Process;
-use App\Entity\UniqueClientProcess;
 use App\Entity\User;
 use App\Form\AppointmentFormType;
 use App\Form\CallFormType;
@@ -155,6 +154,7 @@ class TeleprospectingController extends AbstractController
      */
     public function callHandle(Request $request, $id): Response
     {
+        /*dd($request->headers->get('referer'));*/
         $loggedUser = $this->getUser();
         /*$loggedUserId = $this->getUser()->getUserIdentifier();
         $usr = $this->getDoctrine()->getRepository(User::class)->findBy(['email' => $loggedUserId]);*/
@@ -170,6 +170,8 @@ class TeleprospectingController extends AbstractController
         $manager = $this->getDoctrine()->getManager();
 
         if($callForm->isSubmitted()) {
+            $previousReferer = $request->request->get('call_referer');
+
             /*dd($newCall->getCallNotes());*/
             /*dd($request->request->get('call_form[callNotes]'));*/
             $status = (int)$request->request->get('status');
@@ -209,14 +211,6 @@ class TeleprospectingController extends AbstractController
                     $newCall->setStatusDetails($statusDetailsNQ);
                     $client->setStatusDetail($statusDetailsNQ);
                 }
-                /*$myProcessedClients = $loggedUser->getProcessedClients();
-                $myProcessedClientsIdsArray = [];
-                foreach ($myProcessedClients as $processedClient) {
-                    $myProcessedClientsIdsArray[] = $processedClient->getId();
-                }
-                if(!in_array($client->getId(), $myProcessedClientsIdsArray)) {
-                    $loggedUser->addProcessedClient($client);
-                }*/
                 $client->setUpdatedAt(new \DateTime());
                 $loggedUser->addProcessedClient($client);
                 $manager->persist($newCall);
@@ -228,7 +222,7 @@ class TeleprospectingController extends AbstractController
                 /*$test = $this->getDoctrine()->getRepository(UniqueClientProcess::class)->findAll();*/
                 $manager->flush();
                 $this->flashy->success("Fiche contact traitée avec succès !");
-                return $this->redirectToRoute('teleprospecting');
+                return $this->redirect($previousReferer);
             }
 
         }
@@ -241,15 +235,10 @@ class TeleprospectingController extends AbstractController
 
             if($validationEndTime < $validationStartTime) {
                 $this->flashy->warning("Veuillez revérifier vos entrées! L'heure de début doit être avant l'heure de fin !");
-                /*$this->addFlash(
-                    'appointment_duration_warning',
-                    "Veuillez revérifier vos entrées! L'heure de début doit être avant l'heure de fin!"
-                );*/
                 return $this->render('/teleprospecting/direct_appointment.html.twig', [
                     'appointment_form' => $appointmentForm->createView(),
                 ]);
             }
-
             if($validationEndTime > $validationStartTime) {
                 $startTime = $directAppointment->getStart()->format('Y-m-d H:i:s');
                 $endTime = $directAppointment->getEnd()->format('Y-m-d H:i:s');

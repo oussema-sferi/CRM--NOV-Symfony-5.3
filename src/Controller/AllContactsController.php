@@ -7,6 +7,7 @@ use App\Entity\Call;
 use App\Entity\Client;
 use App\Entity\Equipment;
 use App\Entity\GeographicArea;
+use App\Entity\Process;
 use App\Entity\User;
 use App\Form\AppointmentFormType;
 use App\Form\CallFormType;
@@ -157,37 +158,7 @@ class AllContactsController extends AbstractController
         $newAppointment = new Appointment();
         $appointmentForm = $this->createForm(AppointmentFormType::class, $newAppointment);
         $appointmentForm->handleRequest($request);
-
-       /* $calls = $clientToUpdate->getCalls();*/
         $commercials = $this->getDoctrine()->getRepository(User::class)->findUsersByCommercialRole("ROLE_COMMERCIAL");
-        /*dd($clientForm->getData());*/
-        /*dd($clientToUpdate->getCalls()[0]);*/
-        /*if($request->isMethod('Post')) {
-           dd($request->request->all());
-        }*/
-
-
-        /*dd(count($clientToUpdate->getCalls()));*/
-        /*$callsCount = count($clientToUpdate->getCalls());
-        for ($i = 0; $i < $callsCount; $i++) {
-
-            $call = new Call();
-            ($call . '' . $i) = new Call();
-            dd($call . $i);
-
-
-        }
-
-
-        /*$call1 = new Call();
-        $call1->setCallNotes('test1');
-        $newClient->getCalls()->add($call1);*/
-
-        /*dd($calls);*/
-        /*$newCall = new Call();
-        $callForm = $this->createForm(CallFormType::class, $newCall);
-        $callForm->handleRequest($request);*/
-/*dd($clientForm->getData()->getCalls());*/
 
         if($clientForm->isSubmitted()) {
             if ($newClient->getFirstName()) $clientToUpdate->setFirstName($newClient->getFirstName());
@@ -211,7 +182,6 @@ class AllContactsController extends AbstractController
                 "id" => $id
             ]);
         }
-
         return $this->render('/all_contacts/full_update_contact.html.twig', [
             'client_form' => $clientForm->createView(),
             'client_to_update' => $clientToUpdate,
@@ -224,12 +194,13 @@ class AllContactsController extends AbstractController
     }
 
 
-
     /**
      * @Route("/dashboard/allcontacts/show/{id}", name="show_contact")
      */
     public function show(Request $request, $id): Response
     {
+        $allContactsReferer = $request->headers->get('referer');
+        /*dd($test);*/
         $clientToShow = $this->getDoctrine()->getRepository(Client::class)->find($id);
         $clientAppointmentsList = $clientToShow->getAppointments();
 
@@ -299,6 +270,8 @@ class AllContactsController extends AbstractController
             'add_appointment_form' => $addAppointmentForm->createView(),
         ]);
     }
+
+
 
     /**
      * @Route("/dashboard/allcontacts/delete/{id}", name="delete_contact")
@@ -410,7 +383,11 @@ class AllContactsController extends AbstractController
                     /*$email= $Row['C'];*/     // store the email on each iteration
                     /*$companyName= $Row['D'];*/
                     $address= $Row['C'];
-                    $postalCode= $Row['E'];
+                    if (strlen($Row['E']) === 4) {
+                        $postalCode= "0" . $Row['E'];
+                    } else {
+                        $postalCode= $Row['E'];
+                    }
                     $city = $Row['D'];
                     /*$country= $Row['G'];*/
                     if ($Row['A']) {
@@ -419,7 +396,13 @@ class AllContactsController extends AbstractController
                         $phoneNumber = "";
                     }
 
-                    $geographicArea = $this->getDoctrine()->getRepository(GeographicArea::class)->findOneBy(array('code' => (int)substr($postalCode,0,2)));
+                    if (substr($postalCode,0,2) === "97") {
+                        $departmentCode = substr($postalCode,0,3);
+                    } else {
+                        $departmentCode = substr($postalCode,0,2);
+                    }
+
+                    $geographicArea = $this->getDoctrine()->getRepository(GeographicArea::class)->findOneBy(array('code' => $departmentCode));
                     $existingContactByLastName = $entityManager->getRepository(Client::class)->findOneBy(array('lastName' => $lastName));
                     $existingContactByFirstName = $entityManager->getRepository(Client::class)->findOneBy(array('firstName' => $firstName));
                     if ($phoneNumber !== "" && !($entityManager->getRepository(Client::class)->findOneBy(['phoneNumber' => $phoneNumber]))) {
