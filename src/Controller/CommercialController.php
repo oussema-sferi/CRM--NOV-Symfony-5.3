@@ -181,17 +181,18 @@ class CommercialController extends AbstractController
     {
         $justCommercials = $this->getDoctrine()->getRepository(User::class)->findUsersByCommercialRole("ROLE_COMMERCIAL");
         $allCommercials = $this->getDoctrine()->getRepository(User::class)->findUsersTeleproStats("ROLE_COMMERCIAL", "ROLE_SUPERADMIN");
-        $allAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getAppointmentsWhereClientsExistCommercialStats();
+        /*$allAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getAppointmentsWhereClientsExistCommercialStats();*/
         $doneAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getDoneAppointments();
         $deletedAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getDeletedAppointments();
         $upcomingAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getUpcomingAppointments();
         $processedClients = $this->getDoctrine()->getRepository(Client::class)->getProcessedClients();
-        /*$notProcessedClients = $this->getDoctrine()->getRepository(Client::class)->findBy(["status" => 0]);*/
+        $allAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getAppointmentsWhereClientsExist();
 
-
-        /*$commercial = $this->getDoctrine()->getRepository(User::class)->find(4);
-        $appointments = $commercial->getAppointments();
-        dd($appointments[3]);*/
+        if(count($allAppointments) !== 0) {
+            $doneAppointmentsPerformance = number_format(((count($doneAppointments) / count($allAppointments)) * 100), 2);
+        } else {
+            $doneAppointmentsPerformance = 0;
+        }
 
         return $this->render('commercial/commercial_stats.html.twig', [
             'count_total_commercials' => count($justCommercials),
@@ -203,6 +204,7 @@ class CommercialController extends AbstractController
             'deleted_appointments_count' => count($deletedAppointments),
             'upcoming_appointments' => count($upcomingAppointments),
             'processed_clients' => count($processedClients),
+            'done_appointments_performance' => $doneAppointmentsPerformance,
         ]);
     }
 
