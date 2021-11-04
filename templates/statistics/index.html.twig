@@ -67,7 +67,7 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col">
-                                        <h5 class="card-title text-uppercase text-muted mb-0">Total Fiches de Contacts</h5>
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Total Contacts</h5>
                                         <span class="h2 font-weight-bold mb-0">{{ total_all_contacts }}</span>
                                     </div>
                                     <div class="col-auto">
@@ -76,10 +76,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                {#<p class="mt-3 mb-0 text-sm">
-                                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
-                                    <span class="text-nowrap">Since last month</span>
-                                </p>#}
                             </div>
                         </div>
                     </div>
@@ -94,61 +90,8 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col">
-                                        <h5 class="card-title text-uppercase text-muted mb-0">Total Fiches de Contact Traités</h5>
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Total Contacts Traités</h5>
                                         <span class="h2 font-weight-bold mb-0">
-                                            {#{{ total_processed_contacts }}#}
-                                            {#{% if app.session.get('date_filter_value_all_stats') is not null %}
-                                                {% set processed_contacts_counter = 0 %}
-                                                {% for client in total_processed_contacts %}
-                                                    {% set break = false %}
-                                                    {% for call in client.calls %}
-                                                        {% if break == false %}
-                                                            {% set call_date = call.createdAt | date('Y-m-d') %}
-                                                            {% if filter == "0" or filter == "1" %}
-                                                                {% if call_date == selected_date %}
-                                                                    {% set processed_contacts_counter = processed_contacts_counter + 1 %}
-                                                                    {% set break = true %}
-                                                                {% endif %}
-                                                            {% elseif filter == "100" %}
-                                                                {% if call_date >= start_date and call_date <= end_date %}
-                                                                    {% set processed_contacts_counter = processed_contacts_counter + 1 %}
-                                                                    {% set break = true %}
-                                                                {% endif %}
-                                                            {% else %}
-                                                                {% if call_date >= selected_date %}
-                                                                    {% set processed_contacts_counter = processed_contacts_counter + 1 %}
-                                                                    {% set break = true %}
-                                                                {% endif%}
-                                                            {% endif %}
-                                                        {% endif %}
-                                                    {% endfor %}
-                                                {% endfor %}
-                                                {{ processed_contacts_counter }}
-                                            {% else %}
-                                                {{ count_total_processed_contacts }}
-                                            {% endif %}#}
-                                            {#{% if app.session.get('date_filter_value_all_stats') is not null %}
-                                                {% set processed_clients_counter = 0 %}
-                                                {% for processedClient in total_processed_contacts %}
-                                                    {% set process_date = processedClient.updatedAt | date('Y-m-d') %}
-                                                    {% if filter == "0" or filter == "1" %}
-                                                        {% if process_date == selected_date %}
-                                                            {% set processed_clients_counter = processed_clients_counter + 1 %}
-                                                        {% endif %}
-                                                    {% elseif filter == "100" %}
-                                                        {% if process_date >= start_date and process_date <= end_date %}
-                                                            {% set processed_clients_counter = processed_clients_counter + 1 %}
-                                                        {% endif %}
-                                                    {% else %}
-                                                        {% if process_date >= selected_date %}
-                                                            {% set processed_clients_counter = processed_clients_counter + 1 %}
-                                                        {% endif%}
-                                                    {% endif %}
-                                                {% endfor %}
-                                                {{ processed_clients_counter }}
-                                            {% else %}
-                                                {{ count_total_processed_contacts }}
-                                            {% endif %}#}
                                             {% if app.session.get('date_filter_value_all_stats') is not null %}
                                                 {% set processed_clients_counter = 0 %}
                                                 {% for process in single_clients_processes %}
@@ -187,80 +130,154 @@
                                         </div>
                                     </div>
                                 </div>
-                               {# <p class="mt-3 mb-0 text-sm">
-                                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
-                                    <span class="text-nowrap">Since last month</span>
-                                </p>#}
                             </div>
                         </div>
                     </div>
+
                     <div class="col-xl-4 col-md-6">
                         <div class="card card-stats">
                             <!-- Card body -->
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col">
-                                        <h5 class="card-title text-uppercase text-muted mb-0">Performance Contacts</h5>
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Total Contacts Non Traités</h5>
                                         <span class="h2 font-weight-bold mb-0">
-                                            {#{{ contacts_performance }}%#}
                                             {% if app.session.get('date_filter_value_all_stats') is not null %}
-                                                {% if  total_all_contacts != 0 %}
-                                                    {{ ((processed_clients_counter / total_all_contacts) * 100)|number_format(2) }}%
-                                                {% else %}
-                                                    0.00%
-                                                {% endif %}
+                                                {{ total_all_contacts - processed_clients_counter }}
                                             {% else %}
-                                                {{ contacts_performance }}%
+                                                {{ not_processed_clients }}
                                             {% endif %}
                                         </span>
                                     </div>
                                     <div class="col-auto">
-                                        <div class="icon icon-shape bg-gradient-info text-white rounded-circle shadow">
-                                            <i class="ni ni-chart-bar-32"></i>
+                                        <div class="icon icon-shape bg-gradient-red text-white rounded-circle shadow">
+                                            <i class="fas fa-list-alt"></i>
                                         </div>
                                     </div>
                                 </div>
-                               {# <p class="mt-3 mb-0 text-sm">
-                                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
-                                    <span class="text-nowrap">Since last month</span>
-                                </p>#}
+
                             </div>
                         </div>
                     </div>
-                    {#<div class="col-xl-3 col-md-6">
-                        <div class="card card-stats">
-                            <!-- Card body -->
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col">
-                                        <h5 class="card-title text-uppercase text-muted mb-0">Total Projets</h5>
-                                        <span class="h2 font-weight-bold mb-0">18</span>
-                                    </div>
-                                    <div class="col-auto">
-                                        <div class="icon icon-shape bg-gradient-green text-white rounded-circle shadow">
-                                            <i class="ni ni-money-coins"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                                #}{# <p class="mt-3 mb-0 text-sm">
-                                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
-                                    <span class="text-nowrap">Since last month</span>
-                                </p>#}{#
-                            </div>
-                        </div>
-                    </div>#}
                 </div>
 
                 <div class="row">
                     <div class="col-xl-4 col-md-6">
                         <div class="card card-stats">
                             <!-- Card body -->
+                            {% if app.session.get('date_filter_value_all_stats') is not null %}
+                                {% set filter = app.session.get('date_filter_value_all_stats') %}
+                                {% set selected_date = "now"|date_modify("-" ~ filter ~ " day")| date('Y-m-d') %}
+                            {% endif %}
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col">
-                                        <h5 class="card-title text-uppercase text-muted mb-0">Total RDV</h5>
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Total Contacts Qualifiés</h5>
                                         <span class="h2 font-weight-bold mb-0">
-                                            {#{{ total_appointments }}#}
+                                            {% if app.session.get('date_filter_value_all_stats') is not null %}
+                                                {% set qualified_contacts_counter = 0 %}
+                                                {% for process in single_qualified_clients_processes %}
+                                                    {% set break = false %}
+                                                    {% for date in process %}
+                                                        {% if break == false %}
+                                                            {% set process_date = date | date('Y-m-d') %}
+                                                            {% if filter == "0" or filter == "1" %}
+                                                                {% if process_date == selected_date %}
+                                                                    {% set qualified_contacts_counter = qualified_contacts_counter + 1 %}
+                                                                    {% set break = true %}
+                                                                {% endif %}
+                                                            {% elseif filter == "100" %}
+                                                                {% if process_date >= start_date and process_date <= end_date %}
+                                                                    {% set qualified_contacts_counter = qualified_contacts_counter + 1 %}
+                                                                    {% set break = true %}
+                                                                {% endif %}
+                                                            {% else %}
+                                                                {% if process_date >= selected_date %}
+                                                                    {% set qualified_contacts_counter = qualified_contacts_counter + 1 %}
+                                                                    {% set break = true %}
+                                                                {% endif%}
+                                                            {% endif %}
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                {% endfor %}
+                                                {{ qualified_contacts_counter }}
+                                            {% else %}
+                                                {{ single_qualified_clients_processes_count }}
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-gradient-green text-white rounded-circle shadow">
+                                            <i class="fas fa-list-alt"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-4 col-md-6">
+                        <div class="card card-stats">
+                            <!-- Card body -->
+                            {% if app.session.get('date_filter_value_all_stats') is not null %}
+                                {% set filter = app.session.get('date_filter_value_all_stats') %}
+                                {% set selected_date = "now"|date_modify("-" ~ filter ~ " day")| date('Y-m-d') %}
+                            {% endif %}
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Total Contacts NQ</h5>
+                                        <span class="h2 font-weight-bold mb-0">
+                                            {% if app.session.get('date_filter_value_all_stats') is not null %}
+                                                {% set not_qualified_contacts_counter = 0 %}
+                                                {% for process in single_not_qualified_clients_processes %}
+                                                    {% set break = false %}
+                                                    {% for date in process %}
+                                                        {% if break == false %}
+                                                            {% set process_date = date | date('Y-m-d') %}
+                                                            {% if filter == "0" or filter == "1" %}
+                                                                {% if process_date == selected_date %}
+                                                                    {% set not_qualified_contacts_counter = not_qualified_contacts_counter + 1 %}
+                                                                    {% set break = true %}
+                                                                {% endif %}
+                                                            {% elseif filter == "100" %}
+                                                                {% if process_date >= start_date and process_date <= end_date %}
+                                                                    {% set not_qualified_contacts_counter = not_qualified_contacts_counter + 1 %}
+                                                                    {% set break = true %}
+                                                                {% endif %}
+                                                            {% else %}
+                                                                {% if process_date >= selected_date %}
+                                                                    {% set not_qualified_contacts_counter = not_qualified_contacts_counter + 1 %}
+                                                                    {% set break = true %}
+                                                                {% endif%}
+                                                            {% endif %}
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                {% endfor %}
+                                                {{ not_qualified_contacts_counter }}
+                                            {% else %}
+                                                {{ single_not_qualified_clients_processes_count }}
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-gradient-red text-white rounded-circle shadow">
+                                            <i class="fas fa-list-alt"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-4 col-md-6">
+                        <div class="card card-stats">
+                            <!-- Card body -->
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Total RDV pris</h5>
+                                        <span class="h2 font-weight-bold mb-0">
                                             {% if app.session.get('date_filter_value_all_stats') is not null %}
                                                 {% set fixed_appointments_counter = 0 %}
                                                 {% for appointment in total_appointments %}
@@ -291,21 +308,45 @@
                                         </div>
                                     </div>
                                 </div>
-                                {#<p class="mt-3 mb-0 text-sm">
-                                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
-                                    <span class="text-nowrap">Since last month</span>
-                                </p>#}
                             </div>
                         </div>
                     </div>
-                   {# <div class="col-xl-3 col-md-6">
+                </div>
+
+                <div class="row">
+                    <div class="col-xl-4 col-md-6">
                         <div class="card card-stats">
                             <!-- Card body -->
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col">
-                                        <h5 class="card-title text-uppercase text-muted mb-0">Total Contacts Traités</h5>
-                                        <span class="h2 font-weight-bold mb-0">{{ total_processed_contacts }}</span>
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Total RDV effectués</h5>
+                                        <span class="h2 font-weight-bold mb-0">
+                                            {% if app.session.get('date_filter_value_all_stats') is not null %}
+                                                {% set done_appointments_counter = 0 %}
+                                                {% for appointment in total_appointments %}
+                                                    {% if appointment.isDone == 1 and appointment.isDeleted == 0 %}
+                                                        {% set appointment_date = appointment.doneAt | date('Y-m-d') %}
+                                                        {% if filter == "0" or filter == "1" %}
+                                                            {% if appointment_date == selected_date %}
+                                                                {% set done_appointments_counter = done_appointments_counter + 1 %}
+                                                            {% endif %}
+                                                        {% elseif filter == "100" %}
+                                                            {% if appointment_date >= start_date and appointment_date <= end_date %}
+                                                                {% set done_appointments_counter = done_appointments_counter + 1 %}
+                                                            {% endif %}
+                                                        {% else %}
+                                                            {% if appointment_date >= selected_date %}
+                                                                {% set done_appointments_counter = done_appointments_counter + 1 %}
+                                                            {% endif%}
+                                                        {% endif %}
+                                                    {% endif %}
+                                                {% endfor %}
+                                                {{ done_appointments_counter }}
+                                            {% else %}
+                                                {{ done_appointments_count }}
+                                            {% endif %}
+                                        </span>
                                     </div>
                                     <div class="col-auto">
                                         <div class="icon icon-shape bg-gradient-green text-white rounded-circle shadow">
@@ -313,30 +354,70 @@
                                         </div>
                                     </div>
                                 </div>
-                                #}{# <p class="mt-3 mb-0 text-sm">
-                                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
-                                    <span class="text-nowrap">Since last month</span>
-                                </p>#}{#
                             </div>
                         </div>
-                    </div>#}
+                    </div>
+
                     <div class="col-xl-4 col-md-6">
                         <div class="card card-stats">
                             <!-- Card body -->
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col">
-                                        <h5 class="card-title text-uppercase text-muted mb-0">Performance RDV</h5>
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Total RDV Annulés</h5>
                                         <span class="h2 font-weight-bold mb-0">
-                                            {#{{ appointments_performance }}%#}
                                             {% if app.session.get('date_filter_value_all_stats') is not null %}
-                                                {% if  processed_clients_counter != 0 %}
-                                                    {{ ((fixed_appointments_counter / processed_clients_counter) * 100)|number_format(2) }}%
+                                                {% set deleted_appointments_counter = 0 %}
+                                                {% for appointment in total_appointments %}
+                                                    {% if appointment.isDeleted == 1 %}
+                                                        {% set appointment_deletion_date = appointment.deletionDate | date('Y-m-d') %}
+                                                        {% if filter == "0" or filter == "1" %}
+                                                            {% if appointment_deletion_date == selected_date %}
+                                                                {% set deleted_appointments_counter = deleted_appointments_counter + 1 %}
+                                                            {% endif %}
+                                                        {% elseif filter == "100" %}
+                                                            {% if appointment_deletion_date >= start_date and appointment_deletion_date <= end_date %}
+                                                                {% set deleted_appointments_counter = deleted_appointments_counter + 1 %}
+                                                            {% endif %}
+                                                        {% else %}
+                                                            {% if appointment_deletion_date >= selected_date %}
+                                                                {% set deleted_appointments_counter = deleted_appointments_counter + 1 %}
+                                                            {% endif%}
+                                                        {% endif %}
+                                                    {% endif %}
+                                                {% endfor %}
+                                                {{ deleted_appointments_counter }}
+                                            {% else %}
+                                                {{ deleted_appointments_count }}
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-gradient-orange text-white rounded-circle shadow">
+                                            <i class="fas fa-list-alt"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-4 col-md-6">
+                        <div class="card card-stats">
+                            <!-- Card body -->
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Performance Contacts Traités</h5>
+                                        <span class="h2 font-weight-bold mb-0">
+                                            {% if app.session.get('date_filter_value_all_stats') is not null %}
+                                                {% if  total_all_contacts != 0 %}
+                                                    {{ ((processed_clients_counter / total_all_contacts) * 100)|number_format(2) }}%
                                                 {% else %}
                                                     0.00%
                                                 {% endif %}
                                             {% else %}
-                                                {{ appointments_performance }}%
+                                                {{ contacts_performance }}%
                                             {% endif %}
                                         </span>
                                     </div>
@@ -346,36 +427,128 @@
                                         </div>
                                     </div>
                                 </div>
-                                {# <p class="mt-3 mb-0 text-sm">
-                                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
-                                    <span class="text-nowrap">Since last month</span>
-                                </p>#}
                             </div>
                         </div>
                     </div>
-                    {#<div class="col-xl-3 col-md-6">
+                </div>
+
+                <div class="row">
+                    <div class="col-xl-4 col-md-6">
+                        <div class="card card-stats">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Performance Contacts Qualifiés</h5>
+                                        <span class="h2 font-weight-bold mb-0">
+                                            {% if app.session.get('date_filter_value_all_stats') is not null %}
+                                                {% if  processed_clients_counter != 0 %}
+                                                    {{ ((qualified_contacts_counter / processed_clients_counter) * 100)|number_format(2) }}%
+                                                {% else %}
+                                                    0.00%
+                                                {% endif %}
+                                            {% else %}
+                                                {{ qualified_contacts_performance }}%
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-gradient-info text-white rounded-circle shadow">
+                                            <i class="ni ni-chart-bar-32"></i>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-md-6">
+                        <div class="card card-stats">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Performance Contacts NQ</h5>
+                                        <span class="h2 font-weight-bold mb-0">
+                                            {% if app.session.get('date_filter_value_all_stats') is not null %}
+                                                {% if  processed_clients_counter != 0 %}
+                                                    {{ ((not_qualified_contacts_counter / processed_clients_counter) * 100)|number_format(2) }}%
+                                                {% else %}
+                                                    0.00%
+                                                {% endif %}
+                                            {% else %}
+                                                {{ not_qualified_contacts_performance }}%
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-gradient-info text-white rounded-circle shadow">
+                                            <i class="ni ni-chart-bar-32"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-4 col-md-6">
+                        <div class="card card-stats">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Performance RDV Effectués</h5>
+                                        <span class="h2 font-weight-bold mb-0">
+                                            {% if app.session.get('date_filter_value_all_stats') is not null %}
+                                                {% if  fixed_appointments_counter != 0 %}
+                                                    {{ ((done_appointments_counter / fixed_appointments_counter) * 100)|number_format(2) }}%
+                                                {% else %}
+                                                    0.00%
+                                                {% endif %}
+                                            {% else %}
+                                                {{ done_appointments_performance }}%
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-gradient-info text-white rounded-circle shadow">
+                                            <i class="ni ni-chart-bar-32"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xl-4 col-md-6">
                         <div class="card card-stats">
                             <!-- Card body -->
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col">
-                                        <h5 class="card-title text-uppercase text-muted mb-0">Total Projets</h5>
-                                        <span class="h2 font-weight-bold mb-0">18</span>
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Performance RDV Annulés</h5>
+                                        <span class="h2 font-weight-bold mb-0">
+                                            {% if app.session.get('date_filter_value_all_stats') is not null %}
+                                                {% if  fixed_appointments_counter != 0 %}
+                                                    {{ ((deleted_appointments_counter / fixed_appointments_counter) * 100)|number_format(2) }}%
+                                                {% else %}
+                                                    0.00%
+                                                {% endif %}
+                                            {% else %}
+                                                {{ deleted_appointments_performance }}%
+                                            {% endif %}
+                                        </span>
                                     </div>
                                     <div class="col-auto">
-                                        <div class="icon icon-shape bg-gradient-green text-white rounded-circle shadow">
-                                            <i class="ni ni-money-coins"></i>
+                                        <div class="icon icon-shape bg-gradient-info text-white rounded-circle shadow">
+                                            <i class="ni ni-chart-bar-32"></i>
                                         </div>
                                     </div>
                                 </div>
-                    #}{# <p class="mt-3 mb-0 text-sm">
-                                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
-                                    <span class="text-nowrap">Since last month</span>
-                                </p>#}{#
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>#}
-                </div>
+
             </div>
         </div>
     </div>

@@ -181,7 +181,6 @@ class CommercialController extends AbstractController
     {
         $justCommercials = $this->getDoctrine()->getRepository(User::class)->findUsersByCommercialRole("ROLE_COMMERCIAL");
         $allCommercials = $this->getDoctrine()->getRepository(User::class)->findUsersTeleproStats("ROLE_COMMERCIAL", "ROLE_SUPERADMIN");
-        /*$allAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getAppointmentsWhereClientsExistCommercialStats();*/
         $doneAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getDoneAppointments();
         $deletedAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getDeletedAppointments();
         $upcomingAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getUpcomingAppointments();

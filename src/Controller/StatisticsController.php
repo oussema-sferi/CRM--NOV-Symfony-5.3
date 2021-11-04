@@ -27,29 +27,20 @@ class StatisticsController extends AbstractController
      */
     public function index(): Response
     {
-
-
         $allAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getAppointmentsWhereClientsExist();
         $allContacts = $this->getDoctrine()->getRepository(Client::class)->getNotDeletedClients();
         $allUsers = $this->getDoctrine()->getRepository(User::class)->findAll();
+        $notProcessedClients = $this->getDoctrine()->getRepository(Client::class)->getNotProcessedClients();
+        $doneAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getDoneAppointments();
+        $deletedAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getDeletedAppointments();
         $processedClientsArray = [];
         foreach ($allUsers as $user) {
             foreach ($user->getProcessedClients() as $client) {
                 $processedClientsArray[] = $client->getId();
             }
         }
-        /*dd($clientsIdsArray);*/
-        /*$uniqueProcessedClientsArray = array_unique($processedClientsArray);
-        $processedClients = [];
-        foreach ($uniqueProcessedClientsArray as $clientId) {
-            foreach ($allContacts as $clientObject) {
-                if($clientObject->getId() === $clientId) {
-                    $processedClients[] = $clientObject;
-                    break;
-                }
-            }
-        }*/
 
+        //CONTACTS PROCESSED
         $allProcesses = $this->getDoctrine()->getRepository(Process::class)->findAll();
         $allClientsIdsArray = [];
         foreach ($allProcesses as $process) {
@@ -65,25 +56,87 @@ class StatisticsController extends AbstractController
             }
         }
 
+        //CONTACTS QUALIFIES
+        $allQualifiedProcesses = $this->getDoctrine()->getRepository(Process::class)->getAllQualifiedProcesses();
+        $allQualifiedClientsIdsArray = [];
+        foreach ($allQualifiedProcesses as $qualifiedProcess) {
+            $allQualifiedClientsIdsArray[] = $qualifiedProcess->getClient()->getId();
+        }
+        $uniqueQualifiedClientsIdsArray = array_unique($allQualifiedClientsIdsArray);
+        $uniqueQualifiedClientsArray = [];
+        foreach ($uniqueQualifiedClientsIdsArray as $id) {
+            foreach ($allQualifiedProcesses as $qualifiedProcess) {
+                if ($qualifiedProcess->getClient()->getId() == $id) {
+                    $uniqueQualifiedClientsArray[$id][] = $qualifiedProcess->getCreatedAt();
+                }
+            }
+        }
 
-        /*$processedContacts = $this->getDoctrine()->getRepository(Client::class)->getProcessedClients();*/
+        //CONTACTS NON QUALIFIES
+        $allNotQualifiedProcesses = $this->getDoctrine()->getRepository(Process::class)->getAllNotQualifiedProcesses();
+        $allNotQualifiedClientsIdsArray = [];
+        foreach ($allNotQualifiedProcesses as $notQualifiedProcess) {
+            $allNotQualifiedClientsIdsArray[] = $notQualifiedProcess->getClient()->getId();
+        }
+        $uniqueNotQualifiedClientsIdsArray = array_unique($allNotQualifiedClientsIdsArray);
+        $uniqueNotQualifiedClientsArray = [];
+        foreach ($uniqueNotQualifiedClientsIdsArray as $id) {
+            foreach ($allNotQualifiedProcesses as $notQualifiedProcess) {
+                if ($notQualifiedProcess->getClient()->getId() == $id) {
+                    $uniqueNotQualifiedClientsArray[$id][] = $notQualifiedProcess->getCreatedAt();
+                }
+            }
+        }
+
+        // PERFORMANCE FICHES DE CONTACTS TRAITES
         if(count($allContacts) !== 0) {
             $contactsPerformance = number_format(((count($uniqueClientsArray) / count($allContacts)) * 100), 2);
         } else {
             $contactsPerformance = 0;
         }
-        $allAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getAppointmentsWhereClientsExist();
+
+        // PERFORMANCE FICHES DE CONTACT QUALIFIES
+        if(count($uniqueClientsArray) !== 0) {
+            $qualifiedContactsPerformance = number_format(((count($uniqueQualifiedClientsArray) / count($uniqueClientsArray)) * 100), 2);
+        } else {
+            $qualifiedContactsPerformance = 0;
+        }
+
+
+        // PERFORMANCE FICHES DE CONTACT NON QUALIFIES
+        if(count($uniqueClientsArray) !== 0) {
+            $notQualifiedContactsPerformance = number_format(((count($uniqueNotQualifiedClientsArray) / count($uniqueClientsArray)) * 100), 2);
+        } else {
+            $notQualifiedContactsPerformance = 0;
+        }
+
+        // PERFORMANCE RDV
         if(count($uniqueClientsArray) !== 0) {
             $appointmentsPerformance = number_format(((count($allAppointments) / count($uniqueClientsArray)) * 100), 2);
         } else {
             $appointmentsPerformance = 0;
         }
 
+        // PERFORMANCE RDV EFFECTUES
+        if(count($allAppointments) !== 0) {
+            $doneAppointmentsPerformance = number_format(((count($doneAppointments) / count($allAppointments)) * 100), 2);
+        } else {
+            $doneAppointmentsPerformance = 0;
+        }
+
+        // PERFORMANCE RDV ANNULES
+        if(count($allAppointments) !== 0) {
+            $deletedAppointmentsPerformance = number_format(((count($deletedAppointments) / count($allAppointments)) * 100), 2);
+        } else {
+            $deletedAppointmentsPerformance = 0;
+        }
+
+        // GET ARRAY OF PROCESSED CLIENTS OBJECTS
         $processedContactsForGraph= [];
         foreach ($uniqueClientsArray as $clientId) {
             $processedContactsForGraph[] = $this->getDoctrine()->getRepository(Client::class)->find((int)$clientId);
         }
-        /*dd($processedContactsForGraph);*/
+
 
         $processedContactsByMonthArray = [];
         for ($i = 1; $i <13; $i++) {
@@ -113,16 +166,27 @@ class StatisticsController extends AbstractController
 
         return $this->render('statistics/index.html.twig', [
             'total_all_contacts' => count($allContacts),
-           /* 'total_processed_contacts' => $uniqueClientsArray,
-            'count_total_processed_contacts' => count($uniqueClientsArray),*/
-            'contacts_performance' => $contactsPerformance,
+            'not_processed_clients' => count($notProcessedClients),
             'total_appointments' => $allAppointments,
+            'done_appointments' => $doneAppointments,
+            'done_appointments_count' => count($doneAppointments),
+            'deleted_appointments_count' => count($deletedAppointments),
             'count_total_appointments' => count($allAppointments),
             'appointments_performance' => $appointmentsPerformance,
             'processed_contacts_graph' => json_encode($processedContactsByMonthArray),
             'fixed_appointments_graph' => json_encode($appointmentsByMonthArray),
             'actual_year' => (new \DateTime())->format("Y"),
             'single_clients_processes' => $uniqueClientsArray,
+            'single_clients_processes_count' => count($uniqueClientsArray),
+            'single_qualified_clients_processes' => $uniqueQualifiedClientsArray,
+            'single_qualified_clients_processes_count' => count($uniqueQualifiedClientsArray),
+            'single_not_qualified_clients_processes' => $uniqueNotQualifiedClientsArray,
+            'single_not_qualified_clients_processes_count' => count($uniqueNotQualifiedClientsArray),
+            'contacts_performance' => $contactsPerformance,
+            'qualified_contacts_performance' => $qualifiedContactsPerformance,
+            'not_qualified_contacts_performance' => $notQualifiedContactsPerformance,
+            'done_appointments_performance' => $doneAppointmentsPerformance,
+            'deleted_appointments_performance' => $deletedAppointmentsPerformance,
         ]);
     }
 

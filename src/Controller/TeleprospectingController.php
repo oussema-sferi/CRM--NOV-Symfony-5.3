@@ -367,23 +367,7 @@ class TeleprospectingController extends AbstractController
         $allTelepros = $this->getDoctrine()->getRepository(User::class)->findUsersTeleproStats("ROLE_TELEPRO", "ROLE_SUPERADMIN");
         $allClients = $this->getDoctrine()->getRepository(Client::class)->getNotDeletedClients();
 
-        /*$processedClientsArray = [];
-        foreach ($allTelepros as $user) {
-            foreach ($user->getProcessedClients() as $client) {
-                $processedClientsArray[] = $client->getId();
-            }
-        }
-        $uniqueProcessedClientsArray = array_unique($processedClientsArray);
-        $processedClients = [];
-        foreach ($uniqueProcessedClientsArray as $clientId) {
-            foreach ($allClients as $clientObject) {
-                if($clientObject->getId() === $clientId) {
-                    $processedClients[] = $clientObject;
-                    break;
-                }
-            }
-        }*/
-
+        //CONTACTS PROCESSED
         $allProcesses = $this->getDoctrine()->getRepository(Process::class)->findAll();
         $allClientsIdsArray = [];
         foreach ($allProcesses as $process) {
@@ -398,13 +382,10 @@ class TeleprospectingController extends AbstractController
                 }
             }
         }
-        /*dd($uniqueClientsArray);*/
 
 
-        //qualified processes
+        //CONTACTS QUALIFIES
         $allQualifiedProcesses = $this->getDoctrine()->getRepository(Process::class)->getAllQualifiedProcesses();
-        /*$allNotQualifiedProcesses = $this->getDoctrine()->getRepository(Process::class)->getAllNotQualifiedProcesses();*/
-
         $allQualifiedClientsIdsArray = [];
         foreach ($allQualifiedProcesses as $qualifiedProcess) {
             $allQualifiedClientsIdsArray[] = $qualifiedProcess->getClient()->getId();
@@ -419,6 +400,7 @@ class TeleprospectingController extends AbstractController
             }
         }
 
+        //CONTACTS NON QUALIFIES
         $allNotQualifiedProcesses = $this->getDoctrine()->getRepository(Process::class)->getAllNotQualifiedProcesses();
         $allNotQualifiedClientsIdsArray = [];
         foreach ($allNotQualifiedProcesses as $notQualifiedProcess) {
@@ -433,8 +415,6 @@ class TeleprospectingController extends AbstractController
                 }
             }
         }
-        /*dd($uniqueNotQualifiedClientsArray);*/
-
 
 
         $notProcessedClients = $this->getDoctrine()->getRepository(Client::class)->getNotProcessedClients();
@@ -467,20 +447,17 @@ class TeleprospectingController extends AbstractController
             $notQualifiedContactsPerformance = 0;
         }
 
-        if(count($uniqueClientsArray) !== 0) {
+        // PERFORMANCE RDV
+       /* if(count($uniqueClientsArray) !== 0) {
             $appointmentsPerformance = number_format(((count($allAppointments) / count($uniqueClientsArray)) * 100), 2);
         } else {
             $appointmentsPerformance = 0;
-        }
-        /*dd($processedClients);*/
+        }*/
 
         return $this->render('teleprospecting/telepro_stats.html.twig', [
             'count_total_telepros' => count($justTelepros),
             'all_telepros' => $allTelepros,
-            /*'just_telepros' => $justTelepros,*/
             'total_clients' => count($allClients),
-            /*'processed_clients' => $processedClients,*/
-            /*'processed_clients_count' => count($processedClients),*/
             'not_processed_clients' => count($notProcessedClients),
             'total_appointments' => $allAppointments,
             'total_appointments_count' => count($allAppointments),
@@ -496,7 +473,7 @@ class TeleprospectingController extends AbstractController
             'single_not_qualified_clients_processes' => $uniqueNotQualifiedClientsArray,
             'single_not_qualified_clients_processes_count' => count($uniqueNotQualifiedClientsArray),
             'contacts_performance' => $contactsPerformance,
-            'appointments_performance' => $appointmentsPerformance,
+            /*'appointments_performance' => $appointmentsPerformance,*/
             'qualified_contacts_performance' => $qualifiedContactsPerformance,
             'not_qualified_contacts_performance' => $notQualifiedContactsPerformance,
         ]);
