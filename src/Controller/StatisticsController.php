@@ -39,7 +39,7 @@ class StatisticsController extends AbstractController
             }
         }
         /*dd($clientsIdsArray);*/
-        $uniqueProcessedClientsArray = array_unique($processedClientsArray);
+        /*$uniqueProcessedClientsArray = array_unique($processedClientsArray);
         $processedClients = [];
         foreach ($uniqueProcessedClientsArray as $clientId) {
             foreach ($allContacts as $clientObject) {
@@ -48,24 +48,47 @@ class StatisticsController extends AbstractController
                     break;
                 }
             }
+        }*/
+
+        $allProcesses = $this->getDoctrine()->getRepository(Process::class)->findAll();
+        $allClientsIdsArray = [];
+        foreach ($allProcesses as $process) {
+            $allClientsIdsArray[] = $process->getClient()->getId();
         }
+        $uniqueClientsIdsArray = array_unique($allClientsIdsArray);
+        $uniqueClientsArray = [];
+        foreach ($uniqueClientsIdsArray as $clientId) {
+            foreach ($allProcesses as $process) {
+                if ($process->getClient()->getId() == $clientId) {
+                    $uniqueClientsArray[$clientId][] = $process->getCreatedAt();
+                }
+            }
+        }
+
 
         /*$processedContacts = $this->getDoctrine()->getRepository(Client::class)->getProcessedClients();*/
         if(count($allContacts) !== 0) {
-            $contactsPerformance = number_format(((count($processedClients) / count($allContacts)) * 100), 2);
+            $contactsPerformance = number_format(((count($uniqueClientsArray) / count($allContacts)) * 100), 2);
         } else {
             $contactsPerformance = 0;
         }
         $allAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getAppointmentsWhereClientsExist();
-        if(count($processedClients) !== 0) {
-            $appointmentsPerformance = number_format(((count($allAppointments) / count($processedClients)) * 100), 2);
+        if(count($uniqueClientsArray) !== 0) {
+            $appointmentsPerformance = number_format(((count($allAppointments) / count($uniqueClientsArray)) * 100), 2);
         } else {
             $appointmentsPerformance = 0;
         }
+
+        $processedContactsForGraph= [];
+        foreach ($uniqueClientsArray as $clientId) {
+            $processedContactsForGraph[] = $this->getDoctrine()->getRepository(Client::class)->find((int)$clientId);
+        }
+        /*dd($processedContactsForGraph);*/
+
         $processedContactsByMonthArray = [];
         for ($i = 1; $i <13; $i++) {
             $contactsCounter = 0;
-            foreach ($processedClients as $contact) {
+            foreach ($processedContactsForGraph as $contact) {
                     if (((new \DateTime())->format("Y")) === $contact->getUpdatedAt()->format("Y")) {
                         if (date("F",mktime(0,0,0,(int)($contact->getUpdatedAt()->format("m")),1,(int)($contact->getUpdatedAt())->format("Y"))) === date("F",mktime(0,0,0,$i,1,(int)(new \DateTime())->format("Y")))) {
                             $contactsCounter += 1;
@@ -90,15 +113,16 @@ class StatisticsController extends AbstractController
 
         return $this->render('statistics/index.html.twig', [
             'total_all_contacts' => count($allContacts),
-            'total_processed_contacts' => $processedClients,
-            'count_total_processed_contacts' => count($processedClients),
+           /* 'total_processed_contacts' => $uniqueClientsArray,
+            'count_total_processed_contacts' => count($uniqueClientsArray),*/
             'contacts_performance' => $contactsPerformance,
             'total_appointments' => $allAppointments,
             'count_total_appointments' => count($allAppointments),
             'appointments_performance' => $appointmentsPerformance,
             'processed_contacts_graph' => json_encode($processedContactsByMonthArray),
             'fixed_appointments_graph' => json_encode($appointmentsByMonthArray),
-            'actual_year' => (new \DateTime())->format("Y")
+            'actual_year' => (new \DateTime())->format("Y"),
+            'single_clients_processes' => $uniqueClientsArray,
         ]);
     }
 
