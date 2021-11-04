@@ -565,6 +565,8 @@ class AppointmentController extends AbstractController
                 $newProcess = new Process();
                 $newProcess->setClient($client);
                 $newProcess->setProcessorUser($loggedUser);
+                $newProcess->setStatus(2);
+                $newProcess->setStatusDetail(7);
                 $newProcess->setCreatedAt(new \DateTime());
                 $manager->persist($newProcess);
                 $manager->flush();

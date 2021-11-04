@@ -74,20 +74,6 @@ class Client
      */
     private $isUnderContract;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $status;
-
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    private $createdAt;
-
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    private $updatedAt;
 
     /**
      * @ORM\OneToMany(targetEntity=Call::class, mappedBy="client")
@@ -117,9 +103,24 @@ class Client
     private $city;
 
     /**
+     * @ORM\Column(type="integer")
+     */
+    private $status;
+
+    /**
      * @ORM\Column(type="integer", nullable=true)
      */
     private $statusDetail;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $createdAt;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $updatedAt;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="clients")
@@ -137,16 +138,6 @@ class Client
     private $deletionDate;
 
     /**
-     * @ORM\ManyToMany(targetEntity=User::class, inversedBy="calledClients")
-     */
-    private $callersUsers;
-
-    /**
-     * @ORM\ManyToMany(targetEntity=User::class, mappedBy="processedClients")
-     */
-    private $processingUsers;
-
-    /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="deletedClients")
      */
     private $whoDeletedIt;
@@ -156,6 +147,15 @@ class Client
      */
     private $processes;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=User::class, mappedBy="processedClients")
+     */
+    private $processingUsers;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=User::class, inversedBy="calledClients")
+     */
+    private $callersUsers;
 
 
     public function __construct()

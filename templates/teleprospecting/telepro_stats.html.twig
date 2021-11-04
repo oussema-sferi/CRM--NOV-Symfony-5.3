@@ -264,7 +264,7 @@
                                             {#{{ dump(processed_clients) }}#}
                                             {#{{ dump(processed_clients[2].calls) }}#}
                                             {#{{ processed_clients }}#}
-                                            {% if app.session.get('date_filter_value') is not null %}
+                                            {#{% if app.session.get('date_filter_value') is not null %}
                                                 {% set qualified_calls_counter = 0 %}
                                                     {% for call in total_calls %}
                                                             {% set call_date = call.createdAt | date('Y-m-d') %}
@@ -291,6 +291,36 @@
                                                 {{ qualified_calls_counter }}
                                             {% else %}
                                                 {{ qualified_calls_count }}
+                                            {% endif %}#}
+                                            {% if app.session.get('date_filter_value') is not null %}
+                                                {% set qualified_contacts_counter = 0 %}
+                                                {% for process in single_qualified_clients_processes %}
+                                                    {% set break = false %}
+                                                    {% for date in process %}
+                                                        {% if break == false %}
+                                                            {% set process_date = date | date('Y-m-d') %}
+                                                            {% if filter == "0" or filter == "1" %}
+                                                                {% if process_date == selected_date %}
+                                                                    {% set qualified_contacts_counter = qualified_contacts_counter + 1 %}
+                                                                    {% set break = true %}
+                                                                {% endif %}
+                                                            {% elseif filter == "100" %}
+                                                                {% if process_date >= start_date and process_date <= end_date %}
+                                                                    {% set qualified_contacts_counter = qualified_contacts_counter + 1 %}
+                                                                    {% set break = true %}
+                                                                {% endif %}
+                                                            {% else %}
+                                                                {% if process_date >= selected_date %}
+                                                                    {% set qualified_contacts_counter = qualified_contacts_counter + 1 %}
+                                                                    {% set break = true %}
+                                                                {% endif%}
+                                                            {% endif %}
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                {% endfor %}
+                                                {{ qualified_contacts_counter }}
+                                            {% else %}
+                                                {{ single_qualified_clients_processes_count }}
                                             {% endif %}
                                         </span>
                                     </div>
@@ -320,7 +350,7 @@
                                     <div class="col">
                                         <h5 class="card-title text-uppercase text-muted mb-0">Total Fiches Non Qualifiées</h5>
                                         <span class="h2 font-weight-bold mb-0">
-                                            {% if app.session.get('date_filter_value') is not null %}
+                                            {#{% if app.session.get('date_filter_value') is not null %}
                                                 {% set not_qualified_calls_counter = 0 %}
                                                 {% for call in total_calls %}
                                                     {% set call_date = call.createdAt | date('Y-m-d') %}
@@ -347,6 +377,36 @@
                                                 {{ not_qualified_calls_counter }}
                                             {% else %}
                                                 {{ not_qualified_calls_count }}
+                                            {% endif %}#}
+                                            {% if app.session.get('date_filter_value') is not null %}
+                                                {% set not_qualified_contacts_counter = 0 %}
+                                                {% for process in single_not_qualified_clients_processes %}
+                                                    {% set break = false %}
+                                                    {% for date in process %}
+                                                        {% if break == false %}
+                                                            {% set process_date = date | date('Y-m-d') %}
+                                                            {% if filter == "0" or filter == "1" %}
+                                                                {% if process_date == selected_date %}
+                                                                    {% set not_qualified_contacts_counter = not_qualified_contacts_counter + 1 %}
+                                                                    {% set break = true %}
+                                                                {% endif %}
+                                                            {% elseif filter == "100" %}
+                                                                {% if process_date >= start_date and process_date <= end_date %}
+                                                                    {% set not_qualified_contacts_counter = not_qualified_contacts_counter + 1 %}
+                                                                    {% set break = true %}
+                                                                {% endif %}
+                                                            {% else %}
+                                                                {% if process_date >= selected_date %}
+                                                                    {% set not_qualified_contacts_counter = not_qualified_contacts_counter + 1 %}
+                                                                    {% set break = true %}
+                                                                {% endif%}
+                                                            {% endif %}
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                {% endfor %}
+                                                {{ not_qualified_contacts_counter }}
+                                            {% else %}
+                                                {{ single_not_qualified_clients_processes_count }}
                                             {% endif %}
                                         </span>
                                     </div>

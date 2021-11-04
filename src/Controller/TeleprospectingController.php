@@ -236,6 +236,12 @@ class TeleprospectingController extends AbstractController
                 $newProcess = new Process();
                 $newProcess->setClient($client);
                 $newProcess->setProcessorUser($loggedUser);
+                $newProcess->setStatus($status);
+                if($statusDetailsQ) {
+                    $newProcess->setStatusDetail($statusDetailsQ);
+                } elseif ($statusDetailsNQ) {
+                    $newProcess->setStatusDetail($statusDetailsNQ);
+                }
                 $newProcess->setCreatedAt(new \DateTime());
                 $manager->persist($newProcess);
                 /*$test = $this->getDoctrine()->getRepository(UniqueClientProcess::class)->findAll();*/
@@ -377,9 +383,40 @@ class TeleprospectingController extends AbstractController
                 }
             }
         }
-        /*dd(count($processedClients));*/
-        /*dd($data);
-        $processedClients = $this->getDoctrine()->getRepository(User::class)->getProcessedClients();*/
+
+        $allQualifiedProcesses = $this->getDoctrine()->getRepository(Process::class)->getAllQualifiedProcesses();
+        /*$allNotQualifiedProcesses = $this->getDoctrine()->getRepository(Process::class)->getAllNotQualifiedProcesses();*/
+
+        $allQualifiedClientsIdsArray = [];
+        foreach ($allQualifiedProcesses as $qualifiedProcess) {
+            $allQualifiedClientsIdsArray[] = $qualifiedProcess->getClient()->getId();
+        }
+        $uniqueQualifiedClientsIdsArray = array_unique($allQualifiedClientsIdsArray);
+        $uniqueQualifiedClientsArray = [];
+        foreach ($uniqueQualifiedClientsIdsArray as $id) {
+            foreach ($allQualifiedProcesses as $qualifiedProcess) {
+                if ($qualifiedProcess->getClient()->getId() == $id) {
+                    $uniqueQualifiedClientsArray[$id][] = $qualifiedProcess->getCreatedAt();
+                }
+            }
+        }
+
+        $allNotQualifiedProcesses = $this->getDoctrine()->getRepository(Process::class)->getAllNotQualifiedProcesses();
+        $allNotQualifiedClientsIdsArray = [];
+        foreach ($allNotQualifiedProcesses as $notQualifiedProcess) {
+            $allNotQualifiedClientsIdsArray[] = $notQualifiedProcess->getClient()->getId();
+        }
+        $uniqueNotQualifiedClientsIdsArray = array_unique($allNotQualifiedClientsIdsArray);
+        $uniqueNotQualifiedClientsArray = [];
+        foreach ($uniqueNotQualifiedClientsIdsArray as $id) {
+            foreach ($allNotQualifiedProcesses as $notQualifiedProcess) {
+                if ($notQualifiedProcess->getClient()->getId() == $id) {
+                    $uniqueNotQualifiedClientsArray[$id][] = $notQualifiedProcess->getCreatedAt();
+                }
+            }
+        }
+        /*dd($uniqueNotQualifiedClientsArray);*/
+
         $notProcessedClients = $this->getDoctrine()->getRepository(Client::class)->getNotProcessedClients();
         $allAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getAppointmentsWhereClientsExist();
         $allCalls = $this->getDoctrine()->getRepository(Call::class)->getAllNotDeletedCalls();
@@ -403,7 +440,11 @@ class TeleprospectingController extends AbstractController
             'total_calls_count' => count($allCalls),
             'qualified_calls_count' => count($qualifiedCalls),
             'not_qualified_calls_count' => count($notQualifiedCalls),
-            'deleted_calls_count' => count($deletedCalls)
+            'deleted_calls_count' => count($deletedCalls),
+            'single_qualified_clients_processes' => $uniqueQualifiedClientsArray,
+            'single_qualified_clients_processes_count' => count($uniqueQualifiedClientsArray),
+            'single_not_qualified_clients_processes' => $uniqueNotQualifiedClientsArray,
+            'single_not_qualified_clients_processes_count' => count($uniqueNotQualifiedClientsArray)
         ]);
     }
 

@@ -55,6 +55,7 @@ class CallController extends AbstractController
             /*$test = $callToUpdate->getClient()->getAppointments();*/
             $callToUpdate->setCallNotes($request->request->get('notes_call'));
         }
+        $callToUpdate->setUpdatedAt(new \DateTime());
         $manager->persist($callToUpdate);
         $manager->flush();
         /*dd(new \DateTime($request->request->get('start_appointment')));

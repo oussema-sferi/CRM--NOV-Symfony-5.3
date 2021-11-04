@@ -189,9 +189,9 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col">
-                                        <h5 class="card-title text-uppercase text-muted mb-0">Appels Qualifiés</h5>
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Fiches Qualifiées</h5>
                                         <span class="h2 font-weight-bold mb-0">
-                                            {% if app.session.get('date_filter_value_stats_per_user') is not null %}
+                                            {#{% if app.session.get('date_filter_value_stats_per_user') is not null %}
                                                 {% set qualified_calls_counter = 0 %}
                                                 {% for call in qualified_calls %}
                                                     {% set call_date = call.createdAt | date('Y-m-d') %}
@@ -212,6 +212,36 @@
                                                 {{ qualified_calls_counter }}
                                             {% else %}
                                                 {{ qualified_calls_count }}
+                                            {% endif %}#}
+                                            {% if app.session.get('date_filter_value_stats_per_user') is not null %}
+                                                {% set qualified_contacts_counter = 0 %}
+                                                {% for process in single_qualified_clients_processes %}
+                                                    {% set break = false %}
+                                                    {% for date in process %}
+                                                        {% if break == false %}
+                                                            {% set process_date = date | date('Y-m-d') %}
+                                                            {% if filter == "0" or filter == "1" %}
+                                                                {% if process_date == selected_date %}
+                                                                    {% set qualified_contacts_counter = qualified_contacts_counter + 1 %}
+                                                                    {% set break = true %}
+                                                                {% endif %}
+                                                            {% elseif filter == "100" %}
+                                                                {% if process_date >= start_date and process_date <= end_date %}
+                                                                    {% set qualified_contacts_counter = qualified_contacts_counter + 1 %}
+                                                                    {% set break = true %}
+                                                                {% endif %}
+                                                            {% else %}
+                                                                {% if process_date >= selected_date %}
+                                                                    {% set qualified_contacts_counter = qualified_contacts_counter + 1 %}
+                                                                    {% set break = true %}
+                                                                {% endif%}
+                                                            {% endif %}
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                {% endfor %}
+                                                {{ qualified_contacts_counter }}
+                                            {% else %}
+                                                {{ single_qualified_clients_processes_count }}
                                             {% endif %}
                                         </span>
                                     </div>
@@ -234,9 +264,9 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col">
-                                        <h5 class="card-title text-uppercase text-muted mb-0">Appels Non Qualifiés</h5>
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Fiches Non Qualifiées</h5>
                                         <span class="h2 font-weight-bold mb-0">
-                                            {% if app.session.get('date_filter_value_stats_per_user') is not null %}
+                                            {#{% if app.session.get('date_filter_value_stats_per_user') is not null %}
                                                 {% set not_qualified_calls_counter = 0 %}
                                                 {% for call in not_qualified_calls %}
                                                     {% set call_date = call.createdAt | date('Y-m-d') %}
@@ -257,6 +287,36 @@
                                                 {{ not_qualified_calls_counter }}
                                             {% else %}
                                                 {{ not_qualified_calls_count }}
+                                            {% endif %}#}
+                                            {% if app.session.get('date_filter_value_stats_per_user') is not null %}
+                                                {% set not_qualified_contacts_counter = 0 %}
+                                                {% for process in single_not_qualified_clients_processes %}
+                                                    {% set break = false %}
+                                                    {% for date in process %}
+                                                        {% if break == false %}
+                                                            {% set process_date = date | date('Y-m-d') %}
+                                                            {% if filter == "0" or filter == "1" %}
+                                                                {% if process_date == selected_date %}
+                                                                    {% set not_qualified_contacts_counter = not_qualified_contacts_counter + 1 %}
+                                                                    {% set break = true %}
+                                                                {% endif %}
+                                                            {% elseif filter == "100" %}
+                                                                {% if process_date >= start_date and process_date <= end_date %}
+                                                                    {% set not_qualified_contacts_counter = not_qualified_contacts_counter + 1 %}
+                                                                    {% set break = true %}
+                                                                {% endif %}
+                                                            {% else %}
+                                                                {% if process_date >= selected_date %}
+                                                                    {% set not_qualified_contacts_counter = not_qualified_contacts_counter + 1 %}
+                                                                    {% set break = true %}
+                                                                {% endif%}
+                                                            {% endif %}
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                {% endfor %}
+                                                {{ not_qualified_contacts_counter }}
+                                            {% else %}
+                                                {{ single_not_qualified_clients_processes_count }}
                                             {% endif %}
                                         </span>
                                     </div>
@@ -298,7 +358,7 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-xl-4 col-md-6">
+                    {#<div class="col-xl-4 col-md-6">
                         <div class="card card-stats">
                             <!-- Card body -->
                             <div class="card-body">
@@ -338,13 +398,13 @@
                                         </div>
                                     </div>
                                 </div>
-                                {#<p class="mt-3 mb-0 text-sm">
+                                #}{#<p class="mt-3 mb-0 text-sm">
                                     <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
                                     <span class="text-nowrap">Since last month</span>
-                                </p>#}
+                                </p>#}{#
                             </div>
                         </div>
-                    </div>
+                    </div>#}
                    {# <div class="col-xl-3 col-md-6">
                         <div class="card card-stats">
                             <!-- Card body -->
@@ -461,32 +521,6 @@
                         </div>
                     </div>
 
-
-                    {#<div class="col-xl-3 col-md-6">
-                        <div class="card card-stats">
-                            <!-- Card body -->
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col">
-                                        <h5 class="card-title text-uppercase text-muted mb-0">Total Projets</h5>
-                                        <span class="h2 font-weight-bold mb-0">18</span>
-                                    </div>
-                                    <div class="col-auto">
-                                        <div class="icon icon-shape bg-gradient-green text-white rounded-circle shadow">
-                                            <i class="ni ni-money-coins"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                    #}{# <p class="mt-3 mb-0 text-sm">
-                                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
-                                    <span class="text-nowrap">Since last month</span>
-                                </p>#}{#
-                    </div>
-                    </div>
-                    </div>#}
-                </div>
-
-                <div class="row">
                     <div class="col-xl-4 col-md-6">
                         <div class="card card-stats">
                             <!-- Card body -->
@@ -532,6 +566,33 @@
                             </div>
                         </div>
                     </div>
+
+
+                    {#<div class="col-xl-3 col-md-6">
+                        <div class="card card-stats">
+                            <!-- Card body -->
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Total Projets</h5>
+                                        <span class="h2 font-weight-bold mb-0">18</span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-gradient-green text-white rounded-circle shadow">
+                                            <i class="ni ni-money-coins"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                    #}{# <p class="mt-3 mb-0 text-sm">
+                                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
+                                    <span class="text-nowrap">Since last month</span>
+                                </p>#}{#
+                    </div>
+                    </div>
+                    </div>#}
+                </div>
+
+                <div class="row">
 
                     {#<div class="col-xl-4 col-md-6">
                         <div class="card card-stats">

@@ -55,4 +55,40 @@ class ProcessRepository extends ServiceEntityRepository
             ->where("u.id =$Id" );
         return $qb->getQuery()->getResult();
     }
+
+    public function getAllQualifiedProcesses()
+    {
+        $qb = $this->createQueryBuilder('p');
+        $qb->select('p')
+            ->where('p.status = 2');
+        return $qb->getQuery()->getResult();
+    }
+
+    public function getAllNotQualifiedProcesses()
+    {
+        $qb = $this->createQueryBuilder('p');
+        $qb->select('p')
+            ->where('p.status = 1');
+        return $qb->getQuery()->getResult();
+    }
+
+    public function getAllQualifiedProcessesByUser($Id)
+    {
+        $qb = $this->createQueryBuilder('p');
+        $qb->select('p')
+            ->join('p.processorUser', 'u')
+            ->where("u.id =$Id" )
+            ->andWhere('p.status = 2');
+        return $qb->getQuery()->getResult();
+    }
+
+    public function getAllNotQualifiedProcessesByUser($Id)
+    {
+        $qb = $this->createQueryBuilder('p');
+        $qb->select('p')
+            ->join('p.processorUser', 'u')
+            ->where("u.id =$Id" )
+            ->andWhere('p.status = 1');
+        return $qb->getQuery()->getResult();
+    }
 }

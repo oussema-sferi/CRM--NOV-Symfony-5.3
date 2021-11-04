@@ -179,13 +179,47 @@ class StatisticsController extends AbstractController
         }
         $uniqueClientsIdsArray = array_unique($allClientsIdsArray);
         $uniqueClientsArray = [];
-        foreach ($uniqueClientsIdsArray as $id) {
+        foreach ($uniqueClientsIdsArray as $clientId) {
             foreach ($allProcesses as $process) {
-                if ($process->getClient()->getId() == $id) {
-                    $uniqueClientsArray[$id][] = $process->getCreatedAt();
+                if ($process->getClient()->getId() == $clientId) {
+                    $uniqueClientsArray[$clientId][] = $process->getCreatedAt();
                 }
             }
         }
+        //Qualified Processes
+        $allQualifiedProcessesByUser = $this->getDoctrine()->getRepository(Process::class)->getAllQualifiedProcessesByUser($id);
+        $allQualifiedClientsIdsArray = [];
+        foreach ($allQualifiedProcessesByUser as $qualifiedProcessByUser) {
+            $allQualifiedClientsIdsArray[] = $qualifiedProcessByUser->getClient()->getId();
+        }
+        $uniqueQualifiedClientsIdsArray = array_unique($allQualifiedClientsIdsArray);
+        $uniqueQualifiedClientsArray = [];
+        foreach ($uniqueQualifiedClientsIdsArray as $qClientId) {
+            foreach ($allQualifiedProcessesByUser as $qualifiedProcessByUser) {
+                if ($qualifiedProcessByUser->getClient()->getId() == $qClientId) {
+                    $uniqueQualifiedClientsArray[$qClientId][] = $qualifiedProcessByUser->getCreatedAt();
+                }
+            }
+        }
+        /*dd($uniqueQualifiedClientsArray);*/
+
+        //Not Qualified Processes
+
+        $allNotQualifiedProcessesByUser = $this->getDoctrine()->getRepository(Process::class)->getAllNotQualifiedProcessesByUser($id);
+        $allNotQualifiedClientsIdsArray = [];
+        foreach ($allNotQualifiedProcessesByUser as $notQualifiedProcessByUser) {
+            $allNotQualifiedClientsIdsArray[] = $notQualifiedProcessByUser->getClient()->getId();
+        }
+        $uniqueNotQualifiedClientsIdsArray = array_unique($allNotQualifiedClientsIdsArray);
+        $uniqueNotQualifiedClientsArray = [];
+        foreach ($uniqueNotQualifiedClientsIdsArray as $notQClientId) {
+            foreach ($allNotQualifiedProcessesByUser as $notQualifiedProcessByUser) {
+                if ($notQualifiedProcessByUser->getClient()->getId() == $notQClientId) {
+                    $uniqueNotQualifiedClientsArray[$notQClientId][] = $notQualifiedProcessByUser->getCreatedAt();
+                }
+            }
+        }
+        /*dd($uniqueNotQualifiedClientsArray);*/
 
         return $this->render('statistics/stats_per_user.html.twig', [
             'user' => $user,
@@ -208,7 +242,11 @@ class StatisticsController extends AbstractController
             'deleted_appointments' =>$myDeletedAppointments,
             'deleted_appointments_count' =>count($myDeletedAppointments),
             'single_clients_processes' => $uniqueClientsArray,
-            'single_clients_processes_count' => count($uniqueClientsArray)
+            'single_clients_processes_count' => count($uniqueClientsArray),
+            'single_qualified_clients_processes' => $uniqueQualifiedClientsArray,
+            'single_qualified_clients_processes_count' => count($uniqueQualifiedClientsArray),
+            'single_not_qualified_clients_processes' => $uniqueNotQualifiedClientsArray,
+            'single_not_qualified_clients_processes_count' => count($uniqueNotQualifiedClientsArray)
         ]);
     }
 

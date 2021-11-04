@@ -30,6 +30,16 @@ class Process
     private $client;
 
     /**
+     * @ORM\Column(type="integer")
+     */
+    private $status;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $statusDetail;
+
+    /**
      * @ORM\Column(type="datetime")
      */
     private $createdAt;
@@ -71,6 +81,30 @@ class Process
     public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getStatus(): ?int
+    {
+        return $this->status;
+    }
+
+    public function setStatus(int $status): self
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getStatusDetail(): ?int
+    {
+        return $this->statusDetail;
+    }
+
+    public function setStatusDetail(int $statusDetail): self
+    {
+        $this->statusDetail = $statusDetail;
 
         return $this;
     }
