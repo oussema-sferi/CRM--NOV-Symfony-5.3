@@ -19,7 +19,9 @@
                         </nav>
                     </div>
                     <div id="initial-import" class="col-lg-6 col-5 text-right">
+                        {% if (is_granted('ROLE_SUPERADMIN')) %}
                         <a id="import-button" class="btn btn-sm btn-info" style="color: white">Importer une liste</a>
+                        {% endif %}
                         <a href="{{ path('new_contact') }}" class="btn btn-sm btn-success">Nouveau contact</a>
                         {#<label for="pagination" style="color: white; font-size: small">Nb de résultats par page</label>
                         <select name="pagination" id="pagination" class="form-control-sm">

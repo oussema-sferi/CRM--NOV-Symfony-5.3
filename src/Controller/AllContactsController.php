@@ -34,17 +34,33 @@ class AllContactsController extends AbstractController
     public function index(Request $request, PaginatorInterface $paginator): Response
     {
         $loggedUserRolesArray = $this->getUser()->getRoles();
-        if (in_array("ROLE_TELEPRO",$loggedUserRolesArray)) {
+        /*if (in_array("ROLE_TELEPRO",$loggedUserRolesArray)) {
             return $this->redirectToRoute('teleprospecting');
         } elseif (in_array("ROLE_COMMERCIAL",$loggedUserRolesArray)) {
             return $this->redirectToRoute('commercial');
         } elseif (in_array("ROLE_ADMIN",$loggedUserRolesArray)) {
-            /*dd("yeeah");*/
             return $this->redirectToRoute('show_my_calendar');
-        }
+        }*/
         $session = $request->getSession();
+        $loggedUser = $this->getUser();
         $geographicAreas = $this->getDoctrine()->getRepository(GeographicArea::class)->findAll();
-        $data = $this->getDoctrine()->getRepository(Client::class)->getNotDeletedClients();
+
+        $loggedUserGeographicAreasArray = $loggedUser->getGeographicAreas();
+        $loggedUserGeographicAreasIdsArray = [];
+        foreach ($loggedUserGeographicAreasArray as $geographicArea) {
+            $loggedUserGeographicAreasIdsArray[] =  $geographicArea->getId();
+        }
+        $loggedUserRolesArray = $this->getUser()->getRoles();
+        if (in_array("ROLE_TELEPRO",$loggedUserRolesArray) || in_array("ROLE_COMMERCIAL",$loggedUserRolesArray)) {
+            $data = $this->getDoctrine()->getRepository(Client::class)->findAllClientsByUserDepartments($loggedUserGeographicAreasIdsArray, $loggedUser->getId());
+
+        } else {
+            $data = $this->getDoctrine()->getRepository(Client::class)->getNotDeletedClients();
+        }
+
+
+
+        /*$data = $this->getDoctrine()->getRepository(Client::class)->getNotDeletedClients();*/
         $session->set('total_contacts',
             count($data)
         );
@@ -80,6 +96,7 @@ class AllContactsController extends AbstractController
      */
     public function add(Request $request): Response
     {
+        $loggedUser = $this->getUser();
         $newClient = new Client();
         $clientForm = $this->createForm(ClientFormType::class, $newClient);
         $clientForm->handleRequest($request);
@@ -89,6 +106,7 @@ class AllContactsController extends AbstractController
             $newClient->setStatusDetail(0);
             $newClient->setCreatedAt(new \DateTime());
             $newClient->setUpdatedAt(new \DateTime());
+            $newClient->setCreatorUser($loggedUser);
             $newClient->setIsDeleted(false);
             $manager->persist($newClient);
             $manager->flush();

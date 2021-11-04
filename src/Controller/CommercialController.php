@@ -194,6 +194,12 @@ class CommercialController extends AbstractController
             $doneAppointmentsPerformance = 0;
         }
 
+        if(count($allAppointments) !== 0) {
+            $deletedAppointmentsPerformance = number_format(((count($deletedAppointments) / count($allAppointments)) * 100), 2);
+        } else {
+            $deletedAppointmentsPerformance = 0;
+        }
+
         return $this->render('commercial/commercial_stats.html.twig', [
             'count_total_commercials' => count($justCommercials),
             'all_commercials' => $allCommercials,
@@ -205,6 +211,7 @@ class CommercialController extends AbstractController
             'upcoming_appointments' => count($upcomingAppointments),
             'processed_clients' => count($processedClients),
             'done_appointments_performance' => $doneAppointmentsPerformance,
+            'deleted_appointments_performance' => $deletedAppointmentsPerformance,
         ]);
     }
 

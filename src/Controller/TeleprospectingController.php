@@ -40,8 +40,9 @@ class TeleprospectingController extends AbstractController
             $teleproGeographicAreasIdsArray[] =  $geographicArea->getId();
         }
         $loggedUserRolesArray = $this->getUser()->getRoles();
-        if (in_array("ROLE_TELEPRO",$loggedUserRolesArray)) {
+        if (in_array("ROLE_TELEPRO",$loggedUserRolesArray) || in_array("ROLE_COMMERCIAL",$loggedUserRolesArray)) {
             $data = $this->getDoctrine()->getRepository(Client::class)->findClientsByTeleproDepartments($teleproGeographicAreasIdsArray, $loggedTelepro->getId());
+            /*dd($data);*/
             /*dd($loggedTelepro->getId());*/
         } else {
             $data = $this->getDoctrine()->getRepository(Client::class)->getNotFixedAppointmentsClients();
@@ -445,10 +446,25 @@ class TeleprospectingController extends AbstractController
         /*dd($processedCalls);*/
         /*dd($allTelepros);*/
 
+        // PERFORMANCE FICHES DE CONTACT TRAITÉS
         if(count($allClients) !== 0) {
             $contactsPerformance = number_format(((count($uniqueClientsArray) / count($allClients)) * 100), 2);
         } else {
             $contactsPerformance = 0;
+        }
+
+        // PERFORMANCE FICHES DE CONTACT QUALIFIES
+        if(count($uniqueClientsArray) !== 0) {
+            $qualifiedContactsPerformance = number_format(((count($uniqueQualifiedClientsArray) / count($uniqueClientsArray)) * 100), 2);
+        } else {
+            $qualifiedContactsPerformance = 0;
+        }
+
+        // PERFORMANCE FICHES DE CONTACT NON QUALIFIES
+        if(count($uniqueClientsArray) !== 0) {
+            $notQualifiedContactsPerformance = number_format(((count($uniqueNotQualifiedClientsArray) / count($uniqueClientsArray)) * 100), 2);
+        } else {
+            $notQualifiedContactsPerformance = 0;
         }
 
         if(count($uniqueClientsArray) !== 0) {
@@ -481,6 +497,8 @@ class TeleprospectingController extends AbstractController
             'single_not_qualified_clients_processes_count' => count($uniqueNotQualifiedClientsArray),
             'contacts_performance' => $contactsPerformance,
             'appointments_performance' => $appointmentsPerformance,
+            'qualified_contacts_performance' => $qualifiedContactsPerformance,
+            'not_qualified_contacts_performance' => $notQualifiedContactsPerformance,
         ]);
     }
 

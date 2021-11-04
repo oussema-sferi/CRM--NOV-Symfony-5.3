@@ -457,58 +457,6 @@
 
                 <div class="row">
 
-
-
-                    {#<div class="col-xl-4 col-md-6">
-                        <div class="card card-stats">
-                            <!-- Card body -->
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col">
-                                        <h5 class="card-title text-uppercase text-muted mb-0">Total Appels Supprimés</h5>
-                                        <span class="h2 font-weight-bold mb-0">
-
-                                            {% if app.session.get('date_filter_value') is not null %}
-                                                {% set deleted_calls_counter = 0 %}
-                                                {% for call in total_calls %}
-                                                    {% if call.isDeleted == 1 %}
-                                                        {% set call_deletion_date = call.deletionDate | date('Y-m-d') %}
-                                                        {% if filter == "0" or filter == "1" %}
-                                                            {% if call_deletion_date == selected_date %}
-                                                                {% set deleted_calls_counter = deleted_calls_counter + 1 %}
-                                                            {% endif %}
-                                                        {% elseif filter == "100" %}
-                                                            {% if call_deletion_date >= start_date and call_deletion_date <= end_date %}
-                                                                {% set deleted_calls_counter = deleted_calls_counter + 1 %}
-                                                            {% endif %}
-                                                        {% else %}
-                                                            {% if call_deletion_date >= selected_date %}
-                                                                {% set deleted_calls_counter = deleted_calls_counter + 1 %}
-                                                            {% endif%}
-                                                        {% endif %}
-                                                    {% endif %}
-                                                {% endfor %}
-                                                {{ deleted_calls_counter }}
-                                            {% else %}
-                                                {{ deleted_calls_count }}
-                                            {% endif %}
-
-                                        </span>
-                                    </div>
-                                    <div class="col-auto">
-                                        <div class="icon icon-shape bg-gradient-orange text-white rounded-circle shadow">
-                                            <i class="fas fa-list-alt"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                                #}{# <p class="mt-3 mb-0 text-sm">
-                                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
-                                    <span class="text-nowrap">Since last month</span>
-                                </p>#}{#
-                            </div>
-                        </div>
-                    </div>#}
-
                     <div class="col-xl-4 col-md-6">
                         <div class="card card-stats">
                             <!-- Card body -->
@@ -563,7 +511,7 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col">
-                                        <h5 class="card-title text-uppercase text-muted mb-0">Performance Contacts</h5>
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Performance Fiches de Contact Traités</h5>
                                         <span class="h2 font-weight-bold mb-0">
                                             {#{{ contacts_performance }}%#}
                                             {% if app.session.get('date_filter_value') is not null %}
@@ -597,17 +545,17 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col">
-                                        <h5 class="card-title text-uppercase text-muted mb-0">Performance RDV Pris</h5>
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Performance Fiches de Contact Qualifiées</h5>
                                         <span class="h2 font-weight-bold mb-0">
-                                            {#{{ appointments_performance }}%#}
+                                            {#{{ contacts_performance }}%#}
                                             {% if app.session.get('date_filter_value') is not null %}
                                                 {% if  processed_clients_counter != 0 %}
-                                                    {{ ((fixed_appointments_counter / processed_clients_counter) * 100)|number_format(2) }}%
+                                                    {{ ((qualified_contacts_counter / processed_clients_counter) * 100)|number_format(2) }}%
                                                 {% else %}
                                                     0.00%
                                                 {% endif %}
                                             {% else %}
-                                                {{ appointments_performance }}%
+                                                {{ qualified_contacts_performance }}%
                                             {% endif %}
                                         </span>
                                     </div>
@@ -625,6 +573,41 @@
                         </div>
                     </div>
 
+                </div>
+                <div class="row">
+                    <div class="col-xl-4 col-md-6">
+                        <div class="card card-stats">
+                            <!-- Card body -->
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Performance Fiches de Contact Non Qualifiées</h5>
+                                        <span class="h2 font-weight-bold mb-0">
+                                            {#{{ contacts_performance }}%#}
+                                            {% if app.session.get('date_filter_value') is not null %}
+                                                {% if  processed_clients_counter != 0 %}
+                                                    {{ ((not_qualified_contacts_counter / processed_clients_counter) * 100)|number_format(2) }}%
+                                                {% else %}
+                                                    0.00%
+                                                {% endif %}
+                                            {% else %}
+                                                {{ not_qualified_contacts_performance }}%
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-gradient-info text-white rounded-circle shadow">
+                                            <i class="ni ni-chart-bar-32"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                {# <p class="mt-3 mb-0 text-sm">
+                                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
+                                    <span class="text-nowrap">Since last month</span>
+                                </p>#}
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

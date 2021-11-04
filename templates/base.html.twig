@@ -71,15 +71,15 @@
                                     <div class="collapse navbar-collapse" id="sidenav-collapse-main">
                                         <!-- Nav items -->
                                         <ul class="navbar-nav">
-                                            {% if (is_granted('ROLE_SUPERADMIN')) %}
+                                            {#{% if (is_granted('ROLE_SUPERADMIN')) %}#}
                                             <li class="nav-item">
                                                 <a class="nav-link" href="{{ path('all_contacts') }}">
                                                     <i class="ni fas fa-address-book text-black-50"></i>
                                                     <span class="nav-link-text">Gestion des Contacts</span>
                                                 </a>
                                             </li>
-                                            {% endif %}
-                                            {% if (is_granted('ROLE_TELEPRO') or is_granted('ROLE_SUPERADMIN')) %}
+                                            {#{% endif %}#}
+                                            {% if (is_granted('ROLE_TELEPRO') or is_granted('ROLE_SUPERADMIN') or is_granted('ROLE_COMMERCIAL')) %}
                                                 <li class="nav-item">
                                                     <a class="nav-link" href="#navbar-dashboards" data-toggle="collapse" role="button" aria-controls="navbar-dashboards">
                                                         <i class="ni fas fa-phone-volume text-orange"></i>
@@ -162,6 +162,9 @@
 
                                             {% endif %}
 
+
+                                            {% if (is_granted('ROLE_SUPERADMIN') or is_granted('ROLE_TELEPRO')) %}
+
                                             <li class="nav-item">
                                                 {#<a class="nav-link" href="{{ path('appointment') }}">
                                         <i class="ni fas fa-calendar-alt text-cyan"></i>
@@ -179,17 +182,18 @@
                                                                 <span class="sidenav-normal"> Mon Agenda </span>
                                                             </a>
                                                         </li>#}
-                                                        {% if (is_granted('ROLE_SUPERADMIN') or is_granted('ROLE_TELEPRO')) %}
+
                                                             <li class="nav-item">
                                                                 <a href="{{ path('appointment') }}" class="nav-link">
                                                                     <i class="ni fas fa-calendar-alt text-cyan"></i>
                                                                     <span class="sidenav-normal"> Agendas des Commerciaux </span>
                                                                 </a>
                                                             </li>
-                                                        {% endif %}
+
                                                     </ul>
                                                 </div>
                                             </li>
+                                            {% endif %}
 
                                             {% if is_granted('ROLE_SUPERADMIN') %}
 
@@ -370,6 +374,7 @@
                             <!-- Navigation -->
                             <ul class="navbar-nav mb-md-3">
 
+                                {% if ( not is_granted('ROLE_ADMIN')) %}
                                 <li class="nav-item">
                                     {#<a class="nav-link" href="{{ path('appointment') }}">
                                         <i class="ni fas fa-calendar-alt text-cyan"></i>
@@ -387,6 +392,7 @@
                                                     <span class="sidenav-normal"> Mon Agenda </span>
                                                 </a>
                                             </li>
+
                                             <li class="nav-item">
                                                 <a href="{{ path('statistics_per_user', {'id': app.user.id}) }}" class="nav-link">
                                                     <i class="ni fas fa-chart-bar text-green"></i>
@@ -394,10 +400,11 @@
                                                 </a>
                                             </li>
 
+
                                         </ul>
                                     </div>
                                 </li>
-
+                                {% endif %}
 
 
 

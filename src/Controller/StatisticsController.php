@@ -7,6 +7,7 @@ use App\Entity\Call;
 use App\Entity\Client;
 use App\Entity\Process;
 use App\Entity\User;
+use Doctrine\ORM\Mapping\Driver\DatabaseDriver;
 use MercurySeries\FlashyBundle\FlashyNotifier;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -161,6 +162,7 @@ class StatisticsController extends AbstractController
     public function statsPerUser($id): Response
     {
         $userId = $this->getUser()->getId();
+        $allContacts = $this->getDoctrine()->getRepository(Client::class)->findAll();
         $user = $this->getDoctrine()->getRepository(User::class)->find($id);
         $myProcessedContacts = $user->getProcessedClients();
         $myQualifiedCalls = $this->getDoctrine()->getRepository(Call::class)->getQualifiedCallsByUser($id);
@@ -219,7 +221,42 @@ class StatisticsController extends AbstractController
                 }
             }
         }
-        /*dd($uniqueNotQualifiedClientsArray);*/
+
+        // PERFORMANCE FICHES DE CONTACT TRAITÉS
+        if(count($allContacts) !== 0) {
+            $contactsPerformance = number_format(((count($uniqueClientsArray) / count($allContacts)) * 100), 2);
+        } else {
+            $contactsPerformance = 0;
+        }
+
+        // PERFORMANCE FICHES DE CONTACT QUALIFIES
+        if(count($uniqueClientsArray) !== 0) {
+            $qualifiedContactsPerformance = number_format(((count($uniqueQualifiedClientsArray) / count($uniqueClientsArray)) * 100), 2);
+        } else {
+            $qualifiedContactsPerformance = 0;
+        }
+
+        // PERFORMANCE FICHES DE CONTACT NON QUALIFIES
+        if(count($uniqueClientsArray) !== 0) {
+            $notQualifiedContactsPerformance = number_format(((count($uniqueNotQualifiedClientsArray) / count($uniqueClientsArray)) * 100), 2);
+        } else {
+            $notQualifiedContactsPerformance = 0;
+        }
+
+        // PERFORMANCE RDV EFFECTUES
+
+        if(count($myAssignedAppointments) !== 0) {
+            $doneAppointmentsPerformance = number_format(((count($myDoneAppointments) / count($myAssignedAppointments)) * 100), 2);
+        } else {
+            $doneAppointmentsPerformance = 0;
+        }
+
+        // PERFORMANCE RDV ANNULES
+        if(count($myAssignedAppointments) !== 0) {
+            $deletedAppointmentsPerformance = number_format(((count($myDeletedAppointments) / count($myAssignedAppointments)) * 100), 2);
+        } else {
+            $deletedAppointmentsPerformance = 0;
+        }
 
         return $this->render('statistics/stats_per_user.html.twig', [
             'user' => $user,
@@ -246,7 +283,14 @@ class StatisticsController extends AbstractController
             'single_qualified_clients_processes' => $uniqueQualifiedClientsArray,
             'single_qualified_clients_processes_count' => count($uniqueQualifiedClientsArray),
             'single_not_qualified_clients_processes' => $uniqueNotQualifiedClientsArray,
-            'single_not_qualified_clients_processes_count' => count($uniqueNotQualifiedClientsArray)
+            'single_not_qualified_clients_processes_count' => count($uniqueNotQualifiedClientsArray),
+            'all_contacts' =>$allContacts,
+            'all_contacts_count' =>count($allContacts),
+            'contacts_performance' => $contactsPerformance,
+            'done_appointments_performance' => $doneAppointmentsPerformance,
+            'deleted_appointments_performance' => $deletedAppointmentsPerformance,
+            'qualified_contacts_performance' => $qualifiedContactsPerformance,
+            'not_qualified_contacts_performance' => $notQualifiedContactsPerformance,
         ]);
     }
 

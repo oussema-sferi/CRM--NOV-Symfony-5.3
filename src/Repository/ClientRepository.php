@@ -188,6 +188,34 @@ class ClientRepository extends ServiceEntityRepository
         return array_merge($qb->getQuery()->getResult(),$qb2->getQuery()->getResult());
     }
 
+    public function findAllClientsByUserDepartments($departmentsArrayIds, $loggedUserId)
+    {
+        $qb = $this->createQueryBuilder('c');
+        $qb->select('c')
+            ->join('c.geographicArea', 'g');
+        /*->join('c.creatorUser', 'u');*/
+        $counter = 0;
+        if(count($departmentsArrayIds) === 0) {
+            return [];
+        }
+        foreach ($departmentsArrayIds as $departmentId) {
+            $statement = "g.id = $departmentId";
+            if ($counter === 0) {
+                $qb->where($statement);
+            } else {
+                $qb->orWhere($statement);
+            }
+            $counter ++;
+        };
+        $qb->andWhere('c.isDeleted = 0');
+        /*$qb->orWhere('u.id = 15');*/
+        /*dd($qb->getQuery()->getResult());*/
+        $qb2 = $this->createQueryBuilder('c')->select('c')->join('c.creatorUser', 'u');
+        $qb2->where("u.id = $loggedUserId");
+        /*dd($qb2->getQuery()->getResult());*/
+        return array_merge($qb->getQuery()->getResult(),$qb2->getQuery()->getResult());
+    }
+
     public function fetchAssignedClientsbyFilters(array $departmentsArrayIds, array $filters, int $loggedUserId): array
     {
         $builder = $this->createQueryBuilder('c');
