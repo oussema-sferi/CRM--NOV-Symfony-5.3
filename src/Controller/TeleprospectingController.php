@@ -366,13 +366,12 @@ class TeleprospectingController extends AbstractController
         $allTelepros = $this->getDoctrine()->getRepository(User::class)->findUsersTeleproStats("ROLE_TELEPRO", "ROLE_SUPERADMIN");
         $allClients = $this->getDoctrine()->getRepository(Client::class)->getNotDeletedClients();
 
-        $processedClientsArray = [];
+        /*$processedClientsArray = [];
         foreach ($allTelepros as $user) {
             foreach ($user->getProcessedClients() as $client) {
                 $processedClientsArray[] = $client->getId();
             }
         }
-        /*dd($clientsIdsArray);*/
         $uniqueProcessedClientsArray = array_unique($processedClientsArray);
         $processedClients = [];
         foreach ($uniqueProcessedClientsArray as $clientId) {
@@ -382,8 +381,26 @@ class TeleprospectingController extends AbstractController
                     break;
                 }
             }
-        }
+        }*/
 
+        $allProcesses = $this->getDoctrine()->getRepository(Process::class)->findAll();
+        $allClientsIdsArray = [];
+        foreach ($allProcesses as $process) {
+            $allClientsIdsArray[] = $process->getClient()->getId();
+        }
+        $uniqueClientsIdsArray = array_unique($allClientsIdsArray);
+        $uniqueClientsArray = [];
+        foreach ($uniqueClientsIdsArray as $clientId) {
+            foreach ($allProcesses as $process) {
+                if ($process->getClient()->getId() == $clientId) {
+                    $uniqueClientsArray[$clientId][] = $process->getCreatedAt();
+                }
+            }
+        }
+        /*dd($uniqueClientsArray);*/
+
+
+        //qualified processes
         $allQualifiedProcesses = $this->getDoctrine()->getRepository(Process::class)->getAllQualifiedProcesses();
         /*$allNotQualifiedProcesses = $this->getDoctrine()->getRepository(Process::class)->getAllNotQualifiedProcesses();*/
 
@@ -417,6 +434,8 @@ class TeleprospectingController extends AbstractController
         }
         /*dd($uniqueNotQualifiedClientsArray);*/
 
+
+
         $notProcessedClients = $this->getDoctrine()->getRepository(Client::class)->getNotProcessedClients();
         $allAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getAppointmentsWhereClientsExist();
         $allCalls = $this->getDoctrine()->getRepository(Call::class)->getAllNotDeletedCalls();
@@ -426,13 +445,26 @@ class TeleprospectingController extends AbstractController
         /*dd($processedCalls);*/
         /*dd($allTelepros);*/
 
+        if(count($allClients) !== 0) {
+            $contactsPerformance = number_format(((count($uniqueClientsArray) / count($allClients)) * 100), 2);
+        } else {
+            $contactsPerformance = 0;
+        }
+
+        if(count($uniqueClientsArray) !== 0) {
+            $appointmentsPerformance = number_format(((count($allAppointments) / count($uniqueClientsArray)) * 100), 2);
+        } else {
+            $appointmentsPerformance = 0;
+        }
+        /*dd($processedClients);*/
+
         return $this->render('teleprospecting/telepro_stats.html.twig', [
             'count_total_telepros' => count($justTelepros),
             'all_telepros' => $allTelepros,
             /*'just_telepros' => $justTelepros,*/
             'total_clients' => count($allClients),
-            'processed_clients' => $processedClients,
-            'processed_clients_count' => count($processedClients),
+            /*'processed_clients' => $processedClients,*/
+            /*'processed_clients_count' => count($processedClients),*/
             'not_processed_clients' => count($notProcessedClients),
             'total_appointments' => $allAppointments,
             'total_appointments_count' => count($allAppointments),
@@ -441,10 +473,14 @@ class TeleprospectingController extends AbstractController
             'qualified_calls_count' => count($qualifiedCalls),
             'not_qualified_calls_count' => count($notQualifiedCalls),
             'deleted_calls_count' => count($deletedCalls),
+            'single_clients_processes' => $uniqueClientsArray,
+            'single_clients_processes_count' => count($uniqueClientsArray),
             'single_qualified_clients_processes' => $uniqueQualifiedClientsArray,
             'single_qualified_clients_processes_count' => count($uniqueQualifiedClientsArray),
             'single_not_qualified_clients_processes' => $uniqueNotQualifiedClientsArray,
-            'single_not_qualified_clients_processes_count' => count($uniqueNotQualifiedClientsArray)
+            'single_not_qualified_clients_processes_count' => count($uniqueNotQualifiedClientsArray),
+            'contacts_performance' => $contactsPerformance,
+            'appointments_performance' => $appointmentsPerformance,
         ]);
     }
 

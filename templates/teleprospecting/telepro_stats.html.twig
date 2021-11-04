@@ -178,7 +178,7 @@
                                             {% else %}
                                                 {{ processed_clients_count }}
                                             {% endif %}#}
-                                            {% if app.session.get('date_filter_value') is not null %}
+                                            {#{% if app.session.get('date_filter_value') is not null %}
                                                 {% set processed_clients_counter = 0 %}
                                                     {% for processedClient in processed_clients %}
                                                         {% set process_date = processedClient.updatedAt | date('Y-m-d') %}
@@ -199,6 +199,36 @@
                                                 {{ processed_clients_counter }}
                                             {% else %}
                                                 {{ processed_clients_count }}
+                                            {% endif %}#}
+                                            {% if app.session.get('date_filter_value') is not null %}
+                                                {% set processed_clients_counter = 0 %}
+                                                {% for process in single_clients_processes %}
+                                                    {% set break = false %}
+                                                    {% for date in process %}
+                                                        {% if break == false %}
+                                                            {% set process_date = date | date('Y-m-d') %}
+                                                            {% if filter == "0" or filter == "1" %}
+                                                                {% if process_date == selected_date %}
+                                                                    {% set processed_clients_counter = processed_clients_counter + 1 %}
+                                                                    {% set break = true %}
+                                                                {% endif %}
+                                                            {% elseif filter == "100" %}
+                                                                {% if process_date >= start_date and process_date <= end_date %}
+                                                                    {% set processed_clients_counter = processed_clients_counter + 1 %}
+                                                                    {% set break = true %}
+                                                                {% endif %}
+                                                            {% else %}
+                                                                {% if process_date >= selected_date %}
+                                                                    {% set processed_clients_counter = processed_clients_counter + 1 %}
+                                                                    {% set break = true %}
+                                                                {% endif%}
+                                                            {% endif %}
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                {% endfor %}
+                                                {{ processed_clients_counter }}
+                                            {% else %}
+                                                {{ single_clients_processes_count }}
                                             {% endif %}
                                         </span>
                                     </div>
@@ -526,6 +556,75 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="col-xl-4 col-md-6">
+                        <div class="card card-stats">
+                            <!-- Card body -->
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Performance Contacts</h5>
+                                        <span class="h2 font-weight-bold mb-0">
+                                            {#{{ contacts_performance }}%#}
+                                            {% if app.session.get('date_filter_value') is not null %}
+                                                {% if  total_clients != 0 %}
+                                                    {{ ((processed_clients_counter / total_clients) * 100)|number_format(2) }}%
+                                                {% else %}
+                                                    0.00%
+                                                {% endif %}
+                                            {% else %}
+                                                {{ contacts_performance }}%
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-gradient-info text-white rounded-circle shadow">
+                                            <i class="ni ni-chart-bar-32"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                {# <p class="mt-3 mb-0 text-sm">
+                                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
+                                    <span class="text-nowrap">Since last month</span>
+                                </p>#}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-4 col-md-6">
+                        <div class="card card-stats">
+                            <!-- Card body -->
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Performance RDV Pris</h5>
+                                        <span class="h2 font-weight-bold mb-0">
+                                            {#{{ appointments_performance }}%#}
+                                            {% if app.session.get('date_filter_value') is not null %}
+                                                {% if  processed_clients_counter != 0 %}
+                                                    {{ ((fixed_appointments_counter / processed_clients_counter) * 100)|number_format(2) }}%
+                                                {% else %}
+                                                    0.00%
+                                                {% endif %}
+                                            {% else %}
+                                                {{ appointments_performance }}%
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-gradient-info text-white rounded-circle shadow">
+                                            <i class="ni ni-chart-bar-32"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                {# <p class="mt-3 mb-0 text-sm">
+                                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
+                                    <span class="text-nowrap">Since last month</span>
+                                </p>#}
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
