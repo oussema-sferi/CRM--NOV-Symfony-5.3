@@ -58,7 +58,7 @@ class AllContactsController extends AbstractController
             $data = $this->getDoctrine()->getRepository(Client::class)->getNotDeletedClients();
         }
 
-
+        /*dd(count($data));*/
 
         /*$data = $this->getDoctrine()->getRepository(Client::class)->getNotDeletedClients();*/
         $session->set('total_contacts',

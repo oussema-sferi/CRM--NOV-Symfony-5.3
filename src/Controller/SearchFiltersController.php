@@ -66,7 +66,7 @@ class SearchFiltersController extends AbstractController
 
             $loggedUserId = $this->getUser()->getId();
             $loggedUserRolesArray = $this->getUser()->getRoles();
-            if (in_array("ROLE_TELEPRO",$loggedUserRolesArray)) {
+            if (in_array("ROLE_TELEPRO",$loggedUserRolesArray) || in_array("ROLE_COMMERCIAL",$loggedUserRolesArray)) {
                 /*dd($teleproGeographicAreasIdsArray);*/
                 $payload = $this->getDoctrine()->getRepository(Client::class)->fetchAssignedClientsbyFilters($teleproGeographicAreasIdsArray, $criterias, $loggedUserId);
 
@@ -128,7 +128,22 @@ class SearchFiltersController extends AbstractController
             );
         }
         $criterias = $session->get('criterias');
-        $payload = $this->getDoctrine()->getRepository(Client::class)->fetchClientsbyFiltersAllContacts($criterias);
+
+        $loggedTelepro = $this->getUser();
+        $teleproGeographicAreasArray = $loggedTelepro->getGeographicAreas();
+        $teleproGeographicAreasIdsArray = [];
+        foreach ($teleproGeographicAreasArray as $geographicArea) {
+            $teleproGeographicAreasIdsArray[] =  $geographicArea->getId();
+        }
+        $loggedUserId = $this->getUser()->getId();
+        $loggedUserRolesArray = $this->getUser()->getRoles();
+        if (in_array("ROLE_TELEPRO",$loggedUserRolesArray) || in_array("ROLE_COMMERCIAL",$loggedUserRolesArray)) {
+            $payload = $this->getDoctrine()->getRepository(Client::class)->fetchAssignedClientsbyFiltersAllContacts($teleproGeographicAreasIdsArray, $criterias, $loggedUserId);
+        } else {
+            $payload = $this->getDoctrine()->getRepository(Client::class)->fetchClientsbyFiltersAllContacts($criterias);
+        }
+
+        /*$payload = $this->getDoctrine()->getRepository(Client::class)->fetchClientsbyFiltersAllContacts($criterias);*/
         if(count($payload) === 0) {
             $session->set('total_contacts_search_results',
                 'nothing'

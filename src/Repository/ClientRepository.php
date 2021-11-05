@@ -180,6 +180,7 @@ class ClientRepository extends ServiceEntityRepository
         };
         $qb->andWhere('c.statusDetail != 7')
             ->andWhere('c.isDeleted = 0');
+        /*dd($qb->getQuery()->getResult());*/
         /*$qb->orWhere('u.id = 15');*/
         /*dd($qb->getQuery()->getResult());*/
         $qb2 = $this->createQueryBuilder('c')->select('c')->join('c.creatorUser', 'u');
@@ -208,6 +209,7 @@ class ClientRepository extends ServiceEntityRepository
             $counter ++;
         };
         $qb->andWhere('c.isDeleted = 0');
+        /*dd($qb->getQuery()->getResult());*/
         /*$qb->orWhere('u.id = 15');*/
         /*dd($qb->getQuery()->getResult());*/
         $qb2 = $this->createQueryBuilder('c')->select('c')->join('c.creatorUser', 'u');
@@ -274,6 +276,40 @@ class ClientRepository extends ServiceEntityRepository
         $query->setParameters($filters);
         $query->andWhere('c.isDeleted = 0');
         return $query->getQuery()->getResult();
+    }
+
+    public function fetchAssignedClientsbyFiltersAllContacts(array $departmentsArrayIds, array $filters, int $loggedUserId): array
+    {
+        $builder = $this->createQueryBuilder('c');
+        $query = $builder->select('c')
+            ->join('c.geographicArea', 'g');
+        $counter = 0;
+        $filters = $this->_trimFilters($filters);
+        foreach ($this->_trimFilters($filters) as $key => $value) {
+            $statement1 = $key === self::GEOGRAPHIC_AREA ? " g.id = :$key" : "c.$key LIKE :$key";
+            $query->andWhere($statement1);
+            /*dd($query->getQuery());*/
+        }
+        $statement2 = "";
+        for($i = 0; $i < (count($departmentsArrayIds) - 1); $i++) {
+
+            $statement2 = $statement2 . "g.id = $departmentsArrayIds[$i] OR ";
+
+        };
+        $statement2 = $statement2 . "g.id = $departmentsArrayIds[$i]";
+        $query->andWhere($statement2);
+        $query->setParameters($filters);
+        /*dd($query->getQuery());*/
+        $query2 = $this->createQueryBuilder('c')->select('c')->join('c.geographicArea', 'g')
+            ->join('c.creatorUser', 'u');
+        foreach ($this->_trimFilters($filters) as $key => $value) {
+            $statement3 = $key === self::GEOGRAPHIC_AREA ? " g.id = :$key" : "c.$key LIKE :$key";
+            $query2->andWhere($statement3);
+        }
+        $query2->andWhere("u.id = $loggedUserId")
+                ->andWhere('c.isDeleted = 0');
+        $query2->setParameters($filters);
+        return array_merge($query->getQuery()->getResult(),$query2->getQuery()->getResult());
     }
 
     public function getNotDeletedClients()

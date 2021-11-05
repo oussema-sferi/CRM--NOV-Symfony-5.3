@@ -47,6 +47,7 @@ class TeleprospectingController extends AbstractController
         } else {
             $data = $this->getDoctrine()->getRepository(Client::class)->getNotFixedAppointmentsClients();
         }
+        /*dd(count($data));*/
 
         $session = $request->getSession();
         /*$data = $this->getDoctrine()->getRepository(Client::class)->findAll();*/
