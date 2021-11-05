@@ -74,13 +74,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?User $teleprospector=null;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="commercials")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="deletedUsers")
      * @var User $whoDeletedIt
      */
     private ?User $whoDeletedIt=null;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="deletedUsers")
+     * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="teleprospector")
      * @var ArrayCollection<User> $commercials
      */
     private Collection $commercials;

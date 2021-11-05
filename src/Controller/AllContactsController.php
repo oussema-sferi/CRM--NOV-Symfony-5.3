@@ -218,8 +218,11 @@ class AllContactsController extends AbstractController
     public function show(Request $request, $id): Response
     {
         $allContactsReferer = $request->headers->get('referer');
-        /*dd($test);*/
         $clientToShow = $this->getDoctrine()->getRepository(Client::class)->find($id);
+        /*dd($clientToShow->getIsDeleted());*/
+        if ($clientToShow->getIsDeleted()) {
+            return $this->redirectToRoute('all_contacts');
+        }
         $clientAppointmentsList = $clientToShow->getAppointments();
 
         $newAppointment = new Appointment();
@@ -298,7 +301,7 @@ class AllContactsController extends AbstractController
     {
         $manager = $this->getDoctrine()->getManager();
         $referer = $request->headers->get('referer');
-        dd($referer);
+        /*dd($referer);*/
         $loggedUser = $this->getUser();
         $contactToDelete = $this->getDoctrine()->getRepository(Client::class)->find($id);
         $contactToDelete->setIsDeleted(true);
@@ -307,7 +310,7 @@ class AllContactsController extends AbstractController
         $manager->persist($contactToDelete);
         $manager->flush();
         $this->flashy->success("Contact supprimé avec succès !");
-        return $this->redirectToRoute('all_contacts');
+        return $this->redirect($referer);
     }
 
     /**

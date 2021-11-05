@@ -323,6 +323,7 @@ class RolesController extends AbstractController
     public function teleproCommercialsAssignment(Request $request): Response
     {
         $commercials = [];
+
         $manager = $this->getDoctrine()->getManager();
         if($request->isMethod('Post')) {
 
