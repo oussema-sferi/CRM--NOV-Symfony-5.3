@@ -53,6 +53,7 @@
                             <tr>
                                 <th scope="col">Prénom</th>
                                 <th scope="col">Nom</th>
+                                <th scope="col">Actions</th>
                                 <th scope="col">Email</th>
                                 {#<th scope="col">Société</th>#}
                                 <th scope="col">Catégorie</th>
@@ -67,7 +68,7 @@
                                 <th scope="col">Numéro Mobile</th>
                                 <th scope="col">Société</th>
                                 <th scope="col">Sous Contrat</th>
-                                <th scope="col">Actions</th>
+
                                 {#<th scope="col">Traitement</th>#}
                                 {#<th scope="col">Consultation</th>
                                 <th scope="col">Modification</th>
@@ -86,6 +87,12 @@
 
                                     <td class="budget">
                                         {{ commercial_appointment.client.lastName }}
+                                    </td>
+                                    <td >
+                                        <a href="{{ path('show_contact', {'id': commercial_appointment.client.id}) }}"><i class="fas fa-search-plus text-blue"></i></a>&nbsp;&nbsp;
+                                        <a href="{{ path('full_update_contact', {'id': commercial_appointment.client.id}) }}"><i class="fas fa-edit text-yellow"></i></a>&nbsp;&nbsp;
+                                        <a href="" data-toggle="modal" data-target="#deleteModal{{ commercial_appointment.client.id }}"><i class="fas fa-trash-alt text-red"></i></a>
+
                                     </td>
 
                                     <td class="budget">
@@ -155,13 +162,7 @@
                                         {% endif %}
                                     </td>
 
-                                    <td >
-                                        {#<a href="{{ path('show_contact', {'id': client.id}) }}"  class="badge badge-default" >Consulter Fiche</a>#}
-                                        <a href="{{ path('show_contact', {'id': commercial_appointment.client.id}) }}"><i class="fas fa-search-plus text-blue"></i></a>&nbsp;&nbsp;
-                                        <a href="{{ path('full_update_contact', {'id': commercial_appointment.client.id}) }}"><i class="fas fa-edit text-yellow"></i></a>&nbsp;&nbsp;
-                                        <a href="" data-toggle="modal" data-target="#deleteModal"><i class="fas fa-trash-alt text-red"></i></a>
 
-                                    </td>
 
                                    {# <td >
                                         <a href="{{ path('call_handle', {'id': commercial_appointment.client.id}) }}"  class="badge badge-default" >Traiter Fiche</a>
@@ -184,6 +185,22 @@
                                 </td>#}
 
                                 </tr>
+                                <div class="modal fade" id="deleteModal{{ commercial_appointment.client.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header" style="margin: 0 auto">
+                                                <h5 class="modal-title" id="exampleModalLabel">Avertissement</h5>
+                                            </div>
+                                            <div class="modal-body" style="margin: 0 auto">
+                                                Êtes-vous sûr de vouloir supprimer "{{ commercial_appointment.client.firstName ~ ' ' ~ commercial_appointment.client.lastName }}" ?
+                                            </div>
+                                            <div class="modal-footer" style="margin: 0 auto">
+                                                <button type="button" class="btn btn-success" data-dismiss="modal">Annuler</button>
+                                                <a href="{{ path('delete_contact', {'id': commercial_appointment.client.id}) }}" class="btn btn-danger">Confirmer</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
                             {% endfor %}
 

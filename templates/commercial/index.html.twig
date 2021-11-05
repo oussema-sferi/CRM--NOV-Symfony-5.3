@@ -367,13 +367,9 @@
                                 </tr>
                                 <div class="modal fade" id="deleteModal{{ commercial_appointment.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-centered" role="document">
-                                        {#<form action="{{ path('delete_contact', {'id': client.id}) }}" method="post">#}
                                         <div class="modal-content">
                                             <div class="modal-header" style="margin: 0 auto">
                                                 <h5 class="modal-title" id="exampleModalLabel">Avertissement</h5>
-                                                {#<button type="button" class="close" data-dismiss="modal" aria-label="Close">#}{#
-                                                #}{#<span aria-hidden="true">&times;</span>#}{#
-                                                </button>#}
                                             </div>
                                             <div class="modal-body" style="margin: 0 auto">
                                                 Êtes-vous sûr de vouloir supprimer ce RDV ?
@@ -382,9 +378,7 @@
                                                 <button type="button" class="btn btn-success" data-dismiss="modal">Annuler</button>
                                                 <a href="{{ path('delete_appointment', {'id': commercial_appointment.id}) }}" class="btn btn-danger">Confirmer</a>
                                             </div>
-
                                         </div>
-                                        {#</form>#}
                                     </div>
                                 </div>
 

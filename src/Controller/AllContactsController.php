@@ -297,6 +297,8 @@ class AllContactsController extends AbstractController
     public function delete(Request $request, $id): Response
     {
         $manager = $this->getDoctrine()->getManager();
+        $referer = $request->headers->get('referer');
+        dd($referer);
         $loggedUser = $this->getUser();
         $contactToDelete = $this->getDoctrine()->getRepository(Client::class)->find($id);
         $contactToDelete->setIsDeleted(true);
