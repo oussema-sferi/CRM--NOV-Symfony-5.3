@@ -264,13 +264,23 @@ class AllContactsController extends AbstractController
                         $freeCommercials = $this->getDoctrine()->getRepository(User::class)->findAssignedUsersByCommercialRole($loggedUserId,"ROLE_COMMERCIAL");
                     }
                 }
-                return $this->render('/all_contacts/appointment_free_commercials_check.html.twig', [
-                    /*'free_appointments' => $freeAppointmentsTime*/
-                    'free_commercials' => $freeCommercials,
-                    'clients' => $clientToShow,
-                    'start' => $startTime,
-                    'end' => $endTime
-                ]);
+                if((count($freeCommercials) !== 0)) {
+                    return $this->render('/all_contacts/appointment_free_commercials_check.html.twig', [
+                        /*'free_appointments' => $freeAppointmentsTime*/
+                        'free_commercials' => $freeCommercials,
+                        'clients' => $clientToShow,
+                        'start' => $startTime,
+                        'end' => $endTime
+                    ]);
+                } else {
+                    $this->flashy->info("Aucun agent n'est disponible à l'intervalle de temps choisi, Veuillez sélectionner d'autres dates !");
+                    return $this->render('/all_contacts/show.html.twig', [
+                        'client_to_show' => $clientToShow,
+                        'client_appointments_list' => $clientAppointmentsList,
+                        'add_appointment_form' => $addAppointmentForm->createView(),
+                    ]);
+                }
+
             } else {
                 if(($appointmentDuration->days === 0) && ($appointmentDuration->h === 0)
                     && ($appointmentDuration->i === 0) && ($appointmentDuration->s === 0)) {

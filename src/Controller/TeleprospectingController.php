@@ -233,6 +233,7 @@ class TeleprospectingController extends AbstractController
                     $client->setStatusDetail($statusDetailsNQ);
                 }
                 $client->setUpdatedAt(new \DateTime());
+                $client->setIsProcessed(true);
                 $loggedUser->addProcessedClient($client);
                 $manager->persist($newCall);
                 $newProcess = new Process();
@@ -294,26 +295,27 @@ class TeleprospectingController extends AbstractController
                         $freeCommercials = $this->getDoctrine()->getRepository(User::class)->findAssignedUsersByCommercialRole($loggedUserId,"ROLE_COMMERCIAL");
                     }
                 }
-                return $this->render('/appointment/free_commercials_check.html.twig', [
-                    /*'free_appointments' => $freeAppointmentsTime*/
-                    'free_commercials' => $freeCommercials,
-                    'clients' => $client,
-                    'start' => $startTime,
-                    'end' => $endTime,
-                    'appointment_referer_teleprospecting' => $previousReferer
-                ]);
+
+                if((count($freeCommercials) !== 0)) {
+                    return $this->render('/appointment/free_commercials_check.html.twig', [
+                        'free_commercials' => $freeCommercials,
+                        'clients' => $client,
+                        'start' => $startTime,
+                        'end' => $endTime,
+                        'appointment_referer_teleprospecting' => $previousReferer
+                    ]);
+                } else {
+                    $this->flashy->info("Aucun agent n'est disponible à l'intervalle de temps choisi, Veuillez sélectionner d'autres dates !");
+                    return $this->render('/teleprospecting/direct_appointment.html.twig', [
+                        'appointment_form' => $appointmentForm->createView(),
+                    ]);
+                }
+
             } else {
                 if(($appointmentDuration->days === 0) && ($appointmentDuration->h === 0)
                     && ($appointmentDuration->i === 0) && ($appointmentDuration->s === 0)) {
-                    /*dd($appointmentDuration);*/
                     $this->flashy->warning("Veuillez revérifier vos entrées! La durée du RDV ne doit pas être nulle !");
-                    /*$this->addFlash(
-                        'appointment_duration_warning',
-                        "Veuillez revérifier vos entrées! La durée du RDV doit pas être nulle!"
-                    );*/
-                } /*else {
-                    $this->flashy->warning("Veuillez revérifier vos entrées! La durée du RDV ne doit pas dépasser trois heures !");
-                }*/
+                }
                 return $this->render('/teleprospecting/direct_appointment.html.twig', [
                     'appointment_form' => $appointmentForm->createView(),
                 ]);
@@ -369,8 +371,9 @@ class TeleprospectingController extends AbstractController
         $allClients = $this->getDoctrine()->getRepository(Client::class)->getNotDeletedClients();
 
         //CONTACTS PROCESSED
-        $allProcesses = $this->getDoctrine()->getRepository(Process::class)->findAll();
+        $allProcesses = $this->getDoctrine()->getRepository(Process::class)->findAllSortedDate();
         $allClientsIdsArray = [];
+        $clientsProcesses = [];
         foreach ($allProcesses as $process) {
             $allClientsIdsArray[] = $process->getClient()->getId();
         }
@@ -380,13 +383,37 @@ class TeleprospectingController extends AbstractController
             foreach ($allProcesses as $process) {
                 if ($process->getClient()->getId() == $clientId) {
                     $uniqueClientsArray[$clientId][] = $process->getCreatedAt();
+                    $clientsProcesses[$clientId][$process->getStatus()][] = $process->getCreatedAt();
                 }
             }
         }
 
+        // Qualified and not Qualified clients count
+        $qualifiedClientsCounter = 0;
+        $notQualifiedClientsCounter = 0;
+        foreach ($clientsProcesses as $processedClient) {
+            if (count($processedClient) === 2) {
+                $NQdate = $processedClient[1][0];
+                $Qdate = $processedClient[2][0];
 
+                if($NQdate >$Qdate) {
+                    $notQualifiedClientsCounter += 1;
+                } else {
+                    $qualifiedClientsCounter += 1;
+                }
+            } elseif (count($processedClient) === 1) {
+                if(!array_key_exists("1", $processedClient)) {
+                    $qualifiedClientsCounter += 1;
+                } elseif (!array_key_exists("2", $processedClient)) {
+                    $notQualifiedClientsCounter += 1;
+                }
+            }
+        }
+        //
+
+        /*dd($notQualifiedClientsCounter);*/
         //CONTACTS QUALIFIES
-        $allQualifiedProcesses = $this->getDoctrine()->getRepository(Process::class)->getAllQualifiedProcesses();
+        /*$allQualifiedProcesses = $this->getDoctrine()->getRepository(Process::class)->getAllQualifiedProcesses();
         $allQualifiedClientsIdsArray = [];
         foreach ($allQualifiedProcesses as $qualifiedProcess) {
             $allQualifiedClientsIdsArray[] = $qualifiedProcess->getClient()->getId();
@@ -399,10 +426,10 @@ class TeleprospectingController extends AbstractController
                     $uniqueQualifiedClientsArray[$id][] = $qualifiedProcess->getCreatedAt();
                 }
             }
-        }
+        }*/
 
         //CONTACTS NON QUALIFIES
-        $allNotQualifiedProcesses = $this->getDoctrine()->getRepository(Process::class)->getAllNotQualifiedProcesses();
+        /*$allNotQualifiedProcesses = $this->getDoctrine()->getRepository(Process::class)->getAllNotQualifiedProcesses();
         $allNotQualifiedClientsIdsArray = [];
         foreach ($allNotQualifiedProcesses as $notQualifiedProcess) {
             $allNotQualifiedClientsIdsArray[] = $notQualifiedProcess->getClient()->getId();
@@ -415,7 +442,7 @@ class TeleprospectingController extends AbstractController
                     $uniqueNotQualifiedClientsArray[$id][] = $notQualifiedProcess->getCreatedAt();
                 }
             }
-        }
+        }*/
 
 
         $notProcessedClients = $this->getDoctrine()->getRepository(Client::class)->getNotProcessedClients();
@@ -436,14 +463,14 @@ class TeleprospectingController extends AbstractController
 
         // PERFORMANCE FICHES DE CONTACT QUALIFIES
         if(count($uniqueClientsArray) !== 0) {
-            $qualifiedContactsPerformance = number_format(((count($uniqueQualifiedClientsArray) / count($uniqueClientsArray)) * 100), 2);
+            $qualifiedContactsPerformance = number_format((($qualifiedClientsCounter / count($uniqueClientsArray)) * 100), 2);
         } else {
             $qualifiedContactsPerformance = 0;
         }
 
         // PERFORMANCE FICHES DE CONTACT NON QUALIFIES
         if(count($uniqueClientsArray) !== 0) {
-            $notQualifiedContactsPerformance = number_format(((count($uniqueNotQualifiedClientsArray) / count($uniqueClientsArray)) * 100), 2);
+            $notQualifiedContactsPerformance = number_format((($notQualifiedClientsCounter / count($uniqueClientsArray)) * 100), 2);
         } else {
             $notQualifiedContactsPerformance = 0;
         }
@@ -469,14 +496,15 @@ class TeleprospectingController extends AbstractController
             'deleted_calls_count' => count($deletedCalls),
             'single_clients_processes' => $uniqueClientsArray,
             'single_clients_processes_count' => count($uniqueClientsArray),
-            'single_qualified_clients_processes' => $uniqueQualifiedClientsArray,
-            'single_qualified_clients_processes_count' => count($uniqueQualifiedClientsArray),
-            'single_not_qualified_clients_processes' => $uniqueNotQualifiedClientsArray,
-            'single_not_qualified_clients_processes_count' => count($uniqueNotQualifiedClientsArray),
+           /* 'single_qualified_clients_processes' => $uniqueQualifiedClientsArray,*/
+            'single_qualified_clients_processes_count' => $qualifiedClientsCounter,
+            /*'single_not_qualified_clients_processes' => $uniqueNotQualifiedClientsArray,*/
+            'single_not_qualified_clients_processes_count' => $notQualifiedClientsCounter,
             'contacts_performance' => $contactsPerformance,
             /*'appointments_performance' => $appointmentsPerformance,*/
             'qualified_contacts_performance' => $qualifiedContactsPerformance,
             'not_qualified_contacts_performance' => $notQualifiedContactsPerformance,
+            'clients_processes' => $clientsProcesses
         ]);
     }
 

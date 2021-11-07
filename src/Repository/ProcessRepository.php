@@ -91,4 +91,12 @@ class ProcessRepository extends ServiceEntityRepository
             ->andWhere('p.status = 1');
         return $qb->getQuery()->getResult();
     }
+    public function findAllSortedDate()
+    {
+        $qb = $this->createQueryBuilder('p');
+        $qb->select('p');
+
+        return $qb->orderBy('p.createdAt', 'DESC')->getQuery()->getResult();
+
+    }
 }

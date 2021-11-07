@@ -533,6 +533,7 @@ class AppointmentController extends AbstractController
                 /*$client->setStatus(2);*/
                 $client->setStatus(2);
                 $client->setStatusDetail(7);
+                $client->setIsProcessed(true);
                 $manager->persist($newAppointment);
                 $client->setUpdatedAt(new \DateTime());
                 /*$manager->persist($aNewCall);*/
@@ -743,6 +744,7 @@ class AppointmentController extends AbstractController
         if ((count($allClientNotDeletedCalls) === 0) && (count($allClientNotDeletedAppointments) === 0)) {
             $client->setStatus(0);
             $client->setStatusDetail(0);
+            $client->setIsProcessed(false);
         }
         $manager->persist($client);
         $manager->flush();

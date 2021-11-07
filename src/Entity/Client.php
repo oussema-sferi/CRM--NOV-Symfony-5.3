@@ -157,6 +157,11 @@ class Client
      */
     private $callersUsers;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isProcessed;
+
 
     public function __construct()
     {
@@ -568,6 +573,18 @@ class Client
                 $process->setClient(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getIsProcessed(): ?bool
+    {
+        return $this->isProcessed;
+    }
+
+    public function setIsProcessed(bool $isProcessed): self
+    {
+        $this->isProcessed = $isProcessed;
 
         return $this;
     }

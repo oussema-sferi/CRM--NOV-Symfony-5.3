@@ -108,6 +108,7 @@ class CallController extends AbstractController
         if ((count($allClientNotDeletedCalls) === 0) && (count($allClientNotDeletedAppointments) === 0)) {
             $client->setStatus(0);
             $client->setStatusDetail(0);
+            $client->setIsProcessed(false);
         }
         $manager->persist($client);
         $manager->flush();
