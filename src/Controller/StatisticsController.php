@@ -28,7 +28,7 @@ class StatisticsController extends AbstractController
     public function index(): Response
     {
         /*dd('hi');*/
-        $allAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getAppointmentsWhereClientsExist();
+        $allAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getAppointmentsWhereClientsExistCommercialStats();
         $allContacts = $this->getDoctrine()->getRepository(Client::class)->getNotDeletedClients();
         $allUsers = $this->getDoctrine()->getRepository(User::class)->findAll();
         $notProcessedClients = $this->getDoctrine()->getRepository(Client::class)->getNotProcessedClients();
@@ -77,26 +77,33 @@ class StatisticsController extends AbstractController
             }
         }
         // Qualified and not Qualified clients count
+        $qualifiedClientsIdsForGraph = [];
+        $notQualifiedClientsIdsForGraph = [];
         $qualifiedClientsCounter = 0;
         $notQualifiedClientsCounter = 0;
-        foreach ($clientsProcesses as $processedClient) {
+        foreach ($clientsProcesses as $processedClientId => $processedClient) {
             if (count($processedClient) === 2) {
                 $NQdate = $processedClient[1][0];
                 $Qdate = $processedClient[2][0];
 
                 if($NQdate >$Qdate) {
                     $notQualifiedClientsCounter += 1;
+                    $notQualifiedClientsIdsForGraph[] = $processedClientId;
                 } else {
                     $qualifiedClientsCounter += 1;
+                    $qualifiedClientsIdsForGraph[] = $processedClientId;
                 }
             } elseif (count($processedClient) === 1) {
                 if(!array_key_exists("1", $processedClient)) {
                     $qualifiedClientsCounter += 1;
+                    $qualifiedClientsIdsForGraph[] = $processedClientId;
                 } elseif (!array_key_exists("2", $processedClient)) {
                     $notQualifiedClientsCounter += 1;
+                    $notQualifiedClientsIdsForGraph[] = $processedClientId;
                 }
             }
         }
+        /*dd($qualifiedClientsIdsForGraph);*/
         //
 
         //CONTACTS QUALIFIES
@@ -206,6 +213,32 @@ class StatisticsController extends AbstractController
             $appointmentsByMonthArray[] = $appointmentsCounter;
         }
 
+        $doneAppointmentsByMonthArray = [];
+        for ($j = 1; $j <13; $j++) {
+            $doneAppointmentsCounter = 0;
+            foreach ($doneAppointments as $doneAppointment) {
+                if (((new \DateTime())->format("Y")) === $doneAppointment->getDoneAt()->format("Y")) {
+                    if (date("F", mktime(0, 0, 0, (int)($doneAppointment->getDoneAt()->format("m")), 1, (int)($doneAppointment->getDoneAt())->format("Y"))) === date("F", mktime(0, 0, 0, $j, 1, (int)(new \DateTime())->format("Y")))) {
+                        $doneAppointmentsCounter += 1;
+                    }
+                }
+            }
+            $doneAppointmentsByMonthArray[] = $doneAppointmentsCounter;
+        }
+
+        $deletedAppointmentsByMonthArray = [];
+        for ($j = 1; $j <13; $j++) {
+            $deletedAppointmentsCounter = 0;
+            foreach ($deletedAppointments as $deletedAppointment) {
+                if (((new \DateTime())->format("Y")) === $deletedAppointment->getDeletionDate()->format("Y")) {
+                    if (date("F", mktime(0, 0, 0, (int)($deletedAppointment->getDeletionDate()->format("m")), 1, (int)($deletedAppointment->getDeletionDate())->format("Y"))) === date("F", mktime(0, 0, 0, $j, 1, (int)(new \DateTime())->format("Y")))) {
+                        $deletedAppointmentsCounter += 1;
+                    }
+                }
+            }
+            $deletedAppointmentsByMonthArray[] = $deletedAppointmentsCounter;
+        }
+
 
         return $this->render('statistics/index.html.twig', [
             'total_all_contacts' => count($allContacts),
@@ -218,6 +251,8 @@ class StatisticsController extends AbstractController
             'appointments_performance' => $appointmentsPerformance,
             'processed_contacts_graph' => json_encode($processedContactsByMonthArray),
             'fixed_appointments_graph' => json_encode($appointmentsByMonthArray),
+            'done_appointments_graph' => json_encode($doneAppointmentsByMonthArray),
+            'deleted_appointments_graph' => json_encode($deletedAppointmentsByMonthArray),
             'actual_year' => (new \DateTime())->format("Y"),
             'single_clients_processes' => $uniqueClientsArray,
             'single_clients_processes_count' => count($uniqueClientsArray),

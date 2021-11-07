@@ -688,6 +688,7 @@
                                     {{ telepro.firstName ~ ' ' ~ telepro.lastName }}
                                 </th>
                                 <td>
+                                    {{ dump(telepro.processes|length) }}
                                     {% if app.session.get('date_filter_value') is not null %}
                                         {% set processed_clients_counter_by_user = 0 %}
                                             {% for processedClient in telepro.processedClients  %}

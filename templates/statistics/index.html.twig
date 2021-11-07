@@ -1098,8 +1098,9 @@
           data: {
               labels: ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"],
               datasets: [{label: "Contacts Traités", data: {{ processed_contacts_graph|raw }}, backgroundColor: "#ff00ff"},
-                  {label: "Nombre de RDV", data: {{ fixed_appointments_graph|raw }}, backgroundColor: "#33ccff",},
-
+                  {label: "Nombre de RDV Pris", data: {{ fixed_appointments_graph|raw }}, backgroundColor: "#33ccff",},
+                  {label: "Nombre de RDV Effectués", data: {{ done_appointments_graph|raw }}, backgroundColor: "#046e0b",},
+                  {label: "Nombre de RDV Annulés", data: {{ deleted_appointments_graph|raw }}, backgroundColor: "#8c0611",},
               ]
           },
           options: {

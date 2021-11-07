@@ -710,6 +710,7 @@ class AppointmentController extends AbstractController
     public function deleteAppointment(Request $request, $id): Response
     {
         $manager = $this->getDoctrine()->getManager();
+        $referer = $request->headers->get('referer');
         $loggedUser = $this->getUser();
         $appointmentToDelete = $this->getDoctrine()->getRepository(Appointment::class)->find($id);
         $clientId = $appointmentToDelete->getClient()->getId();
@@ -749,9 +750,7 @@ class AppointmentController extends AbstractController
         $manager->persist($client);
         $manager->flush();
         $this->flashy->success('RDV supprimé avec succès !');
-        return $this->redirectToRoute('full_update_contact', [
-            "id" => $clientId
-        ]);
+        return $this->redirect($referer);
     }
 
     /**
