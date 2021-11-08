@@ -15,10 +15,14 @@ use App\Repository\AppointmentRepository;
 use App\Repository\UserRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use MercurySeries\FlashyBundle\FlashyNotifier;
+use phpDocumentor\Reflection\DocBlock\Serializer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use function mysql_xdevapi\getSession;
 
 class AppointmentController extends AbstractController
@@ -1039,4 +1043,28 @@ class AppointmentController extends AbstractController
             "id" => $calendarUserId
         ]);
     }
+
+    /**
+     * @Route("/dashboard/appointments/clientsajaxsearch/", name="clients_ajax_search")
+     */
+    public function clientsAjaxSearch(Request $request): Response
+    {
+        $manager = $this->getDoctrine()->getManager();
+        if($request->isXmlHttpRequest()){
+            $searchKeyword = $request->get('searchKeyword');
+            /*dd($searchKeyword);*/
+            $clients = $this->getDoctrine()->getRepository(Client::class)->ajaxClientsSearch($searchKeyword);
+            $clientsArray = [];
+            foreach ($clients as $client) {
+                $clientsArray[] = ["id" => $client->getId(), "firstName" => $client->getFirstName(), "lastName" => $client->getLastName()];
+            }
+            /*dd($clients);*/
+            $serializer = new \Symfony\Component\Serializer\Serializer([new ObjectNormalizer()]);
+            $result = $serializer->normalize($clientsArray, 'json');
+            return new JsonResponse($result);
+        }
+        /*['attributes' => 'id', 'firstName', 'lastName']*/
+        return new Response('use AJAX');
+    }
+
 }

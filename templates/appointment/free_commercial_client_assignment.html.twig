@@ -52,7 +52,7 @@
 
                             <form action="{{ path('fix_appointment') }}" method="post">
 
-                                <div class="form-group">
+                                {#<div class="form-group">
 
                                     <label class="form-control-label" for="input-username">Sélectionnez le Client</label>
                                     <select id="client" name="client">
@@ -61,7 +61,14 @@
                                         {% endfor %}
                                     </select>
 
-                                </div>
+                                </div>#}
+
+                                <input id="client_id" name="client" type="text" hidden>
+                                <label for="keyword">Client</label>
+                                <input id="keyword" name="show_client" type="text" class="form-control" placeholder="Nom de Famille...">
+                                <div id="sugggestion"></div>
+
+                                <br>
 
                                 <div class="form-group">
 
@@ -134,12 +141,70 @@
     </script>#}
     <script type="text/javascript">
         $(document).ready(function() {
-                let client = new SlimSelect({
+                /*let client = new SlimSelect({
                     select: '#client',
                     placeholder: 'Choisissez le client',
                     searchText: 'Aucun Résultat',
                     searchPlaceholder: 'Rechercher',
+                })*/
+
+            let searchInput = $("#keyword")
+            let searchInputClientId = $("#client_id")
+            let suggestion = $("#sugggestion")
+
+            $("#keyword").keyup(function () {
+                let searchKeyword = $(this).val();
+                $.ajax({
+                    url:"{{ path('clients_ajax_search') }}",
+                    method: "POST",
+                    dataType: 'json',
+                    data : { searchKeyword: searchKeyword},
+                    success: (e) => {
+                        /*location.reload();*/
+                        console.log(e);
+                        suggestion.html('')
+                            e.forEach(function (client) {
+                                suggestion.css({"border-color": "#C1E0FF",
+                                    "border-width":"2px",
+                                    "border-style":"solid",
+                                    "height": "100px",
+                                    "overflow-y":"scroll"
+                                });
+                                suggestion.append(
+                                    "<div class='test' data-client='" + client.id + "'>" + client.firstName + " " + client.lastName + "</div>"
+                                )
+                            })
+                        $(".test").on("click", function () {
+                            searchInputClientId.val($(this).data('client'))
+                            console.log(searchInputClientId.val())
+                            searchInput.val($(this).text())
+                            suggestion.html('')
+                            suggestion.css({"border-color": "",
+                                "border-width":"",
+                                "border-style":"",
+                                "height": "",
+                                "overflow-y":""
+                            });
+                        })
+                        if(e.length === 0) {
+                            suggestion.css({"border-color": "",
+                                "border-width":"",
+                                "border-style":"",
+                                "height": "",
+                                "overflow-y":""
+                            });
+                        }
+                    },
+                    error : (f) => {
+                        console.log(f);
+                    }
                 })
+
+
+            })
+            /*function liveSearch() {
+                console.log("test")
+            }*/
         });
     </script>
 

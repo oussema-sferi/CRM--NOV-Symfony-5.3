@@ -345,4 +345,14 @@ class ClientRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }*/
 
+    public function ajaxClientsSearch($keyword)
+    {
+        $qb = $this->createQueryBuilder('c');
+        $qb->select('c')
+            ->where('c.isDeleted = 0')
+            ->andWhere("c.lastName LIKE :keyword")
+            ->setParameter('keyword', '%'.$keyword.'%');
+        return $qb->getQuery()->getResult();
+    }
+
 }
