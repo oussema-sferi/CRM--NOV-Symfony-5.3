@@ -63,9 +63,19 @@
 
                                 </div>#}
 
-                                <input id="client_id" name="client" type="text" hidden>
+                                <input id="client_id" name="client" type="text" hidden required>
                                 <label for="keyword">Client</label>
-                                <input id="keyword" name="show_client" type="text" class="form-control" placeholder="Nom de Famille...">
+                                <div class="input-group">
+
+                                    <input id="keyword" name="show_client" type="text" class="form-control" placeholder="Nom de Famille..." required>
+
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-primary" type="button" id="button-addon2">Reset</button>
+                                    </div>
+                                    {#<a href=""><i class="fas fa-search-plus text-blue"></i></a>#}
+                                </div>
+
+
                                 <div id="sugggestion"></div>
 
                                 <br>
@@ -105,7 +115,7 @@
 
 
                                 <div class="text-center">
-                                    <button type="submit" class="btn btn-success mt-4">Confirmer</button>
+                                    <button id="submit_button" type="submit" class="btn btn-success mt-4" disabled>Confirmer</button>
                                 </div>
                             </form>
                             {#<div class="form-group">
@@ -148,10 +158,16 @@
                     searchPlaceholder: 'Rechercher',
                 })*/
 
+            let resetButton = $("#button-addon2")
+            let submitButton = $("#submit_button")
             let searchInput = $("#keyword")
             let searchInputClientId = $("#client_id")
             let suggestion = $("#sugggestion")
-
+            resetButton.on("click", function () {
+                searchInputClientId.val('');
+                searchInput.val('')
+                console.log(searchInputClientId.val())
+            })
             $("#keyword").keyup(function () {
                 let searchKeyword = $(this).val();
                 $.ajax({
@@ -178,6 +194,10 @@
                             searchInputClientId.val($(this).data('client'))
                             console.log(searchInputClientId.val())
                             searchInput.val($(this).text())
+                            searchInput.prop("disabled", true)
+                            submitButton.prop("disabled", false)
+                            resetButton.prop("disabled", false)
+
                             suggestion.html('')
                             suggestion.css({"border-color": "",
                                 "border-width":"",
@@ -187,13 +207,24 @@
                             });
                         })
                         if(e.length === 0) {
+                            suggestion.append("<div> Aucune suggestion </div>")
+                            suggestion.css({
+                                "height": "",
+                                "overflow-y":""
+                            });
+                        }
+                        resetButton.on("click", function () {
+                            searchInputClientId.val('');
+                            searchInput.val('')
+                            suggestion.html('')
                             suggestion.css({"border-color": "",
                                 "border-width":"",
                                 "border-style":"",
                                 "height": "",
                                 "overflow-y":""
                             });
-                        }
+                            console.log(searchInputClientId.val())
+                        })
                     },
                     error : (f) => {
                         console.log(f);

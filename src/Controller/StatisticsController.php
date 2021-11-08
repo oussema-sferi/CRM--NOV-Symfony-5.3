@@ -185,7 +185,7 @@ class StatisticsController extends AbstractController
 
         // GET ARRAY OF PROCESSED CLIENTS OBJECTS
         $processedContactsForGraph= [];
-        foreach ($uniqueClientsArray as $clientId) {
+        foreach ($uniqueClientsArray as $clientId => $value) {
             $processedContactsForGraph[] = $this->getDoctrine()->getRepository(Client::class)->find((int)$clientId);
         }
 
@@ -202,10 +202,12 @@ class StatisticsController extends AbstractController
             }
             $processedContactsByMonthArray[] = $contactsCounter;
         }
+
         $appointmentsByMonthArray = [];
         for ($j = 1; $j <13; $j++) {
             $appointmentsCounter = 0;
             foreach ($allAppointments as $appointment) {
+
                 if (((new \DateTime())->format("Y")) === $appointment->getCreatedAt()->format("Y")) {
                     if (date("F", mktime(0, 0, 0, (int)($appointment->getCreatedAt()->format("m")), 1, (int)($appointment->getCreatedAt())->format("Y"))) === date("F", mktime(0, 0, 0, $j, 1, (int)(new \DateTime())->format("Y")))) {
                         $appointmentsCounter += 1;
@@ -216,9 +218,11 @@ class StatisticsController extends AbstractController
         }
 
         $doneAppointmentsByMonthArray = [];
+
         for ($j = 1; $j <13; $j++) {
             $doneAppointmentsCounter = 0;
             foreach ($doneAppointments as $doneAppointment) {
+
                 if (((new \DateTime())->format("Y")) === $doneAppointment->getDoneAt()->format("Y")) {
                     if (date("F", mktime(0, 0, 0, (int)($doneAppointment->getDoneAt()->format("m")), 1, (int)($doneAppointment->getDoneAt())->format("Y"))) === date("F", mktime(0, 0, 0, $j, 1, (int)(new \DateTime())->format("Y")))) {
                         $doneAppointmentsCounter += 1;

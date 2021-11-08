@@ -351,6 +351,7 @@ class ClientRepository extends ServiceEntityRepository
         $qb->select('c')
             ->where('c.isDeleted = 0')
             ->andWhere("c.lastName LIKE :keyword")
+            ->orWhere("c.firstName LIKE :keyword")
             ->setParameter('keyword', '%'.$keyword.'%');
         return $qb->getQuery()->getResult();
     }
