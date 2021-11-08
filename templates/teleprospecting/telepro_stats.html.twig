@@ -688,29 +688,60 @@
                                     {{ telepro.firstName ~ ' ' ~ telepro.lastName }}
                                 </th>
                                 <td>
-                                    {{ dump(telepro.processes|length) }}
+                                    {% set processes_clients_ids_array = [] %}
+                                    {% for process in telepro.processes  %}
+                                        {% set processes_clients_ids_array = processes_clients_ids_array|merge([process.client.id]) %}
+                                    {% endfor %}
+                                    {#{{ dump(processes_clients_ids_array) }}#}
+
+                                    {% set newArray = [] %}
+                                    {% for id in processes_clients_ids_array %}
+                                        {% if id not in newArray %}
+                                            {% set newArray = newArray|merge([id]) %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    {#{{ dump(newArray) }}#}
+                                    {#{{ dump(telepro.processes|length) }}#}
+
+                                    {% set sorted_processes = [] %}
+                                    {% if telepro.processes|default %}
+                                        {% set processes_array_count = telepro.processes|length - 1 %}
+                                        {% for i in processes_array_count..0 %}
+                                            {#{{ dump(telepro.processes[i].createdAt) }}#}
+                                            {% set sorted_processes = sorted_processes|merge([telepro.processes[i]]) %}
+                                        {% endfor %}
+                                    {% endif %}
+                                    {#{{ dump(sorted_processes) }}#}
+
                                     {% if app.session.get('date_filter_value') is not null %}
                                         {% set processed_clients_counter_by_user = 0 %}
-                                            {% for processedClient in telepro.processedClients  %}
-                                                {% set process_date = processedClient.updatedAt | date('Y-m-d') %}
-                                                    {% if filter == "0" or filter == "1" %}
-                                                        {% if process_date == selected_date %}
-                                                            {% set processed_clients_counter_by_user = processed_clients_counter_by_user + 1 %}
+                                            {% for sorted_process in sorted_processes  %}
+                                                {% set sorted_process_date = sorted_process.createdAt | date('Y-m-d') %}
+                                                    {% if sorted_process.client.id in newArray %}
+                                                        {% if filter == "0" or filter == "1" %}
+                                                            {% if sorted_process_date == selected_date %}
+                                                                {% set processed_clients_counter_by_user = processed_clients_counter_by_user + 1 %}
+                                                                {% set newArray = remove(newArray, sorted_process.client.id) %}
+                                                            {% endif %}
+                                                        {% elseif filter == "100" %}
+                                                            {% if sorted_process_date >= start_date and sorted_process_date <= end_date %}
+                                                                {% set processed_clients_counter_by_user = processed_clients_counter_by_user + 1 %}
+                                                                {% set newArray = remove(newArray, sorted_process.client.id) %}
+                                                            {% endif %}
+                                                        {% else %}
+                                                            {% if sorted_process_date >= selected_date %}
+                                                                {% set processed_clients_counter_by_user = processed_clients_counter_by_user + 1 %}
+                                                                {% set newArray = remove(newArray, sorted_process.client.id) %}
+                                                            {% endif%}
                                                         {% endif %}
-                                                    {% elseif filter == "100" %}
-                                                        {% if process_date >= start_date and process_date <= end_date %}
-                                                            {% set processed_clients_counter_by_user = processed_clients_counter_by_user + 1 %}
-                                                        {% endif %}
-                                                    {% else %}
-                                                        {% if process_date >= selected_date %}
-                                                            {% set processed_clients_counter_by_user = processed_clients_counter_by_user + 1 %}
-                                                        {% endif%}
                                                     {% endif %}
+
                                             {% endfor %}
                                         {{ processed_clients_counter_by_user }}
                                     {% else %}
                                         {{ telepro.processedClients | length }}
                                     {% endif %}
+
                                 </td>
                                 <td>
                                     {% set taken_appointments_counter = 0 %}

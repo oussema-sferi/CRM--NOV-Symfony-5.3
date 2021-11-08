@@ -76,6 +76,7 @@ class StatisticsController extends AbstractController
                 }
             }
         }
+        /*dd($clientsProcesses);*/
         // Qualified and not Qualified clients count
         $qualifiedClientsIdsForGraph = [];
         $notQualifiedClientsIdsForGraph = [];
@@ -103,6 +104,7 @@ class StatisticsController extends AbstractController
                 }
             }
         }
+
         /*dd($qualifiedClientsIdsForGraph);*/
         //
 
