@@ -385,7 +385,7 @@
 
                                                         {% endif %}
                                                     {% endfor %}
-                                                    {#{{ dump(full_date_timeNQ) }}#}
+
                                                     {% if NQ == 1 and Q == 0 %}
                                                         {% set not_qualified_contacts_counter  = not_qualified_contacts_counter  + 1 %}
                                                     {% elseif NQ == 1 and Q == 1 %}

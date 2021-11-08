@@ -344,16 +344,19 @@ class StatisticsController extends AbstractController
         $myDeletedAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getDeletedAppointmentsByUser($id);
 
         $allProcesses = $this->getDoctrine()->getRepository(Process::class)->getProcessesByUser($id);
+
         $allClientsIdsArray = [];
         foreach ($allProcesses as $process) {
             $allClientsIdsArray[] = $process->getClient()->getId();
         }
         $uniqueClientsIdsArray = array_unique($allClientsIdsArray);
         $uniqueClientsArray = [];
+        $clientsProcesses = [];
         foreach ($uniqueClientsIdsArray as $clientId) {
             foreach ($allProcesses as $process) {
                 if ($process->getClient()->getId() == $clientId) {
                     $uniqueClientsArray[$clientId][] = $process->getCreatedAt();
+                    $clientsProcesses[$clientId][$process->getStatus()][] = $process->getCreatedAt();
                 }
             }
         }
@@ -361,12 +364,37 @@ class StatisticsController extends AbstractController
 
         //
 
+        /*dd($clientsProcesses);*/
+        $qualifiedClientsCounter = 0;
+        $notQualifiedClientsCounter = 0;
+        foreach ($clientsProcesses as $processedClientId => $processedClient) {
+            if (count($processedClient) === 2) {
+                $NQdate = $processedClient[1][0];
+                $Qdate = $processedClient[2][0];
+
+                if($NQdate >$Qdate) {
+                    $notQualifiedClientsCounter += 1;
+                    $notQualifiedClientsIdsForGraph[] = $processedClientId;
+                } else {
+                    $qualifiedClientsCounter += 1;
+                    $qualifiedClientsIdsForGraph[] = $processedClientId;
+                }
+            } elseif (count($processedClient) === 1) {
+                if(!array_key_exists("1", $processedClient)) {
+                    $qualifiedClientsCounter += 1;
+                    $qualifiedClientsIdsForGraph[] = $processedClientId;
+                } elseif (!array_key_exists("2", $processedClient)) {
+                    $notQualifiedClientsCounter += 1;
+                    $notQualifiedClientsIdsForGraph[] = $processedClientId;
+                }
+            }
+        }
 
 
         //
 
         //Qualified Processes
-        $allQualifiedProcessesByUser = $this->getDoctrine()->getRepository(Process::class)->getAllQualifiedProcessesByUser($id);
+        /*$allQualifiedProcessesByUser = $this->getDoctrine()->getRepository(Process::class)->getAllQualifiedProcessesByUser($id);
         $allQualifiedClientsIdsArray = [];
         foreach ($allQualifiedProcessesByUser as $qualifiedProcessByUser) {
             $allQualifiedClientsIdsArray[] = $qualifiedProcessByUser->getClient()->getId();
@@ -379,13 +407,13 @@ class StatisticsController extends AbstractController
                     $uniqueQualifiedClientsArray[$qClientId][] = $qualifiedProcessByUser->getCreatedAt();
                 }
             }
-        }
+        }*/
 
         /*dd($uniqueQualifiedClientsArray);*/
 
         //Not Qualified Processes
 
-        $allNotQualifiedProcessesByUser = $this->getDoctrine()->getRepository(Process::class)->getAllNotQualifiedProcessesByUser($id);
+        /*$allNotQualifiedProcessesByUser = $this->getDoctrine()->getRepository(Process::class)->getAllNotQualifiedProcessesByUser($id);
         $allNotQualifiedClientsIdsArray = [];
         foreach ($allNotQualifiedProcessesByUser as $notQualifiedProcessByUser) {
             $allNotQualifiedClientsIdsArray[] = $notQualifiedProcessByUser->getClient()->getId();
@@ -398,7 +426,7 @@ class StatisticsController extends AbstractController
                     $uniqueNotQualifiedClientsArray[$notQClientId][] = $notQualifiedProcessByUser->getCreatedAt();
                 }
             }
-        }
+        }*/
 
         /*dd($uniqueNotQualifiedClientsArray);*/
         // PERFORMANCE FICHES DE CONTACT TRAITÉS
@@ -410,14 +438,14 @@ class StatisticsController extends AbstractController
 
         // PERFORMANCE FICHES DE CONTACT QUALIFIES
         if(count($uniqueClientsArray) !== 0) {
-            $qualifiedContactsPerformance = number_format(((count($uniqueQualifiedClientsArray) / count($uniqueClientsArray)) * 100), 2);
+            $qualifiedContactsPerformance = number_format((($qualifiedClientsCounter / count($uniqueClientsArray)) * 100), 2);
         } else {
             $qualifiedContactsPerformance = 0;
         }
 
         // PERFORMANCE FICHES DE CONTACT NON QUALIFIES
         if(count($uniqueClientsArray) !== 0) {
-            $notQualifiedContactsPerformance = number_format(((count($uniqueNotQualifiedClientsArray) / count($uniqueClientsArray)) * 100), 2);
+            $notQualifiedContactsPerformance = number_format((($notQualifiedClientsCounter / count($uniqueClientsArray)) * 100), 2);
         } else {
             $notQualifiedContactsPerformance = 0;
         }
@@ -459,10 +487,10 @@ class StatisticsController extends AbstractController
             'deleted_appointments_count' =>count($myDeletedAppointments),
             'single_clients_processes' => $uniqueClientsArray,
             'single_clients_processes_count' => count($uniqueClientsArray),
-            'single_qualified_clients_processes' => $uniqueQualifiedClientsArray,
-            'single_qualified_clients_processes_count' => count($uniqueQualifiedClientsArray),
-            'single_not_qualified_clients_processes' => $uniqueNotQualifiedClientsArray,
-            'single_not_qualified_clients_processes_count' => count($uniqueNotQualifiedClientsArray),
+            /*'single_qualified_clients_processes' => $uniqueQualifiedClientsArray,*/
+            'single_qualified_clients_processes_count' => $qualifiedClientsCounter,
+            /*'single_not_qualified_clients_processes' => $uniqueNotQualifiedClientsArray,*/
+            'single_not_qualified_clients_processes_count' => $notQualifiedClientsCounter,
             'all_contacts' =>$allContacts,
             'all_contacts_count' =>count($allContacts),
             'contacts_performance' => $contactsPerformance,
@@ -470,6 +498,7 @@ class StatisticsController extends AbstractController
             'deleted_appointments_performance' => $deletedAppointmentsPerformance,
             'qualified_contacts_performance' => $qualifiedContactsPerformance,
             'not_qualified_contacts_performance' => $notQualifiedContactsPerformance,
+            'clients_processes' => $clientsProcesses
         ]);
     }
 

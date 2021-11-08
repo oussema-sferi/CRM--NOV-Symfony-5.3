@@ -53,7 +53,7 @@ class ProcessRepository extends ServiceEntityRepository
         $qb->select('p')
             ->join('p.processorUser', 'u')
             ->where("u.id =$Id" );
-        return $qb->getQuery()->getResult();
+        return $qb->orderBy('p.createdAt', 'DESC')->getQuery()->getResult();
     }
 
     public function getAllQualifiedProcesses()

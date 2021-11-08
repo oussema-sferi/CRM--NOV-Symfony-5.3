@@ -446,7 +446,8 @@ class TeleprospectingController extends AbstractController
 
 
         $notProcessedClients = $this->getDoctrine()->getRepository(Client::class)->getNotProcessedClients();
-        $allAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getAppointmentsWhereClientsExist();
+        $allAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getAppointmentsWhereClientsExistCommercialStats();
+        /*$allAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getAppointmentsWhereClientsExist();*/
         $allCalls = $this->getDoctrine()->getRepository(Call::class)->getAllNotDeletedCalls();
         $qualifiedCalls = $this->getDoctrine()->getRepository(Call::class)->getQualifiedCalls();
         $notQualifiedCalls = $this->getDoctrine()->getRepository(Call::class)->getNotQualifiedCalls();
