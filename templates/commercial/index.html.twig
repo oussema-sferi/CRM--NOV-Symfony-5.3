@@ -288,16 +288,23 @@
                                     {% endif %}
 
                                     <td class="budget">
-                                        {% if commercial_appointment.isDone == 1 %}
-                                            <span class="badge badge-success badge-lg">
-                                                <i class="bg-success"></i>
-                                                effectué
+                                        {% if commercial_appointment.isDeleted == 1 %}
+                                            <span class="badge badge-warning badge-lg">
+                                                <i class="bg-warning"></i>
+                                                annulé
                                             </span>
                                         {% else %}
-                                            <span class="badge badge-warning badge-lg">
-                                            <i class="bg-warning"></i>
-                                            à venir
-                                            </span>
+                                            {% if commercial_appointment.isDone == 1 %}
+                                                <span class="badge badge-success badge-lg">
+                                                    <i class="bg-success"></i>
+                                                    effectué
+                                                </span>
+                                            {% else %}
+                                                <span class="badge badge-info badge-lg">
+                                                <i class="bg-warning"></i>
+                                                à venir
+                                                </span>
+                                            {% endif %}
                                         {% endif %}
                                     </td>
 

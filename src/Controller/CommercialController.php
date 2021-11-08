@@ -38,9 +38,9 @@ class CommercialController extends AbstractController
         /*dd($loggedUserId);*/
         $loggedUserRolesArray = $this->getUser()->getRoles();
         if (in_array("ROLE_COMMERCIAL",$loggedUserRolesArray)) {
-            $data = $appointment->getAppointmentsOfLoggedUser($loggedUserId);
+            $data = $appointment->getAppointmentsOfLoggedUserEvenDeleted($loggedUserId);
         } else {
-            $data = $appointment->getAppointmentsWhereClientsExist();
+            $data = $appointment->getAppointmentsWhereClientsExistCommercialStats();
         }
         $session->remove('total_appointments_search_results');
         if($session->get('pagination_value')) {

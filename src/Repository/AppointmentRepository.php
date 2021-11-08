@@ -96,11 +96,25 @@ class AppointmentRepository extends ServiceEntityRepository
             ->join('a.client', 'c')
             ->where('a.client IS NOT NULL')
             ->andWhere("u.id =$loggedUserId" )
-            ->andWhere('c.isDeleted = 0' )
+            /*->andWhere('c.isDeleted = 0' )*/
             ->andWhere('a.isDeleted = 0');
 
         return $qb->orderBy('a.start', 'DESC')->getQuery()->getResult();
     }
+
+    public function getAppointmentsOfLoggedUserEvenDeleted($loggedUserId)
+    {
+
+        $qb = $this->createQueryBuilder('a');
+        $qb->select('a')
+            ->join('a.user', 'u')
+            ->join('a.client', 'c')
+            ->where('a.client IS NOT NULL')
+            ->andWhere("u.id =$loggedUserId" );
+
+        return $qb->orderBy('a.start', 'DESC')->getQuery()->getResult();
+    }
+
 
     public function getDoneAppointments()
     {
