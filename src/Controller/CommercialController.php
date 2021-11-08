@@ -185,7 +185,8 @@ class CommercialController extends AbstractController
         $deletedAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getDeletedAppointments();
         $upcomingAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getUpcomingAppointments();
         $processedClients = $this->getDoctrine()->getRepository(Client::class)->getProcessedClients();
-        $allAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getAppointmentsWhereClientsExist();
+        $allAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getAppointmentsWhereClientsExistCommercialStats();
+        /*$allAppointments = $this->getDoctrine()->getRepository(Appointment::class)->getAppointmentsWhereClientsExist();*/
 
         if(count($allAppointments) !== 0) {
             $doneAppointmentsPerformance = number_format(((count($doneAppointments) / count($allAppointments)) * 100), 2);
