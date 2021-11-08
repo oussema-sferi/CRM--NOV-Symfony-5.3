@@ -150,9 +150,11 @@ class CallController extends AbstractController
             if ($allItems[0] instanceof Call) {
                 $client->setStatus($allItems[0]->getGeneralStatus());
                 $client->setStatusDetail($allItems[0]->getStatusDetails());
+                $client->setIsProcessed(true);
             } elseif ($allItems[0] instanceof Appointment) {
                 $client->setStatus(2);
                 $client->setStatusDetail(7);
+                $client->setIsProcessed(true);
             }
         }
         /*if ((count($allClientNotDeletedCalls) === 0) && (count($allClientNotDeletedAppointments) === 0)) {

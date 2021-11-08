@@ -790,9 +790,11 @@ class AppointmentController extends AbstractController
             if ($allItems[0] instanceof Call) {
                 $client->setStatus($allItems[0]->getGeneralStatus());
                 $client->setStatusDetail($allItems[0]->getStatusDetails());
+                $client->setIsProcessed(true);
             } elseif ($allItems[0] instanceof Appointment) {
                 $client->setStatus(2);
                 $client->setStatusDetail(7);
+                $client->setIsProcessed(true);
             }
         }
         $manager->persist($client);
@@ -900,6 +902,7 @@ class AppointmentController extends AbstractController
             if ((count($allClientNotDeletedCalls) === 0) && (count($allClientNotDeletedAppointments) === 0)) {
                 $client->setStatus(0);
                 $client->setStatusDetail(0);
+                $client->setIsProcessed(false);
             }
             $manager->persist($client);
             $manager->flush();
