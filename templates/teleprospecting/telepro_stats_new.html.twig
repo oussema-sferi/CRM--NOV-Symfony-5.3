@@ -691,7 +691,7 @@
                         <table class="table align-items-center table-flush">
                             <thead class="thead-light">
                             <tr>
-                                <th scope="col">Donnée</th>
+                                <th scope="col">Données</th>
                                 <th scope="col">Valeur</th>
                                 <th scope="col">Pourcentage</th>
                             </tr>
@@ -781,6 +781,149 @@
                                         {{ TX_TRANSFO }} %
                                     </td>
                                 </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-header border-0">
+                        <div class="row align-items-center">
+
+                            <h3 class="mb-0">Statistiques Générales</h3>
+
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <!-- Projects table -->
+                        <table class="table align-items-center table-flush">
+                            <thead class="thead-light">
+                            <tr>
+                                <th scope="col">Données</th>
+                                <th scope="col">Valeur</th>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            <tr>
+                                <th scope="row">
+                                    Total Téléprospecteurs
+                                </th>
+                                <td>
+                                    {{ telepro_count }}
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th scope="row">
+                                    Total Contacts
+                                </th>
+                                <td>
+                                    {{ contacts_count }}
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th scope="row">
+                                    Total Contacts Restants
+                                </th>
+                                <td>
+                                    {{ contacts_count - processed_contacts_count }}
+                                </td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-header border-0">
+                        <div class="row align-items-center">
+
+                            <h3 class="mb-0">Statistiques Pour La Période Sélectionnée</h3>
+
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <!-- Projects table -->
+                        <table class="table align-items-center table-flush">
+                            <thead class="thead-light">
+                            <tr>
+                                <th scope="col">Données</th>
+                                <th scope="col">Valeur</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            <tr>
+                                <th scope="row">
+                                    Nombre de Contacts Traités
+                                </th>
+
+                                <td>
+                                    {{ processed_contacts_count }}
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th scope="row">
+                                    Nombre d'Appels Non Qualifiés
+                                </th>
+
+                                <td>
+                                    {{ not_qualified_calls_count }}
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th scope="row">
+                                    Nombre d'Appels Qualifiés
+                                </th>
+
+                                <td>
+                                    {{ qualified_calls_count }}
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th scope="row">
+                                    PI
+                                </th>
+
+                                <td>
+                                    {{ PI_calls_count }}
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th scope="row">
+                                    A Rappeler
+                                </th>
+
+                                <td>
+                                    {{ RAPPEL_calls_count }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    RDV
+                                </th>
+                                <td>
+                                    {{ RDV_calls_count }}
+                                </td>
+                            </tr>
 
                             </tbody>
                         </table>

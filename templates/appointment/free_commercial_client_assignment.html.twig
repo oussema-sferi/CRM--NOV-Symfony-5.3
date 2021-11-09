@@ -215,6 +215,7 @@
                         }
                         resetButton.on("click", function () {
                             searchInputClientId.val('');
+                            searchInput.prop("disabled", false)
                             searchInput.val('')
                             suggestion.html('')
                             suggestion.css({"border-color": "",

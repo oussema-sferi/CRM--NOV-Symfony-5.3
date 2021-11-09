@@ -12,6 +12,8 @@ use App\Form\AppointmentFormType;
 use App\Form\CallFormType;
 use App\Form\ClientFormType;
 use App\Repository\CallRepository;
+use App\Repository\ClientRepository;
+use App\Repository\UserRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use MercurySeries\FlashyBundle\FlashyNotifier;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -514,14 +516,16 @@ class TeleprospectingController extends AbstractController
     /**
      * @Route("/dashboard/teleprospecting/statsnew", name="teleprospecting_stats_new")
      */
-    public function teleprospectingStatsNew(Request $request, CallRepository $callRepository): Response
+    public function teleprospectingStatsNew(Request $request, CallRepository $callRepository, UserRepository $userRepository, ClientRepository $clientRepository): Response
     {
+        //Bloc Résumé Statistiques
         $allCalls = $callRepository->findAll();
         $PICalls = $callRepository->findBy(["statusDetails" => 5]);
         $RAPPELCalls = $callRepository->findBy(["statusDetails" => 6]);
         $NRPCalls = $callRepository->findBy(["statusDetails" => 1]);
         $RDVCalls = $callRepository->findBy(["statusDetails" => 7]);
         $QualifiedCalls = $callRepository->findBy(["generalStatus" => 2]);
+        $NOTQualifiedCalls = $callRepository->findBy(["generalStatus" => 1]);
         if(count($allCalls) !== 0) {
             $TXCTPercentage = number_format(((count($QualifiedCalls) / count($allCalls)) * 100), 2);
         } else {
@@ -532,7 +536,13 @@ class TeleprospectingController extends AbstractController
         } else {
             $TXTRANSFOPercentage = 0;
         }
+
+        //Bloc Statistiques Générales
+        $allTelepros = $userRepository->findUsersByCommercialRole("ROLE_TELEPRO");
+        $allContacts = $clientRepository->getNotDeletedClients();
+        $processedContacts = $clientRepository->getProcessedClients();
         return $this->render('teleprospecting/telepro_stats_new.html.twig', [
+            //Bloc Résumé Statistiques
             'all_calls' => $allCalls,
             'all_calls_count' => count($allCalls),
             'PI_calls_count' => count($PICalls),
@@ -541,6 +551,14 @@ class TeleprospectingController extends AbstractController
             'RDV_calls_count' => count($RDVCalls),
             'TX_CT' => $TXCTPercentage,
             'TX_TRANSFO' => $TXTRANSFOPercentage,
+            //Bloc Statistiques Générales
+            'telepro_count' => count($allTelepros),
+            'contacts_count' => count($allContacts),
+            //Bloc Statistiques Pour La Période Sélectionnée
+            'processed_contacts_count' => count($processedContacts),
+            'qualified_calls_count' => count($QualifiedCalls),
+            'not_qualified_calls_count' => count($NOTQualifiedCalls),
+
         ]);
     }
 
