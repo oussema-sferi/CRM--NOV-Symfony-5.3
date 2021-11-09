@@ -11,6 +11,7 @@ use App\Entity\User;
 use App\Form\AppointmentFormType;
 use App\Form\CallFormType;
 use App\Form\ClientFormType;
+use App\Repository\CallRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use MercurySeries\FlashyBundle\FlashyNotifier;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -506,6 +507,40 @@ class TeleprospectingController extends AbstractController
             'qualified_contacts_performance' => $qualifiedContactsPerformance,
             'not_qualified_contacts_performance' => $notQualifiedContactsPerformance,
             'clients_processes' => $clientsProcesses
+        ]);
+    }
+
+
+    /**
+     * @Route("/dashboard/teleprospecting/statsnew", name="teleprospecting_stats_new")
+     */
+    public function teleprospectingStatsNew(Request $request, CallRepository $callRepository): Response
+    {
+        $allCalls = $callRepository->findAll();
+        $PICalls = $callRepository->findBy(["statusDetails" => 5]);
+        $RAPPELCalls = $callRepository->findBy(["statusDetails" => 6]);
+        $NRPCalls = $callRepository->findBy(["statusDetails" => 1]);
+        $RDVCalls = $callRepository->findBy(["statusDetails" => 7]);
+        $QualifiedCalls = $callRepository->findBy(["generalStatus" => 2]);
+        if(count($allCalls) !== 0) {
+            $TXCTPercentage = number_format(((count($QualifiedCalls) / count($allCalls)) * 100), 2);
+        } else {
+            $TXCTPercentage = 0;
+        }
+        if(count($QualifiedCalls) !== 0) {
+            $TXTRANSFOPercentage = number_format(((count($RDVCalls) / count($QualifiedCalls)) * 100), 2);
+        } else {
+            $TXTRANSFOPercentage = 0;
+        }
+        return $this->render('teleprospecting/telepro_stats_new.html.twig', [
+            'all_calls' => $allCalls,
+            'all_calls_count' => count($allCalls),
+            'PI_calls_count' => count($PICalls),
+            'RAPPEL_calls_count' => count($RAPPELCalls),
+            'NRP_calls_count' => count($NRPCalls),
+            'RDV_calls_count' => count($RDVCalls),
+            'TX_CT' => $TXCTPercentage,
+            'TX_TRANSFO' => $TXTRANSFOPercentage,
         ]);
     }
 

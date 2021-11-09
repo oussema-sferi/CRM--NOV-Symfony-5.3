@@ -1,0 +1,861 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Statistiques Téléprospection{% endblock %}
+
+
+
+{% block body %}
+
+    <div class="header pb-6" style="background-color: #EDA200">
+        <div class="container-fluid">
+            <div class="header-body">
+                <div class="row align-items-center py-4">
+                    <div class="col-lg-5 col-7">
+                        <h6 class="h2 text-white d-inline-block mb-0">CRM</h6>
+                        <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+                            <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                                <li class="breadcrumb-item"><i class="fas fa-phone-volume text-orange"></i></li>
+                                <li class="breadcrumb-item">Service Téléprospection</li>
+                                <li class="breadcrumb-item active" aria-current="page">Statistiques</li>
+                            </ol>
+                        </nav>
+                    </div>
+                    <div class="col-lg-7 col-5 text-right">
+                        {#{{ dump(app.session.get('date_filter_value')) }}#}
+                        {#<a href="#" class="btn btn-sm btn-neutral">Période</a>#}
+
+                            <div class="form-group" id="normal_period_block">
+                                <label for="period" style="color: #fff; font-weight: bold; font-family: 'Times New Roman'">Période : </label>
+                                <select class="form-control-sm" name="normal_period" id="normal_period">
+                                    <option value="" {% if app.session.get('date_filter_value') is not defined or app.session.get('date_filter_value') is null %} selected {% endif %}>Choisir...</option>
+                                    <option value="0" {% if app.session.get('date_filter_value') is defined and app.session.get('date_filter_value') == "0" %} selected {% endif %}>Aujourd'hui</option>
+                                    <option value="1" {% if app.session.get('date_filter_value') is defined and app.session.get('date_filter_value') == "1" %} selected {% endif %}>Hier</option>
+                                    <option value="7" {% if app.session.get('date_filter_value') is defined and app.session.get('date_filter_value') == "7" %} selected {% endif %}>7 derniers jours</option>
+                                    <option value="14" {% if app.session.get('date_filter_value') is defined and app.session.get('date_filter_value') == "14" %} selected {% endif %}>14 derniers jours</option>
+                                    <option value="30" {% if app.session.get('date_filter_value') is defined and app.session.get('date_filter_value') == "30" %} selected {% endif %}>30 derniers jours</option>
+                                    <option value="60" {% if app.session.get('date_filter_value') is defined and app.session.get('date_filter_value') == "60" %} selected {% endif %}>60 derniers jours</option>
+                                    <option value="90" {% if app.session.get('date_filter_value') is defined and app.session.get('date_filter_value') == "90" %} selected {% endif %}>90 derniers jours</option>
+                                    <option value="100" {% if app.session.get('date_filter_value') is defined and app.session.get('date_filter_value') == "100" %} selected {% endif %}>Personalisée</option>
+                                </select>
+                                <a href="{{ path('teleprospecting_stats_filters_notifications') }}" class="btn btn-sm btn-success">Appliquer les filtres</a>
+                                <a href="{{ path('teleprospecting_stats_filters_initialization') }}" class="btn btn-sm btn-primary">Réinitialiser les filtres</a>
+                            </div>
+                        <form action="{{ path('teleprospecting_stats_filters') }}" method="post">
+                            <div class="form-group" id="custom_period_block" style="display: none">
+                                <input type="text" name="dateFilterValue" value="100" hidden>
+                                <label for="start_date" style="font-weight: bolder; font-family: Cambria; color: #fff">De: </label>
+                                <input type="date" class="form-control-sm" name="start_date" id="start_date" required>
+                                <label for="start_date" style="font-weight: bolder; font-family: Cambria; color: #fff">Jusqu'à: </label>
+                                <input type="date" class="form-control-sm" name="end_date" id="end_date" required>
+                                <a id="retour_period" class="btn btn-sm btn-neutral" style="margin-left: 10px">Retour</a>
+                                <input class="btn btn-sm btn-success" type="submit" value="Appliquer les filtres">
+                                <a href="{{ path('teleprospecting_stats_filters_initialization') }}" class="btn btn-sm btn-primary" id="between-date-initialization" style="display: none">Réinitialiser les filtres</a>
+                            </div>
+                        </form>
+                        {#<a href="#" class="btn btn-sm btn-neutral">Filters</a>#}
+                    </div>
+                </div>
+                <!-- Card stats -->
+                {#<div class="row">
+                    <div class="col-xl-4 col-md-6">
+                        <div class="card card-stats">
+                            <!-- Card body -->
+                            {% if app.session.get('date_filter_value') == "100" %}
+                                {% set start_date = app.session.get('date_filter_start')|date('Y-m-d') %}
+                                {% set end_date = app.session.get('date_filter_end')|date('Y-m-d') %}
+                            {% endif%}
+                            #}{#{{ dump(app.session.get('date_filter_start')|date()) }}#}{#
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Total Téléprospecteurs</h5>
+                                        <span class="h2 font-weight-bold mb-0">{{ count_total_telepros }}</span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-gradient-yellow text-white rounded-circle shadow">
+                                            <i class="fas fa-user-friends"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-md-6">
+                        <div class="card card-stats">
+                            <!-- Card body -->
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Total Contacts</h5>
+                                        <span class="h2 font-weight-bold mb-0">{{ total_clients }}</span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-gradient-info text-white rounded-circle shadow">
+                                            <i class="fas fa-list-alt"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-md-6">
+                        <div class="card card-stats">
+                            <!-- Card body -->
+                            {% if app.session.get('date_filter_value') is not null %}
+                                {% set filter = app.session.get('date_filter_value') %}
+                                {% set selected_date = "now"|date_modify("-" ~ filter ~ " day")| date('Y-m-d') %}
+                            {% endif %}
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Total Contacts Traités</h5>
+                                        <span class="h2 font-weight-bold mb-0">
+                                            {% if app.session.get('date_filter_value') is not null %}
+                                                {% set processed_clients_counter = 0 %}
+                                                {% for process in single_clients_processes %}
+                                                    {% set break = false %}
+                                                    {% for date in process %}
+                                                        {% if break == false %}
+                                                            {% set process_date = date | date('Y-m-d') %}
+                                                            {% if filter == "0" or filter == "1" %}
+                                                                {% if process_date == selected_date %}
+                                                                    {% set processed_clients_counter = processed_clients_counter + 1 %}
+                                                                    {% set break = true %}
+                                                                {% endif %}
+                                                            {% elseif filter == "100" %}
+                                                                {% if process_date >= start_date and process_date <= end_date %}
+                                                                    {% set processed_clients_counter = processed_clients_counter + 1 %}
+                                                                    {% set break = true %}
+                                                                {% endif %}
+                                                            {% else %}
+                                                                {% if process_date >= selected_date %}
+                                                                    {% set processed_clients_counter = processed_clients_counter + 1 %}
+                                                                    {% set break = true %}
+                                                                {% endif%}
+                                                            {% endif %}
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                {% endfor %}
+                                                {{ processed_clients_counter }}
+                                            {% else %}
+                                                {{ single_clients_processes_count }}
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-gradient-green text-white rounded-circle shadow">
+                                            <i class="fas fa-list-alt"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>#}
+
+                {#<div class="row">
+                    <div class="col-xl-4 col-md-6">
+                        <div class="card card-stats">
+                            <!-- Card body -->
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Total Contacts Non Traités</h5>
+                                        <span class="h2 font-weight-bold mb-0">
+                                            #}{#{{ not_processed_clients }}#}{#
+                                            {% if app.session.get('date_filter_value') is not null %}
+                                                {{ total_clients - processed_clients_counter }}
+                                            {% else %}
+                                                {{ not_processed_clients }}
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-gradient-red text-white rounded-circle shadow">
+                                            <i class="fas fa-list-alt"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-4 col-md-6">
+                        <div class="card card-stats">
+                            <!-- Card body -->
+                            {% if app.session.get('date_filter_value') is not null %}
+                                {% set filter = app.session.get('date_filter_value') %}
+                                {% set selected_date = "now"|date_modify("-" ~ filter ~ " day")| date('Y-m-d') %}
+                            {% endif %}
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Total Contacts Qualifiés</h5>
+                                        <span class="h2 font-weight-bold mb-0">
+                                            {% if app.session.get('date_filter_value') is not null %}
+                                                {% set qualified_contacts_counter  = 0 %}
+
+                                                {% for client in clients_processes %}
+                                                    {% set NQ = 0 %}
+                                                    {% set Q = 0 %}
+                                                    {% set full_date_timeNQ = '' %}
+                                                    {% set full_date_timeQ = '' %}
+                                                    {% set breakNQ = false %}
+
+                                                    {% for status, dates_array in client %}
+                                                        {% if status == 1 %}
+                                                            {% for date in dates_array %}
+                                                                {% if breakNQ == false %}
+                                                                    {% set process_dateNQ = date | date('Y-m-d') %}
+                                                                    {% if filter == "0" or filter == "1" %}
+                                                                        {% if process_dateNQ == selected_date %}
+                                                                            {% set NQ = NQ + 1 %}
+                                                                            {% set breakNQ = true %}
+                                                                            {% set full_date_timeNQ = date %}
+                                                                        {% endif %}
+                                                                    {% elseif filter == "100" %}
+                                                                        {% if process_dateNQ >= start_date and process_dateNQ <= end_date %}
+                                                                            {% set NQ = NQ + 1 %}
+                                                                            {% set breakNQ = true %}
+                                                                            {% set full_date_timeNQ = date %}
+                                                                        {% endif %}
+                                                                    {% else %}
+                                                                        {% if process_dateNQ >= selected_date %}
+                                                                            {% set NQ = NQ + 1 %}
+                                                                            {% set breakNQ = true %}
+                                                                            {% set full_date_timeNQ = date %}
+                                                                        {% endif%}
+                                                                    {% endif %}
+                                                                {% endif %}
+                                                            {% endfor %}
+
+                                                        {% endif %}
+                                                    {% endfor %}
+
+
+                                                    {% set breakQ = false %}
+                                                    {% for status, dates_array in client %}
+                                                        {% if status == 2 %}
+                                                            {% for date in dates_array %}
+                                                                {% if breakQ == false %}
+                                                                    {% set process_dateQ = date | date('Y-m-d') %}
+                                                                    {% if filter == "0" or filter == "1" %}
+                                                                        {% if process_dateQ == selected_date %}
+                                                                            {% set Q = Q + 1 %}
+                                                                            {% set breakQ = true %}
+                                                                            {% set full_date_timeQ = date %}
+                                                                        {% endif %}
+                                                                    {% elseif filter == "100" %}
+                                                                        {% if process_dateQ >= start_date and process_dateQ <= end_date %}
+                                                                            {% set Q = Q + 1 %}
+                                                                            {% set breakQ = true %}
+                                                                            {% set full_date_timeQ = date %}
+                                                                        {% endif %}
+                                                                    {% else %}
+                                                                        {% if process_dateQ >= selected_date %}
+                                                                            {% set Q = Q + 1 %}
+                                                                            {% set breakQ = true %}
+                                                                            {% set full_date_timeQ = date %}
+                                                                        {% endif%}
+                                                                    {% endif %}
+                                                                {% endif %}
+                                                            {% endfor %}
+
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                    {% if Q == 1 and NQ == 0 %}
+                                                        {% set qualified_contacts_counter  = qualified_contacts_counter  + 1 %}
+                                                    {% elseif NQ == 1 and Q == 1 %}
+
+                                                        {% if full_date_timeQ > full_date_timeNQ %}
+                                                            {% set qualified_contacts_counter  = qualified_contacts_counter  + 1 %}
+                                                        {% endif %}
+                                                    {% endif %}
+
+                                                {% endfor %}
+                                                {{ qualified_contacts_counter  }}
+                                            {% else %}
+                                                {{ single_qualified_clients_processes_count }}
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-gradient-green text-white rounded-circle shadow">
+                                            <i class="fas fa-list-alt"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-4 col-md-6">
+                        <div class="card card-stats">
+                            <!-- Card body -->
+                            {% if app.session.get('date_filter_value') is not null %}
+                                {% set filter = app.session.get('date_filter_value') %}
+                                {% set selected_date = "now"|date_modify("-" ~ filter ~ " day")| date('Y-m-d') %}
+                            {% endif %}
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Total Contacts NQ</h5>
+                                        <span class="h2 font-weight-bold mb-0">
+
+                                            {% if app.session.get('date_filter_value') is not null %}
+                                                {% set not_qualified_contacts_counter  = 0 %}
+
+                                                {% for client in clients_processes %}
+                                                    {% set NQ = 0 %}
+                                                    {% set Q = 0 %}
+                                                    {% set full_date_timeNQ = '' %}
+                                                    {% set full_date_timeQ = '' %}
+                                                    {% set breakNQ = false %}
+
+                                                    {% for status, dates_array in client %}
+                                                        {% if status == 1 %}
+                                                            {% for date in dates_array %}
+                                                                {% if breakNQ == false %}
+                                                                    {% set process_dateNQ = date | date('Y-m-d') %}
+                                                                    {% if filter == "0" or filter == "1" %}
+                                                                        {% if process_dateNQ == selected_date %}
+                                                                            {% set NQ = NQ + 1 %}
+                                                                            {% set breakNQ = true %}
+                                                                            {% set full_date_timeNQ = date %}
+                                                                        {% endif %}
+                                                                    {% elseif filter == "100" %}
+                                                                        {% if process_dateNQ >= start_date and process_dateNQ <= end_date %}
+                                                                            {% set NQ = NQ + 1 %}
+                                                                            {% set breakNQ = true %}
+                                                                            {% set full_date_timeNQ = date %}
+                                                                        {% endif %}
+                                                                    {% else %}
+                                                                        {% if process_dateNQ >= selected_date %}
+                                                                            {% set NQ = NQ + 1 %}
+                                                                            {% set breakNQ = true %}
+                                                                            {% set full_date_timeNQ = date %}
+                                                                        {% endif%}
+                                                                    {% endif %}
+                                                                {% endif %}
+                                                            {% endfor %}
+
+                                                        {% endif %}
+                                                    {% endfor %}
+
+
+                                                    {% set breakQ = false %}
+                                                    {% for status, dates_array in client %}
+                                                        {% if status == 2 %}
+                                                            {% for date in dates_array %}
+                                                                {% if breakQ == false %}
+                                                                    {% set process_dateQ = date | date('Y-m-d') %}
+                                                                    {% if filter == "0" or filter == "1" %}
+                                                                        {% if process_dateQ == selected_date %}
+                                                                            {% set Q = Q + 1 %}
+                                                                            {% set breakQ = true %}
+                                                                            {% set full_date_timeQ = date %}
+                                                                        {% endif %}
+                                                                    {% elseif filter == "100" %}
+                                                                        {% if process_dateQ >= start_date and process_dateQ <= end_date %}
+                                                                            {% set Q = Q + 1 %}
+                                                                            {% set breakQ = true %}
+                                                                            {% set full_date_timeQ = date %}
+                                                                        {% endif %}
+                                                                    {% else %}
+                                                                        {% if process_dateQ >= selected_date %}
+                                                                            {% set Q = Q + 1 %}
+                                                                            {% set breakQ = true %}
+                                                                            {% set full_date_timeQ = date %}
+                                                                        {% endif%}
+                                                                    {% endif %}
+                                                                {% endif %}
+                                                            {% endfor %}
+
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                    {% if NQ == 1 and Q == 0 %}
+                                                        {% set not_qualified_contacts_counter  = not_qualified_contacts_counter  + 1 %}
+                                                    {% elseif NQ == 1 and Q == 1 %}
+
+                                                        {% if full_date_timeNQ > full_date_timeQ %}
+                                                            {% set not_qualified_contacts_counter  = not_qualified_contacts_counter  + 1 %}
+                                                        {% endif %}
+                                                    {% endif %}
+
+                                                {% endfor %}
+                                                {{ not_qualified_contacts_counter  }}
+                                            {% else %}
+                                                {{ single_not_qualified_clients_processes_count }}
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-gradient-red text-white rounded-circle shadow">
+                                            <i class="fas fa-list-alt"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>#}
+
+                {#<div class="row">
+
+                    <div class="col-xl-4 col-md-6">
+                        <div class="card card-stats">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Total RDV Pris</h5>
+                                        <span class="h2 font-weight-bold mb-0">
+                                            {% if app.session.get('date_filter_value') is not null %}
+                                                {% set fixed_appointments_counter = 0 %}
+                                                {% for appointment in total_appointments %}
+                                                    {% set appointment_date = appointment.createdAt | date('Y-m-d') %}
+                                                    {% if filter == "0" or filter == "1" %}
+                                                        {% if appointment_date == selected_date %}
+                                                            {% set fixed_appointments_counter = fixed_appointments_counter + 1 %}
+                                                        {% endif %}
+                                                    {% elseif filter == "100" %}
+                                                        {% if appointment_date >= start_date and appointment_date <= end_date %}
+                                                            {% set fixed_appointments_counter = fixed_appointments_counter + 1 %}
+                                                        {% endif %}
+                                                    {% else %}
+                                                        {% if appointment_date >= selected_date %}
+                                                            {% set fixed_appointments_counter = fixed_appointments_counter + 1 %}
+                                                        {% endif%}
+                                                    {% endif %}
+                                                {% endfor %}
+                                                {{ fixed_appointments_counter }}
+                                            {% else %}
+                                                {{ total_appointments_count }}
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-gradient-green text-white rounded-circle shadow">
+                                            <i class="far fa-calendar-check"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-4 col-md-6">
+                        <div class="card card-stats">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Performance Contacts Traités</h5>
+                                        <span class="h2 font-weight-bold mb-0">
+                                            {% if app.session.get('date_filter_value') is not null %}
+                                                {% if  total_clients != 0 %}
+                                                    {{ ((processed_clients_counter / total_clients) * 100)|number_format(2) }}%
+                                                {% else %}
+                                                    0.00%
+                                                {% endif %}
+                                            {% else %}
+                                                {{ contacts_performance }}%
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-gradient-info text-white rounded-circle shadow">
+                                            <i class="ni ni-chart-bar-32"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-4 col-md-6">
+                        <div class="card card-stats">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Performance Contacts Qualifiés</h5>
+                                        <span class="h2 font-weight-bold mb-0">
+                                            {% if app.session.get('date_filter_value') is not null %}
+                                                {% if  processed_clients_counter != 0 %}
+                                                    {{ ((qualified_contacts_counter / processed_clients_counter) * 100)|number_format(2) }}%
+                                                {% else %}
+                                                    0.00%
+                                                {% endif %}
+                                            {% else %}
+                                                {{ qualified_contacts_performance }}%
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-gradient-info text-white rounded-circle shadow">
+                                            <i class="ni ni-chart-bar-32"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>#}
+                {#<div class="row">
+                    <div class="col-xl-4 col-md-6">
+                        <div class="card card-stats">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Performance Contacts NQ</h5>
+                                        <span class="h2 font-weight-bold mb-0">
+                                            {% if app.session.get('date_filter_value') is not null %}
+                                                {% if  processed_clients_counter != 0 %}
+                                                    {{ ((not_qualified_contacts_counter / processed_clients_counter) * 100)|number_format(2) }}%
+                                                {% else %}
+                                                    0.00%
+                                                {% endif %}
+                                            {% else %}
+                                                {{ not_qualified_contacts_performance }}%
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-gradient-info text-white rounded-circle shadow">
+                                            <i class="ni ni-chart-bar-32"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>#}
+            </div>
+        </div>
+    </div>
+    <!-- Page content -->
+
+    <div class="container-fluid mt--6">
+
+        {#<div class="row">
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-header border-0">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <h3 class="mb-0">Liste des Utilisateurs</h3>
+                            </div>
+                            <div class="col text-right">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <!-- Projects table -->
+                        <table class="table align-items-center table-flush">
+                            <thead class="thead-light">
+                            <tr>
+                                <th scope="col">Utilisateur</th>
+                                <th scope="col">Contacts traités</th>
+                                <th scope="col">RDVs pris</th>
+                                <th scope="col">Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% if app.session.get('date_filter_value') is not null %}
+                                {% set filter = app.session.get('date_filter_value') %}
+                                {% set selected_date = "now"|date_modify("-" ~ filter ~ " day")| date('Y-m-d') %}
+                            {% endif %}
+
+
+                            {% for telepro in all_telepros %}
+                            <tr class="clickable-row" data-href="{{ path('statistics_per_user', {'id': telepro.id}) }}">
+                                <th scope="row">
+                                    {{ telepro.firstName ~ ' ' ~ telepro.lastName }}
+                                </th>
+                                <td>
+                                    {% set processes_clients_ids_array = [] %}
+                                    {% for process in telepro.processes  %}
+                                        {% set processes_clients_ids_array = processes_clients_ids_array|merge([process.client.id]) %}
+                                    {% endfor %}
+
+
+                                    {% set newArray = [] %}
+                                    {% for id in processes_clients_ids_array %}
+                                        {% if id not in newArray %}
+                                            {% set newArray = newArray|merge([id]) %}
+                                        {% endif %}
+                                    {% endfor %}
+
+
+                                    {% set sorted_processes = [] %}
+                                    {% if telepro.processes|default %}
+                                        {% set processes_array_count = telepro.processes|length - 1 %}
+                                        {% for i in processes_array_count..0 %}
+
+                                            {% set sorted_processes = sorted_processes|merge([telepro.processes[i]]) %}
+                                        {% endfor %}
+                                    {% endif %}
+
+
+                                    {% if app.session.get('date_filter_value') is not null %}
+                                        {% set processed_clients_counter_by_user = 0 %}
+                                            {% for sorted_process in sorted_processes  %}
+                                                {% set sorted_process_date = sorted_process.createdAt | date('Y-m-d') %}
+                                                    {% if sorted_process.client.id in newArray %}
+                                                        {% if filter == "0" or filter == "1" %}
+                                                            {% if sorted_process_date == selected_date %}
+                                                                {% set processed_clients_counter_by_user = processed_clients_counter_by_user + 1 %}
+                                                                {% set newArray = remove(newArray, sorted_process.client.id) %}
+                                                            {% endif %}
+                                                        {% elseif filter == "100" %}
+                                                            {% if sorted_process_date >= start_date and sorted_process_date <= end_date %}
+                                                                {% set processed_clients_counter_by_user = processed_clients_counter_by_user + 1 %}
+                                                                {% set newArray = remove(newArray, sorted_process.client.id) %}
+                                                            {% endif %}
+                                                        {% else %}
+                                                            {% if sorted_process_date >= selected_date %}
+                                                                {% set processed_clients_counter_by_user = processed_clients_counter_by_user + 1 %}
+                                                                {% set newArray = remove(newArray, sorted_process.client.id) %}
+                                                            {% endif%}
+                                                        {% endif %}
+                                                    {% endif %}
+
+                                            {% endfor %}
+                                        {{ processed_clients_counter_by_user }}
+                                    {% else %}
+                                        {{ telepro.processedClients | length }}
+                                    {% endif %}
+
+                                </td>
+                                <td>
+                                    {% set taken_appointments_counter = 0 %}
+                                    {% if app.session.get('date_filter_value') is not null %}
+                                        {% for appointment in telepro.fixedAppointments  %}
+                                            {% set appointment_date = appointment.createdAt | date('Y-m-d') %}
+                                            {% if filter == "0" or filter == "1" %}
+                                                {% if appointment_date == selected_date %}
+                                                    {% if appointment.eventType.id == 4 %}
+                                                        {% set taken_appointments_counter = taken_appointments_counter + 1 %}
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% elseif filter == "100" %}
+                                                {% if appointment_date >= start_date and appointment_date <= end_date %}
+                                                    {% if appointment.eventType.id == 4 %}
+                                                        {% set taken_appointments_counter = taken_appointments_counter + 1 %}
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% else %}
+                                                {% if appointment_date >= selected_date %}
+                                                    {% if appointment.eventType.id == 4 %}
+                                                        {% set taken_appointments_counter = taken_appointments_counter + 1 %}
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% endif %}
+                                        {% endfor %}
+                                        {{ taken_appointments_counter }}
+                                    {% else %}
+                                        {% set taken_appointments_counter_no_filter = 0 %}
+                                        {% for appointment in telepro.fixedAppointments  %}
+                                            {% if appointment.eventType.id == 4 %}
+                                                {% set taken_appointments_counter_no_filter = taken_appointments_counter_no_filter + 1 %}
+                                            {% endif %}
+                                        {% endfor %}
+                                        {{ taken_appointments_counter_no_filter }}
+                                    {% endif %}
+                                </td>
+
+                                <td>
+                                    <a href="{{ path('statistics_per_user', {'id': telepro.id}) }}"><i class="fas fa-search-plus text-blue"></i></a>&nbsp;&nbsp;
+
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>#}
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-header border-0">
+                        <div class="row align-items-center">
+
+                                <h3 class="mb-0">Résumé Statistiques</h3>
+
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <!-- Projects table -->
+                        <table class="table align-items-center table-flush">
+                            <thead class="thead-light">
+                            <tr>
+                                <th scope="col">Donnée</th>
+                                <th scope="col">Valeur</th>
+                                <th scope="col">Pourcentage</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                                <tr>
+                                    <th scope="row">
+                                       Nombre d'appels
+                                    </th>
+                                    <td>
+                                        {{ all_calls_count }}
+                                    </td>
+                                    <td>
+                                        N/A
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th scope="row">
+                                        PI
+                                    </th>
+                                    <td>
+                                        {{ PI_calls_count }}
+                                    </td>
+                                    <td>
+                                        N/A
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th scope="row">
+                                        Rappel
+                                    </th>
+                                    <td>
+                                        {{ RAPPEL_calls_count }}
+                                    </td>
+                                    <td>
+                                        N/A
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th scope="row">
+                                        NRP
+                                    </th>
+                                    <td>
+                                        {{ NRP_calls_count }}
+                                    </td>
+                                    <td>
+                                        N/A
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th scope="row">
+                                        RDV
+                                    </th>
+                                    <td>
+                                        {{ RDV_calls_count }}
+                                    </td>
+                                    <td>
+                                        N/A
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th scope="row">
+                                        TX CT
+                                    </th>
+                                    <td>
+                                        N/A
+                                    </td>
+                                    <td>
+                                        {{ TX_CT }} %
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th scope="row">
+                                        TX TRANSFO
+                                    </th>
+                                    <td>
+                                        N/A
+                                    </td>
+                                    <td>
+                                        {{ TX_TRANSFO }} %
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+{% endblock %}
+
+{% block additionalJs %}
+    <script>
+        window.onload = () => {
+
+            let normalPeriod =  $("#normal_period");
+            let normalPeriodBlock =  $("#normal_period_block");
+            let customPeriod = $("#custom_period_block");
+            normalPeriod.on('change', function() {
+                if($(this).val() === "100") {
+                    $(this).parent().fadeOut(50)
+                    customPeriod.fadeIn(1000)
+                }
+            })
+            $('#retour_period').click(function () {
+                $(this).parent().fadeOut(50)
+                normalPeriodBlock.fadeIn(1000);
+                normalPeriod.val("");
+                normalPeriod.val({{ app.session.get('date_filter_value') }});
+                if(normalPeriod.val() === "100") {
+                    normalPeriod.val("");
+                }
+            })
+
+            //date
+
+            $('#normal_period').hover(function () {
+                $(this).css('cursor','pointer');
+            })
+            $('#normal_period').change(function () {
+                /*console.log(this.value == "14")*/
+                if(this.value && this.value != "100") {
+                    $.ajax({
+                        url:"{{ path('teleprospecting_stats_filters') }}",
+                        method: "POST",
+                        dataType: 'json',
+                        data : { dateFilterValue: this.value },
+                        success: (e) => {
+                            /*location.reload();*/
+                            /*console.log(e);*/
+                        },
+                        error : (f) => {
+                            console.log(f);
+                        }
+                    })
+                }
+
+
+            })
+            if(normalPeriod.val() === "100") {
+                normalPeriodBlock.fadeOut(0.05)
+                customPeriod.fadeIn(0.1)
+                $("#start_date").val("{{ app.session.get('date_filter_start')|date('Y-m-d') }}")
+                $("#end_date").val("{{ app.session.get('date_filter_end')|date('Y-m-d') }}")
+                $("#between-date-initialization").fadeIn(0.1)
+            }
+            $(".clickable-row").hover(function () {
+                $(this).css('cursor', 'pointer');
+            });
+
+            $(".clickable-row").dblclick(function () {
+                window.location = $(this).data("href");
+            });
+        }
+    </script>
+{% endblock %}
