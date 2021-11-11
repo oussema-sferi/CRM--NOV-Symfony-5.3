@@ -14,6 +14,7 @@ use App\Form\ClientFormType;
 use App\Repository\AppointmentRepository;
 use App\Repository\CallRepository;
 use App\Repository\ClientRepository;
+use App\Repository\ProcessRepository;
 use App\Repository\UserRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use MercurySeries\FlashyBundle\FlashyNotifier;
@@ -517,8 +518,27 @@ class TeleprospectingController extends AbstractController
     /**
      * @Route("/dashboard/teleprospecting/statsnew", name="teleprospecting_stats_new")
      */
-    public function teleprospectingStatsNew(Request $request, CallRepository $callRepository, UserRepository $userRepository, ClientRepository $clientRepository, AppointmentRepository $appointmentRepository): Response
+    public function teleprospectingStatsNew(Request $request, ProcessRepository $processRepository,CallRepository $callRepository, UserRepository $userRepository, ClientRepository $clientRepository, AppointmentRepository $appointmentRepository): Response
     {
+        // new
+        //CONTACTS PROCESSED
+        $allProcesses = $processRepository->findAllSortedDate();
+        $processedClientsIdsArray = [];
+        $clientsProcesses = [];
+        foreach ($allProcesses as $process) {
+            $processedClientsIdsArray[] = $process->getClient()->getId();
+        }
+        $uniqueProcessedClientsIdsArray = array_unique($processedClientsIdsArray);
+        $uniqueProcessedClientsArray = [];
+        foreach ($processedClientsIdsArray as $clientId) {
+            foreach ($allProcesses as $process) {
+                if ($process->getClient()->getId() == $clientId) {
+                    $uniqueProcessedClientsArray[$clientId][] = $process->getCreatedAt();
+                    $clientsProcesses[$clientId][$process->getCreatedAt()->format('Y-m-d H:i:s')] = $process->getStatusDetail();
+                }
+            }
+        }
+        /*dd($clientsProcesses);*/
         //Bloc Résumé Statistiques
         $allCalls = $callRepository->findAll();
         $PICalls = $callRepository->findBy(["statusDetails" => 5]);
@@ -572,7 +592,8 @@ class TeleprospectingController extends AbstractController
             'NOT_QUALIFIED_calls_count' => count($NOTQualifiedCalls),
             //Bloc Statistiques Par Utilisateur
             'users' => $users,
-
+            //new
+            'clients_processes'=> $clientsProcesses,
         ]);
     }
 

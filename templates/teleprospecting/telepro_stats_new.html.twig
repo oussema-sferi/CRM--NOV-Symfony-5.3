@@ -750,7 +750,7 @@
                                         PI
                                     </th>
                                     <td>
-                                        {% if app.session.get('date_filter_value') is not null %}
+                                        {#{% if app.session.get('date_filter_value') is not null %}
                                             {% set PI_calls_counter = 0 %}
                                             {% for call in PI_calls %}
                                                 {% set call_date = call.createdAt | date('Y-m-d') %}
@@ -771,6 +771,43 @@
                                             {{ PI_calls_counter }}
                                         {% else %}
                                             {{ PI_calls_count }}
+                                        {% endif %}#}
+                                        {% if app.session.get('date_filter_value') is not null %}
+                                            {% set PI_contacts_counter  = 0 %}
+
+                                            {% for client in clients_processes %}
+                                                {% set break_PI = false %}
+                                                {% for date_time, status_detail in client %}
+                                                    {% set process_date = date_time | date('Y-m-d') %}
+                                                        {% if break_PI == false %}
+                                                            {% if filter == "0" or filter == "1" %}
+                                                                {% if process_date == selected_date %}
+                                                                    {% if status_detail == 5 %}
+                                                                        {% set PI_contacts_counter = PI_contacts_counter + 1 %}
+                                                                        {% set break_PI = true %}
+                                                                    {% endif %}
+                                                                {% endif %}
+                                                            {% elseif filter == "100" %}
+                                                                {% if process_date >= start_date and process_date <= end_date %}
+                                                                    {% if status_detail == 5 %}
+                                                                        {% set PI_contacts_counter = PI_contacts_counter + 1 %}
+                                                                        {% set break_PI = true %}
+                                                                    {% endif %}
+                                                                {% endif %}
+                                                            {% else %}
+                                                                {% if process_date >= selected_date %}
+                                                                    {% if status_detail == 5 %}
+                                                                        {% set PI_contacts_counter = PI_contacts_counter + 1 %}
+                                                                        {% set break_PI = true %}
+                                                                    {% endif %}
+                                                                {% endif%}
+                                                            {% endif %}
+                                                        {% endif %}
+                                                {% endfor %}
+                                            {% endfor %}
+                                            {{ PI_contacts_counter  }}
+                                        {% else %}
+                                            15
                                         {% endif %}
                                     </td>
                                     <td>
@@ -783,7 +820,7 @@
                                         Rappel
                                     </th>
                                     <td>
-                                        {% if app.session.get('date_filter_value') is not null %}
+                                        {#{% if app.session.get('date_filter_value') is not null %}
                                             {% set RAPPEL_calls_counter = 0 %}
                                             {% for call in RAPPEL_calls %}
                                                 {% set call_date = call.createdAt | date('Y-m-d') %}
@@ -804,7 +841,7 @@
                                             {{ RAPPEL_calls_counter }}
                                         {% else %}
                                             {{ RAPPEL_calls_count }}
-                                        {% endif %}
+                                        {% endif %}#}
                                     </td>
                                     <td>
                                         N/A
@@ -816,7 +853,7 @@
                                         NRP
                                     </th>
                                     <td>
-                                        {% if app.session.get('date_filter_value') is not null %}
+                                        {#{% if app.session.get('date_filter_value') is not null %}
                                             {% set NRP_calls_counter = 0 %}
                                             {% for call in NRP_calls %}
                                                 {% set call_date = call.createdAt | date('Y-m-d') %}
@@ -837,7 +874,7 @@
                                             {{ NRP_calls_counter }}
                                         {% else %}
                                             {{ NRP_calls_count }}
-                                        {% endif %}
+                                        {% endif %}#}
                                     </td>
                                     <td>
                                         N/A
@@ -849,7 +886,7 @@
                                         RDV
                                     </th>
                                     <td>
-                                        {% if app.session.get('date_filter_value') is not null %}
+                                        {#{% if app.session.get('date_filter_value') is not null %}
                                             {% set RDV_counter = 0 %}
                                             {% for appointment in RDV %}
                                                 {% set appointment_date = appointment.createdAt | date('Y-m-d') %}
@@ -870,7 +907,7 @@
                                             {{ RDV_counter }}
                                         {% else %}
                                             {{ RDV_count }}
-                                        {% endif %}
+                                        {% endif %}#}
                                     </td>
                                     <td>
                                         N/A
@@ -885,7 +922,7 @@
                                         N/A
                                     </td>
                                     <td>
-                                        {% if app.session.get('date_filter_value') is not null %}
+                                        {#{% if app.session.get('date_filter_value') is not null %}
                                             {% set QUALIFIED_calls_counter = 0 %}
                                             {% for call in QUALIFIED_calls %}
                                                 {% set call_date = call.createdAt | date('Y-m-d') %}
@@ -910,7 +947,7 @@
                                             {% endif %}
                                         {% else %}
                                             {{ TX_CT }} %
-                                        {% endif %}
+                                        {% endif %}#}
                                     </td>
                                 </tr>
 
@@ -922,7 +959,7 @@
                                         N/A
                                     </td>
                                     <td>
-                                        {% if app.session.get('date_filter_value') is not null %}
+                                        {#{% if app.session.get('date_filter_value') is not null %}
                                             {% if QUALIFIED_calls_counter != 0 %}
                                                 {{ RDV_counter / QUALIFIED_calls_counter }} %
                                             {% else %}
@@ -930,7 +967,7 @@
                                             {% endif %}
                                         {% else %}
                                             {{ TX_TRANSFO }} %
-                                        {% endif %}
+                                        {% endif %}#}
                                     </td>
                                 </tr>
                             </tbody>
@@ -968,7 +1005,7 @@
                                     Total Téléprospecteurs
                                 </th>
                                 <td>
-                                    {{ telepro_count }}
+                                    {#{{ telepro_count }}#}
                                 </td>
                             </tr>
 
@@ -977,7 +1014,7 @@
                                     Total Contacts
                                 </th>
                                 <td>
-                                    {{ contacts_count }}
+                                    {#{{ contacts_count }}#}
                                 </td>
                             </tr>
 
@@ -986,7 +1023,7 @@
                                     Total Contacts Restants
                                 </th>
                                 <td>
-                                    {{ contacts_count - processed_contacts_count }}
+                                    {#{{ contacts_count - processed_contacts_count }}#}
                                 </td>
                             </tr>
 
