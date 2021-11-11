@@ -717,7 +717,7 @@
                                        Nombre d'appels
                                     </th>
                                     <td>
-                                        {% if app.session.get('date_filter_value') is not null %}
+                                        {#{% if app.session.get('date_filter_value') is not null %}
                                             {% set total_calls_counter = 0 %}
                                             {% for call in all_calls %}
                                                 {% set call_date = call.createdAt | date('Y-m-d') %}
@@ -738,7 +738,7 @@
                                             {{ total_calls_counter }}
                                         {% else %}
                                             {{ all_calls_count }}
-                                        {% endif %}
+                                        {% endif %}#}
                                     </td>
                                     <td>
                                         N/A
@@ -807,7 +807,7 @@
                                             {% endfor %}
                                             {{ PI_contacts_counter  }}
                                         {% else %}
-                                            15
+                                            {{ PI_count }}
                                         {% endif %}
                                     </td>
                                     <td>
@@ -1061,7 +1061,7 @@
                                 </th>
 
                                 <td>
-                                    {{ processed_contacts_count }}
+                                    {#{{ processed_contacts_count }}#}
                                 </td>
                             </tr>
 
@@ -1071,7 +1071,7 @@
                                 </th>
 
                                 <td>
-                                    {{ NOT_QUALIFIED_calls_count }}
+                                    {#{{ NOT_QUALIFIED_calls_count }}#}
                                 </td>
                             </tr>
 
@@ -1081,7 +1081,7 @@
                                 </th>
 
                                 <td>
-                                    {{ QUALIFIED_calls_count }}
+                                    {#{{ QUALIFIED_calls_count }}#}
                                 </td>
                             </tr>
 
@@ -1091,7 +1091,7 @@
                                 </th>
 
                                 <td>
-                                    {{ PI_calls_count }}
+                                    {#{{ PI_calls_count }}#}
                                 </td>
                             </tr>
 
@@ -1101,7 +1101,7 @@
                                 </th>
 
                                 <td>
-                                    {{ RAPPEL_calls_count }}
+                                    {#{{ RAPPEL_calls_count }}#}
                                 </td>
                             </tr>
                             <tr>
@@ -1109,7 +1109,7 @@
                                     RDV
                                 </th>
                                 <td>
-                                    {{ RDV_count }}
+                                    {#{{ RDV_count }}#}
                                 </td>
                             </tr>
 

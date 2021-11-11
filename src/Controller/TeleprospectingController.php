@@ -539,8 +539,23 @@ class TeleprospectingController extends AbstractController
             }
         }
         /*dd($clientsProcesses);*/
+        // PI contacts counter
+        $PIcounter = 0;
+        foreach ($clientsProcesses as $client) {
+            $breakPI = false;
+            foreach ($client as $dateTime => $statusDetail) {
+                if($breakPI === false) {
+                    if($statusDetail === 5) {
+                        $PIcounter += 1;
+                        $breakPI = true;
+                    }
+                }
+            }
+        }
+
+
         //Bloc Résumé Statistiques
-        $allCalls = $callRepository->findAll();
+        /*$allCalls = $callRepository->findAll();
         $PICalls = $callRepository->findBy(["statusDetails" => 5]);
         $RAPPELCalls = $callRepository->findBy(["statusDetails" => 6]);
         $NRPCalls = $callRepository->findBy(["statusDetails" => 1]);
@@ -557,19 +572,20 @@ class TeleprospectingController extends AbstractController
             $TXTRANSFOPercentage = number_format(((count($RDVAppointments) / count($QualifiedCalls)) * 100), 2);
         } else {
             $TXTRANSFOPercentage = 0;
-        }
+        }*/
+
 
         //Bloc Statistiques Générales
-        $allTelepros = $userRepository->findUsersByCommercialRole("ROLE_TELEPRO");
+        /*$allTelepros = $userRepository->findUsersByCommercialRole("ROLE_TELEPRO");
         $allContacts = $clientRepository->getNotDeletedClients();
-        $processedContacts = $clientRepository->getProcessedClients();
+        $processedContacts = $clientRepository->getProcessedClients();*/
 
         //Bloc Statistiques Par Utilisateur
         $users = $userRepository->findUsersTeleproStats("ROLE_TELEPRO", "ROLE_SUPERADMIN");
 
         return $this->render('teleprospecting/telepro_stats_new.html.twig', [
             //Bloc Résumé Statistiques
-            'all_calls' => $allCalls,
+            /*'all_calls' => $allCalls,
             'all_calls_count' => count($allCalls),
             'PI_calls' => $PICalls,
             'PI_calls_count' => count($PICalls),
@@ -583,17 +599,18 @@ class TeleprospectingController extends AbstractController
             'TX_TRANSFO' => $TXTRANSFOPercentage,
             //Bloc Statistiques Générales
             'telepro_count' => count($allTelepros),
-            'contacts_count' => count($allContacts),
+            'contacts_count' => count($allContacts),*/
             //Bloc Statistiques Pour La Période Sélectionnée
-            'processed_contacts_count' => count($processedContacts),
+            /*'processed_contacts_count' => count($processedContacts),
             'QUALIFIED_calls' => $QualifiedCalls,
             'QUALIFIED_calls_count' => count($QualifiedCalls),
             'NOT_QUALIFIED_calls' => $NOTQualifiedCalls,
-            'NOT_QUALIFIED_calls_count' => count($NOTQualifiedCalls),
+            'NOT_QUALIFIED_calls_count' => count($NOTQualifiedCalls),*/
             //Bloc Statistiques Par Utilisateur
             'users' => $users,
             //new
             'clients_processes'=> $clientsProcesses,
+            'PI_count' => $PIcounter
         ]);
     }
 
