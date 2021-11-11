@@ -774,7 +774,6 @@
                                         {% endif %}#}
                                         {% if app.session.get('date_filter_value') is not null %}
                                             {% set PI_contacts_counter  = 0 %}
-
                                             {% for client in clients_processes %}
                                                 {% set break_PI = false %}
                                                 {% for date_time, status_detail in client %}
@@ -807,7 +806,7 @@
                                             {% endfor %}
                                             {{ PI_contacts_counter  }}
                                         {% else %}
-                                            {{ PI_count }}
+                                            {{ all_PI_contacts_count }}
                                         {% endif %}
                                     </td>
                                     <td>
@@ -842,6 +841,42 @@
                                         {% else %}
                                             {{ RAPPEL_calls_count }}
                                         {% endif %}#}
+                                        {% if app.session.get('date_filter_value') is not null %}
+                                            {% set RAPPEL_contacts_counter  = 0 %}
+                                            {% for client in clients_processes %}
+                                                {% set break_RAPPEL = false %}
+                                                {% for date_time, status_detail in client %}
+                                                    {% set process_date = date_time | date('Y-m-d') %}
+                                                    {% if break_RAPPEL == false %}
+                                                        {% if filter == "0" or filter == "1" %}
+                                                            {% if process_date == selected_date %}
+                                                                {% if status_detail == 6 %}
+                                                                    {% set RAPPEL_contacts_counter = RAPPEL_contacts_counter + 1 %}
+                                                                    {% set break_RAPPEL = true %}
+                                                                {% endif %}
+                                                            {% endif %}
+                                                        {% elseif filter == "100" %}
+                                                            {% if process_date >= start_date and process_date <= end_date %}
+                                                                {% if status_detail == 6 %}
+                                                                    {% set RAPPEL_contacts_counter = RAPPEL_contacts_counter + 1 %}
+                                                                    {% set break_RAPPEL = true %}
+                                                                {% endif %}
+                                                            {% endif %}
+                                                        {% else %}
+                                                            {% if process_date >= selected_date %}
+                                                                {% if status_detail == 6 %}
+                                                                    {% set RAPPEL_contacts_counter = RAPPEL_contacts_counter + 1 %}
+                                                                    {% set break_RAPPEL = true %}
+                                                                {% endif %}
+                                                            {% endif%}
+                                                        {% endif %}
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% endfor %}
+                                            {{ RAPPEL_contacts_counter  }}
+                                        {% else %}
+                                            {{ all_RAPPEL_contacts_count }}
+                                        {% endif %}
                                     </td>
                                     <td>
                                         N/A
@@ -875,6 +910,42 @@
                                         {% else %}
                                             {{ NRP_calls_count }}
                                         {% endif %}#}
+                                        {% if app.session.get('date_filter_value') is not null %}
+                                            {% set NRP_contacts_counter  = 0 %}
+                                            {% for client in clients_processes %}
+                                                {% set break_NRP = false %}
+                                                {% for date_time, status_detail in client %}
+                                                    {% set process_date = date_time | date('Y-m-d') %}
+                                                    {% if break_NRP == false %}
+                                                        {% if filter == "0" or filter == "1" %}
+                                                            {% if process_date == selected_date %}
+                                                                {% if status_detail == 1 %}
+                                                                    {% set NRP_contacts_counter = NRP_contacts_counter + 1 %}
+                                                                    {% set break_NRP = true %}
+                                                                {% endif %}
+                                                            {% endif %}
+                                                        {% elseif filter == "100" %}
+                                                            {% if process_date >= start_date and process_date <= end_date %}
+                                                                {% if status_detail == 1 %}
+                                                                    {% set NRP_contacts_counter = NRP_contacts_counter + 1 %}
+                                                                    {% set break_NRP = true %}
+                                                                {% endif %}
+                                                            {% endif %}
+                                                        {% else %}
+                                                            {% if process_date >= selected_date %}
+                                                                {% if status_detail == 1 %}
+                                                                    {% set NRP_contacts_counter = NRP_contacts_counter + 1 %}
+                                                                    {% set break_NRP = true %}
+                                                                {% endif %}
+                                                            {% endif%}
+                                                        {% endif %}
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% endfor %}
+                                            {{ NRP_contacts_counter  }}
+                                        {% else %}
+                                            {{ all_NRP_contacts_count }}
+                                        {% endif %}
                                     </td>
                                     <td>
                                         N/A

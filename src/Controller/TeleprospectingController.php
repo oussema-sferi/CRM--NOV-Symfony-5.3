@@ -553,6 +553,33 @@ class TeleprospectingController extends AbstractController
             }
         }
 
+        // RAPPEL contacts counter
+        $RAPPELcounter = 0;
+        foreach ($clientsProcesses as $client) {
+            $breakRAPPEL = false;
+            foreach ($client as $dateTime => $statusDetail) {
+                if($breakRAPPEL === false) {
+                    if($statusDetail === 6) {
+                        $RAPPELcounter += 1;
+                        $breakRAPPEL = true;
+                    }
+                }
+            }
+        }
+
+        // NRP contacts counter
+        $NRPcounter = 0;
+        foreach ($clientsProcesses as $client) {
+            $breakNRP = false;
+            foreach ($client as $dateTime => $statusDetail) {
+                if($breakNRP === false) {
+                    if($statusDetail === 6) {
+                        $NRPcounter += 1;
+                        $breakNRP = true;
+                    }
+                }
+            }
+        }
 
         //Bloc Résumé Statistiques
         /*$allCalls = $callRepository->findAll();
@@ -610,7 +637,9 @@ class TeleprospectingController extends AbstractController
             'users' => $users,
             //new
             'clients_processes'=> $clientsProcesses,
-            'PI_count' => $PIcounter
+            'all_PI_contacts_count' => $PIcounter,
+            'all_RAPPEL_contacts_count' => $RAPPELcounter,
+            'all_NRP_contacts_count' => $NRPcounter,
         ]);
     }
 
