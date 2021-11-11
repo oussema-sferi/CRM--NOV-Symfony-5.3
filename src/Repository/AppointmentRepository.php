@@ -281,8 +281,8 @@ class AppointmentRepository extends ServiceEntityRepository
 
         $qb = $this->createQueryBuilder('a');
         $qb->select('a')
-            ->where('a.client IS NOT NULL');
-
+            ->join('a.eventType', 'e')
+            ->where('e.id = 4');
         return $qb->orderBy('a.start', 'DESC')->getQuery()->getResult();
     }
 

@@ -11,6 +11,7 @@ use App\Entity\User;
 use App\Form\AppointmentFormType;
 use App\Form\CallFormType;
 use App\Form\ClientFormType;
+use App\Repository\AppointmentRepository;
 use App\Repository\CallRepository;
 use App\Repository\ClientRepository;
 use App\Repository\UserRepository;
@@ -516,7 +517,7 @@ class TeleprospectingController extends AbstractController
     /**
      * @Route("/dashboard/teleprospecting/statsnew", name="teleprospecting_stats_new")
      */
-    public function teleprospectingStatsNew(Request $request, CallRepository $callRepository, UserRepository $userRepository, ClientRepository $clientRepository): Response
+    public function teleprospectingStatsNew(Request $request, CallRepository $callRepository, UserRepository $userRepository, ClientRepository $clientRepository, AppointmentRepository $appointmentRepository): Response
     {
         //Bloc Résumé Statistiques
         $allCalls = $callRepository->findAll();
@@ -526,13 +527,14 @@ class TeleprospectingController extends AbstractController
         $RDVCalls = $callRepository->findBy(["statusDetails" => 7]);
         $QualifiedCalls = $callRepository->findBy(["generalStatus" => 2]);
         $NOTQualifiedCalls = $callRepository->findBy(["generalStatus" => 1]);
+        $RDVAppointments = $appointmentRepository->getAppointmentsWhereClientsExistCommercialStats();
         if(count($allCalls) !== 0) {
             $TXCTPercentage = number_format(((count($QualifiedCalls) / count($allCalls)) * 100), 2);
         } else {
             $TXCTPercentage = 0;
         }
         if(count($QualifiedCalls) !== 0) {
-            $TXTRANSFOPercentage = number_format(((count($RDVCalls) / count($QualifiedCalls)) * 100), 2);
+            $TXTRANSFOPercentage = number_format(((count($RDVAppointments) / count($QualifiedCalls)) * 100), 2);
         } else {
             $TXTRANSFOPercentage = 0;
         }
@@ -541,14 +543,22 @@ class TeleprospectingController extends AbstractController
         $allTelepros = $userRepository->findUsersByCommercialRole("ROLE_TELEPRO");
         $allContacts = $clientRepository->getNotDeletedClients();
         $processedContacts = $clientRepository->getProcessedClients();
+
+        //Bloc Statistiques Par Utilisateur
+        $users = $userRepository->findUsersTeleproStats("ROLE_TELEPRO", "ROLE_SUPERADMIN");
+
         return $this->render('teleprospecting/telepro_stats_new.html.twig', [
             //Bloc Résumé Statistiques
             'all_calls' => $allCalls,
             'all_calls_count' => count($allCalls),
+            'PI_calls' => $PICalls,
             'PI_calls_count' => count($PICalls),
+            'RAPPEL_calls' => $RAPPELCalls,
             'RAPPEL_calls_count' => count($RAPPELCalls),
+            'NRP_calls' => $NRPCalls,
             'NRP_calls_count' => count($NRPCalls),
-            'RDV_calls_count' => count($RDVCalls),
+            'RDV' => $RDVAppointments,
+            'RDV_count' => count($RDVAppointments),
             'TX_CT' => $TXCTPercentage,
             'TX_TRANSFO' => $TXTRANSFOPercentage,
             //Bloc Statistiques Générales
@@ -556,8 +566,12 @@ class TeleprospectingController extends AbstractController
             'contacts_count' => count($allContacts),
             //Bloc Statistiques Pour La Période Sélectionnée
             'processed_contacts_count' => count($processedContacts),
-            'qualified_calls_count' => count($QualifiedCalls),
-            'not_qualified_calls_count' => count($NOTQualifiedCalls),
+            'QUALIFIED_calls' => $QualifiedCalls,
+            'QUALIFIED_calls_count' => count($QualifiedCalls),
+            'NOT_QUALIFIED_calls' => $NOTQualifiedCalls,
+            'NOT_QUALIFIED_calls_count' => count($NOTQualifiedCalls),
+            //Bloc Statistiques Par Utilisateur
+            'users' => $users,
 
         ]);
     }
@@ -593,7 +607,7 @@ class TeleprospectingController extends AbstractController
                 $endDate
             );
             $this->flashy->success('Filtre mis à jour avec succès !');
-            return $this->redirectToRoute('teleprospecting_stats');
+            return $this->redirectToRoute('teleprospecting_stats_new');
         }
     }
 
@@ -607,7 +621,7 @@ class TeleprospectingController extends AbstractController
         if($session->get('date_filter_start')) $session->remove('date_filter_start');
         if($session->get('date_filter_end')) $session->remove('date_filter_end');
         $this->flashy->success('Filtre réinitialisé avec succès !');
-        return $this->redirectToRoute('teleprospecting_stats');
+        return $this->redirectToRoute('teleprospecting_stats_new');
     }
 
     /**
@@ -616,7 +630,7 @@ class TeleprospectingController extends AbstractController
     public function teleprospectingStatsFiltersNotifications(): Response
     {
         $this->flashy->success('Filtre mis à jour avec succès !');
-        return $this->redirectToRoute('teleprospecting_stats');
+        return $this->redirectToRoute('teleprospecting_stats_new');
     }
 
 }

@@ -5,7 +5,20 @@
 
 
 {% block body %}
+    {% if app.session.get('date_filter_value') == "100" %}
+        {% set start_date = app.session.get('date_filter_start')|date('Y-m-d') %}
+        {% set end_date = app.session.get('date_filter_end')|date('Y-m-d') %}
+    {% endif%}
 
+    {% if app.session.get('date_filter_value') is not null %}
+        {% set filter = app.session.get('date_filter_value') %}
+        {% if filter == "100" %}
+            {% set start_date = app.session.get('date_filter_start')|date('Y-m-d') %}
+            {% set end_date = app.session.get('date_filter_end')|date('Y-m-d') %}
+        {% else %}
+            {% set selected_date = "now"|date_modify("-" ~ filter ~ " day")| date('Y-m-d') %}
+        {% endif %}
+    {% endif %}
     <div class="header pb-6" style="background-color: #EDA200">
         <div class="container-fluid">
             <div class="header-body">
@@ -536,6 +549,7 @@
 
     <div class="container-fluid mt--6">
 
+
         {#<div class="row">
             <div class="col-xl-12">
                 <div class="card">
@@ -703,7 +717,28 @@
                                        Nombre d'appels
                                     </th>
                                     <td>
-                                        {{ all_calls_count }}
+                                        {% if app.session.get('date_filter_value') is not null %}
+                                            {% set total_calls_counter = 0 %}
+                                            {% for call in all_calls %}
+                                                {% set call_date = call.createdAt | date('Y-m-d') %}
+                                                {% if filter == "0" or filter == "1" %}
+                                                    {% if call_date == selected_date %}
+                                                        {% set total_calls_counter = total_calls_counter + 1 %}
+                                                    {% endif %}
+                                                {% elseif filter == "100" %}
+                                                    {% if call_date >= start_date and call_date <= end_date %}
+                                                        {% set total_calls_counter = total_calls_counter + 1 %}
+                                                    {% endif %}
+                                                {% else %}
+                                                    {% if call_date >= selected_date %}
+                                                        {% set total_calls_counter = total_calls_counter + 1 %}
+                                                    {% endif%}
+                                                {% endif %}
+                                            {% endfor %}
+                                            {{ total_calls_counter }}
+                                        {% else %}
+                                            {{ all_calls_count }}
+                                        {% endif %}
                                     </td>
                                     <td>
                                         N/A
@@ -715,7 +750,28 @@
                                         PI
                                     </th>
                                     <td>
-                                        {{ PI_calls_count }}
+                                        {% if app.session.get('date_filter_value') is not null %}
+                                            {% set PI_calls_counter = 0 %}
+                                            {% for call in PI_calls %}
+                                                {% set call_date = call.createdAt | date('Y-m-d') %}
+                                                {% if filter == "0" or filter == "1" %}
+                                                    {% if call_date == selected_date %}
+                                                        {% set PI_calls_counter = PI_calls_counter + 1 %}
+                                                    {% endif %}
+                                                {% elseif filter == "100" %}
+                                                    {% if call_date >= start_date and call_date <= end_date %}
+                                                        {% set PI_calls_counter = PI_calls_counter + 1 %}
+                                                    {% endif %}
+                                                {% else %}
+                                                    {% if call_date >= selected_date %}
+                                                        {% set PI_calls_counter = PI_calls_counter + 1 %}
+                                                    {% endif%}
+                                                {% endif %}
+                                            {% endfor %}
+                                            {{ PI_calls_counter }}
+                                        {% else %}
+                                            {{ PI_calls_count }}
+                                        {% endif %}
                                     </td>
                                     <td>
                                         N/A
@@ -727,7 +783,28 @@
                                         Rappel
                                     </th>
                                     <td>
-                                        {{ RAPPEL_calls_count }}
+                                        {% if app.session.get('date_filter_value') is not null %}
+                                            {% set RAPPEL_calls_counter = 0 %}
+                                            {% for call in RAPPEL_calls %}
+                                                {% set call_date = call.createdAt | date('Y-m-d') %}
+                                                {% if filter == "0" or filter == "1" %}
+                                                    {% if call_date == selected_date %}
+                                                        {% set RAPPEL_calls_counter = RAPPEL_calls_counter + 1 %}
+                                                    {% endif %}
+                                                {% elseif filter == "100" %}
+                                                    {% if call_date >= start_date and call_date <= end_date %}
+                                                        {% set RAPPEL_calls_counter = RAPPEL_calls_counter + 1 %}
+                                                    {% endif %}
+                                                {% else %}
+                                                    {% if call_date >= selected_date %}
+                                                        {% set RAPPEL_calls_counter = RAPPEL_calls_counter + 1 %}
+                                                    {% endif%}
+                                                {% endif %}
+                                            {% endfor %}
+                                            {{ RAPPEL_calls_counter }}
+                                        {% else %}
+                                            {{ RAPPEL_calls_count }}
+                                        {% endif %}
                                     </td>
                                     <td>
                                         N/A
@@ -739,7 +816,28 @@
                                         NRP
                                     </th>
                                     <td>
-                                        {{ NRP_calls_count }}
+                                        {% if app.session.get('date_filter_value') is not null %}
+                                            {% set NRP_calls_counter = 0 %}
+                                            {% for call in NRP_calls %}
+                                                {% set call_date = call.createdAt | date('Y-m-d') %}
+                                                {% if filter == "0" or filter == "1" %}
+                                                    {% if call_date == selected_date %}
+                                                        {% set NRP_calls_counter = NRP_calls_counter + 1 %}
+                                                    {% endif %}
+                                                {% elseif filter == "100" %}
+                                                    {% if call_date >= start_date and call_date <= end_date %}
+                                                        {% set NRP_calls_counter = NRP_calls_counter + 1 %}
+                                                    {% endif %}
+                                                {% else %}
+                                                    {% if call_date >= selected_date %}
+                                                        {% set NRP_calls_counter = NRP_calls_counter + 1 %}
+                                                    {% endif%}
+                                                {% endif %}
+                                            {% endfor %}
+                                            {{ NRP_calls_counter }}
+                                        {% else %}
+                                            {{ NRP_calls_count }}
+                                        {% endif %}
                                     </td>
                                     <td>
                                         N/A
@@ -751,7 +849,28 @@
                                         RDV
                                     </th>
                                     <td>
-                                        {{ RDV_calls_count }}
+                                        {% if app.session.get('date_filter_value') is not null %}
+                                            {% set RDV_counter = 0 %}
+                                            {% for appointment in RDV %}
+                                                {% set appointment_date = appointment.createdAt | date('Y-m-d') %}
+                                                {% if filter == "0" or filter == "1" %}
+                                                    {% if appointment_date == selected_date %}
+                                                        {% set RDV_counter = RDV_counter + 1 %}
+                                                    {% endif %}
+                                                {% elseif filter == "100" %}
+                                                    {% if appointment_date >= start_date and appointment_date <= end_date %}
+                                                        {% set RDV_counter = RDV_counter + 1 %}
+                                                    {% endif %}
+                                                {% else %}
+                                                    {% if appointment_date >= selected_date %}
+                                                        {% set RDV_counter = RDV_counter + 1 %}
+                                                    {% endif%}
+                                                {% endif %}
+                                            {% endfor %}
+                                            {{ RDV_counter }}
+                                        {% else %}
+                                            {{ RDV_count }}
+                                        {% endif %}
                                     </td>
                                     <td>
                                         N/A
@@ -766,7 +885,32 @@
                                         N/A
                                     </td>
                                     <td>
-                                        {{ TX_CT }} %
+                                        {% if app.session.get('date_filter_value') is not null %}
+                                            {% set QUALIFIED_calls_counter = 0 %}
+                                            {% for call in QUALIFIED_calls %}
+                                                {% set call_date = call.createdAt | date('Y-m-d') %}
+                                                {% if filter == "0" or filter == "1" %}
+                                                    {% if call_date == selected_date %}
+                                                        {% set QUALIFIED_calls_counter = QUALIFIED_calls_counter + 1 %}
+                                                    {% endif %}
+                                                {% elseif filter == "100" %}
+                                                    {% if call_date >= start_date and call_date <= end_date %}
+                                                        {% set QUALIFIED_calls_counter = QUALIFIED_calls_counter + 1 %}
+                                                    {% endif %}
+                                                {% else %}
+                                                    {% if call_date >= selected_date %}
+                                                        {% set QUALIFIED_calls_counter = QUALIFIED_calls_counter + 1 %}
+                                                    {% endif%}
+                                                {% endif %}
+                                            {% endfor %}
+                                            {% if total_calls_counter != 0 %}
+                                                {{ QUALIFIED_calls_counter / total_calls_counter }} %
+                                            {% else %}
+                                                0 %
+                                            {% endif %}
+                                        {% else %}
+                                            {{ TX_CT }} %
+                                        {% endif %}
                                     </td>
                                 </tr>
 
@@ -778,10 +922,17 @@
                                         N/A
                                     </td>
                                     <td>
-                                        {{ TX_TRANSFO }} %
+                                        {% if app.session.get('date_filter_value') is not null %}
+                                            {% if QUALIFIED_calls_counter != 0 %}
+                                                {{ RDV_counter / QUALIFIED_calls_counter }} %
+                                            {% else %}
+                                                0 %
+                                            {% endif %}
+                                        {% else %}
+                                            {{ TX_TRANSFO }} %
+                                        {% endif %}
                                     </td>
                                 </tr>
-
                             </tbody>
                         </table>
                     </div>
@@ -883,7 +1034,7 @@
                                 </th>
 
                                 <td>
-                                    {{ not_qualified_calls_count }}
+                                    {{ NOT_QUALIFIED_calls_count }}
                                 </td>
                             </tr>
 
@@ -893,7 +1044,7 @@
                                 </th>
 
                                 <td>
-                                    {{ qualified_calls_count }}
+                                    {{ QUALIFIED_calls_count }}
                                 </td>
                             </tr>
 
@@ -921,10 +1072,82 @@
                                     RDV
                                 </th>
                                 <td>
-                                    {{ RDV_calls_count }}
+                                    {{ RDV_count }}
                                 </td>
                             </tr>
 
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-header border-0">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <h3 class="mb-0">Statistiques Par Utilisateur</h3>
+                            </div>
+                            <div class="col text-right">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <!-- Projects table -->
+                        <table class="table align-items-center table-flush">
+                            <thead class="thead-light">
+                            <tr>
+                                <th scope="col">Utilisateur</th>
+                                <th scope="col">Contacts Assignés</th>
+                                <th scope="col">Contacts Traités</th>
+                                <th scope="col">Contacts Restants</th>
+                                <th scope="col">Appels NQ</th>
+                                <th scope="col">Appels Q</th>
+                                <th scope="col">PI</th>
+                                <th scope="col">A Rappeler</th>
+                                <th scope="col">RDV</th>
+                                <th scope="col">Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for user in users %}
+                                <tr class="clickable-row" data-href="{{ path('statistics_per_user', {'id': user.id}) }}">
+                                    <th scope="row">
+                                        {{ user.firstName ~ ' ' ~ user.lastName }}
+                                    </th>
+                                    <td>
+                                        0
+                                    </td>
+                                    <td>
+                                        0
+                                    </td>
+                                    <td>
+                                        0
+                                    </td>
+                                    <td>
+                                        0
+                                    </td>
+                                    <td>
+                                        0
+                                    </td>
+                                    <td>
+                                        0
+                                    </td>
+                                    <td>
+                                        0
+                                    </td>
+                                    <td>
+                                        0
+                                    </td>
+                                    <td>
+                                        <a href="{{ path('statistics_per_user', {'id': user.id}) }}"><i class="fas fa-search-plus text-blue"></i></a>&nbsp;&nbsp;
+                                    </td>
+                                </tr>
+                            {% endfor %}
                             </tbody>
                         </table>
                     </div>
