@@ -573,7 +573,7 @@ class TeleprospectingController extends AbstractController
             $breakNRP = false;
             foreach ($client as $dateTime => $statusDetail) {
                 if($breakNRP === false) {
-                    if($statusDetail === 6) {
+                    if($statusDetail === 1) {
                         $NRPcounter += 1;
                         $breakNRP = true;
                     }
@@ -581,6 +581,58 @@ class TeleprospectingController extends AbstractController
             }
         }
 
+        // RDV contacts counter
+        $RDVcounter = 0;
+        foreach ($clientsProcesses as $client) {
+            $breakRDV = false;
+            foreach ($client as $dateTime => $statusDetail) {
+                if($breakRDV === false) {
+                    if($statusDetail === 7) {
+                        $RDVcounter += 1;
+                        $breakRDV = true;
+                    }
+                }
+            }
+        }
+
+        // QUALIFIED contacts counter
+        $qualifiedContactsArray = [];
+        foreach ($processedClientsIdsArray as $clientId) {
+            foreach ($allProcesses as $process) {
+                if ($process->getClient()->getId() == $clientId) {
+                    $qualifiedContactsArray[$clientId][$process->getCreatedAt()->format('Y-m-d H:i:s')] = $process->getStatus();
+                }
+            }
+        }
+        $QUALIFIEDcontactscounter = 0;
+        foreach ($qualifiedContactsArray as $client) {
+            $breakQUALIFIED = false;
+            foreach ($client as $dateTime => $status) {
+                if($breakQUALIFIED === false) {
+                    if($status === 2) {
+                        $QUALIFIEDcontactscounter += 1;
+                        $breakQUALIFIED = true;
+                    }
+                }
+            }
+        }
+
+        // TX CT contacts
+
+        $processedContactsCount = count($uniqueProcessedClientsIdsArray);
+        if($processedContactsCount !== 0) {
+            $TXCTPercentage = number_format((($QUALIFIEDcontactscounter / $processedContactsCount) * 100), 2);
+        } else {
+            $TXCTPercentage = 0;
+        }
+
+        // TX TRANSFO
+
+         if($processedContactsCount !== 0) {
+             $TXTRANSFORPercentage = number_format((($RDVcounter / $QUALIFIEDcontactscounter) * 100), 2);
+         } else {
+             $TXTRANSFORPercentage = 0;
+         }
         //Bloc Résumé Statistiques
         /*$allCalls = $callRepository->findAll();
         $PICalls = $callRepository->findBy(["statusDetails" => 5]);
@@ -640,6 +692,10 @@ class TeleprospectingController extends AbstractController
             'all_PI_contacts_count' => $PIcounter,
             'all_RAPPEL_contacts_count' => $RAPPELcounter,
             'all_NRP_contacts_count' => $NRPcounter,
+            'all_RDV_contacts_count' => $RDVcounter,
+            'clients_processes_by_status' => $qualifiedContactsArray,
+            'TX_CT' => $TXCTPercentage,
+            'TX_TRANSFOR' => $TXTRANSFORPercentage,
         ]);
     }
 

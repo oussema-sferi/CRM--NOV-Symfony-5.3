@@ -979,6 +979,42 @@
                                         {% else %}
                                             {{ RDV_count }}
                                         {% endif %}#}
+                                        {% if app.session.get('date_filter_value') is not null %}
+                                            {% set RDV_contacts_counter  = 0 %}
+                                            {% for client in clients_processes %}
+                                                {% set break_RDV = false %}
+                                                {% for date_time, status_detail in client %}
+                                                    {% set process_date = date_time | date('Y-m-d') %}
+                                                    {% if break_RDV == false %}
+                                                        {% if filter == "0" or filter == "1" %}
+                                                            {% if process_date == selected_date %}
+                                                                {% if status_detail == 7 %}
+                                                                    {% set RDV_contacts_counter = RDV_contacts_counter + 1 %}
+                                                                    {% set break_RDV = true %}
+                                                                {% endif %}
+                                                            {% endif %}
+                                                        {% elseif filter == "100" %}
+                                                            {% if process_date >= start_date and process_date <= end_date %}
+                                                                {% if status_detail == 7 %}
+                                                                    {% set RDV_contacts_counter = RDV_contacts_counter + 1 %}
+                                                                    {% set break_RDV = true %}
+                                                                {% endif %}
+                                                            {% endif %}
+                                                        {% else %}
+                                                            {% if process_date >= selected_date %}
+                                                                {% if status_detail == 7 %}
+                                                                    {% set RDV_contacts_counter = RDV_contacts_counter + 1 %}
+                                                                    {% set break_RDV = true %}
+                                                                {% endif %}
+                                                            {% endif%}
+                                                        {% endif %}
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% endfor %}
+                                            {{ RDV_contacts_counter  }}
+                                        {% else %}
+                                            {{ all_RDV_contacts_count }}
+                                        {% endif %}
                                     </td>
                                     <td>
                                         N/A
@@ -1019,6 +1055,43 @@
                                         {% else %}
                                             {{ TX_CT }} %
                                         {% endif %}#}
+                                        {% if app.session.get('date_filter_value') is not null %}
+                                            {% set QUALIFIED_contacts_counter  = 0 %}
+                                            {% for client in clients_processes_by_status %}
+                                                {% set break_QUALIFIED = false %}
+                                                {% for date_time, status in client %}
+                                                    {% set process_date = date_time | date('Y-m-d') %}
+                                                    {% if break_QUALIFIED == false %}
+                                                        {% if filter == "0" or filter == "1" %}
+                                                            {% if process_date == selected_date %}
+                                                                {% if status == 2 %}
+                                                                    {% set QUALIFIED_contacts_counter = QUALIFIED_contacts_counter + 1 %}
+                                                                    {% set break_QUALIFIED = true %}
+                                                                {% endif %}
+                                                            {% endif %}
+                                                        {% elseif filter == "100" %}
+                                                            {% if process_date >= start_date and process_date <= end_date %}
+                                                                {% if status == 2 %}
+                                                                    {% set QUALIFIED_contacts_counter = QUALIFIED_contacts_counter + 1 %}
+                                                                    {% set break_QUALIFIED = true %}
+                                                                {% endif %}
+                                                            {% endif %}
+                                                        {% else %}
+                                                            {% if process_date >= selected_date %}
+                                                                {% if status == 2 %}
+                                                                    {% set QUALIFIED_contacts_counter = QUALIFIED_contacts_counter + 1 %}
+                                                                    {% set break_QUALIFIED = true %}
+                                                                {% endif %}
+                                                            {% endif%}
+                                                        {% endif %}
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% endfor %}
+                                            {#{{ QUALIFIED_contacts_counter }} test#}
+                                            {{ ((QUALIFIED_contacts_counter /  clients_processes_by_status|length) * 100)|number_format(2) }}
+                                        {% else %}
+                                            {{ TX_CT }} %
+                                        {% endif %}
                                     </td>
                                 </tr>
 
@@ -1039,6 +1112,11 @@
                                         {% else %}
                                             {{ TX_TRANSFO }} %
                                         {% endif %}#}
+                                        {% if app.session.get('date_filter_value') is not null %}
+                                            {{ ((RDV_contacts_counter /  QUALIFIED_contacts_counter) * 100)|number_format(2) }} %
+                                        {% else %}
+                                            {{ TX_TRANSFOR }} %
+                                        {% endif %}
                                     </td>
                                 </tr>
                             </tbody>
