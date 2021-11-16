@@ -297,13 +297,25 @@
                                             {% if commercial_appointment.isDone == 1 %}
                                                 <span class="badge badge-success badge-lg">
                                                     <i class="bg-success"></i>
-                                                    effectué
+                                                    Argu
+                                                </span>
+                                            {% elseif commercial_appointment.isDone == 2 %}
+                                                <span class="badge badge-success badge-lg">
+                                                    <i class="bg-success"></i>
+                                                    Vente
                                                 </span>
                                             {% else %}
-                                                <span class="badge badge-info badge-lg">
-                                                <i class="bg-warning"></i>
-                                                à venir
-                                                </span>
+                                                    {% if commercial_appointment.isPostponed == 1 %}
+                                                        <span class="badge badge-primary badge-lg">
+                                                        <i class="bg-primary"></i>
+                                                        reporté
+                                                        </span>
+                                                    {% else %}
+                                                        <span class="badge badge-info badge-lg">
+                                                        <i class="bg-info"></i>
+                                                        à venir
+                                                        </span>
+                                                    {% endif %}
                                             {% endif %}
                                         {% endif %}
                                     </td>

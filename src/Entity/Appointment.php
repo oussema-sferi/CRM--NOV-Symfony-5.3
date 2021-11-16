@@ -50,7 +50,7 @@ class Appointment
     private $user;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $isDone;
 
@@ -186,17 +186,23 @@ class Appointment
         return $this;
     }
 
-    public function getIsDone(): ?bool
+    /**
+     * @return mixed
+     */
+    public function getIsDone()
     {
         return $this->isDone;
     }
 
-    public function setIsDone(?bool $isDone): self
+    /**
+     * @param mixed $isDone
+     */
+    public function setIsDone($isDone): void
     {
         $this->isDone = $isDone;
-
-        return $this;
     }
+
+
 
     /**
      * @return mixed

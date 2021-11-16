@@ -152,18 +152,23 @@ class CommercialController extends AbstractController
         $manager = $this->getDoctrine()->getManager();
         $appointmentToProcess = $this->getDoctrine()->getRepository(Appointment::class)->find($id);
         if($request->isMethod('Post')) {
-            if($request->request->get('testing') === "on") {
-                /*dd($request->request->get('notes'));*/
+            /*if($request->request->get('testing') === "on") {
                 $appointmentToProcess->setIsDone(true);
                 $appointmentToProcess->setDoneAt(new \DateTime());
                 $appointmentToProcess->setPostAppointmentNotes($request->request->get('notes'));
-                /*$this->flashy->success("RDV traité avec succès !");*/
             } else {
                 $appointmentToProcess->setIsDone(false);
                 $appointmentToProcess->setDoneAt(null);
                 $appointmentToProcess->setPostAppointmentNotes(null);
-                /*$this->flashy->info("Aucun traitement n'a été effectué sur le RDV !");*/
+            }*/
+            $isDoneStatus = $request->request->get('appointment_status');
+            if($isDoneStatus === "argu") {
+                $appointmentToProcess->setIsDone(1);
+            } elseif ($isDoneStatus === "vente") {
+                $appointmentToProcess->setIsDone(2);
             }
+            $appointmentToProcess->setDoneAt(new \DateTime());
+            $appointmentToProcess->setPostAppointmentNotes($request->request->get('notes'));
             $manager->persist($appointmentToProcess);
             $manager->flush();
             $this->flashy->success("RDV traité avec succès !");
