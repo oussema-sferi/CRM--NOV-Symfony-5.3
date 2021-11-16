@@ -370,7 +370,8 @@ class AppointmentRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('a');
         $qb->select('a')
             ->where('a.isDeleted = 0')
-            ->andWhere("a.isDone = 1");
+            ->andWhere("a.isDone = 1")
+            ->andWhere('a.client IS NOT NULL');
         return $qb->getQuery()->getResult();
     }
 
@@ -379,7 +380,8 @@ class AppointmentRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('a');
         $qb->select('a')
             ->where('a.isDeleted = 0')
-            ->andWhere("a.isDone = 2");
+            ->andWhere("a.isDone = 2")
+            ->andWhere('a.client IS NOT NULL');
         return $qb->getQuery()->getResult();
     }
 
@@ -388,7 +390,8 @@ class AppointmentRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('a');
         $qb->select('a')
             ->where('a.isDeleted = 0')
-            ->andWhere("a.isDone = 3");
+            ->andWhere("a.isDone = 3")
+            ->andWhere('a.client IS NOT NULL');
         return $qb->getQuery()->getResult();
     }
 }

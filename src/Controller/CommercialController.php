@@ -401,6 +401,7 @@ class CommercialController extends AbstractController
             'vente_appointments_count' => $venteAppointmentsCount,
             /*'contacts_count' => count($allContacts),*/
             //Bloc Statistiques Pour La Période Sélectionnée
+            'done_appointments' => $doneAppointments,
             /*'processed_contacts_count' => count($processedContacts),*/
             //Bloc Statistiques Par Utilisateur
             'users' => $users,

@@ -495,7 +495,28 @@
                                 </th>
 
                                 <td>
-
+                                    {% if app.session.get('date_filter_value_commercial_stats') is not null %}
+                                        {% set done_appointments_counter = 0 %}
+                                        {% for appointment in done_appointments %}
+                                            {% set appointment_isdone_date = appointment.doneAt | date('Y-m-d') %}
+                                            {% if filter == "0" or filter == "1" %}
+                                                {% if appointment_isdone_date == selected_date %}
+                                                    {% set done_appointments_counter = done_appointments_counter + 1 %}
+                                                {% endif %}
+                                            {% elseif filter == "100" %}
+                                                {% if appointment_isdone_date >= start_date and appointment_isdone_date <= end_date %}
+                                                    {% set done_appointments_counter = done_appointments_counter + 1 %}
+                                                {% endif %}
+                                            {% else %}
+                                                {% if appointment_isdone_date >= selected_date %}
+                                                    {% set done_appointments_counter = done_appointments_counter + 1 %}
+                                                {% endif%}
+                                            {% endif %}
+                                        {% endfor %}
+                                        {{ done_appointments_counter }}
+                                    {% else %}
+                                        {{ done_appointments_count }}
+                                    {% endif %}
                                 </td>
                             </tr>
 
@@ -515,11 +536,11 @@
                                 </th>
 
                                 <td>
-                                    {#{% if app.session.get('date_filter_value_commercial_stats') is not null %}
-
+                                    {% if app.session.get('date_filter_value_commercial_stats') is not null %}
+                                        {{ postponed_appointments_counter }}
                                     {% else %}
-
-                                    {% endif %}#}
+                                        {{ postponed_appointments_count }}
+                                    {% endif %}
                                 </td>
                             </tr>
                             <tr>
@@ -527,11 +548,11 @@
                                     Total RDV Annulés
                                 </th>
                                 <td>
-                                    {#{% if app.session.get('date_filter_value_commercial_stats') is not null %}
-
+                                    {% if app.session.get('date_filter_value_commercial_stats') is not null %}
+                                        {{ deleted_appointments_counter }}
                                     {% else %}
-
-                                    {% endif %}#}
+                                        {{ deleted_appointments_count }}
+                                    {% endif %}
                                 </td>
                             </tr>
                             </tbody>
