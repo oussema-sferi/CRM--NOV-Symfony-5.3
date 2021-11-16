@@ -296,9 +296,21 @@
                     <hr class="my-3">
 
                     <div class="text-center">
-                        <a id="edit-button" class="btn btn-sm btn-info">Editer</a>
-                        <button id="edit-submit-button" type="submit" class="btn btn-sm btn-success" style="display: none">Sauvegarder</button>
-                        <a id="delete-event" class="btn btn-sm btn-warning" href="">Supprimer</a>
+                        <div id="edit-block">
+                            <a id="edit-button" class="btn btn-sm btn-info text-white">Editer</a>
+                            <a id="report-button" class="btn btn-sm btn-primary text-white">Reporter</a>
+                            <a id="delete-event" class="btn btn-sm btn-warning" href="">Supprimer</a>
+                        </div>
+
+                        <div id="edit-submit-block" style="display: none">
+                            <button id="edit-submit-button" type="submit" class="btn btn-sm btn-success">Sauvegarder</button>
+                            <a id="back_to_edit" class="btn btn-sm btn-neutral">Retour</a>
+                        </div>
+
+                        <div id="report-submit-block" style="display: none">
+                            <button id="report-submit-button" type="submit" class="btn btn-sm btn-success">Confirmer</button>
+                            <a id="report_back_to_edit" class="btn btn-sm btn-neutral">Retour</a>
+                        </div>
                         {#<button type="button" class="btn btn-link  ml-auto" data-dismiss="modal">Retour</button>#}
 
                     </div>
@@ -522,8 +534,8 @@
                     $("#edit_form_end_time_hour").prop("disabled", true)
                     $("#edit_form_end_time_minute").prop("disabled", true)
                     $("#notes-show").prop("disabled", true)
-                    $("#edit-submit-button").hide()
-                    $("#edit-button").show()
+                    /*$("#edit-submit-button").hide()
+                    $("#edit-button").show()*/
 
                     if(info.event.title !== "RDV") {
                         if (info.event.backgroundColor === "#008000") {
@@ -599,15 +611,23 @@
                            /* console.log(editDepartment.val())*/
                         } else {
                             $("#test2").click()
+                            $("#edit-submit-block").hide()
+                            $("#report-submit-block").hide()
+                            $("#edit-block").show()
                             $('#client_show-block').hide();
                             /*$("#notes_block").show()*/
                             $('#notes_label').text('Observations ' + info.event.title);
                             /*$("#start-show").val((moment(info.event.start).format('DD/MM/YYYY hh:mm')))
                             $("#end-show").val((moment(info.event.end).format('DD/MM/YYYY hh:mm')))*/
                             $("#notes-show").val(info.event.extendedProps.description)
+                            $("#report-button").hide()
                         }
                     } else {
                         $("#test2").click()
+                        $("#report-button").show()
+                        $("#edit-submit-block").hide()
+                        $("#report-submit-block").hide()
+                        $("#edit-block").show()
                         $('#client_show-block').show();
                         /*$("#notes_block").show()*/
                         /*$("#start-show").val((moment(info.event.start).format('DD/MM/YYYY hh:mm')))
@@ -620,6 +640,48 @@
                         /*if (info.event.extendedProps.description === null) {
                             $("#notes_block").hide()
                         }*/
+                        /*$("#report-button").show()*/
+                        //reporter link
+                        let postponeAppointmentUrl = '{{ path("postpone_appointment", {'id': 'the_appointment_to_postpone_id'}) }}';
+                        postponeAppointmentUrl = postponeAppointmentUrl.replace("the_appointment_to_postpone_id", info.event.id);
+                        $("#report-button").on("click", function () {
+                            /*$(this).hide()
+                            $("#edit-button").hide()
+                            $("#edit-submit-button").hide()
+                            $("#delete-event").hide()
+                            $("#report-submit-button").show()
+                            $("#report_back_to_edit").show()*/
+                            $("#edit-block").hide()
+                            $("#edit-submit-block").hide()
+                            $("#report-submit-block").show()
+                            $("#edit_form_start_date").prop("disabled", false)
+                            $("#edit_form_start_time_hour").prop("disabled", false)
+                            $("#edit_form_start_time_minute").prop("disabled", false)
+                            $("#edit_form_end_date").prop("disabled", false)
+                            $("#edit_form_end_time_hour").prop("disabled", false)
+                            $("#edit_form_end_time_minute").prop("disabled", false)
+                            $("#notes-show").prop("disabled", false)
+                            $('#edit-event-form').attr('action', postponeAppointmentUrl);
+                        })
+                        $("#report_back_to_edit").on("click", function () {
+                            /*$(this).hide()
+                            $("#report-submit-button").hide()
+                            $("#edit-button").show()
+                            $("#report-button").show()
+                            $("#delete-event").show()*/
+
+
+                            $("#edit-block").show()
+                            $("#report-submit-block").hide()
+                            $("#edit-submit-block").hide()
+                            $("#edit_form_start_date").prop("disabled", true)
+                            $("#edit_form_start_time_hour").prop("disabled", true)
+                            $("#edit_form_start_time_minute").prop("disabled", true)
+                            $("#edit_form_end_date").prop("disabled", true)
+                            $("#edit_form_end_time_hour").prop("disabled", true)
+                            $("#edit_form_end_time_minute").prop("disabled", true)
+                            $("#notes-show").prop("disabled", true)
+                        })
                     }
 
                     /*console.log(info.event.extendedProps.description)*/
@@ -629,8 +691,13 @@
                     /*info.el.style.borderColor = 'red';*/
 
                     /*edit-submit-button*/
+
+
+                    //edit link
+                    let editEventUrl = '{{ path("edit_event", {'id': 'the_event_to_edit_id'}) }}';
+                    editEventUrl = editEventUrl.replace("the_event_to_edit_id", info.event.id);
                     $("#edit-button").on("click", function () {
-                        $(this).hide()
+                        /*$(this).hide()*/
                         $("#edit_form_start_date").prop("disabled", false)
                         $("#edit_form_start_time_hour").prop("disabled", false)
                         $("#edit_form_start_time_minute").prop("disabled", false)
@@ -638,7 +705,14 @@
                         $("#edit_form_end_time_hour").prop("disabled", false)
                         $("#edit_form_end_time_minute").prop("disabled", false)
                         $("#notes-show").prop("disabled", false)
+                       /* $("#report-button").hide()
+                        $("#delete-event").hide()
                         $("#edit-submit-button").show()
+                        $("#back_to_edit").show()*/
+                        $("#edit-block").hide()
+                        $("#report-submit-block").hide()
+                        $("#edit-submit-block").show()
+                        $('#edit-event-form').attr('action', editEventUrl);
                     })
 
                     $("#edit_form_start_date").on("change", function () {
@@ -659,9 +733,10 @@
                     $("#edit_form_end_date").val((moment(info.event.end).startOf('day').format('YYYY-MM-DD')))
                     $("#edit_form_end_time_hour").val(parseInt(moment.parseZone(info.event.end).utcOffset(0).format('HH')))
                     $("#edit_form_end_time_minute").val(parseInt(moment(info.event.end).format('mm')))
-                    let editEventUrl = '{{ path("edit_event", {'id': 'the_event_to_edit_id'}) }}';
-                    editEventUrl = editEventUrl.replace("the_event_to_edit_id", info.event.id);
-                    $('#edit-event-form').attr('action', editEventUrl);
+
+
+
+
 
 
 
@@ -669,6 +744,34 @@
                     let deleteEventUrl = '{{ path("delete_event", {'id': 'the_event_id'}) }}';
                     deleteEventUrl = deleteEventUrl.replace("the_event_id", info.event.id);
                     deleteEvent.attr("href",deleteEventUrl)
+
+                    //Reporter RDV
+
+
+                    $("#back_to_edit").on("click", function () {
+                        $("#edit-submit-block").hide()
+                        $("#report-submit-block").hide()
+                        $("#edit-block").show()
+
+                        /*$(this).hide()
+                        $("#edit-submit-button").hide()
+                        $("#edit-button").show()
+                        $("#delete-event").show()*/
+                        if(info.event.title === "RDV") {
+                            $("#report-button").show()
+                        } else {
+                            $("#report-button").hide()
+                        }
+
+                        $("#edit_form_start_date").prop("disabled", true)
+                        $("#edit_form_start_time_hour").prop("disabled", true)
+                        $("#edit_form_start_time_minute").prop("disabled", true)
+                        $("#edit_form_end_date").prop("disabled", true)
+                        $("#edit_form_end_time_hour").prop("disabled", true)
+                        $("#edit_form_end_time_minute").prop("disabled", true)
+                        $("#notes-show").prop("disabled", true)
+                    })
+
                 },
                /* dayClick: function(date, allDay, jsEvent, view) {
                     console.log(date)

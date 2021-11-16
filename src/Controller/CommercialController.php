@@ -7,6 +7,10 @@ use App\Entity\Client;
 use App\Entity\GeographicArea;
 use App\Entity\User;
 use App\Repository\AppointmentRepository;
+use App\Repository\CallRepository;
+use App\Repository\ClientRepository;
+use App\Repository\ProcessRepository;
+use App\Repository\UserRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use MercurySeries\FlashyBundle\FlashyNotifier;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -216,6 +220,189 @@ class CommercialController extends AbstractController
     }
 
     /**
+     * @Route("/dashboard/commercial/statsnew", name="commercial_stats_new")
+     */
+    public function commercialStatsNew(Request $request, ProcessRepository $processRepository,CallRepository $callRepository, UserRepository $userRepository, ClientRepository $clientRepository, AppointmentRepository $appointmentRepository): Response
+    {
+        // new
+        //CONTACTS PROCESSED
+        $allProcesses = $processRepository->findAllSortedDate();
+        $processedClientsIdsArray = [];
+        $clientsProcesses = [];
+        foreach ($allProcesses as $process) {
+            $processedClientsIdsArray[] = $process->getClient()->getId();
+        }
+        $uniqueProcessedClientsIdsArray = array_unique($processedClientsIdsArray);
+        $uniqueProcessedClientsArray = [];
+        foreach ($processedClientsIdsArray as $clientId) {
+            foreach ($allProcesses as $process) {
+                if ($process->getClient()->getId() == $clientId) {
+                    $uniqueProcessedClientsArray[$clientId][] = $process->getCreatedAt();
+                    $clientsProcesses[$clientId][$process->getCreatedAt()->format('Y-m-d H:i:s')] = $process->getStatusDetail();
+                }
+            }
+        }
+        /*dd($clientsProcesses);*/
+        // PI contacts counter
+        /*$PIcounter = 0;
+        foreach ($clientsProcesses as $client) {
+            $breakPI = false;
+            foreach ($client as $dateTime => $statusDetail) {
+                if($breakPI === false) {
+                    if($statusDetail === 5) {
+                        $PIcounter += 1;
+                        $breakPI = true;
+                    }
+                }
+            }
+        }*/
+
+        // RAPPEL contacts counter
+        /*$RAPPELcounter = 0;
+        foreach ($clientsProcesses as $client) {
+            $breakRAPPEL = false;
+            foreach ($client as $dateTime => $statusDetail) {
+                if($breakRAPPEL === false) {
+                    if($statusDetail === 6) {
+                        $RAPPELcounter += 1;
+                        $breakRAPPEL = true;
+                    }
+                }
+            }
+        }*/
+
+        // NRP contacts counter
+        /*$NRPcounter = 0;
+        foreach ($clientsProcesses as $client) {
+            $breakNRP = false;
+            foreach ($client as $dateTime => $statusDetail) {
+                if($breakNRP === false) {
+                    if($statusDetail === 1) {
+                        $NRPcounter += 1;
+                        $breakNRP = true;
+                    }
+                }
+            }
+        }*/
+
+        // RDV count
+        $allAppointments = $appointmentRepository->getAppointmentsWhereClientsExistCommercialStats();
+        $allAppointmentsCount = count($allAppointments);
+
+        // Done RDV count
+        $doneAppointments = $appointmentRepository->getDoneAppointments();
+        $doneAppointmentsCount = count($doneAppointments);
+
+        // Upcoming RDV count
+        $upcomingAppointments = $appointmentRepository->getUpcomingAppointments();
+        $upcomingAppointmentsCount = count($upcomingAppointments);
+
+        // Deleted RDV count
+        $deletedAppointments = $appointmentRepository->getDeletedAppointments();
+        $deletedAppointmentsCount = count($deletedAppointments);
+
+        // Postponed RDV count
+        $postponedAppointments = $appointmentRepository->getPostponedAppointments();
+        $postponedAppointmentsCount = count($postponedAppointments);
+
+        /*dd($reportedAppointments);*/
+        // QUALIFIED contacts counter
+        /*$processedContactsByStatus = [];
+        foreach ($processedClientsIdsArray as $clientId) {
+            foreach ($allProcesses as $process) {
+                if ($process->getClient()->getId() == $clientId) {
+                    $processedContactsByStatus[$clientId][$process->getCreatedAt()->format('Y-m-d H:i:s')] = $process->getStatus();
+                }
+            }
+        }
+        $QUALIFIEDcontactscounter = 0;
+        foreach ($processedContactsByStatus as $client) {
+            $breakQUALIFIED = false;
+            foreach ($client as $dateTime => $status) {
+                if($breakQUALIFIED === false) {
+                    if($status === 2) {
+                        $QUALIFIEDcontactscounter += 1;
+                        $breakQUALIFIED = true;
+                    }
+                }
+            }
+        }*/
+
+        // TX CT contacts
+
+        /*$processedContactsCount = count($uniqueProcessedClientsIdsArray);
+        if($processedContactsCount !== 0) {
+            $TXCTPercentage = number_format((($QUALIFIEDcontactscounter / $processedContactsCount) * 100), 2);
+        } else {
+            $TXCTPercentage = 0;
+        }*/
+
+        // TX TRANSFO
+
+        /*if($processedContactsCount !== 0) {
+            $TXTRANSFORPercentage = number_format((($RDVcounter / $QUALIFIEDcontactscounter) * 100), 2);
+        } else {
+            $TXTRANSFORPercentage = 0;
+        }*/
+
+        // NOT QUALIFIED contacts counter
+        /*$NOTQUALIFIEDcontactscounter = 0;
+        foreach ($processedContactsByStatus as $client) {
+            $breakNOTQUALIFIED = false;
+            foreach ($client as $dateTime => $status) {
+                if($breakNOTQUALIFIED === false) {
+                    if($status === 1) {
+                        $NOTQUALIFIEDcontactscounter += 1;
+                        $breakNOTQUALIFIED = true;
+                    }
+                }
+            }
+        }*/
+
+        //Bloc Statistiques Générales
+        $allCommercials = $userRepository->findUsersByCommercialRole("ROLE_COMMERCIAL");
+        /*$allContacts = $clientRepository->getNotDeletedClients();
+        $processedContacts = $clientRepository->getProcessedClients();*/
+
+        //Bloc Statistiques Par Utilisateur
+        $users = $userRepository->findUsersTeleproStats("ROLE_COMMERCIAL", "ROLE_SUPERADMIN");
+
+
+        return $this->render('commercial/commercial_stats_new.html.twig', [
+
+            //Bloc Statistiques Générales
+            'commercials_count' => count($allCommercials),
+            'all_appointments_count' => $allAppointmentsCount,
+            'done_appointments_count' => $doneAppointmentsCount,
+            'upcoming_appointments_count' => $upcomingAppointmentsCount,
+            'deleted_appointments_count' => $deletedAppointmentsCount,
+            //Bloc Résumé Statistiques
+            'all_appointments' => $allAppointments,
+            'deleted_appointments' => $deletedAppointments,
+            'postponed_appointments' => $postponedAppointments,
+            'postponed_appointments_count' => $postponedAppointmentsCount,
+            /*'contacts_count' => count($allContacts),*/
+            //Bloc Statistiques Pour La Période Sélectionnée
+            /*'processed_contacts_count' => count($processedContacts),*/
+            //Bloc Statistiques Par Utilisateur
+            'users' => $users,
+            //new
+            /*'clients_processes'=> $clientsProcesses,
+            'clients_processes_count'=> count($clientsProcesses),
+            'all_PI_contacts_count' => $PIcounter,
+            'all_RAPPEL_contacts_count' => $RAPPELcounter,
+            'all_NRP_contacts_count' => $NRPcounter,
+            'all_RDV_contacts_count' => $RDVcounter,
+            'clients_processes_by_status' => $processedContactsByStatus,
+            'TX_CT' => $TXCTPercentage,
+            'TX_TRANSFOR' => $TXTRANSFORPercentage,
+            'NOT_QUALIFIED_contacts_count' => $NOTQUALIFIEDcontactscounter,
+            'QUALIFIED_contacts_count' => $QUALIFIEDcontactscounter*/
+
+        ]);
+    }
+
+    /**
      * @Route("/dashboard/commercial/stats/filters", name="commercial_stats_filters")
      */
     public function commercialStatsFilters(Request $request): Response
@@ -246,7 +433,7 @@ class CommercialController extends AbstractController
                 $endDate
             );
             $this->flashy->success('Filtre mis à jour avec succès !');
-            return $this->redirectToRoute('commercial_stats');
+            return $this->redirectToRoute('commercial_stats_new');
         }
     }
 
@@ -260,7 +447,7 @@ class CommercialController extends AbstractController
         if($session->get('date_filter_commercial_start')) $session->remove('date_filter_commercial_start');
         if($session->get('date_filter_commercial_end')) $session->remove('date_filter_commercial_end');
         $this->flashy->success('Filtre réinitialisé avec succès !');
-        return $this->redirectToRoute('commercial_stats');
+        return $this->redirectToRoute('commercial_stats_new');
     }
 
     /**
@@ -269,6 +456,6 @@ class CommercialController extends AbstractController
     public function commercialStatsFiltersNotifications(): Response
     {
         $this->flashy->success('Filtre mis à jour avec succès !');
-        return $this->redirectToRoute('commercial_stats');
+        return $this->redirectToRoute('commercial_stats_new');
     }
 }

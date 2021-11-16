@@ -361,4 +361,14 @@ class AppointmentRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    public function getPostponedAppointments()
+    {
+        $qb = $this->createQueryBuilder('a');
+        $qb->select('a')
+            ->join('a.client', 'c')
+            ->where('a.isDeleted = 0')
+            ->andWhere("a.isDone = 0")
+            ->andWhere("a.isPostponed = 1");
+        return $qb->getQuery()->getResult();
+    }
 }

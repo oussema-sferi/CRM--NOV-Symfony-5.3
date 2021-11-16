@@ -5,11 +5,6 @@
 
 
 {% block body %}
-    {% if app.session.get('date_filter_value') == "100" %}
-        {% set start_date = app.session.get('date_filter_start')|date('Y-m-d') %}
-        {% set end_date = app.session.get('date_filter_end')|date('Y-m-d') %}
-    {% endif%}
-
     {% if app.session.get('date_filter_value') is not null %}
         {% set filter = app.session.get('date_filter_value') %}
         {% if filter == "100" %}
@@ -1088,7 +1083,11 @@
                                                 {% endfor %}
                                             {% endfor %}
                                             {#{{ QUALIFIED_contacts_counter }} test#}
-                                            {{ ((QUALIFIED_contacts_counter /  clients_processes_by_status|length) * 100)|number_format(2) }}
+                                            {% if clients_processes_by_status|length != 0 %}
+                                                {{ ((QUALIFIED_contacts_counter /  clients_processes_by_status|length) * 100)|number_format(2) }}
+                                            {% else %}
+                                                0 %
+                                            {% endif %}
                                         {% else %}
                                             {{ TX_CT }} %
                                         {% endif %}
@@ -1113,7 +1112,11 @@
                                             {{ TX_TRANSFO }} %
                                         {% endif %}#}
                                         {% if app.session.get('date_filter_value') is not null %}
-                                            {{ ((RDV_contacts_counter /  QUALIFIED_contacts_counter) * 100)|number_format(2) }} %
+                                            {% if QUALIFIED_contacts_counter != 0 %}
+                                                {{ ((RDV_contacts_counter /  QUALIFIED_contacts_counter) * 100)|number_format(2) }} %
+                                            {% else %}
+                                                0 %
+                                            {% endif %}
                                         {% else %}
                                             {{ TX_TRANSFOR }} %
                                         {% endif %}
@@ -1154,7 +1157,7 @@
                                     Total Téléprospecteurs
                                 </th>
                                 <td>
-                                    {#{{ telepro_count }}#}
+                                    {{ telepro_count }}
                                 </td>
                             </tr>
 
@@ -1163,7 +1166,7 @@
                                     Total Contacts
                                 </th>
                                 <td>
-                                    {#{{ contacts_count }}#}
+                                    {{ contacts_count }}
                                 </td>
                             </tr>
 
@@ -1172,7 +1175,7 @@
                                     Total Contacts Restants
                                 </th>
                                 <td>
-                                    {#{{ contacts_count - processed_contacts_count }}#}
+                                    {{ contacts_count - processed_contacts_count }}
                                 </td>
                             </tr>
 
@@ -1211,26 +1214,95 @@
 
                                 <td>
                                     {#{{ processed_contacts_count }}#}
+                                    {% if app.session.get('date_filter_value') is not null %}
+                                        {% set processed_contacts_counter  = 0 %}
+                                        {% for client in clients_processes %}
+                                            {% set break_processed = false %}
+                                            {% for date_time, status_detail in client %}
+                                                {% set process_date = date_time | date('Y-m-d') %}
+                                                {% if break_processed == false %}
+                                                    {% if filter == "0" or filter == "1" %}
+                                                        {% if process_date == selected_date %}
+                                                                {% set processed_contacts_counter = processed_contacts_counter + 1 %}
+                                                                {% set break_processed = true %}
+                                                        {% endif %}
+                                                    {% elseif filter == "100" %}
+                                                        {% if process_date >= start_date and process_date <= end_date %}
+                                                                {% set processed_contacts_counter = processed_contacts_counter + 1 %}
+                                                                {% set break_processed = true %}
+                                                        {% endif %}
+                                                    {% else %}
+                                                        {% if process_date >= selected_date %}
+                                                                {% set processed_contacts_counter = processed_contacts_counter + 1 %}
+                                                                {% set break_processed = true %}
+                                                        {% endif%}
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endfor %}
+                                        {{ processed_contacts_counter  }}
+                                    {% else %}
+                                        {{ clients_processes_count }}
+                                    {% endif %}
                                 </td>
                             </tr>
 
                             <tr>
                                 <th scope="row">
-                                    Nombre d'Appels Non Qualifiés
+                                    Nombre de Contacts Non Qualifiés
                                 </th>
 
                                 <td>
-                                    {#{{ NOT_QUALIFIED_calls_count }}#}
+                                    {% if app.session.get('date_filter_value') is not null %}
+                                        {% set NOT_QUALIFIED_contacts_counter  = 0 %}
+                                        {% for client in clients_processes_by_status %}
+                                            {% set break_NOT_QUALIFIED = false %}
+                                            {% for date_time, status in client %}
+                                                {% set process_date = date_time | date('Y-m-d') %}
+                                                {% if break_NOT_QUALIFIED == false %}
+                                                    {% if filter == "0" or filter == "1" %}
+                                                        {% if process_date == selected_date %}
+                                                            {% if status == 1 %}
+                                                                {% set NOT_QUALIFIED_contacts_counter = NOT_QUALIFIED_contacts_counter + 1 %}
+                                                                {% set break_NOT_QUALIFIED = true %}
+                                                            {% endif %}
+                                                        {% endif %}
+                                                    {% elseif filter == "100" %}
+                                                        {% if process_date >= start_date and process_date <= end_date %}
+                                                            {% if status == 1 %}
+                                                                {% set NOT_QUALIFIED_contacts_counter = NOT_QUALIFIED_contacts_counter + 1 %}
+                                                                {% set break_NOT_QUALIFIED = true %}
+                                                            {% endif %}
+                                                        {% endif %}
+                                                    {% else %}
+                                                        {% if process_date >= selected_date %}
+                                                            {% if status == 1 %}
+                                                                {% set NOT_QUALIFIED_contacts_counter = NOT_QUALIFIED_contacts_counter + 1 %}
+                                                                {% set break_NOT_QUALIFIED = true %}
+                                                            {% endif %}
+                                                        {% endif%}
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endfor %}
+                                        {{ NOT_QUALIFIED_contacts_counter }}
+                                    {% else %}
+                                        {{ NOT_QUALIFIED_contacts_count }}
+                                    {% endif %}
                                 </td>
                             </tr>
 
                             <tr>
                                 <th scope="row">
-                                    Nombre d'Appels Qualifiés
+                                    Nombre de Contacts Qualifiés
                                 </th>
 
                                 <td>
-                                    {#{{ QUALIFIED_calls_count }}#}
+                                    {% if app.session.get('date_filter_value') is not null %}
+                                        {{ QUALIFIED_contacts_counter }}
+                                    {% else %}
+                                        {{ QUALIFIED_contacts_count }}
+                                    {% endif %}
                                 </td>
                             </tr>
 
@@ -1240,7 +1312,11 @@
                                 </th>
 
                                 <td>
-                                    {#{{ PI_calls_count }}#}
+                                    {% if app.session.get('date_filter_value') is not null %}
+                                        {{ PI_contacts_counter }}
+                                    {% else %}
+                                        {{ all_PI_contacts_count }}
+                                    {% endif %}
                                 </td>
                             </tr>
 
@@ -1250,7 +1326,11 @@
                                 </th>
 
                                 <td>
-                                    {#{{ RAPPEL_calls_count }}#}
+                                    {% if app.session.get('date_filter_value') is not null %}
+                                        {{ RAPPEL_contacts_counter }}
+                                    {% else %}
+                                        {{ all_RAPPEL_contacts_count }}
+                                    {% endif %}
                                 </td>
                             </tr>
                             <tr>
@@ -1258,10 +1338,13 @@
                                     RDV
                                 </th>
                                 <td>
-                                    {#{{ RDV_count }}#}
+                                    {% if app.session.get('date_filter_value') is not null %}
+                                        {{ RDV_contacts_counter }}
+                                    {% else %}
+                                        {{ all_RDV_contacts_count }}
+                                    {% endif %}
                                 </td>
                             </tr>
-
                             </tbody>
                         </table>
                     </div>

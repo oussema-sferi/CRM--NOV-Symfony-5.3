@@ -30,10 +30,6 @@ class Appointment
      */
     private $end;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    private $status;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -113,6 +109,16 @@ class Appointment
      */
     private $updatedAt;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isPostponed;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $postponedAt;
+
 
     public function getId(): ?int
     {
@@ -143,17 +149,6 @@ class Appointment
         return $this;
     }
 
-    public function getStatus(): ?bool
-    {
-        return $this->status;
-    }
-
-    public function setStatus(bool $status): self
-    {
-        $this->status = $status;
-
-        return $this;
-    }
 
     public function getAppointmentNotes(): ?string
     {
@@ -327,6 +322,30 @@ class Appointment
     public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getIsPostponed(): ?bool
+    {
+        return $this->isPostponed;
+    }
+
+    public function setIsPostponed(bool $isPostponed): self
+    {
+        $this->isPostponed = $isPostponed;
+
+        return $this;
+    }
+
+    public function getPostponedAt(): ?\DateTimeInterface
+    {
+        return $this->postponedAt;
+    }
+
+    public function setPostponedAt(?\DateTimeInterface $postponedAt): self
+    {
+        $this->postponedAt = $postponedAt;
 
         return $this;
     }

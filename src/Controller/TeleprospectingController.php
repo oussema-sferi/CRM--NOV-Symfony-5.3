@@ -596,16 +596,16 @@ class TeleprospectingController extends AbstractController
         }
 
         // QUALIFIED contacts counter
-        $qualifiedContactsArray = [];
+        $processedContactsByStatus = [];
         foreach ($processedClientsIdsArray as $clientId) {
             foreach ($allProcesses as $process) {
                 if ($process->getClient()->getId() == $clientId) {
-                    $qualifiedContactsArray[$clientId][$process->getCreatedAt()->format('Y-m-d H:i:s')] = $process->getStatus();
+                    $processedContactsByStatus[$clientId][$process->getCreatedAt()->format('Y-m-d H:i:s')] = $process->getStatus();
                 }
             }
         }
         $QUALIFIEDcontactscounter = 0;
-        foreach ($qualifiedContactsArray as $client) {
+        foreach ($processedContactsByStatus as $client) {
             $breakQUALIFIED = false;
             foreach ($client as $dateTime => $status) {
                 if($breakQUALIFIED === false) {
@@ -633,69 +633,50 @@ class TeleprospectingController extends AbstractController
          } else {
              $TXTRANSFORPercentage = 0;
          }
-        //Bloc Résumé Statistiques
-        /*$allCalls = $callRepository->findAll();
-        $PICalls = $callRepository->findBy(["statusDetails" => 5]);
-        $RAPPELCalls = $callRepository->findBy(["statusDetails" => 6]);
-        $NRPCalls = $callRepository->findBy(["statusDetails" => 1]);
-        $RDVCalls = $callRepository->findBy(["statusDetails" => 7]);
-        $QualifiedCalls = $callRepository->findBy(["generalStatus" => 2]);
-        $NOTQualifiedCalls = $callRepository->findBy(["generalStatus" => 1]);
-        $RDVAppointments = $appointmentRepository->getAppointmentsWhereClientsExistCommercialStats();
-        if(count($allCalls) !== 0) {
-            $TXCTPercentage = number_format(((count($QualifiedCalls) / count($allCalls)) * 100), 2);
-        } else {
-            $TXCTPercentage = 0;
-        }
-        if(count($QualifiedCalls) !== 0) {
-            $TXTRANSFOPercentage = number_format(((count($RDVAppointments) / count($QualifiedCalls)) * 100), 2);
-        } else {
-            $TXTRANSFOPercentage = 0;
-        }*/
 
+        // NOT QUALIFIED contacts counter
+        $NOTQUALIFIEDcontactscounter = 0;
+        foreach ($processedContactsByStatus as $client) {
+            $breakNOTQUALIFIED = false;
+            foreach ($client as $dateTime => $status) {
+                if($breakNOTQUALIFIED === false) {
+                    if($status === 1) {
+                        $NOTQUALIFIEDcontactscounter += 1;
+                        $breakNOTQUALIFIED = true;
+                    }
+                }
+            }
+        }
 
         //Bloc Statistiques Générales
-        /*$allTelepros = $userRepository->findUsersByCommercialRole("ROLE_TELEPRO");
+        $allTelepros = $userRepository->findUsersByCommercialRole("ROLE_TELEPRO");
         $allContacts = $clientRepository->getNotDeletedClients();
-        $processedContacts = $clientRepository->getProcessedClients();*/
+        $processedContacts = $clientRepository->getProcessedClients();
 
         //Bloc Statistiques Par Utilisateur
         $users = $userRepository->findUsersTeleproStats("ROLE_TELEPRO", "ROLE_SUPERADMIN");
 
         return $this->render('teleprospecting/telepro_stats_new.html.twig', [
-            //Bloc Résumé Statistiques
-            /*'all_calls' => $allCalls,
-            'all_calls_count' => count($allCalls),
-            'PI_calls' => $PICalls,
-            'PI_calls_count' => count($PICalls),
-            'RAPPEL_calls' => $RAPPELCalls,
-            'RAPPEL_calls_count' => count($RAPPELCalls),
-            'NRP_calls' => $NRPCalls,
-            'NRP_calls_count' => count($NRPCalls),
-            'RDV' => $RDVAppointments,
-            'RDV_count' => count($RDVAppointments),
-            'TX_CT' => $TXCTPercentage,
-            'TX_TRANSFO' => $TXTRANSFOPercentage,
+
             //Bloc Statistiques Générales
             'telepro_count' => count($allTelepros),
-            'contacts_count' => count($allContacts),*/
+            'contacts_count' => count($allContacts),
             //Bloc Statistiques Pour La Période Sélectionnée
-            /*'processed_contacts_count' => count($processedContacts),
-            'QUALIFIED_calls' => $QualifiedCalls,
-            'QUALIFIED_calls_count' => count($QualifiedCalls),
-            'NOT_QUALIFIED_calls' => $NOTQualifiedCalls,
-            'NOT_QUALIFIED_calls_count' => count($NOTQualifiedCalls),*/
+            'processed_contacts_count' => count($processedContacts),
             //Bloc Statistiques Par Utilisateur
             'users' => $users,
             //new
             'clients_processes'=> $clientsProcesses,
+            'clients_processes_count'=> count($clientsProcesses),
             'all_PI_contacts_count' => $PIcounter,
             'all_RAPPEL_contacts_count' => $RAPPELcounter,
             'all_NRP_contacts_count' => $NRPcounter,
             'all_RDV_contacts_count' => $RDVcounter,
-            'clients_processes_by_status' => $qualifiedContactsArray,
+            'clients_processes_by_status' => $processedContactsByStatus,
             'TX_CT' => $TXCTPercentage,
             'TX_TRANSFOR' => $TXTRANSFORPercentage,
+            'NOT_QUALIFIED_contacts_count' => $NOTQUALIFIEDcontactscounter,
+            'QUALIFIED_contacts_count' => $QUALIFIEDcontactscounter
         ]);
     }
 

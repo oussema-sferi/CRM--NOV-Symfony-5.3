@@ -1009,6 +1009,88 @@ class AppointmentController extends AbstractController
 
 
     /**
+     * @Route("/dashboard/appointments/showcalendar/postponeappointment/{id}", name="postpone_appointment")
+     */
+    public function postponeAppointment(Request $request, $id): Response
+    {
+        $manager = $this->getDoctrine()->getManager();
+        $appointmentToPostpone = $this->getDoctrine()->getRepository(Appointment::class)->find($id);
+        $calendarUserId = $appointmentToPostpone->getUser()->getId();
+        $startDay = (($request->request->get('edit_form'))["start"])["date"];
+        $startHour = ((($request->request->get('edit_form'))["start"])["time"])["hour"];
+        $startMinute = ((($request->request->get('edit_form'))["start"])["time"])["minute"];
+        $endDay = (($request->request->get('edit_form'))["end"])["date"];
+        $endHour = ((($request->request->get('edit_form'))["end"])["time"])["hour"];
+        $endMinute = ((($request->request->get('edit_form'))["end"])["time"])["minute"];
+        if (strlen($startMinute) === 1) {
+            $startMinute = "0" . $startMinute;
+        }
+        if (strlen($endMinute) === 1) {
+            $endMinute = "0" . $endMinute;
+        }
+        $fullStartDate = $startDay . " " . $startHour . ":" . $startMinute;
+        $fullStartDateFormatted = \DateTime::createFromFormat('Y-m-d H:i',$fullStartDate);
+        $fullEndtDate = $endDay . " " . $endHour . ":" . $endMinute;
+        $fullEndDateFormatted = \DateTime::createFromFormat('Y-m-d H:i',$fullEndtDate);
+        $editedNotes = $request->request->get('notes');
+
+
+        //check availability
+        $validationStartTime = $fullStartDateFormatted;
+        $validationEndTime = $fullEndDateFormatted;
+        $appointmentDuration = date_diff($validationEndTime,$validationStartTime);
+        if($validationEndTime < $validationStartTime) {
+            $this->flashy->warning("Veuillez revérifier vos entrées! L'heure de début doit être avant l'heure de fin !");
+            return $this->redirectToRoute('show_calendar', [
+                'id' => $calendarUserId,
+            ]);
+        }
+
+        if($validationEndTime > $validationStartTime) {
+            $startTime = $fullStartDateFormatted->format('Y-m-d H:i:s');
+            $endTime = $fullEndDateFormatted->format('Y-m-d H:i:s');
+            $busyAppointmentsTime = $this->getDoctrine()->getRepository(Appointment::class)->getAppointmentsBetweenByDate($startTime, $endTime);
+            $newBusyAppointmentsTime = [];
+            foreach ($busyAppointmentsTime as $appointment) {
+                if ($appointment->getId() !== $appointmentToPostpone->getId())
+                    $newBusyAppointmentsTime[] = $appointment;
+            }
+            if ($newBusyAppointmentsTime) {
+                foreach ($newBusyAppointmentsTime as $appointment) {
+                    if ($appointment->getUser()->getId() === $calendarUserId) {
+                        $this->flashy->info("Aucune disponibilité à l'intervalle de temps choisi, Veuillez sélectionner d'autres dates !");
+                        return $this->redirectToRoute('show_calendar', [
+                            'id' => $calendarUserId,
+                        ]);
+                    }
+                }
+            } else {
+                $appointmentToPostpone->setStart($validationStartTime);
+                $appointmentToPostpone->setEnd($validationEndTime);
+                $appointmentToPostpone->setAppointmentNotes($editedNotes);
+                $appointmentToPostpone->setIsPostponed(true);
+                $manager->persist($appointmentToPostpone);
+                $manager->flush();
+                $this->flashy->success("RDV reporté avec succès !");
+                return $this->redirectToRoute('show_calendar', [
+                    'id' => $calendarUserId,
+                ]);
+            }
+
+        }
+        else {
+            if(($appointmentDuration->days === 0) && ($appointmentDuration->h === 0)
+                && ($appointmentDuration->i === 0) && ($appointmentDuration->s === 0)) {
+                $this->flashy->warning("Veuillez revérifier vos entrées! La durée du RDV ne doit pas être nulle !");
+            }
+            return $this->redirectToRoute('show_calendar', [
+                'id' => $calendarUserId,
+            ]);
+        }
+    }
+
+
+    /**
      * @Route("/dashboard/appointments/showcalendar/editgeozoneevent/{id}", name="edit_geo_zone_event")
      */
     public function editGeoZoneEvent(Request $request, $id): Response
