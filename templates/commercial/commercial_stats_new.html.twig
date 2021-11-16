@@ -266,6 +266,28 @@
                                         {% else %}
                                             {{ all_NRP_contacts_count }}
                                         {% endif %}#}
+                                        {% if app.session.get('date_filter_value_commercial_stats') is not null %}
+                                            {% set argu_appointments_counter = 0 %}
+                                            {% for appointment in argu_appointments %}
+                                                {% set appointment_isdone_date = appointment.doneAt | date('Y-m-d') %}
+                                                {% if filter == "0" or filter == "1" %}
+                                                    {% if appointment_isdone_date == selected_date %}
+                                                        {% set argu_appointments_counter = argu_appointments_counter + 1 %}
+                                                    {% endif %}
+                                                {% elseif filter == "100" %}
+                                                    {% if appointment_isdone_date >= start_date and appointment_isdone_date <= end_date %}
+                                                        {% set argu_appointments_counter = argu_appointments_counter + 1 %}
+                                                    {% endif %}
+                                                {% else %}
+                                                    {% if appointment_isdone_date >= selected_date %}
+                                                        {% set argu_appointments_counter = argu_appointments_counter + 1 %}
+                                                    {% endif%}
+                                                {% endif %}
+                                            {% endfor %}
+                                            {{ argu_appointments_counter }}
+                                        {% else %}
+                                            {{ argu_appointments_count }}
+                                        {% endif %}
                                     </td>
                                     <td>
                                         N/A
@@ -313,6 +335,28 @@
                                         {% else %}
                                             {{ all_RDV_contacts_count }}
                                         {% endif %}#}
+                                        {% if app.session.get('date_filter_value_commercial_stats') is not null %}
+                                            {% set vente_appointments_counter = 0 %}
+                                            {% for appointment in vente_appointments %}
+                                                {% set appointment_isdone_date = appointment.doneAt | date('Y-m-d') %}
+                                                {% if filter == "0" or filter == "1" %}
+                                                    {% if appointment_isdone_date == selected_date %}
+                                                        {% set vente_appointments_counter = vente_appointments_counter + 1 %}
+                                                    {% endif %}
+                                                {% elseif filter == "100" %}
+                                                    {% if appointment_isdone_date >= start_date and appointment_isdone_date <= end_date %}
+                                                        {% set vente_appointments_counter = vente_appointments_counter + 1 %}
+                                                    {% endif %}
+                                                {% else %}
+                                                    {% if appointment_isdone_date >= selected_date %}
+                                                        {% set vente_appointments_counter = vente_appointments_counter + 1 %}
+                                                    {% endif%}
+                                                {% endif %}
+                                            {% endfor %}
+                                            {{ vente_appointments_counter }}
+                                        {% else %}
+                                            {{ vente_appointments_count }}
+                                        {% endif %}
                                     </td>
                                     <td>
                                         N/A

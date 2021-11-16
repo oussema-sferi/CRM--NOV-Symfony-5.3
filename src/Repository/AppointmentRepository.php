@@ -123,6 +123,7 @@ class AppointmentRepository extends ServiceEntityRepository
         $qb->select('a')
             ->where('a.client IS NOT NULL')
             ->andWhere("a.isDone != 0" )
+            ->andWhere("a.isDone != 1" )
             ->andWhere('a.isDeleted = 0');
 
         return $qb->getQuery()->getResult();
@@ -134,7 +135,8 @@ class AppointmentRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('a');
         $qb->select('a')
             ->where('a.client IS NOT NULL')
-            ->andWhere("a.isDone = 0" )
+            ->andWhere("a.isDone = 0")
+            ->orWhere("a.isDone = 1")
             ->andWhere('a.isDeleted = 0');
 
         return $qb->getQuery()->getResult();
@@ -294,7 +296,8 @@ class AppointmentRepository extends ServiceEntityRepository
             ->join('a.user', 'u')
             ->where('a.client IS NOT NULL')
             ->andWhere("u.id =$Id" )
-            ->andWhere('a.isDone != 0')
+            ->andWhere('a.isDone = 2')
+            ->orWhere('a.isDone = 3')
             ->andWhere('a.isDeleted = 0');
 
         return $qb->orderBy('a.start', 'DESC')->getQuery()->getResult();
@@ -321,6 +324,7 @@ class AppointmentRepository extends ServiceEntityRepository
             ->where('a.client IS NOT NULL')
             ->andWhere("u.id =$Id" )
             ->andWhere('a.isDone = 0')
+            ->orWhere('a.isDone = 1')
             ->andWhere('a.isDeleted = 0');
 
         return $qb->orderBy('a.start', 'DESC')->getQuery()->getResult();
@@ -365,10 +369,26 @@ class AppointmentRepository extends ServiceEntityRepository
     {
         $qb = $this->createQueryBuilder('a');
         $qb->select('a')
-            ->join('a.client', 'c')
             ->where('a.isDeleted = 0')
-            ->andWhere("a.isDone = 0")
-            ->andWhere("a.isPostponed = 1");
+            ->andWhere("a.isDone = 1");
+        return $qb->getQuery()->getResult();
+    }
+
+    public function getArguAppointments()
+    {
+        $qb = $this->createQueryBuilder('a');
+        $qb->select('a')
+            ->where('a.isDeleted = 0')
+            ->andWhere("a.isDone = 2");
+        return $qb->getQuery()->getResult();
+    }
+
+    public function getVenteAppointments()
+    {
+        $qb = $this->createQueryBuilder('a');
+        $qb->select('a')
+            ->where('a.isDeleted = 0')
+            ->andWhere("a.isDone = 3");
         return $qb->getQuery()->getResult();
     }
 }

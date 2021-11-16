@@ -1068,7 +1068,8 @@ class AppointmentController extends AbstractController
                 $appointmentToPostpone->setStart($validationStartTime);
                 $appointmentToPostpone->setEnd($validationEndTime);
                 $appointmentToPostpone->setAppointmentNotes($editedNotes);
-                $appointmentToPostpone->setIsPostponed(true);
+                $appointmentToPostpone->setIsDone(1);
+                $appointmentToPostpone->setPostponedAt(new \DateTime());
                 $manager->persist($appointmentToPostpone);
                 $manager->flush();
                 $this->flashy->success("RDV reporté avec succès !");

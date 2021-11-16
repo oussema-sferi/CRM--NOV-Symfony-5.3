@@ -163,9 +163,9 @@ class CommercialController extends AbstractController
             }*/
             $isDoneStatus = $request->request->get('appointment_status');
             if($isDoneStatus === "argu") {
-                $appointmentToProcess->setIsDone(1);
-            } elseif ($isDoneStatus === "vente") {
                 $appointmentToProcess->setIsDone(2);
+            } elseif ($isDoneStatus === "vente") {
+                $appointmentToProcess->setIsDone(3);
             }
             $appointmentToProcess->setDoneAt(new \DateTime());
             $appointmentToProcess->setPostAppointmentNotes($request->request->get('notes'));
@@ -310,6 +310,15 @@ class CommercialController extends AbstractController
         $postponedAppointments = $appointmentRepository->getPostponedAppointments();
         $postponedAppointmentsCount = count($postponedAppointments);
 
+        // Argu RDV count
+        $arguAppointments = $appointmentRepository->getArguAppointments();
+        $arguAppointmentsCount = count($arguAppointments);
+
+        // Vente RDV count
+        $venteAppointments = $appointmentRepository->getVenteAppointments();
+        $venteAppointmentsCount = count($venteAppointments);
+
+
         /*dd($reportedAppointments);*/
         // QUALIFIED contacts counter
         /*$processedContactsByStatus = [];
@@ -386,6 +395,10 @@ class CommercialController extends AbstractController
             'deleted_appointments' => $deletedAppointments,
             'postponed_appointments' => $postponedAppointments,
             'postponed_appointments_count' => $postponedAppointmentsCount,
+            'argu_appointments' => $arguAppointments,
+            'argu_appointments_count' => $arguAppointmentsCount,
+            'vente_appointments' => $venteAppointments,
+            'vente_appointments_count' => $venteAppointmentsCount,
             /*'contacts_count' => count($allContacts),*/
             //Bloc Statistiques Pour La Période Sélectionnée
             /*'processed_contacts_count' => count($processedContacts),*/
