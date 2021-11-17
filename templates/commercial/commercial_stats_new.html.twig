@@ -728,27 +728,203 @@
                             </thead>
                             <tbody>
                             {% for user in users %}
+                                {% set all_user_appointments = [] %}
+                                {% if user.appointments|default %}
+                                    {% for appointment in user.appointments %}
+                                        {% if appointment.client is not null %}
+                                        {% set all_user_appointments = all_user_appointments|merge([appointment]) %}
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                                {#{{ dump(all_user_appointments) }}#}
+
                                 <tr class="clickable-row" data-href="{{ path('statistics_per_user', {'id': user.id}) }}">
                                     <th scope="row">
                                         {{ user.firstName ~ ' ' ~ user.lastName }}
                                     </th>
                                     <td>
-                                        0
+                                        {% if app.session.get('date_filter_value_commercial_stats') is not null %}
+                                            {% set assigned_appointments_by_user_counter = 0 %}
+                                            {% for assigned_appointment_by_user in all_user_appointments %}
+                                                {% set assigned_appointment_by_user_date = assigned_appointment_by_user.createdAt | date('Y-m-d') %}
+                                                {% if filter == "0" or filter == "1" %}
+                                                    {% if assigned_appointment_by_user_date == selected_date %}
+                                                        {% set assigned_appointments_by_user_counter = assigned_appointments_by_user_counter + 1 %}
+                                                    {% endif %}
+                                                {% elseif filter == "100" %}
+                                                    {% if assigned_appointment_by_user_date >= start_date and assigned_appointment_by_user_date <= end_date %}
+                                                        {% set assigned_appointments_by_user_counter = assigned_appointments_by_user_counter + 1 %}
+                                                    {% endif %}
+                                                {% else %}
+                                                    {% if assigned_appointment_by_user_date >= selected_date %}
+                                                        {% set assigned_appointments_by_user_counter = assigned_appointments_by_user_counter + 1 %}
+                                                    {% endif%}
+                                                {% endif %}
+                                            {% endfor %}
+                                            {{ assigned_appointments_by_user_counter }}
+                                        {% else %}
+                                            {{ all_user_appointments | length }}
+                                        {% endif %}
                                     </td>
                                     <td>
-                                        0
+                                        {% if app.session.get('date_filter_value_commercial_stats') is not null %}
+                                            {% set done_appointments_by_user_counter = 0 %}
+                                            {% for done_appointment_by_user in all_user_appointments %}
+                                                {% if (done_appointment_by_user.isDone == 2 or done_appointment_by_user.isDone == 3) and done_appointment_by_user.isDeleted == 0 %}
+                                                    {% set done_appointments_by_user_date = done_appointment_by_user.doneAt | date('Y-m-d') %}
+                                                    {% if filter == "0" or filter == "1" %}
+                                                        {% if done_appointments_by_user_date == selected_date %}
+                                                            {% set done_appointments_by_user_counter = done_appointments_by_user_counter + 1 %}
+                                                        {% endif %}
+                                                    {% elseif filter == "100" %}
+                                                        {% if done_appointments_by_user_date >= start_date and done_appointments_by_user_date <= end_date %}
+                                                            {% set done_appointments_by_user_counter = done_appointments_by_user_counter + 1 %}
+                                                        {% endif %}
+                                                    {% else %}
+                                                        {% if done_appointments_by_user_date >= selected_date %}
+                                                            {% set done_appointments_by_user_counter = done_appointments_by_user_counter + 1 %}
+                                                        {% endif%}
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% endfor %}
+                                            {{ done_appointments_by_user_counter }}
+                                        {% else %}
+                                            {% set done_appointments_by_user_counter_without_filter = 0 %}
+                                            {% for done_appointment_by_user in all_user_appointments %}
+                                                {% if (done_appointment_by_user.isDone == 2 or done_appointment_by_user.isDone == 3) and done_appointment_by_user.isDeleted == 0 %}
+                                                    {% set done_appointments_by_user_counter_without_filter = done_appointments_by_user_counter_without_filter + 1 %}
+                                                {% endif %}
+                                            {% endfor %}
+                                            {{ done_appointments_by_user_counter_without_filter }}
+                                        {% endif %}
                                     </td>
                                     <td>
-                                        0
+                                        {% if app.session.get('date_filter_value_commercial_stats') is not null %}
+                                            {% set ARGU_appointments_by_user_counter = 0 %}
+                                            {% for done_appointment_by_user in all_user_appointments %}
+                                                {% if done_appointment_by_user.isDone == 2 and done_appointment_by_user.isDeleted == 0 %}
+                                                    {% set ARGU_appointments_by_user_date = done_appointment_by_user.doneAt | date('Y-m-d') %}
+                                                    {% if filter == "0" or filter == "1" %}
+                                                        {% if ARGU_appointments_by_user_date == selected_date %}
+                                                            {% set ARGU_appointments_by_user_counter = ARGU_appointments_by_user_counter + 1 %}
+                                                        {% endif %}
+                                                    {% elseif filter == "100" %}
+                                                        {% if ARGU_appointments_by_user_date >= start_date and ARGU_appointments_by_user_date <= end_date %}
+                                                            {% set ARGU_appointments_by_user_counter = ARGU_appointments_by_user_counter + 1 %}
+                                                        {% endif %}
+                                                    {% else %}
+                                                        {% if ARGU_appointments_by_user_date >= selected_date %}
+                                                            {% set ARGU_appointments_by_user_counter = ARGU_appointments_by_user_counter + 1 %}
+                                                        {% endif%}
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% endfor %}
+                                            {{ ARGU_appointments_by_user_counter }}
+                                        {% else %}
+                                            {% set ARGU_appointments_by_user_counter_without_filter = 0 %}
+                                            {% for done_appointment_by_user in all_user_appointments %}
+                                                {% if done_appointment_by_user.isDone == 2 and done_appointment_by_user.isDeleted == 0 %}
+                                                    {% set ARGU_appointments_by_user_counter_without_filter = ARGU_appointments_by_user_counter_without_filter + 1 %}
+                                                {% endif %}
+                                            {% endfor %}
+                                            {{ ARGU_appointments_by_user_counter_without_filter }}
+                                        {% endif %}
                                     </td>
                                     <td>
-                                        0
+                                        {% if app.session.get('date_filter_value_commercial_stats') is not null %}
+                                            {% set VENTE_appointments_by_user_counter = 0 %}
+                                            {% for done_appointment_by_user in all_user_appointments %}
+                                                {% if done_appointment_by_user.isDone == 3 and done_appointment_by_user.isDeleted == 0 %}
+                                                    {% set VENTE_appointments_by_user_date = done_appointment_by_user.doneAt | date('Y-m-d') %}
+                                                    {% if filter == "0" or filter == "1" %}
+                                                        {% if VENTE_appointments_by_user_date == selected_date %}
+                                                            {% set VENTE_appointments_by_user_counter = VENTE_appointments_by_user_counter + 1 %}
+                                                        {% endif %}
+                                                    {% elseif filter == "100" %}
+                                                        {% if VENTE_appointments_by_user_date >= start_date and VENTE_appointments_by_user_date <= end_date %}
+                                                            {% set VENTE_appointments_by_user_counter = VENTE_appointments_by_user_counter + 1 %}
+                                                        {% endif %}
+                                                    {% else %}
+                                                        {% if VENTE_appointments_by_user_date >= selected_date %}
+                                                            {% set VENTE_appointments_by_user_counter = VENTE_appointments_by_user_counter + 1 %}
+                                                        {% endif%}
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% endfor %}
+                                            {{ VENTE_appointments_by_user_counter }}
+                                        {% else %}
+                                            {% set VENTE_appointments_by_user_counter_without_filter = 0 %}
+                                            {% for done_appointment_by_user in all_user_appointments %}
+                                                {% if done_appointment_by_user.isDone == 3 and done_appointment_by_user.isDeleted == 0 %}
+                                                    {% set VENTE_appointments_by_user_counter_without_filter = VENTE_appointments_by_user_counter_without_filter + 1 %}
+                                                {% endif %}
+                                            {% endfor %}
+                                            {{ VENTE_appointments_by_user_counter_without_filter }}
+                                        {% endif %}
                                     </td>
                                     <td>
-                                        0
+                                        {% if app.session.get('date_filter_value_commercial_stats') is not null %}
+                                            {% set POSTPONED_appointments_by_user_counter = 0 %}
+                                            {% for POSTPONED_appointment_by_user in all_user_appointments %}
+                                                {% if POSTPONED_appointment_by_user.isDone == 1 and POSTPONED_appointment_by_user.isDeleted == 0 %}
+                                                    {% set POSTPONED_appointments_by_user_date = POSTPONED_appointment_by_user.postponedAt | date('Y-m-d') %}
+                                                    {% if filter == "0" or filter == "1" %}
+                                                        {% if POSTPONED_appointments_by_user_date == selected_date %}
+                                                            {% set POSTPONED_appointments_by_user_counter = POSTPONED_appointments_by_user_counter + 1 %}
+                                                        {% endif %}
+                                                    {% elseif filter == "100" %}
+                                                        {% if POSTPONED_appointments_by_user_date >= start_date and POSTPONED_appointments_by_user_date <= end_date %}
+                                                            {% set POSTPONED_appointments_by_user_counter = POSTPONED_appointments_by_user_counter + 1 %}
+                                                        {% endif %}
+                                                    {% else %}
+                                                        {% if POSTPONED_appointments_by_user_date >= selected_date %}
+                                                            {% set POSTPONED_appointments_by_user_counter = POSTPONED_appointments_by_user_counter + 1 %}
+                                                        {% endif%}
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% endfor %}
+                                            {{ POSTPONED_appointments_by_user_counter }}
+                                        {% else %}
+                                            {% set POSTPONED_appointments_by_user_counter_without_filter = 0 %}
+                                            {% for POSTPONED_appointment_by_user in all_user_appointments %}
+                                                {% if POSTPONED_appointment_by_user.isDone == 1 and POSTPONED_appointment_by_user.isDeleted == 0 %}
+                                                    {% set POSTPONED_appointments_by_user_counter_without_filter = POSTPONED_appointments_by_user_counter_without_filter + 1 %}
+                                                {% endif %}
+                                            {% endfor %}
+                                            {{ POSTPONED_appointments_by_user_counter_without_filter }}
+                                        {% endif %}
                                     </td>
                                     <td>
-                                        0
+                                        {% if app.session.get('date_filter_value_commercial_stats') is not null %}
+                                            {% set DELETED_appointments_by_user_counter = 0 %}
+                                            {% for DELETED_appointment_by_user in all_user_appointments %}
+                                                {% if DELETED_appointment_by_user.isDeleted == 1 %}
+                                                    {% set DELETED_appointments_by_user_date = DELETED_appointment_by_user.deletionDate | date('Y-m-d') %}
+                                                    {% if filter == "0" or filter == "1" %}
+                                                        {% if DELETED_appointments_by_user_date == selected_date %}
+                                                            {% set DELETED_appointments_by_user_counter = DELETED_appointments_by_user_counter + 1 %}
+                                                        {% endif %}
+                                                    {% elseif filter == "100" %}
+                                                        {% if DELETED_appointments_by_user_date >= start_date and DELETED_appointments_by_user_date <= end_date %}
+                                                            {% set DELETED_appointments_by_user_counter = DELETED_appointments_by_user_counter + 1 %}
+                                                        {% endif %}
+                                                    {% else %}
+                                                        {% if DELETED_appointments_by_user_date >= selected_date %}
+                                                            {% set DELETED_appointments_by_user_counter = DELETED_appointments_by_user_counter + 1 %}
+                                                        {% endif%}
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% endfor %}
+                                            {{ DELETED_appointments_by_user_counter }}
+                                        {% else %}
+                                            {% set DELETED_appointments_by_user_counter_without_filter = 0 %}
+                                            {% for DELETED_appointment_by_user in all_user_appointments %}
+                                                {% if DELETED_appointment_by_user.isDeleted == 1 %}
+                                                    {% set DELETED_appointments_by_user_counter_without_filter = DELETED_appointments_by_user_counter_without_filter + 1 %}
+                                                {% endif %}
+                                            {% endfor %}
+                                            {{ DELETED_appointments_by_user_counter_without_filter }}
+                                        {% endif %}
                                     </td>
                                     <td>
                                         <a href="{{ path('statistics_per_user', {'id': user.id}) }}"><i class="fas fa-search-plus text-blue"></i></a>&nbsp;&nbsp;
