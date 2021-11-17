@@ -673,6 +673,7 @@ class AppointmentController extends AbstractController
     public function fullUpdateAppointment(Request $request, $id): Response
     {
         $manager = $this->getDoctrine()->getManager();
+        $isDoneStatus = (int)$request->request->get('is_done');
         $startDay = (($request->request->get('edit_form'))["start"])["date"];
         $startHour = ((($request->request->get('edit_form'))["start"])["time"])["hour"];
         $startMinute = ((($request->request->get('edit_form'))["start"])["time"])["minute"];
@@ -695,6 +696,12 @@ class AppointmentController extends AbstractController
         $clientId = $appointmentToUpdate->getClient()->getId();
         $appointmentToUpdate->setStart($fullStartDateFormatted);
         $appointmentToUpdate->setEnd($fullEndDateFormatted);
+        if($isDoneStatus === 1) {
+            $appointmentToUpdate->setPostponedAt(new \DateTime());
+        } elseif ($isDoneStatus === 0) {
+            $appointmentToUpdate->setPostponedAt(null);
+        }
+        $appointmentToUpdate->setIsDone($isDoneStatus);
         $appointmentToUpdate->setAppointmentNotes($request->request->get('notes_appointment'));
         $appointmentToUpdate->setUser($selectedCommercial);
         $manager->persist($appointmentToUpdate);
@@ -753,7 +760,7 @@ class AppointmentController extends AbstractController
         }
         $manager->persist($client);
         $manager->flush();
-        $this->flashy->success('RDV supprimé avec succès !');
+        $this->flashy->success('RDV annulé avec succès !');
         return $this->redirect($referer);
     }
 

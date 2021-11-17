@@ -366,7 +366,7 @@ class TeleprospectingController extends AbstractController
     }
 
     /**
-     * @Route("/dashboard/teleprospecting/stats", name="teleprospecting_stats")
+     * @Route("/dashboard/teleprospecting/statsold", name="teleprospecting_stats")
      */
     public function teleprospectingStats(Request $request): Response
     {
@@ -516,7 +516,7 @@ class TeleprospectingController extends AbstractController
 
 
     /**
-     * @Route("/dashboard/teleprospecting/statsnew", name="teleprospecting_stats_new")
+     * @Route("/dashboard/teleprospecting/stats", name="teleprospecting_stats_new")
      */
     public function teleprospectingStatsNew(Request $request, ProcessRepository $processRepository,CallRepository $callRepository, UserRepository $userRepository, ClientRepository $clientRepository, AppointmentRepository $appointmentRepository): Response
     {

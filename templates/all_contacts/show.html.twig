@@ -342,7 +342,7 @@
                                     <div class="col-lg-6">
                                         <div class="form-group">
                                             <label class="form-control-label" for="input-country">Détails</label>
-                                            <input type="text" id="input-country" class="form-control" value="{% if call.statusDetails == 1 %}Ne répond pas{% elseif call.statusDetails == 2 %}Répondeur{% elseif call.statusDetails == 3 %}Barrage Secrétaire{% elseif call.statusDetails == 4 %}Pas Intéressé{% elseif call.statusDetails == 5 %}A Rappeler{% elseif call.statusDetails == 6 %}RDV à prendre{% elseif call.statusDetails == 7 %}RDV fixé {% else %}Non traité{% endif %}" disabled>
+                                            <input type="text" id="input-country" class="form-control" value="{% if call.statusDetails == 1 %}Ne répond pas{% elseif call.statusDetails == 2 %}Répondeur{% elseif call.statusDetails == 3 %}Barrage Secrétaire{% elseif call.statusDetails == 5 %}Pas Intéressé{% elseif call.statusDetails == 6 %}A Rappeler{% elseif call.statusDetails == 7 %}RDV fixé {% else %}Non traité{% endif %}" disabled>
                                         </div>
                                     </div>
                                 </div>
@@ -419,7 +419,7 @@
                                     <div class="col-lg-3">
                                         <div class="form-group">
                                             <label class="form-control-label" for="input-city">Etat</label>
-                                            <input type="text" id="input-city" class="form-control" value="{% if appointment.isDone == 0 %}A Venir{% else %}Effectué{% endif %}" disabled>
+                                            <input type="text" id="input-city" class="form-control" value="{% if appointment.isDone == 0 %}A Venir{% elseif appointment.isDone == 1 %}Reporté{% elseif appointment.isDone == 2 %}Argu{% elseif appointment.isDone == 3 %}Vente{% endif %}" disabled>
                                         </div>
                                     </div>
                                 </div>

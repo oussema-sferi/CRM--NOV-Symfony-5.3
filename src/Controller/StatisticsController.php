@@ -28,7 +28,7 @@ class StatisticsController extends AbstractController
     }
 
     /**
-     * @Route("/dashboard/allstats", name="all_statistics")
+     * @Route("/dashboard/allstatsold", name="all_statistics")
      */
     public function index(): Response
     {
@@ -281,7 +281,7 @@ class StatisticsController extends AbstractController
     }
 
     /**
-     * @Route("/dashboard/allstatsnew", name="all_statistics_new")
+     * @Route("/dashboard/allstats", name="all_statistics_new")
      */
     public function allStatsNew(Request $request, ProcessRepository $processRepository,CallRepository $callRepository, UserRepository $userRepository, ClientRepository $clientRepository, AppointmentRepository $appointmentRepository): Response
     {

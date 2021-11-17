@@ -301,7 +301,7 @@
                                                         </div>#}
                                                         <div class="form-group">
                                                             <label class="form-control-label" for="input-country">Détails</label>
-                                                            <input type="text" id="input-country" class="form-control" value="{% if call.statusDetails == 1 %}Ne répond pas{% elseif call.statusDetails == 2 %}Répondeur{% elseif call.statusDetails == 3 %}Barrage Secrétaire{% elseif call.statusDetails == 4 %}Pas Intéressé{% elseif call.statusDetails == 5 %}A Rappeler{% elseif call.statusDetails == 6 %}RDV à prendre{% elseif call.statusDetails == 7 %}RDV fixé {% else %}Non traité{% endif %}" disabled>
+                                                            <input type="text" id="input-country" class="form-control" value="{% if call.statusDetails == 1 %}Ne répond pas{% elseif call.statusDetails == 2 %}Répondeur{% elseif call.statusDetails == 3 %}Barrage Secrétaire{% elseif call.statusDetails == 5 %}Pas Intéressé{% elseif call.statusDetails == 6 %}A Rappeler{% elseif call.statusDetails == 7 %}RDV fixé {% else %}Non traité{% endif %}" disabled>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -398,9 +398,9 @@
                                                                         <option value="1" {% if call.statusDetails == 1 %} selected {% endif %}>Ne répond pas</option>
                                                                         <option value="2" {% if call.statusDetails == 2 %} selected {% endif %}>Répondeur</option>
                                                                         <option value="3" {% if call.statusDetails == 3 %} selected {% endif %}>Barrage Secrétaire</option>
-                                                                        <option value="4" {% if call.statusDetails == 4 %} selected {% endif %}>Pas Intéressé</option>
-                                                                        <option value="5" {% if call.statusDetails == 5 %} selected {% endif %}>A Rappeler</option>
-                                                                        <option value="6" {% if call.statusDetails == 6 %} selected {% endif %}>RDV à prendre</option>
+                                                                        {#<option value="4" {% if call.statusDetails == 4 %} selected {% endif %}></option>#}
+                                                                        <option value="5" {% if call.statusDetails == 5 %} selected {% endif %}>Pas Intéressé</option>
+                                                                        <option value="6" {% if call.statusDetails == 6 %} selected {% endif %}>A Rappeler</option>
                                                                         <option value="7" {% if call.statusDetails == 7 %} selected {% endif %}>RDV fixé</option>
                                                                     </select>
                                                                 </div>
@@ -520,7 +520,7 @@
                                         </div>#}
                                         <div class="form-group">
                                             <label class="form-control-label" for="input-city">Etat</label>
-                                            <input type="text" id="input-city" class="form-control" value="{% if appointment.isDone == 0 %}A Venir{% else %}Effectué{% endif %}" disabled>
+                                            <input type="text" id="input-city" class="form-control" value="{% if appointment.isDone == 0 %}A Venir{% elseif appointment.isDone == 1 %}Reporté{% elseif appointment.isDone == 2 %}Argu{% elseif appointment.isDone == 3 %}Vente{% endif %}" disabled>
                                         </div>
                                     </div>
                                 </div>
@@ -599,7 +599,7 @@
                                                             <div id="edit_form_start"><input type="date" id="edit_form_start_date" name="edit_form[start][date]" value="{{ appointment.start|date('Y-m-d') }}" required="required">
                                                                 <div id="edit_form_start_time">
                                                                     <select id="edit_form_start_time_hour" name="edit_form[start][time][hour]">
-                                                                        <option value="0">00</option><option value="1">01</option><option value="2">02</option><option value="3">03</option><option value="4">04</option><option value="5">05</option><option value="6">06</option><option value="7">07</option><option value="8">08</option><option{# {% if appointment.start|date('H') == 09 %} selected {% endif %} #}value="9">09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option>
+                                                                        <option value="0">00</option><option value="1">01</option><option value="2">02</option><option value="3">03</option><option value="4">04</option><option value="5">05</option><option value="6">06</option><option value="7">07</option><option value="8">08</option><option value="9">09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option>
                                                                     </select>:
                                                                     <select id="edit_form_start_time_minute" name="edit_form[start][time][minute]"><option value="0">00</option><option value="1">01</option><option value="2">02</option><option value="3">03</option><option value="4">04</option><option value="5">05</option><option value="6">06</option><option value="7">07</option><option value="8">08</option><option value="9">09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option><option value="26">26</option><option value="27">27</option><option value="28">28</option><option value="29">29</option><option value="30">30</option><option value="31">31</option><option value="32">32</option><option value="33">33</option><option value="34">34</option><option value="35">35</option><option value="36">36</option><option value="37">37</option><option value="38">38</option><option value="39">39</option><option value="40">40</option><option value="41">41</option><option value="42">42</option><option value="43">43</option><option value="44">44</option><option value="45">45</option><option value="46">46</option><option value="47">47</option><option value="48">48</option><option value="49">49</option><option value="50">50</option><option value="51">51</option><option value="52">52</option><option value="53">53</option><option value="54">54</option><option value="55">55</option><option value="56">56</option><option value="57">57</option><option value="58">58</option><option value="59">59</option>
                                                                     </select>
@@ -632,6 +632,27 @@
                                                             {% for commercial in commercials %}
                                                                 <option value="{{ commercial.id }}" {% if appointment.user.id == commercial.id %} selected {% endif %}>{{ commercial.firstName ~ ' ' ~ commercial.lastName }}</option>
                                                             {% endfor %}
+                                                        </select>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label class="form-control-label" for="status_details">Etat</label>
+                                                        {#<select name="status_details" id="status_details" class="form-control">
+                                                            <option value="" selected>Choisir...</option>
+                                                            <option value="1" {% if call.statusDetails == 1 %} selected {% endif %}>Ne répond pas</option>
+                                                            <option value="2" {% if call.statusDetails == 2 %} selected {% endif %}>Répondeur</option>
+                                                            <option value="3" {% if call.statusDetails == 3 %} selected {% endif %}>Barrage Secrétaire</option>
+                                                            #}{#<option value="4" {% if call.statusDetails == 4 %} selected {% endif %}></option>#}{#
+                                                            <option value="5" {% if call.statusDetails == 5 %} selected {% endif %}>Pas Intéressé</option>
+                                                            <option value="6" {% if call.statusDetails == 6 %} selected {% endif %}>A Rappeler</option>
+                                                            <option value="7" {% if call.statusDetails == 7 %} selected {% endif %}>RDV fixé</option>
+                                                        </select>#}
+                                                        <select id="is_done" name="is_done" class="form-control">
+                                                            <option value="" selected>--- Choisir ---</option>
+                                                            <option value="0" {% if appointment.isDone == 0 %} selected {% endif %}>A venir</option>
+                                                            <option value="1" {% if appointment.isDone == 1 %} selected {% endif %}>Reporté</option>
+                                                            {#<option value="2" {% if appointment.isDone == 2 %} selected {% endif %}>Argu</option>
+                                                            <option value="3" {% if appointment.isDone == 3 %} selected {% endif %}>Vente</option>#}
                                                         </select>
                                                     </div>
 
@@ -728,6 +749,14 @@
         $(document).ready(function() {
             $('#client_form_geographicArea').val({{ client_to_update.geographicArea.id }})
             $('#client_form_category').val({{ client_to_update.category }})
+
+
+            $("#edit_form_start_time_hour").val(9)
+            $("#edit_form_end_time_hour").val(10)
+
+            $("#edit_form_start_date").on("change", function () {
+                $("#edit_form_end_date").val(this.value)
+            })
 
             $("#edit_form_start_time_hour").on("change", function () {
                 if(this.value == "23") {

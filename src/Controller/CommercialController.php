@@ -184,7 +184,7 @@ class CommercialController extends AbstractController
 
 
     /**
-     * @Route("/dashboard/commercial/stats", name="commercial_stats")
+     * @Route("/dashboard/commercial/statsold", name="commercial_stats")
      */
     public function commercialStats(): Response
     {
@@ -225,7 +225,7 @@ class CommercialController extends AbstractController
     }
 
     /**
-     * @Route("/dashboard/commercial/statsnew", name="commercial_stats_new")
+     * @Route("/dashboard/commercial/stats", name="commercial_stats_new")
      */
     public function commercialStatsNew(Request $request, ProcessRepository $processRepository,CallRepository $callRepository, UserRepository $userRepository, ClientRepository $clientRepository, AppointmentRepository $appointmentRepository): Response
     {
