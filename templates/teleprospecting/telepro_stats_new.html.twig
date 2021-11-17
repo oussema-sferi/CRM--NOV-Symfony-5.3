@@ -1371,11 +1371,11 @@
                             <thead class="thead-light">
                             <tr>
                                 <th scope="col">Utilisateur</th>
-                                <th scope="col">Contacts Assignés</th>
+                                {#<th scope="col">Contacts Assignés</th>#}
                                 <th scope="col">Contacts Traités</th>
-                                <th scope="col">Contacts Restants</th>
-                                <th scope="col">Appels NQ</th>
-                                <th scope="col">Appels Q</th>
+                                {#<th scope="col">Contacts Restants</th>#}
+                                <th scope="col">Contacts Q</th>
+                                <th scope="col">Contacts NQ</th>
                                 <th scope="col">PI</th>
                                 <th scope="col">A Rappeler</th>
                                 <th scope="col">RDV</th>
@@ -1384,33 +1384,271 @@
                             </thead>
                             <tbody>
                             {% for user in users %}
+                                {% set processes_clients_ids_array = [] %}
+                                {% for process in user.processes  %}
+                                    {% set processes_clients_ids_array = processes_clients_ids_array|merge([process.client.id]) %}
+                                {% endfor %}
+
+                                {% set newArray = [] %}
+                                {% for id in processes_clients_ids_array %}
+                                    {% if id not in newArray %}
+                                        {% set newArray = newArray|merge([id]) %}
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% set sorted_processes = [] %}
+                                {% if user.processes|default %}
+                                    {% set processes_array_count = user.processes|length - 1 %}
+                                    {% for i in processes_array_count..0 %}
+                                        {% set sorted_processes = sorted_processes|merge([user.processes[i]]) %}
+                                    {% endfor %}
+                                {% endif %}
                                 <tr class="clickable-row" data-href="{{ path('statistics_per_user', {'id': user.id}) }}">
                                     <th scope="row">
                                         {{ user.firstName ~ ' ' ~ user.lastName }}
                                     </th>
-                                    <td>
+                                    {#<td>
                                         0
+                                    </td>#}
+                                    <td>
+                                        {% set unique_client_processes = newArray %}
+                                        {% if app.session.get('date_filter_value') is not null %}
+                                            {% set processed_clients_counter_by_user = 0 %}
+                                            {% for sorted_process in sorted_processes  %}
+                                                {% set sorted_process_date = sorted_process.createdAt | date('Y-m-d') %}
+                                                {% if sorted_process.client.id in unique_client_processes %}
+                                                    {% if filter == "0" or filter == "1" %}
+                                                        {% if sorted_process_date == selected_date %}
+                                                            {% set processed_clients_counter_by_user = processed_clients_counter_by_user + 1 %}
+                                                            {% set unique_client_processes = remove(unique_client_processes, sorted_process.client.id) %}
+                                                        {% endif %}
+                                                    {% elseif filter == "100" %}
+                                                        {% if sorted_process_date >= start_date and sorted_process_date <= end_date %}
+                                                            {% set processed_clients_counter_by_user = processed_clients_counter_by_user + 1 %}
+                                                            {% set unique_client_processes = remove(unique_client_processes, sorted_process.client.id) %}
+                                                        {% endif %}
+                                                    {% else %}
+                                                        {% if sorted_process_date >= selected_date %}
+                                                            {% set processed_clients_counter_by_user = processed_clients_counter_by_user + 1 %}
+                                                            {% set unique_client_processes = remove(unique_client_processes, sorted_process.client.id) %}
+                                                        {% endif%}
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% endfor %}
+                                            {{ processed_clients_counter_by_user }}
+                                        {% else %}
+                                            {{ unique_client_processes | length }}
+                                        {% endif %}
+                                    </td>
+                                   {# <td>
+                                        0
+                                    </td>#}
+                                    <td>
+                                        {#{{ dump(sorted_processes) }}#}
+                                        {% set Q_unique_client_processes = newArray %}
+                                        {% if app.session.get('date_filter_value') is not null %}
+                                            {% set Q_clients_counter_by_user = 0 %}
+                                            {% for sorted_process in sorted_processes  %}
+                                                {% set Q_sorted_process_date = sorted_process.createdAt | date('Y-m-d') %}
+                                                {% if sorted_process.client.id in Q_unique_client_processes %}
+                                                    {% if sorted_process.status == 2 %}
+                                                        {% if filter == "0" or filter == "1" %}
+                                                            {% if Q_sorted_process_date == selected_date %}
+                                                                {% set Q_clients_counter_by_user = Q_clients_counter_by_user + 1 %}
+                                                                {% set Q_unique_client_processes = remove(Q_unique_client_processes, sorted_process.client.id) %}
+                                                            {% endif %}
+                                                        {% elseif filter == "100" %}
+                                                            {% if Q_sorted_process_date >= start_date and Q_sorted_process_date <= end_date %}
+                                                                {% set Q_clients_counter_by_user = Q_clients_counter_by_user + 1 %}
+                                                                {% set Q_unique_client_processes = remove(Q_unique_client_processes, sorted_process.client.id) %}
+                                                            {% endif %}
+                                                        {% else %}
+                                                            {% if Q_sorted_process_date >= selected_date %}
+                                                                {% set Q_clients_counter_by_user = Q_clients_counter_by_user + 1 %}
+                                                                {% set Q_unique_client_processes = remove(Q_unique_client_processes, sorted_process.client.id) %}
+                                                            {% endif%}
+                                                        {% endif %}
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% endfor %}
+                                            {{ Q_clients_counter_by_user }}
+                                        {% else %}
+                                            {% set Q_clients_counter_by_user_without_filter = 0 %}
+                                            {% for sorted_process in sorted_processes  %}
+                                                {% if sorted_process.client.id in Q_unique_client_processes %}
+                                                    {% if sorted_process.status == 2 %}
+                                                        {% set Q_clients_counter_by_user_without_filter = Q_clients_counter_by_user_without_filter + 1 %}
+                                                        {% set Q_unique_client_processes = remove(Q_unique_client_processes, sorted_process.client.id) %}
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% endfor %}
+                                            {{ Q_clients_counter_by_user_without_filter }}
+                                        {% endif %}
                                     </td>
                                     <td>
-                                        0
+                                        {% set NQ_unique_client_processes = newArray %}
+                                        {% if app.session.get('date_filter_value') is not null %}
+                                            {% set NQ_clients_counter_by_user = 0 %}
+                                            {% for sorted_process in sorted_processes  %}
+                                                {% set NQ_sorted_process_date = sorted_process.createdAt | date('Y-m-d') %}
+                                                {% if sorted_process.client.id in NQ_unique_client_processes %}
+                                                    {% if sorted_process.status == 1 %}
+                                                        {% if filter == "0" or filter == "1" %}
+                                                            {% if NQ_sorted_process_date == selected_date %}
+                                                                {% set NQ_clients_counter_by_user = NQ_clients_counter_by_user + 1 %}
+                                                                {% set NQ_unique_client_processes = remove(NQ_unique_client_processes, sorted_process.client.id) %}
+                                                            {% endif %}
+                                                        {% elseif filter == "100" %}
+                                                            {% if NQ_sorted_process_date >= start_date and NQ_sorted_process_date <= end_date %}
+                                                                {% set NQ_clients_counter_by_user = NQ_clients_counter_by_user + 1 %}
+                                                                {% set NQ_unique_client_processes = remove(NQ_unique_client_processes, sorted_process.client.id) %}
+                                                            {% endif %}
+                                                        {% else %}
+                                                            {% if NQ_sorted_process_date >= selected_date %}
+                                                                {% set NQ_clients_counter_by_user = NQ_clients_counter_by_user + 1 %}
+                                                                {% set NQ_unique_client_processes = remove(NQ_unique_client_processes, sorted_process.client.id) %}
+                                                            {% endif%}
+                                                        {% endif %}
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% endfor %}
+                                            {{ NQ_clients_counter_by_user }}
+                                        {% else %}
+                                            {% set NQ_clients_counter_by_user_without_filter = 0 %}
+                                            {% for sorted_process in sorted_processes  %}
+                                                {% if sorted_process.client.id in NQ_unique_client_processes %}
+                                                    {% if sorted_process.status == 1 %}
+                                                        {% set NQ_clients_counter_by_user_without_filter = NQ_clients_counter_by_user_without_filter + 1 %}
+                                                        {% set NQ_unique_client_processes = remove(NQ_unique_client_processes, sorted_process.client.id) %}
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% endfor %}
+                                            {{ NQ_clients_counter_by_user_without_filter }}
+                                        {% endif %}
+                                    </td>
+
+                                    <td>
+                                        {% set PI_unique_client_processes = newArray %}
+                                        {% if app.session.get('date_filter_value') is not null %}
+                                            {% set PI_clients_counter_by_user = 0 %}
+                                            {% for sorted_process in sorted_processes  %}
+                                                {% set PI_sorted_process_date = sorted_process.createdAt | date('Y-m-d') %}
+                                                {% if sorted_process.client.id in PI_unique_client_processes %}
+                                                    {% if sorted_process.statusDetail == 5 %}
+                                                        {% if filter == "0" or filter == "1" %}
+                                                            {% if PI_sorted_process_date == selected_date %}
+                                                                {% set PI_clients_counter_by_user = PI_clients_counter_by_user + 1 %}
+                                                                {% set PI_unique_client_processes = remove(PI_unique_client_processes, sorted_process.client.id) %}
+                                                            {% endif %}
+                                                        {% elseif filter == "100" %}
+                                                            {% if PI_sorted_process_date >= start_date and PI_sorted_process_date <= end_date %}
+                                                                {% set PI_clients_counter_by_user = PI_clients_counter_by_user + 1 %}
+                                                                {% set PI_unique_client_processes = remove(PI_unique_client_processes, sorted_process.client.id) %}
+                                                            {% endif %}
+                                                        {% else %}
+                                                            {% if PI_sorted_process_date >= selected_date %}
+                                                                {% set PI_clients_counter_by_user = PI_clients_counter_by_user + 1 %}
+                                                                {% set PI_unique_client_processes = remove(PI_unique_client_processes, sorted_process.client.id) %}
+                                                            {% endif%}
+                                                        {% endif %}
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% endfor %}
+                                            {{ PI_clients_counter_by_user }}
+                                        {% else %}
+                                            {% set PI_clients_counter_by_user_without_filter = 0 %}
+                                            {% for sorted_process in sorted_processes  %}
+                                                {% if sorted_process.client.id in PI_unique_client_processes %}
+                                                    {% if sorted_process.statusDetail == 5 %}
+                                                        {% set PI_clients_counter_by_user_without_filter = PI_clients_counter_by_user_without_filter + 1 %}
+                                                        {% set PI_unique_client_processes = remove(PI_unique_client_processes, sorted_process.client.id) %}
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% endfor %}
+                                            {{ PI_clients_counter_by_user_without_filter }}
+                                        {% endif %}
                                     </td>
                                     <td>
-                                        0
+                                        {% set RAPPEL_unique_client_processes = newArray %}
+                                        {% if app.session.get('date_filter_value') is not null %}
+                                            {% set RAPPEL_clients_counter_by_user = 0 %}
+                                            {% for sorted_process in sorted_processes  %}
+                                                {% set RAPPEL_sorted_process_date = sorted_process.createdAt | date('Y-m-d') %}
+                                                {% if sorted_process.client.id in RAPPEL_unique_client_processes %}
+                                                    {% if sorted_process.statusDetail == 6 %}
+                                                        {% if filter == "0" or filter == "1" %}
+                                                            {% if RAPPEL_sorted_process_date == selected_date %}
+                                                                {% set RAPPEL_clients_counter_by_user = RAPPEL_clients_counter_by_user + 1 %}
+                                                                {% set RAPPEL_unique_client_processes = remove(RAPPEL_unique_client_processes, sorted_process.client.id) %}
+                                                            {% endif %}
+                                                        {% elseif filter == "100" %}
+                                                            {% if RAPPEL_sorted_process_date >= start_date and RAPPEL_sorted_process_date <= end_date %}
+                                                                {% set RAPPEL_clients_counter_by_user = RAPPEL_clients_counter_by_user + 1 %}
+                                                                {% set RAPPEL_unique_client_processes = remove(RAPPEL_unique_client_processes, sorted_process.client.id) %}
+                                                            {% endif %}
+                                                        {% else %}
+                                                            {% if RAPPEL_sorted_process_date >= selected_date %}
+                                                                {% set RAPPEL_clients_counter_by_user = RAPPEL_clients_counter_by_user + 1 %}
+                                                                {% set RAPPEL_unique_client_processes = remove(RAPPEL_unique_client_processes, sorted_process.client.id) %}
+                                                            {% endif%}
+                                                        {% endif %}
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% endfor %}
+                                            {{ RAPPEL_clients_counter_by_user }}
+                                        {% else %}
+                                            {% set RAPPEL_clients_counter_by_user_without_filter = 0 %}
+                                            {% for sorted_process in sorted_processes  %}
+                                                {% if sorted_process.client.id in RAPPEL_unique_client_processes %}
+                                                    {% if sorted_process.statusDetail == 6 %}
+                                                        {% set RAPPEL_clients_counter_by_user_without_filter = RAPPEL_clients_counter_by_user_without_filter + 1 %}
+                                                        {% set RAPPEL_unique_client_processes = remove(RAPPEL_unique_client_processes, sorted_process.client.id) %}
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% endfor %}
+                                            {{ RAPPEL_clients_counter_by_user_without_filter }}
+                                        {% endif %}
                                     </td>
                                     <td>
-                                        0
-                                    </td>
-                                    <td>
-                                        0
-                                    </td>
-                                    <td>
-                                        0
-                                    </td>
-                                    <td>
-                                        0
-                                    </td>
-                                    <td>
-                                        0
+                                        {% set RDV_unique_client_processes = newArray %}
+                                        {% if app.session.get('date_filter_value') is not null %}
+                                            {% set RDV_clients_counter_by_user = 0 %}
+                                            {% for sorted_process in sorted_processes  %}
+                                                {% set RDV_sorted_process_date = sorted_process.createdAt | date('Y-m-d') %}
+                                                {% if sorted_process.client.id in RDV_unique_client_processes %}
+                                                    {% if sorted_process.statusDetail == 7 %}
+                                                        {% if filter == "0" or filter == "1" %}
+                                                            {% if RDV_sorted_process_date == selected_date %}
+                                                                {% set RDV_clients_counter_by_user = RDV_clients_counter_by_user + 1 %}
+                                                                {% set RDV_unique_client_processes = remove(RDV_unique_client_processes, sorted_process.client.id) %}
+                                                            {% endif %}
+                                                        {% elseif filter == "100" %}
+                                                            {% if RDV_sorted_process_date >= start_date and RDV_sorted_process_date <= end_date %}
+                                                                {% set RDV_clients_counter_by_user = RDV_clients_counter_by_user + 1 %}
+                                                                {% set RDV_unique_client_processes = remove(RDV_unique_client_processes, sorted_process.client.id) %}
+                                                            {% endif %}
+                                                        {% else %}
+                                                            {% if RDV_sorted_process_date >= selected_date %}
+                                                                {% set RDV_clients_counter_by_user = RDV_clients_counter_by_user + 1 %}
+                                                                {% set RDV_unique_client_processes = remove(RDV_unique_client_processes, sorted_process.client.id) %}
+                                                            {% endif%}
+                                                        {% endif %}
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% endfor %}
+                                            {{ RDV_clients_counter_by_user }}
+                                        {% else %}
+                                            {% set RDV_clients_counter_by_user_without_filter = 0 %}
+                                            {% for sorted_process in sorted_processes  %}
+                                                {% if sorted_process.client.id in RDV_unique_client_processes %}
+                                                    {% if sorted_process.statusDetail == 7 %}
+                                                        {% set RDV_clients_counter_by_user_without_filter = RDV_clients_counter_by_user_without_filter + 1 %}
+                                                        {% set RDV_unique_client_processes = remove(RDV_unique_client_processes, sorted_process.client.id) %}
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% endfor %}
+                                            {{ RDV_clients_counter_by_user_without_filter }}
+                                        {% endif %}
                                     </td>
                                     <td>
                                         <a href="{{ path('statistics_per_user', {'id': user.id}) }}"><i class="fas fa-search-plus text-blue"></i></a>&nbsp;&nbsp;
