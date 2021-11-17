@@ -7,6 +7,11 @@ use App\Entity\Call;
 use App\Entity\Client;
 use App\Entity\Process;
 use App\Entity\User;
+use App\Repository\AppointmentRepository;
+use App\Repository\CallRepository;
+use App\Repository\ClientRepository;
+use App\Repository\ProcessRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping\Driver\DatabaseDriver;
 use MercurySeries\FlashyBundle\FlashyNotifier;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -276,6 +281,287 @@ class StatisticsController extends AbstractController
     }
 
     /**
+     * @Route("/dashboard/allstatsnew", name="all_statistics_new")
+     */
+    public function allStatsNew(Request $request, ProcessRepository $processRepository,CallRepository $callRepository, UserRepository $userRepository, ClientRepository $clientRepository, AppointmentRepository $appointmentRepository): Response
+    {
+        // Partie TELEPROSPECTION
+
+        //CONTACTS PROCESSED
+        $allProcesses = $processRepository->findAllSortedDate();
+        $processedClientsIdsArray = [];
+        $clientsProcesses = [];
+        foreach ($allProcesses as $process) {
+            $processedClientsIdsArray[] = $process->getClient()->getId();
+        }
+        $uniqueProcessedClientsIdsArray = array_unique($processedClientsIdsArray);
+        $uniqueProcessedClientsArray = [];
+        foreach ($processedClientsIdsArray as $clientId) {
+            foreach ($allProcesses as $process) {
+                if ($process->getClient()->getId() == $clientId) {
+                    $uniqueProcessedClientsArray[$clientId][] = $process->getCreatedAt();
+                    $clientsProcesses[$clientId][$process->getCreatedAt()->format('Y-m-d H:i:s')] = $process->getStatusDetail();
+                }
+            }
+        }
+        // PI contacts counter
+        $PIcounter = 0;
+        foreach ($clientsProcesses as $client) {
+            $breakPI = false;
+            foreach ($client as $dateTime => $statusDetail) {
+                if($breakPI === false) {
+                    if($statusDetail === 5) {
+                        $PIcounter += 1;
+                        $breakPI = true;
+                    }
+                }
+            }
+        }
+        // RAPPEL contacts counter
+        $RAPPELcounter = 0;
+        foreach ($clientsProcesses as $client) {
+            $breakRAPPEL = false;
+            foreach ($client as $dateTime => $statusDetail) {
+                if($breakRAPPEL === false) {
+                    if($statusDetail === 6) {
+                        $RAPPELcounter += 1;
+                        $breakRAPPEL = true;
+                    }
+                }
+            }
+        }
+        // NRP contacts counter
+        $NRPcounter = 0;
+        foreach ($clientsProcesses as $client) {
+            $breakNRP = false;
+            foreach ($client as $dateTime => $statusDetail) {
+                if($breakNRP === false) {
+                    if($statusDetail === 1) {
+                        $NRPcounter += 1;
+                        $breakNRP = true;
+                    }
+                }
+            }
+        }
+        // RDV contacts counter
+        $RDVcounter = 0;
+        foreach ($clientsProcesses as $client) {
+            $breakRDV = false;
+            foreach ($client as $dateTime => $statusDetail) {
+                if($breakRDV === false) {
+                    if($statusDetail === 7) {
+                        $RDVcounter += 1;
+                        $breakRDV = true;
+                    }
+                }
+            }
+        }
+        // QUALIFIED contacts counter
+        $processedContactsByStatus = [];
+        foreach ($processedClientsIdsArray as $clientId) {
+            foreach ($allProcesses as $process) {
+                if ($process->getClient()->getId() == $clientId) {
+                    $processedContactsByStatus[$clientId][$process->getCreatedAt()->format('Y-m-d H:i:s')] = $process->getStatus();
+                }
+            }
+        }
+        $QUALIFIEDcontactscounter = 0;
+        foreach ($processedContactsByStatus as $client) {
+            $breakQUALIFIED = false;
+            foreach ($client as $dateTime => $status) {
+                if($breakQUALIFIED === false) {
+                    if($status === 2) {
+                        $QUALIFIEDcontactscounter += 1;
+                        $breakQUALIFIED = true;
+                    }
+                }
+            }
+        }
+        // TX CT contacts
+        $processedContactsCount = count($uniqueProcessedClientsIdsArray);
+        if($processedContactsCount !== 0) {
+            $TXCTPercentage = number_format((($QUALIFIEDcontactscounter / $processedContactsCount) * 100), 2);
+        } else {
+            $TXCTPercentage = 0;
+        }
+        // TX TRANSFO
+        if($processedContactsCount !== 0) {
+            $TXTRANSFORPercentage = number_format((($RDVcounter / $QUALIFIEDcontactscounter) * 100), 2);
+        } else {
+            $TXTRANSFORPercentage = 0;
+        }
+        // NOT QUALIFIED contacts counter
+        $NOTQUALIFIEDcontactscounter = 0;
+        foreach ($processedContactsByStatus as $client) {
+            $breakNOTQUALIFIED = false;
+            foreach ($client as $dateTime => $status) {
+                if($breakNOTQUALIFIED === false) {
+                    if($status === 1) {
+                        $NOTQUALIFIEDcontactscounter += 1;
+                        $breakNOTQUALIFIED = true;
+                    }
+                }
+            }
+        }
+        //Bloc Statistiques Générales
+        $allTelepros = $userRepository->findUsersByCommercialRole("ROLE_TELEPRO");
+        $allContacts = $clientRepository->getNotDeletedClients();
+        $processedContacts = $clientRepository->getProcessedClients();
+
+        //Bloc Statistiques Par Utilisateur
+        $teleprosAndSuperAdmins = $userRepository->findUsersTeleproStats("ROLE_TELEPRO", "ROLE_SUPERADMIN");
+
+        // Partie COMMERCIAL
+
+        // RDV count
+        $allAppointments = $appointmentRepository->getAppointmentsWhereClientsExistCommercialStats();
+        $allAppointmentsCount = count($allAppointments);
+
+        // Done RDV count
+        $doneAppointments = $appointmentRepository->getDoneAppointments();
+        $doneAppointmentsCount = count($doneAppointments);
+
+        // Upcoming RDV count
+        $upcomingAppointments = $appointmentRepository->getUpcomingAppointments();
+        $upcomingAppointmentsCount = count($upcomingAppointments);
+
+        // Deleted RDV count
+        $deletedAppointments = $appointmentRepository->getDeletedAppointments();
+        $deletedAppointmentsCount = count($deletedAppointments);
+
+        // Postponed RDV count
+        $postponedAppointments = $appointmentRepository->getPostponedAppointments();
+        $postponedAppointmentsCount = count($postponedAppointments);
+
+        // Argu RDV count
+        $arguAppointments = $appointmentRepository->getArguAppointments();
+        $arguAppointmentsCount = count($arguAppointments);
+
+        // Vente RDV count
+        $venteAppointments = $appointmentRepository->getVenteAppointments();
+        $venteAppointmentsCount = count($venteAppointments);
+
+        //Bloc Statistiques Générales
+        $allCommercials = $userRepository->findUsersByCommercialRole("ROLE_COMMERCIAL");
+
+        //Bloc Statistiques Par Utilisateur
+        $commercialsAndSuperAdmins = $userRepository->findUsersTeleproStats("ROLE_COMMERCIAL", "ROLE_SUPERADMIN");
+
+        //GRAPH
+
+        // GET ARRAY OF PROCESSED CLIENTS OBJECTS
+        $processedContactsForGraph= [];
+        foreach ($uniqueProcessedClientsArray as $clientId => $value) {
+            $processedContactsForGraph[] = $this->getDoctrine()->getRepository(Client::class)->find((int)$clientId);
+        }
+
+
+        $processedContactsByMonthArray = [];
+        for ($i = 1; $i <13; $i++) {
+            $contactsCounter = 0;
+            foreach ($processedContactsForGraph as $contact) {
+                if (((new \DateTime())->format("Y")) === $contact->getUpdatedAt()->format("Y")) {
+                    if (date("F",mktime(0,0,0,(int)($contact->getUpdatedAt()->format("m")),1,(int)($contact->getUpdatedAt())->format("Y"))) === date("F",mktime(0,0,0,$i,1,(int)(new \DateTime())->format("Y")))) {
+                        $contactsCounter += 1;
+                    }
+                }
+            }
+            $processedContactsByMonthArray[] = $contactsCounter;
+        }
+
+        $appointmentsByMonthArray = [];
+        for ($j = 1; $j <13; $j++) {
+            $appointmentsCounter = 0;
+            foreach ($allAppointments as $appointment) {
+
+                if (((new \DateTime())->format("Y")) === $appointment->getCreatedAt()->format("Y")) {
+                    if (date("F", mktime(0, 0, 0, (int)($appointment->getCreatedAt()->format("m")), 1, (int)($appointment->getCreatedAt())->format("Y"))) === date("F", mktime(0, 0, 0, $j, 1, (int)(new \DateTime())->format("Y")))) {
+                        $appointmentsCounter += 1;
+                    }
+                }
+            }
+            $appointmentsByMonthArray[] = $appointmentsCounter;
+        }
+
+        $doneAppointmentsByMonthArray = [];
+
+        for ($j = 1; $j <13; $j++) {
+            $doneAppointmentsCounter = 0;
+            foreach ($doneAppointments as $doneAppointment) {
+
+                if (((new \DateTime())->format("Y")) === $doneAppointment->getDoneAt()->format("Y")) {
+                    if (date("F", mktime(0, 0, 0, (int)($doneAppointment->getDoneAt()->format("m")), 1, (int)($doneAppointment->getDoneAt())->format("Y"))) === date("F", mktime(0, 0, 0, $j, 1, (int)(new \DateTime())->format("Y")))) {
+                        $doneAppointmentsCounter += 1;
+                    }
+                }
+            }
+            $doneAppointmentsByMonthArray[] = $doneAppointmentsCounter;
+        }
+
+        $deletedAppointmentsByMonthArray = [];
+        for ($j = 1; $j <13; $j++) {
+            $deletedAppointmentsCounter = 0;
+            foreach ($deletedAppointments as $deletedAppointment) {
+                if (((new \DateTime())->format("Y")) === $deletedAppointment->getDeletionDate()->format("Y")) {
+                    if (date("F", mktime(0, 0, 0, (int)($deletedAppointment->getDeletionDate()->format("m")), 1, (int)($deletedAppointment->getDeletionDate())->format("Y"))) === date("F", mktime(0, 0, 0, $j, 1, (int)(new \DateTime())->format("Y")))) {
+                        $deletedAppointmentsCounter += 1;
+                    }
+                }
+            }
+            $deletedAppointmentsByMonthArray[] = $deletedAppointmentsCounter;
+        }
+
+        return $this->render('statistics/index_new.html.twig', [
+            // Partie TELEPROSPECTION
+            //Bloc Statistiques Générales
+            'telepro_count' => count($allTelepros),
+            'contacts_count' => count($allContacts),
+            //Bloc Statistiques Pour La Période Sélectionnée
+            'processed_contacts_count' => count($processedContacts),
+            //Bloc Statistiques Par Utilisateur
+            'telepros_users' => $teleprosAndSuperAdmins,
+            //new
+            'clients_processes'=> $clientsProcesses,
+            'clients_processes_count'=> count($clientsProcesses),
+            'all_PI_contacts_count' => $PIcounter,
+            'all_RAPPEL_contacts_count' => $RAPPELcounter,
+            'all_NRP_contacts_count' => $NRPcounter,
+            'all_RDV_contacts_count' => $RDVcounter,
+            'clients_processes_by_status' => $processedContactsByStatus,
+            'TX_CT' => $TXCTPercentage,
+            'TX_TRANSFOR' => $TXTRANSFORPercentage,
+            'NOT_QUALIFIED_contacts_count' => $NOTQUALIFIEDcontactscounter,
+            'QUALIFIED_contacts_count' => $QUALIFIEDcontactscounter,
+            // Partie COMMERCIAL
+            //Bloc Statistiques Générales
+            'commercials_count' => count($allCommercials),
+            'all_appointments_count' => $allAppointmentsCount,
+            'done_appointments_count' => $doneAppointmentsCount,
+            'upcoming_appointments_count' => $upcomingAppointmentsCount,
+            'deleted_appointments_count' => $deletedAppointmentsCount,
+            //Bloc Résumé Statistiques
+            'all_appointments' => $allAppointments,
+            'deleted_appointments' => $deletedAppointments,
+            'postponed_appointments' => $postponedAppointments,
+            'postponed_appointments_count' => $postponedAppointmentsCount,
+            'argu_appointments' => $arguAppointments,
+            'argu_appointments_count' => $arguAppointmentsCount,
+            'vente_appointments' => $venteAppointments,
+            'vente_appointments_count' => $venteAppointmentsCount,
+            //Bloc Statistiques Pour La Période Sélectionnée
+            'done_appointments' => $doneAppointments,
+            //Bloc Statistiques Par Utilisateur
+            'commercials_users' => $commercialsAndSuperAdmins,
+            //graph
+            'processed_contacts_graph' => json_encode($processedContactsByMonthArray),
+            'fixed_appointments_graph' => json_encode($appointmentsByMonthArray),
+            'done_appointments_graph' => json_encode($doneAppointmentsByMonthArray),
+            'deleted_appointments_graph' => json_encode($deletedAppointmentsByMonthArray),
+            'actual_year' => (new \DateTime())->format("Y"),
+        ]);
+    }
+
+    /**
      * @Route("/dashboard/allstats/filters", name="all_stats_filters")
      */
     public function allStatsFilters(Request $request): Response
@@ -303,7 +589,7 @@ class StatisticsController extends AbstractController
                 $endDate
             );
             $this->flashy->success('Filtre mis à jour avec succès !');
-            return $this->redirectToRoute('all_statistics');
+            return $this->redirectToRoute('all_statistics_new');
         }
     }
 
@@ -317,7 +603,7 @@ class StatisticsController extends AbstractController
         if($session->get('date_filter_value_all_stats_start')) $session->remove('date_filter_value_all_stats_start');
         if($session->get('date_filter_value_all_stats_end')) $session->remove('date_filter_value_all_stats_end');
         $this->flashy->success('Filtre réinitialisé avec succès !');
-        return $this->redirectToRoute('all_statistics');
+        return $this->redirectToRoute('all_statistics_new');
     }
 
     /**
@@ -326,7 +612,7 @@ class StatisticsController extends AbstractController
     public function allStatsFilterssNotifications(): Response
     {
         $this->flashy->success('Filtre mis à jour avec succès !');
-        return $this->redirectToRoute('all_statistics');
+        return $this->redirectToRoute('all_statistics_new');
     }
 
     /**

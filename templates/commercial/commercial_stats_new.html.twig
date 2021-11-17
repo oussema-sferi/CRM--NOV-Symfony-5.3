@@ -731,7 +731,7 @@
                                 {% set all_user_appointments = [] %}
                                 {% if user.appointments|default %}
                                     {% for appointment in user.appointments %}
-                                        {% if appointment.client is not null %}
+                                        {% if appointment.eventType.id == 4 %}
                                         {% set all_user_appointments = all_user_appointments|merge([appointment]) %}
                                         {% endif %}
                                     {% endfor %}
