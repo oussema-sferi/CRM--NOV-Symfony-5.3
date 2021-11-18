@@ -394,4 +394,41 @@ class AppointmentRepository extends ServiceEntityRepository
             ->andWhere('a.client IS NOT NULL');
         return $qb->getQuery()->getResult();
     }
+
+    public function getPostponedAppointmentsByUser($Id)
+    {
+        $qb = $this->createQueryBuilder('a');
+        $qb->select('a')
+            ->join('a.user', 'u')
+            ->where('a.client IS NOT NULL')
+            ->andWhere("u.id =$Id" )
+            ->andWhere('a.isDone = 1')
+            ->andWhere('a.isDeleted = 0');
+        return $qb->orderBy('a.start', 'DESC')->getQuery()->getResult();
+    }
+
+    public function getArguAppointmentsByUser($Id)
+    {
+        $qb = $this->createQueryBuilder('a');
+        $qb->select('a')
+            ->join('a.user', 'u')
+            ->where('a.client IS NOT NULL')
+            ->andWhere("u.id =$Id" )
+            ->andWhere('a.isDone = 2')
+            ->andWhere('a.isDeleted = 0');
+        return $qb->orderBy('a.start', 'DESC')->getQuery()->getResult();
+    }
+
+    public function getVenteAppointmentsByUser($Id)
+    {
+        $qb = $this->createQueryBuilder('a');
+        $qb->select('a')
+            ->join('a.user', 'u')
+            ->where('a.client IS NOT NULL')
+            ->andWhere("u.id =$Id" )
+            ->andWhere('a.isDone = 3')
+            ->andWhere('a.isDeleted = 0');
+        return $qb->orderBy('a.start', 'DESC')->getQuery()->getResult();
+    }
+
 }

@@ -1135,7 +1135,6 @@
               $(this).css('cursor','pointer');
           })
           $('#normal_period').change(function () {
-              console.log(this.value == "14")
               if(this.value && this.value != "100") {
                   $.ajax({
                       url:"{{ path('statistics_per_user_filters', {'id': user.id}) }}",

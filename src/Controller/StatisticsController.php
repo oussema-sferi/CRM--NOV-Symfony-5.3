@@ -538,10 +538,10 @@ class StatisticsController extends AbstractController
             'all_appointments_count' => $allAppointmentsCount,
             'done_appointments_count' => $doneAppointmentsCount,
             'upcoming_appointments_count' => $upcomingAppointmentsCount,
-            'deleted_appointments_count' => $deletedAppointmentsCount,
             //Bloc Résumé Statistiques
             'all_appointments' => $allAppointments,
             'deleted_appointments' => $deletedAppointments,
+            'deleted_appointments_count' => $deletedAppointmentsCount,
             'postponed_appointments' => $postponedAppointments,
             'postponed_appointments_count' => $postponedAppointmentsCount,
             'argu_appointments' => $arguAppointments,
@@ -793,6 +793,180 @@ class StatisticsController extends AbstractController
     }
 
     /**
+     * @Route("/dashboard/statisticsperusernew/{id}", name="statistics_per_user_new")
+     */
+    public function statsPerUserNew($id, ProcessRepository $processRepository, AppointmentRepository $appointmentRepository): Response
+    {
+        $user = $this->getDoctrine()->getRepository(User::class)->find($id);
+        $userId = $this->getUser()->getId();
+
+        //CONTACTS PROCESSED
+        $userProcesses = $processRepository->getProcessesByUser($id);
+        /*dd($userProcesses);*/
+        $processedClientsIdsArray = [];
+        $clientsProcesses = [];
+        foreach ($userProcesses as $process) {
+            $processedClientsIdsArray[] = $process->getClient()->getId();
+        }
+        $uniqueProcessedClientsIdsArray = array_unique($processedClientsIdsArray);
+
+        $uniqueProcessedClientsArray = [];
+        foreach ($processedClientsIdsArray as $clientId) {
+            foreach ($userProcesses as $process) {
+                if ($process->getClient()->getId() == $clientId) {
+                    $uniqueProcessedClientsArray[$clientId][] = $process->getCreatedAt();
+                    $clientsProcesses[$clientId][$process->getCreatedAt()->format('Y-m-d H:i:s')] = $process->getStatusDetail();
+                }
+            }
+        }
+
+        $processedClientsByStatus = [];
+        foreach ($processedClientsIdsArray as $clientId) {
+            foreach ($userProcesses as $process) {
+                if ($process->getClient()->getId() == $clientId) {
+                    $processedClientsByStatus[$clientId][$process->getCreatedAt()->format('Y-m-d H:i:s')] = $process->getStatus();
+                }
+            }
+        }
+        /*dd($clientsProcesses);*/
+        // PI contacts counter
+        $PIcounter = 0;
+        foreach ($clientsProcesses as $client) {
+            $breakPI = false;
+            foreach ($client as $dateTime => $statusDetail) {
+                if($breakPI === false) {
+                    if($statusDetail === 5) {
+                        $PIcounter += 1;
+                        $breakPI = true;
+                    }
+                }
+            }
+        }
+        // RAPPEL contacts counter
+        $RAPPELcounter = 0;
+        foreach ($clientsProcesses as $client) {
+            $breakRAPPEL = false;
+            foreach ($client as $dateTime => $statusDetail) {
+                if($breakRAPPEL === false) {
+                    if($statusDetail === 6) {
+                        $RAPPELcounter += 1;
+                        $breakRAPPEL = true;
+                    }
+                }
+            }
+        }
+        // NRP contacts counter
+        $NRPcounter = 0;
+        foreach ($clientsProcesses as $client) {
+            $breakNRP = false;
+            foreach ($client as $dateTime => $statusDetail) {
+                if($breakNRP === false) {
+                    if($statusDetail === 1) {
+                        $NRPcounter += 1;
+                        $breakNRP = true;
+                    }
+                }
+            }
+        }
+        // RDV contacts counter
+        $RDVcounter = 0;
+        foreach ($clientsProcesses as $client) {
+            $breakRDV = false;
+            foreach ($client as $dateTime => $statusDetail) {
+                if($breakRDV === false) {
+                    if($statusDetail === 7) {
+                        $RDVcounter += 1;
+                        $breakRDV = true;
+                    }
+                }
+            }
+        }
+
+        // QUALIFIED contacts counter
+        $QUALIFIEDcontactscounter = 0;
+        foreach ($processedClientsByStatus as $client) {
+            $breakQUALIFIED = false;
+            foreach ($client as $dateTime => $status) {
+                if($breakQUALIFIED === false) {
+                    if($status === 2) {
+                        $QUALIFIEDcontactscounter += 1;
+                        $breakQUALIFIED = true;
+                    }
+                }
+            }
+        }
+
+        $processedContactsCount = count($uniqueProcessedClientsIdsArray);
+        // TX CT contacts
+        if($processedContactsCount !== 0) {
+            $TXCTPercentage = number_format((($QUALIFIEDcontactscounter / $processedContactsCount) * 100), 2);
+        } else {
+            $TXCTPercentage = 0;
+        }
+        // TX TRANSFO
+        if($processedContactsCount !== 0) {
+            $TXTRANSFORPercentage = number_format((($RDVcounter / $QUALIFIEDcontactscounter) * 100), 2);
+        } else {
+            $TXTRANSFORPercentage = 0;
+        }
+
+        // Terrain
+
+
+        // RDV count
+        $allAppointments = $appointmentRepository->getMyAssignedAppointmentsByUser($id);
+        $allAppointmentsCount = count($allAppointments);
+
+        // Done RDV count
+        $doneAppointments = $appointmentRepository->getDoneAppointmentsByUser($id);
+        $doneAppointmentsCount = count($doneAppointments);
+
+        // Upcoming RDV count
+        $upcomingAppointments = $appointmentRepository->getUpcomingAppointmentsByUser($id);
+        $upcomingAppointmentsCount = count($upcomingAppointments);
+
+        // Deleted RDV count
+        $deletedAppointments = $appointmentRepository->getDeletedAppointmentsByUser($id);
+        $deletedAppointmentsCount = count($deletedAppointments);
+
+        // Postponed RDV count
+        $postponedAppointments = $appointmentRepository->getPostponedAppointmentsByUser($id);
+        $postponedAppointmentsCount = count($postponedAppointments);
+
+        // Argu RDV count
+        $arguAppointments = $appointmentRepository->getArguAppointmentsByUser($id);
+        $arguAppointmentsCount = count($arguAppointments);
+
+        // Vente RDV count
+        $venteAppointments = $appointmentRepository->getVenteAppointmentsByUser($id);
+        $venteAppointmentsCount = count($venteAppointments);
+
+        return $this->render('statistics/stats_per_user_new.html.twig', [
+            'user' => $user,
+            // Phoning
+            'clients_processes' => $clientsProcesses,
+            'clients_processes_by_status' => $processedClientsByStatus,
+            'all_PI_contacts_count' => $PIcounter,
+            'all_RAPPEL_contacts_count' => $RAPPELcounter,
+            'all_NRP_contacts_count' => $NRPcounter,
+            'all_RDV_contacts_count' => $RDVcounter,
+            'TX_CT' => $TXCTPercentage,
+            'TX_TRANSFOR' => $TXTRANSFORPercentage,
+            // Terrain
+            'all_appointments' => $allAppointments,
+            'all_appointments_count' => $allAppointmentsCount,
+            'deleted_appointments' => $deletedAppointments,
+            'deleted_appointments_count' => $deletedAppointmentsCount,
+            'postponed_appointments' => $postponedAppointments,
+            'postponed_appointments_count' => $postponedAppointmentsCount,
+            'argu_appointments' => $arguAppointments,
+            'argu_appointments_count' => $arguAppointmentsCount,
+            'vente_appointments' => $venteAppointments,
+            'vente_appointments_count' => $venteAppointmentsCount,
+        ]);
+    }
+
+    /**
      * @Route("/dashboard/statisticsperuser/{id}/filters", name="statistics_per_user_filters")
      */
     public function statsPerUserFilters(Request $request, $id): Response
@@ -822,7 +996,7 @@ class StatisticsController extends AbstractController
                 $endDate
             );
             $this->flashy->success('Filtre mis à jour avec succès !');
-            return $this->redirectToRoute('statistics_per_user', [
+            return $this->redirectToRoute('statistics_per_user_new', [
                 'id' => $id
             ]);
         }
@@ -838,7 +1012,7 @@ class StatisticsController extends AbstractController
         if($session->get('date_filter_value_stats_per_user_start')) $session->remove('date_filter_value_stats_per_user_start');
         if($session->get('date_filter_value_stats_per_user_end')) $session->remove('date_filter_value_stats_per_user_end');
         $this->flashy->success('Filtre réinitialisé avec succès !');
-        return $this->redirectToRoute('statistics_per_user', [
+        return $this->redirectToRoute('statistics_per_user_new', [
             'id' => $id
         ]);
     }
@@ -849,7 +1023,7 @@ class StatisticsController extends AbstractController
     public function statsPerUserFilterssNotifications($id): Response
     {
         $this->flashy->success('Filtre mis à jour avec succès !');
-        return $this->redirectToRoute('statistics_per_user', [
+        return $this->redirectToRoute('statistics_per_user_new', [
             'id' => $id
         ]);
     }
