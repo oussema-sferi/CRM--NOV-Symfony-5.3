@@ -616,7 +616,7 @@ class StatisticsController extends AbstractController
     }
 
     /**
-     * @Route("/dashboard/statisticsperuser/{id}", name="statistics_per_user")
+     * @Route("/dashboard/statisticsperuserold/{id}", name="statistics_per_user")
      */
     public function statsPerUser($id): Response
     {
@@ -793,7 +793,7 @@ class StatisticsController extends AbstractController
     }
 
     /**
-     * @Route("/dashboard/statisticsperusernew/{id}", name="statistics_per_user_new")
+     * @Route("/dashboard/statisticsperuser/{id}", name="statistics_per_user_new")
      */
     public function statsPerUserNew($id, ProcessRepository $processRepository, AppointmentRepository $appointmentRepository): Response
     {

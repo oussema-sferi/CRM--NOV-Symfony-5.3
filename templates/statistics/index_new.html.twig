@@ -324,8 +324,38 @@
                                                     {% endif %}
                                                 {% endfor %}
                                             {% endfor %}
-                                            {% if clients_processes_by_status|length != 0 %}
-                                                {{ ((QUALIFIED_contacts_counter /  clients_processes_by_status|length) * 100)|number_format(2) }}
+
+                                            {% if app.session.get('date_filter_value_all_stats') is not null %}
+                                                {% set processed_contacts_counter  = 0 %}
+                                                {% for client in clients_processes %}
+                                                    {% set break_processed = false %}
+                                                    {% for date_time, status_detail in client %}
+                                                        {% set process_date = date_time | date('Y-m-d') %}
+                                                        {% if break_processed == false %}
+                                                            {% if filter == "0" or filter == "1" %}
+                                                                {% if process_date == selected_date %}
+                                                                    {% set processed_contacts_counter = processed_contacts_counter + 1 %}
+                                                                    {% set break_processed = true %}
+                                                                {% endif %}
+                                                            {% elseif filter == "100" %}
+                                                                {% if process_date >= start_date and process_date <= end_date %}
+                                                                    {% set processed_contacts_counter = processed_contacts_counter + 1 %}
+                                                                    {% set break_processed = true %}
+                                                                {% endif %}
+                                                            {% else %}
+                                                                {% if process_date >= selected_date %}
+                                                                    {% set processed_contacts_counter = processed_contacts_counter + 1 %}
+                                                                    {% set break_processed = true %}
+                                                                {% endif%}
+                                                            {% endif %}
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                {% endfor %}
+                                            {% endif %}
+
+
+                                            {% if processed_contacts_counter != 0 %}
+                                                {{ ((QUALIFIED_contacts_counter /  processed_contacts_counter) * 100)|number_format(2) }} %
                                             {% else %}
                                                 0 %
                                             {% endif %}
