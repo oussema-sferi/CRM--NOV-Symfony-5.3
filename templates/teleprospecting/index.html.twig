@@ -305,24 +305,6 @@
                                         </span>
                                     {% endif %}
                                 </td>
-                                <td class="budget">
-                                    {% if client.status == 1 %}
-                                        <span class="badge badge-warning badge-lg">
-                                        <i class="bg-warning"></i>
-                                         Appel non Qualifié
-                                        </span>
-                                    {% elseif client.status == 2 %}
-                                        <span class="badge badge-success badge-lg">
-                                        <i class="bg-success"></i>
-                                            Appel Qualifié
-                                        </span>
-                                    {% else %}
-                                        <span class="badge badge-info badge-lg">
-                                        <i class="bg-info"></i>
-                                            Non Traité
-                                        </span>
-                                    {% endif %}
-                                </td>
 
                                 <td class="budget">
                                     {% if client.statusDetail == 1 %}
