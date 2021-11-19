@@ -909,7 +909,7 @@ class StatisticsController extends AbstractController
         }
 
         // QUALIFIED contacts counter
-        $QUALIFIEDcontactscounter = 0;
+        /*$QUALIFIEDcontactscounter = 0;
         foreach ($processedClientsByStatus as $client) {
             $breakQUALIFIED = false;
             foreach ($client as $dateTime => $status) {
@@ -920,7 +920,35 @@ class StatisticsController extends AbstractController
                     }
                 }
             }
+        }*/
+
+        // NOT QUALIFIED + QUALIFIED contacts counter
+       /* dd($clientsProcesses);
+        $processedContactsByStatus = [];
+        foreach ($processedClientsIdsArray as $clientId) {
+            foreach ($clientsProcesses as $process) {
+                if ($process->getClient()->getId() == $clientId) {
+                    $processedContactsByStatus[$clientId][$process->getCreatedAt()->format('Y-m-d H:i:s')] = $process->getStatus();
+                }
+            }
+        }*/
+        /*dd($processedClientsByStatus);*/
+        $NOTQUALIFIEDcontactscounter = 0;
+        $QUALIFIEDcontactscounter = 0;
+        foreach ($processedClientsByStatus as $client) {
+            $breakContacts = false;
+            foreach ($client as $dateTime => $status) {
+                if($breakContacts === false) {
+                    if($status === 1) {
+                        $NOTQUALIFIEDcontactscounter += 1;
+                    } elseif ($status === 2) {
+                        $QUALIFIEDcontactscounter += 1;
+                    }
+                    $breakContacts = true;
+                }
+            }
         }
+        /*dd($NOTQUALIFIEDcontactscounter);*/
 
         $processedContactsCount = count($uniqueProcessedClientsIdsArray);
         // TX CT contacts
@@ -930,10 +958,10 @@ class StatisticsController extends AbstractController
             $TXCTPercentage = 0;
         }
         // TX TRANSFO
-        if($processedContactsCount !== 0) {
-            $TXTRANSFORPercentage = number_format((($RDVcounter / $QUALIFIEDcontactscounter) * 100), 2);
+        if($QUALIFIEDcontactscounter !== 0) {
+            $TXTRANSFORPercentageTelepro = number_format((($RDVcounter / $QUALIFIEDcontactscounter) * 100), 2);
         } else {
-            $TXTRANSFORPercentage = 0;
+            $TXTRANSFORPercentageTelepro = 0;
         }
 
         // Terrain
@@ -967,6 +995,14 @@ class StatisticsController extends AbstractController
         $venteAppointments = $appointmentRepository->getVenteAppointmentsByUser($id);
         $venteAppointmentsCount = count($venteAppointments);
 
+        // TX TRANSFO COMMERCIAL
+
+        if($doneAppointmentsCount !== 0) {
+            $TXTRANSFORPercentageCommercial = number_format((($venteAppointmentsCount / $doneAppointmentsCount) * 100), 2);
+        } else {
+            $TXTRANSFORPercentageCommercial = 0;
+        }
+
         return $this->render('statistics/stats_per_user_new.html.twig', [
             'user' => $user,
             // Phoning
@@ -977,7 +1013,7 @@ class StatisticsController extends AbstractController
             'all_NRP_contacts_count' => $NRPcounter,
             'all_RDV_contacts_count' => $RDVcounter,
             'TX_CT' => $TXCTPercentage,
-            'TX_TRANSFOR' => $TXTRANSFORPercentage,
+            'TX_TRANSFOR_TELEPRO' => $TXTRANSFORPercentageTelepro,
             // Terrain
             'all_appointments' => $allAppointments,
             'all_appointments_count' => $allAppointmentsCount,
@@ -985,10 +1021,12 @@ class StatisticsController extends AbstractController
             'deleted_appointments_count' => $deletedAppointmentsCount,
             'postponed_appointments' => $postponedAppointments,
             'postponed_appointments_count' => $postponedAppointmentsCount,
+            'done_appointments' => $doneAppointments,
             'argu_appointments' => $arguAppointments,
             'argu_appointments_count' => $arguAppointmentsCount,
             'vente_appointments' => $venteAppointments,
             'vente_appointments_count' => $venteAppointmentsCount,
+            'TX_TRANSFOR_COMMERCIAL' => $TXTRANSFORPercentageCommercial,
         ]);
     }
 

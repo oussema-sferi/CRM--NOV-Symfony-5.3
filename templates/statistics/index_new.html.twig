@@ -543,7 +543,7 @@
                                             {% set Q_clients_counter_by_user = 0 %}
                                             {% for sorted_process in sorted_processes  %}
                                                 {% set Q_sorted_process_date = sorted_process.createdAt | date('Y-m-d') %}
-                                                {% if sorted_process.client.id in Q_unique_client_processes %}
+                                                {% if sorted_process.client.id in QNQ_unique_client_processes %}
                                                     {% if sorted_process.status == 2 %}
                                                         {% if filter == "0" or filter == "1" %}
                                                             {% if Q_sorted_process_date == selected_date %}

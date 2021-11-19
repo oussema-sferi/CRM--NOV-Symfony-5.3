@@ -78,6 +78,48 @@
     <!-- Page content -->
 
     <div class="container-fluid mt--6">
+
+        {% if app.session.get('date_filter_value_stats_per_user') is not null %}
+            {% set NOT_QUALIFIED_contacts_counter  = 0 %}
+            {% set QUALIFIED_contacts_counter  = 0 %}
+            {% for client in clients_processes_by_status %}
+                {% set break_CONTACTS = false %}
+                {% for date_time, status in client %}
+                    {% set process_date = date_time | date('Y-m-d') %}
+                    {% if break_CONTACTS == false %}
+                        {% if filter == "0" or filter == "1" %}
+                            {% if process_date == selected_date %}
+                                {% if status == 1 %}
+                                    {% set NOT_QUALIFIED_contacts_counter = NOT_QUALIFIED_contacts_counter + 1 %}
+                                {% elseif status == 2 %}
+                                    {% set QUALIFIED_contacts_counter = QUALIFIED_contacts_counter + 1 %}
+                                {% endif %}
+                                {% set break_CONTACTS = true %}
+                            {% endif %}
+                        {% elseif filter == "100" %}
+                            {% if process_date >= start_date and process_date <= end_date %}
+                                {% if status == 1 %}
+                                    {% set NOT_QUALIFIED_contacts_counter = NOT_QUALIFIED_contacts_counter + 1 %}
+                                {% elseif status == 2 %}
+                                    {% set QUALIFIED_contacts_counter = QUALIFIED_contacts_counter + 1 %}
+                                {% endif %}
+                                {% set break_CONTACTS = true %}
+                            {% endif %}
+                        {% else %}
+                            {% if process_date >= selected_date %}
+                                {% if status == 1 %}
+                                    {% set NOT_QUALIFIED_contacts_counter = NOT_QUALIFIED_contacts_counter + 1 %}
+                                {% elseif status == 2 %}
+                                    {% set QUALIFIED_contacts_counter = QUALIFIED_contacts_counter + 1 %}
+                                {% endif %}
+                                {% set break_CONTACTS = true %}
+                            {% endif%}
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
+        {% endif %}
+
         <div class="row">
             <div class="col-xl-12">
                 <div class="card">
@@ -97,7 +139,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                                <tr>
+                                {#<tr>
                                     <th scope="row">
                                        Nombre d'appels
                                     </th>
@@ -107,7 +149,7 @@
                                     <td>
                                         N/A
                                     </td>
-                                </tr>
+                                </tr>#}
 
                                 <tr>
                                     <th scope="row">
@@ -305,66 +347,33 @@
                                     </td>
                                     <td>
                                         {% if app.session.get('date_filter_value_stats_per_user') is not null %}
-                                            {% set QUALIFIED_contacts_counter  = 0 %}
-                                            {% for client in clients_processes_by_status %}
-                                                {% set break_QUALIFIED = false %}
-                                                {% for date_time, status in client %}
+                                            {% set processed_contacts_counter  = 0 %}
+                                            {% for client in clients_processes %}
+                                                {% set break_processed = false %}
+                                                {% for date_time, status_detail in client %}
                                                     {% set process_date = date_time | date('Y-m-d') %}
-                                                    {% if break_QUALIFIED == false %}
+                                                    {% if break_processed == false %}
                                                         {% if filter == "0" or filter == "1" %}
                                                             {% if process_date == selected_date %}
-                                                                {% if status == 2 %}
-                                                                    {% set QUALIFIED_contacts_counter = QUALIFIED_contacts_counter + 1 %}
-                                                                    {% set break_QUALIFIED = true %}
-                                                                {% endif %}
+                                                                {% set processed_contacts_counter = processed_contacts_counter + 1 %}
+                                                                {% set break_processed = true %}
                                                             {% endif %}
                                                         {% elseif filter == "100" %}
                                                             {% if process_date >= start_date and process_date <= end_date %}
-                                                                {% if status == 2 %}
-                                                                    {% set QUALIFIED_contacts_counter = QUALIFIED_contacts_counter + 1 %}
-                                                                    {% set break_QUALIFIED = true %}
-                                                                {% endif %}
+                                                                {% set processed_contacts_counter = processed_contacts_counter + 1 %}
+                                                                {% set break_processed = true %}
                                                             {% endif %}
                                                         {% else %}
                                                             {% if process_date >= selected_date %}
-                                                                {% if status == 2 %}
-                                                                    {% set QUALIFIED_contacts_counter = QUALIFIED_contacts_counter + 1 %}
-                                                                    {% set break_QUALIFIED = true %}
-                                                                {% endif %}
+                                                                {% set processed_contacts_counter = processed_contacts_counter + 1 %}
+                                                                {% set break_processed = true %}
                                                             {% endif%}
                                                         {% endif %}
                                                     {% endif %}
                                                 {% endfor %}
                                             {% endfor %}
-
-                                            {% if app.session.get('date_filter_value_stats_per_user') is not null %}
-                                                {% set processed_contacts_counter  = 0 %}
-                                                {% for client in clients_processes %}
-                                                    {% set break_processed = false %}
-                                                    {% for date_time, status_detail in client %}
-                                                        {% set process_date = date_time | date('Y-m-d') %}
-                                                        {% if break_processed == false %}
-                                                            {% if filter == "0" or filter == "1" %}
-                                                                {% if process_date == selected_date %}
-                                                                    {% set processed_contacts_counter = processed_contacts_counter + 1 %}
-                                                                    {% set break_processed = true %}
-                                                                {% endif %}
-                                                            {% elseif filter == "100" %}
-                                                                {% if process_date >= start_date and process_date <= end_date %}
-                                                                    {% set processed_contacts_counter = processed_contacts_counter + 1 %}
-                                                                    {% set break_processed = true %}
-                                                                {% endif %}
-                                                            {% else %}
-                                                                {% if process_date >= selected_date %}
-                                                                    {% set processed_contacts_counter = processed_contacts_counter + 1 %}
-                                                                    {% set break_processed = true %}
-                                                                {% endif%}
-                                                            {% endif %}
-                                                        {% endif %}
-                                                    {% endfor %}
-                                                {% endfor %}
-                                            {% endif %}
-
+                                        {% endif %}
+                                        {% if app.session.get('date_filter_value_stats_per_user') is not null %}
                                             {% if processed_contacts_counter != 0 %}
                                                 {{ ((QUALIFIED_contacts_counter /  processed_contacts_counter) * 100)|number_format(2) }} %
                                             {% else %}
@@ -391,7 +400,7 @@
                                                 0 %
                                             {% endif %}
                                         {% else %}
-                                            {{ TX_TRANSFOR }} %
+                                            {{ TX_TRANSFOR_TELEPRO }} %
                                         {% endif %}
                                     </td>
                                 </tr>
@@ -596,7 +605,35 @@
                                     N/A
                                 </td>
                                 <td>
+                                    {% if app.session.get('date_filter_value_stats_per_user') is not null %}
+                                        {% set done_appointments_counter = 0 %}
+                                        {% for appointment in done_appointments %}
+                                            {% set appointment_isdone_date = appointment.doneAt | date('Y-m-d') %}
+                                            {% if filter == "0" or filter == "1" %}
+                                                {% if appointment_isdone_date == selected_date %}
+                                                    {% set done_appointments_counter = done_appointments_counter + 1 %}
+                                                {% endif %}
+                                            {% elseif filter == "100" %}
+                                                {% if appointment_isdone_date >= start_date and appointment_isdone_date <= end_date %}
+                                                    {% set done_appointments_counter = done_appointments_counter + 1 %}
+                                                {% endif %}
+                                            {% else %}
+                                                {% if appointment_isdone_date >= selected_date %}
+                                                    {% set done_appointments_counter = done_appointments_counter + 1 %}
+                                                {% endif%}
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
 
+                                    {% if app.session.get('date_filter_value_stats_per_user') is not null %}
+                                        {% if done_appointments_counter != 0 %}
+                                            {{ ((vente_appointments_counter /  done_appointments_counter) * 100)|number_format(2) }} %
+                                        {% else %}
+                                            0 %
+                                        {% endif %}
+                                    {% else %}
+                                        {{ TX_TRANSFOR_COMMERCIAL }} %
+                                    {% endif %}
                                 </td>
                             </tr>
                             </tbody>
