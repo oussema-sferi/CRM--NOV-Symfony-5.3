@@ -656,8 +656,142 @@ class TeleprospectingController extends AbstractController
         //Bloc Statistiques Par Utilisateur
         $users = $userRepository->findUsersTeleproStats("ROLE_TELEPRO", "ROLE_SUPERADMIN");
 
-        return $this->render('teleprospecting/telepro_stats_new.html.twig', [
+       /* $inputs = '06/10/2011 19:00:02';
+        $date = strtotime($inputs);
+        $myDateTime = \DateTime::createFromFormat('Y-m-d H:i:s', '2021-11-11 04:46:43');
 
+        dd($myDateTime);
+        dd(date('d/M/Y h:i:s', $date));*/
+        // PROCESSED CONTACTS FOR GRAPH
+        /*$processedContactsForGraph= [];
+        foreach ($uniqueProcessedClientsArray as $clientId => $value) {
+            $processedContactsForGraph[] = $this->getDoctrine()->getRepository(Client::class)->find((int)$clientId);
+        }*/
+        // PROCESSED CONTACTS FOR GRAPH
+        $processedContactsByMonthArray = [];
+        for ($i = 1; $i <13; $i++) {
+            $contactsCounter = 0;
+            foreach ($clientsProcesses as $id => $processesArray) {
+                foreach ($processesArray as $datetime => $statusDetails) {
+                    $myDateTime = \DateTime::createFromFormat('Y-m-d H:i:s', $datetime);
+                    if (((new \DateTime())->format("Y")) === $myDateTime->format("Y")) {
+                        if (date("F",mktime(0,0,0,(int)($myDateTime->format("m")),1,(int)($myDateTime)->format("Y"))) === date("F",mktime(0,0,0,$i,1,(int)(new \DateTime())->format("Y")))) {
+                            $contactsCounter += 1;
+                            break;
+                        }
+                    }
+                }
+            }
+            $processedContactsByMonthArray[] = $contactsCounter;
+        }
+
+        // NQ CONTACTS FOR GRAPH
+        $NQContactsByMonthArray = [];
+        for ($i = 1; $i <13; $i++) {
+            $NQcontactsCounter = 0;
+            foreach ($processedContactsByStatus as $id => $processesArray) {
+                foreach ($processesArray as $datetime => $status) {
+                    if($status === 1) {
+                        $myDateTime = \DateTime::createFromFormat('Y-m-d H:i:s', $datetime);
+                        if (((new \DateTime())->format("Y")) === $myDateTime->format("Y")) {
+                            if (date("F",mktime(0,0,0,(int)($myDateTime->format("m")),1,(int)($myDateTime)->format("Y"))) === date("F",mktime(0,0,0,$i,1,(int)(new \DateTime())->format("Y")))) {
+                                $NQcontactsCounter += 1;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+            }
+            $NQContactsByMonthArray[] = $NQcontactsCounter;
+        }
+
+        // Q CONTACTS FOR GRAPH
+        $QContactsByMonthArray = [];
+        for ($i = 1; $i <13; $i++) {
+            $QcontactsCounter = 0;
+            foreach ($processedContactsByStatus as $id => $processesArray) {
+                foreach ($processesArray as $datetime => $status) {
+                    if($status === 2) {
+                        $myDateTime = \DateTime::createFromFormat('Y-m-d H:i:s', $datetime);
+                        if (((new \DateTime())->format("Y")) === $myDateTime->format("Y")) {
+                            if (date("F",mktime(0,0,0,(int)($myDateTime->format("m")),1,(int)($myDateTime)->format("Y"))) === date("F",mktime(0,0,0,$i,1,(int)(new \DateTime())->format("Y")))) {
+                                $QcontactsCounter += 1;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+            }
+            $QContactsByMonthArray[] = $QcontactsCounter;
+        }
+
+        // PI CONTACTS FOR GRAPH
+        $PIContactsByMonthArray = [];
+        for ($i = 1; $i <13; $i++) {
+            $PIcontactsCounter = 0;
+            foreach ($clientsProcesses as $id => $processesArray) {
+                foreach ($processesArray as $datetime => $statusDetails) {
+                    if($statusDetails === 5) {
+                        $myDateTime = \DateTime::createFromFormat('Y-m-d H:i:s', $datetime);
+                        if (((new \DateTime())->format("Y")) === $myDateTime->format("Y")) {
+                            if (date("F",mktime(0,0,0,(int)($myDateTime->format("m")),1,(int)($myDateTime)->format("Y"))) === date("F",mktime(0,0,0,$i,1,(int)(new \DateTime())->format("Y")))) {
+                                $PIcontactsCounter += 1;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+            }
+            $PIContactsByMonthArray[] = $PIcontactsCounter;
+        }
+
+        // RAPPEL CONTACTS FOR GRAPH
+        $RAPPELContactsByMonthArray = [];
+        for ($i = 1; $i <13; $i++) {
+            $RAPPELcontactsCounter = 0;
+            foreach ($clientsProcesses as $id => $processesArray) {
+                foreach ($processesArray as $datetime => $statusDetails) {
+                    if($statusDetails === 6) {
+                        $myDateTime = \DateTime::createFromFormat('Y-m-d H:i:s', $datetime);
+                        if (((new \DateTime())->format("Y")) === $myDateTime->format("Y")) {
+                            if (date("F",mktime(0,0,0,(int)($myDateTime->format("m")),1,(int)($myDateTime)->format("Y"))) === date("F",mktime(0,0,0,$i,1,(int)(new \DateTime())->format("Y")))) {
+                                $RAPPELcontactsCounter += 1;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+            }
+            $RAPPELContactsByMonthArray[] = $RAPPELcontactsCounter;
+        }
+
+        // RDV CONTACTS FOR GRAPH
+        $RDVContactsByMonthArray = [];
+        for ($i = 1; $i <13; $i++) {
+            $RDVcontactsCounter = 0;
+            foreach ($clientsProcesses as $id => $processesArray) {
+                foreach ($processesArray as $datetime => $statusDetails) {
+                    if($statusDetails === 7) {
+                        $myDateTime = \DateTime::createFromFormat('Y-m-d H:i:s', $datetime);
+                        if (((new \DateTime())->format("Y")) === $myDateTime->format("Y")) {
+                            if (date("F",mktime(0,0,0,(int)($myDateTime->format("m")),1,(int)($myDateTime)->format("Y"))) === date("F",mktime(0,0,0,$i,1,(int)(new \DateTime())->format("Y")))) {
+                                $RDVcontactsCounter += 1;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+            }
+            $RDVContactsByMonthArray[] = $RDVcontactsCounter;
+        }
+
+
+        return $this->render('teleprospecting/telepro_stats_new.html.twig', [
             //Bloc Statistiques Générales
             'telepro_count' => count($allTelepros),
             'contacts_count' => count($allContacts),
@@ -676,7 +810,18 @@ class TeleprospectingController extends AbstractController
             'TX_CT' => $TXCTPercentage,
             'TX_TRANSFOR' => $TXTRANSFORPercentage,
             'NOT_QUALIFIED_contacts_count' => $NOTQUALIFIEDcontactscounter,
-            'QUALIFIED_contacts_count' => $QUALIFIEDcontactscounter
+            'QUALIFIED_contacts_count' => $QUALIFIEDcontactscounter,
+            //graph
+            'processed_contacts_graph' => json_encode($processedContactsByMonthArray),
+            'NQ_contacts_graph' => json_encode($NQContactsByMonthArray),
+            'Q_contacts_graph' => json_encode($QContactsByMonthArray),
+            'PI_contacts_graph' => json_encode($PIContactsByMonthArray),
+            'RAPPEL_contacts_graph' => json_encode($RAPPELContactsByMonthArray),
+            'RDV_contacts_graph' => json_encode($RDVContactsByMonthArray),
+            /*'fixed_appointments_graph' => json_encode($appointmentsByMonthArray),
+            'done_appointments_graph' => json_encode($doneAppointmentsByMonthArray),
+            'deleted_appointments_graph' => json_encode($deletedAppointmentsByMonthArray),*/
+            'actual_year' => (new \DateTime())->format("Y"),
         ]);
     }
 
