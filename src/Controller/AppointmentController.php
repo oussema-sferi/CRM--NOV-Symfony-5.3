@@ -520,7 +520,7 @@ class AppointmentController extends AbstractController
                 $client = $this->getDoctrine()->getRepository(Client::class)->find($request->request->get('client'));
                 $commercial = $this->getDoctrine()->getRepository(User::class)->find($request->request->get('commercial'));
                 $newAppointment = new Appointment();
-                $newAppointment->setStatus(0);
+                /*$newAppointment->setStatus(0);*/
                 $newAppointment->setIsDone(0);
                 $newAppointment->setStart(new \DateTime($request->request->get('start')));
                 $newAppointment->setEnd(new \DateTime($request->request->get('end')));
@@ -528,6 +528,7 @@ class AppointmentController extends AbstractController
                 $newAppointment->setClient($client);
                 $newAppointment->setUser($commercial);
                 $newAppointment->setIsDeleted(false);
+                $newAppointment->setIsPostponed(false);
                 $newAppointment->setAppointmentFixer($this->getUser());
                 $newAppointment->setAppointmentNotes($request->request->get('notes'));
                 $newAppointment->setEventType($this->getDoctrine()->getRepository(EventType::class)->find(4));
@@ -605,7 +606,7 @@ class AppointmentController extends AbstractController
             $commercial = $this->getDoctrine()->getRepository(User::class)->find($request->request->get('commercial'));
 
             $newAppointment = new Appointment();
-            $newAppointment->setStatus(0);
+            /*$newAppointment->setStatus(0);*/
             $newAppointment->setIsDone(0);
             $newAppointment->setStart(new \DateTime($request->request->get('start')));
             $newAppointment->setEnd(new \DateTime($request->request->get('end')));
@@ -613,6 +614,7 @@ class AppointmentController extends AbstractController
             $newAppointment->setClient($client);
             $newAppointment->setUser($commercial);
             $newAppointment->setIsDeleted(false);
+            $newAppointment->setIsPostponed(false);
             $newAppointment->setAppointmentFixer($this->getUser());
             $newAppointment->setAppointmentNotes($request->request->get('notes'));
             $newAppointment->setEventType($this->getDoctrine()->getRepository(EventType::class)->find(4));

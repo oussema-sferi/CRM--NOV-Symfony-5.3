@@ -384,11 +384,11 @@ class StatisticsController extends AbstractController
         } else {
             $TXCTPercentage = 0;
         }
-        // TX TRANSFO
-        if($processedContactsCount !== 0) {
-            $TXTRANSFORPercentage = number_format((($RDVcounter / $QUALIFIEDcontactscounter) * 100), 2);
+        // TX TRANSFO TELEPRO
+        if($QUALIFIEDcontactscounter !== 0) {
+            $TXTRANSFORPercentageTelepro = number_format((($RDVcounter / $QUALIFIEDcontactscounter) * 100), 2);
         } else {
-            $TXTRANSFORPercentage = 0;
+            $TXTRANSFORPercentageTelepro = 0;
         }
         // NOT QUALIFIED contacts counter
         $NOTQUALIFIEDcontactscounter = 0;
@@ -446,6 +446,14 @@ class StatisticsController extends AbstractController
 
         //Bloc Statistiques Par Utilisateur
         $commercialsAndSuperAdmins = $userRepository->findUsersTeleproStats("ROLE_COMMERCIAL", "ROLE_SUPERADMIN");
+
+        // TX TRANSFO COMMERCIAL
+
+        if($doneAppointmentsCount !== 0) {
+            $TXTRANSFORPercentageCommercial = number_format((($venteAppointmentsCount / $doneAppointmentsCount) * 100), 2);
+        } else {
+            $TXTRANSFORPercentageCommercial = 0;
+        }
 
         //GRAPH
 
@@ -529,7 +537,7 @@ class StatisticsController extends AbstractController
             'all_RDV_contacts_count' => $RDVcounter,
             'clients_processes_by_status' => $processedContactsByStatus,
             'TX_CT' => $TXCTPercentage,
-            'TX_TRANSFOR' => $TXTRANSFORPercentage,
+            'TX_TRANSFOR_TELEPRO' => $TXTRANSFORPercentageTelepro,
             'NOT_QUALIFIED_contacts_count' => $NOTQUALIFIEDcontactscounter,
             'QUALIFIED_contacts_count' => $QUALIFIEDcontactscounter,
             // Partie COMMERCIAL
@@ -548,6 +556,7 @@ class StatisticsController extends AbstractController
             'argu_appointments_count' => $arguAppointmentsCount,
             'vente_appointments' => $venteAppointments,
             'vente_appointments_count' => $venteAppointmentsCount,
+            'TX_TRANSFOR_COMMERCIAL' => $TXTRANSFORPercentageCommercial,
             //Bloc Statistiques Pour La Période Sélectionnée
             'done_appointments' => $doneAppointments,
             //Bloc Statistiques Par Utilisateur

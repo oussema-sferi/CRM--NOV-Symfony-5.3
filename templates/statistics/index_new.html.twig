@@ -71,7 +71,7 @@
                 <div class="card">
                     <div class="card-header border-0">
                         <div class="row align-items-center">
-                                <h3 class="mb-0">Phoning</h3>
+                                <h3 class="mb-0">Phoning - Résumé Statistiques</h3>
                         </div>
                     </div>
                     <div class="table-responsive">
@@ -380,233 +380,15 @@
                                                 0 %
                                             {% endif %}
                                         {% else %}
-                                            {{ TX_TRANSFOR }} %
+                                            {{ TX_TRANSFOR_TELEPRO }} %
                                         {% endif %}
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-                </div>
-            </div>
-        </div>
 
-
-        <div class="row">
-            <div class="col-xl-12">
-                <div class="card">
-                    <div class="card-header border-0">
-                        <div class="row align-items-center">
-                            <h3 class="mb-0">Terrain</h3>
-                        </div>
-                    </div>
-                    <div class="table-responsive">
-                        <!-- Projects table -->
-                        <table class="table align-items-center table-flush">
-                            <thead class="thead-light">
-                            <tr>
-                                <th scope="col">Données</th>
-                                <th scope="col">Valeur</th>
-                                <th scope="col">Pourcentage</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <th scope="row">
-                                    Total RDV
-                                </th>
-                                <td>
-                                    {% if app.session.get('date_filter_value_all_stats') is not null %}
-                                        {% set all_appointments_counter = 0 %}
-                                        {% for appointment in all_appointments %}
-                                            {% set appointment_date = appointment.createdAt | date('Y-m-d') %}
-                                            {% if filter == "0" or filter == "1" %}
-                                                {% if appointment_date == selected_date %}
-                                                    {% set all_appointments_counter = all_appointments_counter + 1 %}
-                                                {% endif %}
-                                            {% elseif filter == "100" %}
-                                                {% if appointment_date >= start_date and appointment_date <= end_date %}
-                                                    {% set fixed_appointments_counter = all_appointments_counter + 1 %}
-                                                {% endif %}
-                                            {% else %}
-                                                {% if appointment_date >= selected_date %}
-                                                    {% set all_appointments_counter = all_appointments_counter + 1 %}
-                                                {% endif%}
-                                            {% endif %}
-                                        {% endfor %}
-                                        {{ all_appointments_counter }}
-                                    {% else %}
-                                        {{ all_appointments_count }}
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    N/A
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <th scope="row">
-                                    RDV annulés
-                                </th>
-                                <td>
-                                    {% if app.session.get('date_filter_value_all_stats') is not null %}
-                                        {% set deleted_appointments_counter = 0 %}
-                                        {% for appointment in deleted_appointments %}
-                                            {% set appointment_deletion_date = appointment.deletionDate | date('Y-m-d') %}
-                                            {% if filter == "0" or filter == "1" %}
-                                                {% if appointment_deletion_date == selected_date %}
-                                                    {% set deleted_appointments_counter = deleted_appointments_counter + 1 %}
-                                                {% endif %}
-                                            {% elseif filter == "100" %}
-                                                {% if appointment_deletion_date >= start_date and appointment_deletion_date <= end_date %}
-                                                    {% set deleted_appointments_counter = deleted_appointments_counter + 1 %}
-                                                {% endif %}
-                                            {% else %}
-                                                {% if appointment_deletion_date >= selected_date %}
-                                                    {% set deleted_appointments_counter = deleted_appointments_counter + 1 %}
-                                                {% endif%}
-                                            {% endif %}
-                                        {% endfor %}
-                                        {{ deleted_appointments_counter }}
-                                    {% else %}
-                                        {{ deleted_appointments_count }}
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    N/A
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <th scope="row">
-                                    RDV reportés
-                                </th>
-                                <td>
-                                    {% if app.session.get('date_filter_value_all_stats') is not null %}
-                                        {% set postponed_appointments_counter = 0 %}
-                                        {% for appointment in postponed_appointments %}
-                                            {% set appointment_postpone_date = appointment.postponedAt | date('Y-m-d') %}
-                                            {% if filter == "0" or filter == "1" %}
-                                                {% if appointment_postpone_date == selected_date %}
-                                                    {% set postponed_appointments_counter = postponed_appointments_counter + 1 %}
-                                                {% endif %}
-                                            {% elseif filter == "100" %}
-                                                {% if appointment_postpone_date >= start_date and appointment_postpone_date <= end_date %}
-                                                    {% set postponed_appointments_counter = postponed_appointments_counter + 1 %}
-                                                {% endif %}
-                                            {% else %}
-                                                {% if appointment_postpone_date >= selected_date %}
-                                                    {% set postponed_appointments_counter = postponed_appointments_counter + 1 %}
-                                                {% endif%}
-                                            {% endif %}
-                                        {% endfor %}
-                                        {{ postponed_appointments_counter }}
-                                    {% else %}
-                                        {{ postponed_appointments_count }}
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    N/A
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <th scope="row">
-                                    Argu
-                                </th>
-                                <td>
-                                    {% if app.session.get('date_filter_value_all_stats') is not null %}
-                                        {% set argu_appointments_counter = 0 %}
-                                        {% for appointment in argu_appointments %}
-                                            {% set appointment_isdone_date = appointment.doneAt | date('Y-m-d') %}
-                                            {% if filter == "0" or filter == "1" %}
-                                                {% if appointment_isdone_date == selected_date %}
-                                                    {% set argu_appointments_counter = argu_appointments_counter + 1 %}
-                                                {% endif %}
-                                            {% elseif filter == "100" %}
-                                                {% if appointment_isdone_date >= start_date and appointment_isdone_date <= end_date %}
-                                                    {% set argu_appointments_counter = argu_appointments_counter + 1 %}
-                                                {% endif %}
-                                            {% else %}
-                                                {% if appointment_isdone_date >= selected_date %}
-                                                    {% set argu_appointments_counter = argu_appointments_counter + 1 %}
-                                                {% endif%}
-                                            {% endif %}
-                                        {% endfor %}
-                                        {{ argu_appointments_counter }}
-                                    {% else %}
-                                        {{ argu_appointments_count }}
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    N/A
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <th scope="row">
-                                    Vente
-                                </th>
-                                <td>
-                                    {% if app.session.get('date_filter_value_all_stats') is not null %}
-                                        {% set vente_appointments_counter = 0 %}
-                                        {% for appointment in vente_appointments %}
-                                            {% set appointment_isdone_date = appointment.doneAt | date('Y-m-d') %}
-                                            {% if filter == "0" or filter == "1" %}
-                                                {% if appointment_isdone_date == selected_date %}
-                                                    {% set vente_appointments_counter = vente_appointments_counter + 1 %}
-                                                {% endif %}
-                                            {% elseif filter == "100" %}
-                                                {% if appointment_isdone_date >= start_date and appointment_isdone_date <= end_date %}
-                                                    {% set vente_appointments_counter = vente_appointments_counter + 1 %}
-                                                {% endif %}
-                                            {% else %}
-                                                {% if appointment_isdone_date >= selected_date %}
-                                                    {% set vente_appointments_counter = vente_appointments_counter + 1 %}
-                                                {% endif%}
-                                            {% endif %}
-                                        {% endfor %}
-                                        {{ vente_appointments_counter }}
-                                    {% else %}
-                                        {{ vente_appointments_count }}
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    N/A
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <th scope="row">
-                                    TX TRANSFO
-                                </th>
-                                <td>
-                                    N/A
-                                </td>
-                                <td>
-                                    {# {% if app.session.get('date_filter_value_commercial_stats') is not null %}
-                                            {% if QUALIFIED_contacts_counter != 0 %}
-                                                {{ ((RDV_contacts_counter /  QUALIFIED_contacts_counter) * 100)|number_format(2) }} %
-                                            {% else %}
-                                                0 %
-                                            {% endif %}
-                                        {% else %}
-                                            {{ TX_TRANSFOR }} %
-                                        {% endif %}#}
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-        <div class="row">
-            <div class="col-xl-12">
-                <div class="card">
-                    <div class="card-header border-0">
+                    <div class="card-header border-top">
                         <div class="row align-items-center">
 
                             <h3 class="mb-0">Phoning - Statistiques Générales</h3>
@@ -664,85 +446,9 @@
                             </tbody>
                         </table>
                     </div>
-                </div>
-            </div>
-        </div>
 
 
-
-
-
-        <div class="row">
-            <div class="col-xl-12">
-                <div class="card">
-                    <div class="card-header border-0">
-                        <div class="row align-items-center">
-
-                            <h3 class="mb-0">Terrain - Statistiques Générales</h3>
-
-                        </div>
-                    </div>
-                    <div class="table-responsive">
-                        <!-- Projects table -->
-                        <table class="table align-items-center table-flush">
-                            <thead class="thead-light">
-                            <tr>
-                                <th scope="col">Données</th>
-                                <th scope="col">Valeur</th>
-
-                            </tr>
-                            </thead>
-                            <tbody>
-
-                            <tr>
-                                <th scope="row">
-                                    Total Commerciaux
-                                </th>
-                                <td>
-                                    {{ commercials_count }}
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <th scope="row">
-                                    Total RDV
-                                </th>
-                                <td>
-                                    {{ all_appointments_count }}
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <th scope="row">
-                                    Total RDV Effectués
-                                </th>
-                                <td>
-                                    {{ done_appointments_count }}
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <th scope="row">
-                                    Total RDV Restants
-                                </th>
-                                <td>
-                                    {{ upcoming_appointments_count }}
-                                </td>
-                            </tr>
-
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-
-        <div class="row">
-            <div class="col-xl-12">
-                <div class="card">
-                    <div class="card-header border-0">
+                    <div class="card-header border-top">
                         <div class="row align-items-center">
                             <div class="col">
                                 <h3 class="mb-0">Phoning - Statistiques Par Utilisateur</h3>
@@ -1044,15 +750,304 @@
                             </tbody>
                         </table>
                     </div>
+
                 </div>
             </div>
         </div>
+
+
+
+
+
 
 
         <div class="row">
             <div class="col-xl-12">
                 <div class="card">
                     <div class="card-header border-0">
+                        <div class="row align-items-center">
+                            <h3 class="mb-0">Terrain - Résumé Statistiques</h3>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <!-- Projects table -->
+                        <table class="table align-items-center table-flush">
+                            <thead class="thead-light">
+                            <tr>
+                                <th scope="col">Données</th>
+                                <th scope="col">Valeur</th>
+                                <th scope="col">Pourcentage</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <th scope="row">
+                                    Total RDV
+                                </th>
+                                <td>
+                                    {% if app.session.get('date_filter_value_all_stats') is not null %}
+                                        {% set all_appointments_counter = 0 %}
+                                        {% for appointment in all_appointments %}
+                                            {% set appointment_date = appointment.createdAt | date('Y-m-d') %}
+                                            {% if filter == "0" or filter == "1" %}
+                                                {% if appointment_date == selected_date %}
+                                                    {% set all_appointments_counter = all_appointments_counter + 1 %}
+                                                {% endif %}
+                                            {% elseif filter == "100" %}
+                                                {% if appointment_date >= start_date and appointment_date <= end_date %}
+                                                    {% set fixed_appointments_counter = all_appointments_counter + 1 %}
+                                                {% endif %}
+                                            {% else %}
+                                                {% if appointment_date >= selected_date %}
+                                                    {% set all_appointments_counter = all_appointments_counter + 1 %}
+                                                {% endif%}
+                                            {% endif %}
+                                        {% endfor %}
+                                        {{ all_appointments_counter }}
+                                    {% else %}
+                                        {{ all_appointments_count }}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    N/A
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th scope="row">
+                                    RDV annulés
+                                </th>
+                                <td>
+                                    {% if app.session.get('date_filter_value_all_stats') is not null %}
+                                        {% set deleted_appointments_counter = 0 %}
+                                        {% for appointment in deleted_appointments %}
+                                            {% set appointment_deletion_date = appointment.deletionDate | date('Y-m-d') %}
+                                            {% if filter == "0" or filter == "1" %}
+                                                {% if appointment_deletion_date == selected_date %}
+                                                    {% set deleted_appointments_counter = deleted_appointments_counter + 1 %}
+                                                {% endif %}
+                                            {% elseif filter == "100" %}
+                                                {% if appointment_deletion_date >= start_date and appointment_deletion_date <= end_date %}
+                                                    {% set deleted_appointments_counter = deleted_appointments_counter + 1 %}
+                                                {% endif %}
+                                            {% else %}
+                                                {% if appointment_deletion_date >= selected_date %}
+                                                    {% set deleted_appointments_counter = deleted_appointments_counter + 1 %}
+                                                {% endif%}
+                                            {% endif %}
+                                        {% endfor %}
+                                        {{ deleted_appointments_counter }}
+                                    {% else %}
+                                        {{ deleted_appointments_count }}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    N/A
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th scope="row">
+                                    RDV reportés
+                                </th>
+                                <td>
+                                    {% if app.session.get('date_filter_value_all_stats') is not null %}
+                                        {% set postponed_appointments_counter = 0 %}
+                                        {% for appointment in postponed_appointments %}
+                                            {% set appointment_postpone_date = appointment.postponedAt | date('Y-m-d') %}
+                                            {% if filter == "0" or filter == "1" %}
+                                                {% if appointment_postpone_date == selected_date %}
+                                                    {% set postponed_appointments_counter = postponed_appointments_counter + 1 %}
+                                                {% endif %}
+                                            {% elseif filter == "100" %}
+                                                {% if appointment_postpone_date >= start_date and appointment_postpone_date <= end_date %}
+                                                    {% set postponed_appointments_counter = postponed_appointments_counter + 1 %}
+                                                {% endif %}
+                                            {% else %}
+                                                {% if appointment_postpone_date >= selected_date %}
+                                                    {% set postponed_appointments_counter = postponed_appointments_counter + 1 %}
+                                                {% endif%}
+                                            {% endif %}
+                                        {% endfor %}
+                                        {{ postponed_appointments_counter }}
+                                    {% else %}
+                                        {{ postponed_appointments_count }}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    N/A
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th scope="row">
+                                    Argu
+                                </th>
+                                <td>
+                                    {% if app.session.get('date_filter_value_all_stats') is not null %}
+                                        {% set argu_appointments_counter = 0 %}
+                                        {% for appointment in argu_appointments %}
+                                            {% set appointment_isdone_date = appointment.doneAt | date('Y-m-d') %}
+                                            {% if filter == "0" or filter == "1" %}
+                                                {% if appointment_isdone_date == selected_date %}
+                                                    {% set argu_appointments_counter = argu_appointments_counter + 1 %}
+                                                {% endif %}
+                                            {% elseif filter == "100" %}
+                                                {% if appointment_isdone_date >= start_date and appointment_isdone_date <= end_date %}
+                                                    {% set argu_appointments_counter = argu_appointments_counter + 1 %}
+                                                {% endif %}
+                                            {% else %}
+                                                {% if appointment_isdone_date >= selected_date %}
+                                                    {% set argu_appointments_counter = argu_appointments_counter + 1 %}
+                                                {% endif%}
+                                            {% endif %}
+                                        {% endfor %}
+                                        {{ argu_appointments_counter }}
+                                    {% else %}
+                                        {{ argu_appointments_count }}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    N/A
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th scope="row">
+                                    Vente
+                                </th>
+                                <td>
+                                    {% if app.session.get('date_filter_value_all_stats') is not null %}
+                                        {% set vente_appointments_counter = 0 %}
+                                        {% for appointment in vente_appointments %}
+                                            {% set appointment_isdone_date = appointment.doneAt | date('Y-m-d') %}
+                                            {% if filter == "0" or filter == "1" %}
+                                                {% if appointment_isdone_date == selected_date %}
+                                                    {% set vente_appointments_counter = vente_appointments_counter + 1 %}
+                                                {% endif %}
+                                            {% elseif filter == "100" %}
+                                                {% if appointment_isdone_date >= start_date and appointment_isdone_date <= end_date %}
+                                                    {% set vente_appointments_counter = vente_appointments_counter + 1 %}
+                                                {% endif %}
+                                            {% else %}
+                                                {% if appointment_isdone_date >= selected_date %}
+                                                    {% set vente_appointments_counter = vente_appointments_counter + 1 %}
+                                                {% endif%}
+                                            {% endif %}
+                                        {% endfor %}
+                                        {{ vente_appointments_counter }}
+                                    {% else %}
+                                        {{ vente_appointments_count }}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    N/A
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th scope="row">
+                                    TX TRANSFO
+                                </th>
+                                <td>
+                                    N/A
+                                </td>
+                                <td>
+                                    {% if app.session.get('date_filter_value_all_stats') is not null %}
+                                        {% set done_appointments_counter = 0 %}
+                                        {% for appointment in done_appointments %}
+                                            {% set appointment_isdone_date = appointment.doneAt | date('Y-m-d') %}
+                                            {% if filter == "0" or filter == "1" %}
+                                                {% if appointment_isdone_date == selected_date %}
+                                                    {% set done_appointments_counter = done_appointments_counter + 1 %}
+                                                {% endif %}
+                                            {% elseif filter == "100" %}
+                                                {% if appointment_isdone_date >= start_date and appointment_isdone_date <= end_date %}
+                                                    {% set done_appointments_counter = done_appointments_counter + 1 %}
+                                                {% endif %}
+                                            {% else %}
+                                                {% if appointment_isdone_date >= selected_date %}
+                                                    {% set done_appointments_counter = done_appointments_counter + 1 %}
+                                                {% endif%}
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+
+                                    {% if app.session.get('date_filter_value_all_stats') is not null %}
+                                        {% if done_appointments_counter != 0 %}
+                                            {{ ((vente_appointments_counter /  done_appointments_counter) * 100)|number_format(2) }} %
+                                        {% else %}
+                                            0 %
+                                        {% endif %}
+                                    {% else %}
+                                        {{ TX_TRANSFOR_COMMERCIAL }} %
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="card-header border-top">
+                        <div class="row align-items-center">
+
+                            <h3 class="mb-0">Terrain - Statistiques Générales</h3>
+
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <!-- Projects table -->
+                        <table class="table align-items-center table-flush">
+                            <thead class="thead-light">
+                            <tr>
+                                <th scope="col">Données</th>
+                                <th scope="col">Valeur</th>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            <tr>
+                                <th scope="row">
+                                    Total Commerciaux
+                                </th>
+                                <td>
+                                    {{ commercials_count }}
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th scope="row">
+                                    Total RDV
+                                </th>
+                                <td>
+                                    {{ all_appointments_count }}
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th scope="row">
+                                    Total RDV Effectués
+                                </th>
+                                <td>
+                                    {{ done_appointments_count }}
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th scope="row">
+                                    Total RDV Restants
+                                </th>
+                                <td>
+                                    {{ upcoming_appointments_count }}
+                                </td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="card-header border-top">
                         <div class="row align-items-center">
                             <div class="col">
                                 <h3 class="mb-0">Terrain - Statistiques Par Utilisateur</h3>
@@ -1288,6 +1283,7 @@
                 </div>
             </div>
         </div>
+
 
 
         <div class="row">

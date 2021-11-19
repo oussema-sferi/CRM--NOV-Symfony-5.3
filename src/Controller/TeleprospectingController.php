@@ -604,7 +604,8 @@ class TeleprospectingController extends AbstractController
                 }
             }
         }
-        $QUALIFIEDcontactscounter = 0;
+        /*dd($processedContactsByStatus);*/
+        /*$QUALIFIEDcontactscounter = 0;
         foreach ($processedContactsByStatus as $client) {
             $breakQUALIFIED = false;
             foreach ($client as $dateTime => $status) {
@@ -613,6 +614,22 @@ class TeleprospectingController extends AbstractController
                         $QUALIFIEDcontactscounter += 1;
                         $breakQUALIFIED = true;
                     }
+                }
+            }
+        }*/
+        // NOT QUALIFIED + QUALIFIED contacts counter
+        $NOTQUALIFIEDcontactscounter = 0;
+        $QUALIFIEDcontactscounter = 0;
+        foreach ($processedContactsByStatus as $client) {
+            $breakContacts = false;
+            foreach ($client as $dateTime => $status) {
+                if($breakContacts === false) {
+                    if($status === 1) {
+                        $NOTQUALIFIEDcontactscounter += 1;
+                    } elseif ($status === 2) {
+                        $QUALIFIEDcontactscounter += 1;
+                    }
+                    $breakContacts = true;
                 }
             }
         }
@@ -628,25 +645,13 @@ class TeleprospectingController extends AbstractController
 
         // TX TRANSFO
 
-         if($processedContactsCount !== 0) {
+         if($QUALIFIEDcontactscounter !== 0) {
              $TXTRANSFORPercentage = number_format((($RDVcounter / $QUALIFIEDcontactscounter) * 100), 2);
          } else {
              $TXTRANSFORPercentage = 0;
          }
 
-        // NOT QUALIFIED contacts counter
-        $NOTQUALIFIEDcontactscounter = 0;
-        foreach ($processedContactsByStatus as $client) {
-            $breakNOTQUALIFIED = false;
-            foreach ($client as $dateTime => $status) {
-                if($breakNOTQUALIFIED === false) {
-                    if($status === 1) {
-                        $NOTQUALIFIEDcontactscounter += 1;
-                        $breakNOTQUALIFIED = true;
-                    }
-                }
-            }
-        }
+
 
         //Bloc Statistiques Générales
         $allTelepros = $userRepository->findUsersByCommercialRole("ROLE_TELEPRO");
@@ -686,16 +691,26 @@ class TeleprospectingController extends AbstractController
         }
 
         // NQ CONTACTS FOR GRAPH
+        /*dd($processedContactsByStatus);*/
         $NQContactsByMonthArray = [];
+        $QContactsByMonthArray = [];
         for ($i = 1; $i <13; $i++) {
             $NQcontactsCounter = 0;
+            $QcontactsCounter = 0;
             foreach ($processedContactsByStatus as $id => $processesArray) {
                 foreach ($processesArray as $datetime => $status) {
+                    $myDateTime = \DateTime::createFromFormat('Y-m-d H:i:s', $datetime);
                     if($status === 1) {
-                        $myDateTime = \DateTime::createFromFormat('Y-m-d H:i:s', $datetime);
                         if (((new \DateTime())->format("Y")) === $myDateTime->format("Y")) {
                             if (date("F",mktime(0,0,0,(int)($myDateTime->format("m")),1,(int)($myDateTime)->format("Y"))) === date("F",mktime(0,0,0,$i,1,(int)(new \DateTime())->format("Y")))) {
                                 $NQcontactsCounter += 1;
+                                break;
+                            }
+                        }
+                    } elseif ($status === 2) {
+                        if (((new \DateTime())->format("Y")) === $myDateTime->format("Y")) {
+                            if (date("F",mktime(0,0,0,(int)($myDateTime->format("m")),1,(int)($myDateTime)->format("Y"))) === date("F",mktime(0,0,0,$i,1,(int)(new \DateTime())->format("Y")))) {
+                                $QcontactsCounter += 1;
                                 break;
                             }
                         }
@@ -704,10 +719,12 @@ class TeleprospectingController extends AbstractController
 
             }
             $NQContactsByMonthArray[] = $NQcontactsCounter;
+            $QContactsByMonthArray[] = $QcontactsCounter;
         }
 
+        /*dd($QContactsByMonthArray);*/
         // Q CONTACTS FOR GRAPH
-        $QContactsByMonthArray = [];
+        /*$QContactsByMonthArray = [];
         for ($i = 1; $i <13; $i++) {
             $QcontactsCounter = 0;
             foreach ($processedContactsByStatus as $id => $processesArray) {
@@ -725,7 +742,7 @@ class TeleprospectingController extends AbstractController
 
             }
             $QContactsByMonthArray[] = $QcontactsCounter;
-        }
+        }*/
 
         // PI CONTACTS FOR GRAPH
         $PIContactsByMonthArray = [];
