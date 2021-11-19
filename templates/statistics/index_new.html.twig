@@ -537,7 +537,8 @@
                                         0
                                     </td>#}
                                     <td>
-                                        {% set Q_unique_client_processes = newArrayTelepro %}
+                                        {% set QNQ_unique_client_processes = newArrayTelepro %}
+                                        {% set QNQ_unique_client_processes_without_filter = newArrayTelepro %}
                                         {% if app.session.get('date_filter_value_all_stats') is not null %}
                                             {% set Q_clients_counter_by_user = 0 %}
                                             {% for sorted_process in sorted_processes  %}
@@ -547,17 +548,17 @@
                                                         {% if filter == "0" or filter == "1" %}
                                                             {% if Q_sorted_process_date == selected_date %}
                                                                 {% set Q_clients_counter_by_user = Q_clients_counter_by_user + 1 %}
-                                                                {% set Q_unique_client_processes = remove(Q_unique_client_processes, sorted_process.client.id) %}
+                                                                {% set QNQ_unique_client_processes = remove(QNQ_unique_client_processes, sorted_process.client.id) %}
                                                             {% endif %}
                                                         {% elseif filter == "100" %}
                                                             {% if Q_sorted_process_date >= start_date and Q_sorted_process_date <= end_date %}
                                                                 {% set Q_clients_counter_by_user = Q_clients_counter_by_user + 1 %}
-                                                                {% set Q_unique_client_processes = remove(Q_unique_client_processes, sorted_process.client.id) %}
+                                                                {% set QNQ_unique_client_processes = remove(QNQ_unique_client_processes, sorted_process.client.id) %}
                                                             {% endif %}
                                                         {% else %}
                                                             {% if Q_sorted_process_date >= selected_date %}
                                                                 {% set Q_clients_counter_by_user = Q_clients_counter_by_user + 1 %}
-                                                                {% set Q_unique_client_processes = remove(Q_unique_client_processes, sorted_process.client.id) %}
+                                                                {% set QNQ_unique_client_processes = remove(QNQ_unique_client_processes, sorted_process.client.id) %}
                                                             {% endif%}
                                                         {% endif %}
                                                     {% endif %}
@@ -567,10 +568,10 @@
                                         {% else %}
                                             {% set Q_clients_counter_by_user_without_filter = 0 %}
                                             {% for sorted_process in sorted_processes  %}
-                                                {% if sorted_process.client.id in Q_unique_client_processes %}
+                                                {% if sorted_process.client.id in QNQ_unique_client_processes_without_filter %}
                                                     {% if sorted_process.status == 2 %}
                                                         {% set Q_clients_counter_by_user_without_filter = Q_clients_counter_by_user_without_filter + 1 %}
-                                                        {% set Q_unique_client_processes = remove(Q_unique_client_processes, sorted_process.client.id) %}
+                                                        {% set QNQ_unique_client_processes_without_filter = remove(QNQ_unique_client_processes_without_filter, sorted_process.client.id) %}
                                                     {% endif %}
                                                 {% endif %}
                                             {% endfor %}
@@ -578,27 +579,26 @@
                                         {% endif %}
                                     </td>
                                     <td>
-                                        {% set NQ_unique_client_processes = newArrayTelepro %}
                                         {% if app.session.get('date_filter_value_all_stats') is not null %}
                                             {% set NQ_clients_counter_by_user = 0 %}
                                             {% for sorted_process in sorted_processes  %}
                                                 {% set NQ_sorted_process_date = sorted_process.createdAt | date('Y-m-d') %}
-                                                {% if sorted_process.client.id in NQ_unique_client_processes %}
+                                                {% if sorted_process.client.id in QNQ_unique_client_processes %}
                                                     {% if sorted_process.status == 1 %}
                                                         {% if filter == "0" or filter == "1" %}
                                                             {% if NQ_sorted_process_date == selected_date %}
                                                                 {% set NQ_clients_counter_by_user = NQ_clients_counter_by_user + 1 %}
-                                                                {% set NQ_unique_client_processes = remove(NQ_unique_client_processes, sorted_process.client.id) %}
+                                                                {% set QNQ_unique_client_processes = remove(QNQ_unique_client_processes, sorted_process.client.id) %}
                                                             {% endif %}
                                                         {% elseif filter == "100" %}
                                                             {% if NQ_sorted_process_date >= start_date and NQ_sorted_process_date <= end_date %}
                                                                 {% set NQ_clients_counter_by_user = NQ_clients_counter_by_user + 1 %}
-                                                                {% set NQ_unique_client_processes = remove(NQ_unique_client_processes, sorted_process.client.id) %}
+                                                                {% set QNQ_unique_client_processes = remove(QNQ_unique_client_processes, sorted_process.client.id) %}
                                                             {% endif %}
                                                         {% else %}
                                                             {% if NQ_sorted_process_date >= selected_date %}
                                                                 {% set NQ_clients_counter_by_user = NQ_clients_counter_by_user + 1 %}
-                                                                {% set NQ_unique_client_processes = remove(NQ_unique_client_processes, sorted_process.client.id) %}
+                                                                {% set QNQ_unique_client_processes = remove(QNQ_unique_client_processes, sorted_process.client.id) %}
                                                             {% endif%}
                                                         {% endif %}
                                                     {% endif %}
@@ -608,10 +608,10 @@
                                         {% else %}
                                             {% set NQ_clients_counter_by_user_without_filter = 0 %}
                                             {% for sorted_process in sorted_processes  %}
-                                                {% if sorted_process.client.id in NQ_unique_client_processes %}
+                                                {% if sorted_process.client.id in QNQ_unique_client_processes_without_filter %}
                                                     {% if sorted_process.status == 1 %}
                                                         {% set NQ_clients_counter_by_user_without_filter = NQ_clients_counter_by_user_without_filter + 1 %}
-                                                        {% set NQ_unique_client_processes = remove(NQ_unique_client_processes, sorted_process.client.id) %}
+                                                        {% set QNQ_unique_client_processes_without_filter = remove(QNQ_unique_client_processes_without_filter, sorted_process.client.id) %}
                                                     {% endif %}
                                                 {% endif %}
                                             {% endfor %}

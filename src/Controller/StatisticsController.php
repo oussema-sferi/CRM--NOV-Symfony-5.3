@@ -356,7 +356,7 @@ class StatisticsController extends AbstractController
                 }
             }
         }
-        // QUALIFIED contacts counter
+        // NOT QUALIFIED + QUALIFIED contacts counter
         $processedContactsByStatus = [];
         foreach ($processedClientsIdsArray as $clientId) {
             foreach ($allProcesses as $process) {
@@ -365,7 +365,24 @@ class StatisticsController extends AbstractController
                 }
             }
         }
+        $NOTQUALIFIEDcontactscounter = 0;
         $QUALIFIEDcontactscounter = 0;
+        foreach ($processedContactsByStatus as $client) {
+            $breakContacts = false;
+            foreach ($client as $dateTime => $status) {
+                if($breakContacts === false) {
+                    if($status === 1) {
+                        $NOTQUALIFIEDcontactscounter += 1;
+                    } elseif ($status === 2) {
+                        $QUALIFIEDcontactscounter += 1;
+                    }
+                    $breakContacts = true;
+                }
+            }
+        }
+
+        // QUALIFIED contacts counter
+        /*$QUALIFIEDcontactscounter = 0;
         foreach ($processedContactsByStatus as $client) {
             $breakQUALIFIED = false;
             foreach ($client as $dateTime => $status) {
@@ -376,7 +393,7 @@ class StatisticsController extends AbstractController
                     }
                 }
             }
-        }
+        }*/
         // TX CT contacts
         $processedContactsCount = count($uniqueProcessedClientsIdsArray);
         if($processedContactsCount !== 0) {
@@ -391,7 +408,7 @@ class StatisticsController extends AbstractController
             $TXTRANSFORPercentageTelepro = 0;
         }
         // NOT QUALIFIED contacts counter
-        $NOTQUALIFIEDcontactscounter = 0;
+        /*$NOTQUALIFIEDcontactscounter = 0;
         foreach ($processedContactsByStatus as $client) {
             $breakNOTQUALIFIED = false;
             foreach ($client as $dateTime => $status) {
@@ -402,7 +419,7 @@ class StatisticsController extends AbstractController
                     }
                 }
             }
-        }
+        }*/
         //Bloc Statistiques Générales
         $allTelepros = $userRepository->findUsersByCommercialRole("ROLE_TELEPRO");
         $allContacts = $clientRepository->getNotDeletedClients();
