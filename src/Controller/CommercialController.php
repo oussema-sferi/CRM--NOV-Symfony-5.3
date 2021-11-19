@@ -265,6 +265,92 @@ class CommercialController extends AbstractController
         //Bloc Statistiques Par Utilisateur
         $users = $userRepository->findUsersTeleproStats("ROLE_COMMERCIAL", "ROLE_SUPERADMIN");
 
+        // GRAPHIQUE
+        // ALL APPOINTMENTS
+        $allAppointmentsByMonthArray = [];
+        for ($j = 1; $j <13; $j++) {
+            $appointmentsCounter = 0;
+            foreach ($allAppointments as $appointment) {
+
+                if (((new \DateTime())->format("Y")) === $appointment->getCreatedAt()->format("Y")) {
+                    if (date("F", mktime(0, 0, 0, (int)($appointment->getCreatedAt()->format("m")), 1, (int)($appointment->getCreatedAt())->format("Y"))) === date("F", mktime(0, 0, 0, $j, 1, (int)(new \DateTime())->format("Y")))) {
+                        $appointmentsCounter += 1;
+                    }
+                }
+            }
+            $allAppointmentsByMonthArray[] = $appointmentsCounter;
+        }
+        // POSTPONED APPOINTMENTS
+        $postponedAppointmentsByMonthArray = [];
+        for ($j = 1; $j <13; $j++) {
+            $postponedAppointmentsCounter = 0;
+            foreach ($postponedAppointments as $postponedAppointment) {
+                if (((new \DateTime())->format("Y")) === $postponedAppointment->getPostponedAt()->format("Y")) {
+                    if (date("F", mktime(0, 0, 0, (int)($postponedAppointment->getPostponedAt()->format("m")), 1, (int)($postponedAppointment->getPostponedAt())->format("Y"))) === date("F", mktime(0, 0, 0, $j, 1, (int)(new \DateTime())->format("Y")))) {
+                        $postponedAppointmentsCounter += 1;
+                    }
+                }
+            }
+            $postponedAppointmentsByMonthArray[] = $postponedAppointmentsCounter;
+        }
+        // DELETED APPOINTMENTS
+        $deletedAppointmentsByMonthArray = [];
+        for ($j = 1; $j <13; $j++) {
+            $deletedAppointmentsCounter = 0;
+            foreach ($deletedAppointments as $deletedAppointment) {
+                if (((new \DateTime())->format("Y")) === $deletedAppointment->getDeletionDate()->format("Y")) {
+                    if (date("F", mktime(0, 0, 0, (int)($deletedAppointment->getDeletionDate()->format("m")), 1, (int)($deletedAppointment->getDeletionDate())->format("Y"))) === date("F", mktime(0, 0, 0, $j, 1, (int)(new \DateTime())->format("Y")))) {
+                        $deletedAppointmentsCounter += 1;
+                    }
+                }
+            }
+            $deletedAppointmentsByMonthArray[] = $deletedAppointmentsCounter;
+        }
+        // DONE APPOINTMENTS
+        $doneAppointmentsByMonthArray = [];
+        for ($j = 1; $j <13; $j++) {
+            $doneAppointmentsCounter = 0;
+            foreach ($doneAppointments as $doneAppointment) {
+
+                if (((new \DateTime())->format("Y")) === $doneAppointment->getDoneAt()->format("Y")) {
+                    if (date("F", mktime(0, 0, 0, (int)($doneAppointment->getDoneAt()->format("m")), 1, (int)($doneAppointment->getDoneAt())->format("Y"))) === date("F", mktime(0, 0, 0, $j, 1, (int)(new \DateTime())->format("Y")))) {
+                        $doneAppointmentsCounter += 1;
+                    }
+                }
+            }
+            $doneAppointmentsByMonthArray[] = $doneAppointmentsCounter;
+        }
+
+        // ARGU APPOINTMENTS
+        $arguAppointmentsByMonthArray = [];
+        for ($j = 1; $j <13; $j++) {
+            $arguAppointmentsCounter = 0;
+            foreach ($arguAppointments as $arguAppointment) {
+
+                if (((new \DateTime())->format("Y")) === $arguAppointment->getDoneAt()->format("Y")) {
+                    if (date("F", mktime(0, 0, 0, (int)($arguAppointment->getDoneAt()->format("m")), 1, (int)($arguAppointment->getDoneAt())->format("Y"))) === date("F", mktime(0, 0, 0, $j, 1, (int)(new \DateTime())->format("Y")))) {
+                        $arguAppointmentsCounter += 1;
+                    }
+                }
+            }
+            $arguAppointmentsByMonthArray[] = $arguAppointmentsCounter;
+        }
+
+        // VENTE APPOINTMENTS
+        $venteAppointmentsByMonthArray = [];
+        for ($j = 1; $j <13; $j++) {
+            $venteAppointmentsCounter = 0;
+            foreach ($venteAppointments as $venteAppointment) {
+
+                if (((new \DateTime())->format("Y")) === $venteAppointment->getDoneAt()->format("Y")) {
+                    if (date("F", mktime(0, 0, 0, (int)($venteAppointment->getDoneAt()->format("m")), 1, (int)($venteAppointment->getDoneAt())->format("Y"))) === date("F", mktime(0, 0, 0, $j, 1, (int)(new \DateTime())->format("Y")))) {
+                        $venteAppointmentsCounter += 1;
+                    }
+                }
+            }
+            $venteAppointmentsByMonthArray[] = $venteAppointmentsCounter;
+        }
+
 
         return $this->render('commercial/commercial_stats_new.html.twig', [
             //Bloc Statistiques Générales
@@ -286,6 +372,14 @@ class CommercialController extends AbstractController
             'done_appointments' => $doneAppointments,
             //Bloc Statistiques Par Utilisateur
             'users' => $users,
+            // GRAPHIQUE
+            'fixed_appointments_graph' => json_encode($allAppointmentsByMonthArray),
+            'postponed_appointments_graph' => json_encode($postponedAppointmentsByMonthArray),
+            'deleted_appointments_graph' => json_encode($deletedAppointmentsByMonthArray),
+            'done_appointments_graph' => json_encode($doneAppointmentsByMonthArray),
+            'argu_appointments_graph' => json_encode($arguAppointmentsByMonthArray),
+            'vente_appointments_graph' => json_encode($venteAppointmentsByMonthArray),
+            'actual_year' => (new \DateTime())->format("Y"),
         ]);
     }
 

@@ -938,12 +938,34 @@
             </div>
         </div>
 
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="card bg-gradient-white">
+                    <div class="card-header bg-transparent">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <h6 class="text-light text-uppercase ls-1 mb-1">Graphique</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <!-- Chart -->
+                        <div class="chart">
+                            <!-- Chart wrapper -->
+                            <canvas id="multi-bar-chart" width="400" height="90"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
 
 {% endblock %}
 
 {% block additionalJs %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/chart.min.js" integrity="sha512-Wt1bJGtlnMtGP0dqNFH1xlkLBNpEodaiQ8ZN5JLA5wpc1sUlk/O5uuOMNgvzddzkpvZ9GLyYNa8w2s7rqiTk5Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
         window.onload = () => {
             let normalPeriod =  $("#normal_period");
@@ -1004,6 +1026,44 @@
             $(".clickable-row").dblclick(function () {
                 window.location = $(this).data("href");
             });
+
+            let multiBar = document.getElementById("multi-bar-chart").getContext('2d');
+            let multiBArChart = new Chart(multiBar, {
+                type: 'bar',
+                data: {
+                    labels: ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"],
+                    datasets: [
+                        {label: "Nombre de RDV", data: {{ fixed_appointments_graph|raw }}, backgroundColor: "#ff00ff",},
+                        {label: "Nombre de RDV Reportés", data: {{ postponed_appointments_graph|raw }}, backgroundColor: "#9999ff",},
+                        {label: "Nombre de RDV Annulés", data: {{ deleted_appointments_graph|raw }}, backgroundColor: "#ff0000",},
+                        {label: "Nombre de RDV Effectués", data: {{ done_appointments_graph|raw }}, backgroundColor: "#336600",},
+                        {label: "Argu", data: {{ argu_appointments_graph|raw }}, backgroundColor: "#99994d",},
+                        {label: "Vente", data: {{ vente_appointments_graph|raw }}, backgroundColor: "#ffc61a",},
+
+                    ]
+                },
+                options: {
+                    animation:{
+                        duration: 2500 /* time in ms */
+                    },
+                    scales: {
+                        y: {
+                            suggestedMin: 0,
+                            suggestedMax: 8
+                        },
+                    },
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: "Evolution pour l'année {{ actual_year }}"
+                        }
+                    }
+                },
+            })
         }
     </script>
 {% endblock %}
