@@ -265,6 +265,14 @@ class CommercialController extends AbstractController
         //Bloc Statistiques Par Utilisateur
         $users = $userRepository->findUsersTeleproStats("ROLE_COMMERCIAL", "ROLE_SUPERADMIN");
 
+        // TX TRANSFO
+
+        if($doneAppointmentsCount !== 0) {
+            $TXTRANSFORPercentage = number_format((($venteAppointmentsCount / $doneAppointmentsCount) * 100), 2);
+        } else {
+            $TXTRANSFORPercentage = 0;
+        }
+
         // GRAPHIQUE
         // ALL APPOINTMENTS
         $allAppointmentsByMonthArray = [];
@@ -368,6 +376,7 @@ class CommercialController extends AbstractController
             'argu_appointments_count' => $arguAppointmentsCount,
             'vente_appointments' => $venteAppointments,
             'vente_appointments_count' => $venteAppointmentsCount,
+            'TX_TRANSFOR' => $TXTRANSFORPercentage,
             //Bloc Statistiques Pour La Période Sélectionnée
             'done_appointments' => $doneAppointments,
             //Bloc Statistiques Par Utilisateur

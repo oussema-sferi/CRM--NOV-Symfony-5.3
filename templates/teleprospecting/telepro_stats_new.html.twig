@@ -709,39 +709,6 @@
 
                                 <tr>
                                     <th scope="row">
-                                       Nombre d'appels
-                                    </th>
-                                    <td>
-                                        {#{% if app.session.get('date_filter_value') is not null %}
-                                            {% set total_calls_counter = 0 %}
-                                            {% for call in all_calls %}
-                                                {% set call_date = call.createdAt | date('Y-m-d') %}
-                                                {% if filter == "0" or filter == "1" %}
-                                                    {% if call_date == selected_date %}
-                                                        {% set total_calls_counter = total_calls_counter + 1 %}
-                                                    {% endif %}
-                                                {% elseif filter == "100" %}
-                                                    {% if call_date >= start_date and call_date <= end_date %}
-                                                        {% set total_calls_counter = total_calls_counter + 1 %}
-                                                    {% endif %}
-                                                {% else %}
-                                                    {% if call_date >= selected_date %}
-                                                        {% set total_calls_counter = total_calls_counter + 1 %}
-                                                    {% endif%}
-                                                {% endif %}
-                                            {% endfor %}
-                                            {{ total_calls_counter }}
-                                        {% else %}
-                                            {{ all_calls_count }}
-                                        {% endif %}#}
-                                    </td>
-                                    <td>
-                                        N/A
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <th scope="row">
                                         PI
                                     </th>
                                     <td>
