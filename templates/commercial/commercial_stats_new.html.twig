@@ -738,7 +738,7 @@
                                 {% endif %}
                                 {#{{ dump(all_user_appointments) }}#}
 
-                                <tr class="clickable-row" data-href="{{ path('statistics_per_user', {'id': user.id}) }}">
+                                <tr class="clickable-row" data-href="{{ path('statistics_per_user_new', {'id': user.id}) }}">
                                     <th scope="row">
                                         {{ user.firstName ~ ' ' ~ user.lastName }}
                                     </th>
@@ -927,7 +927,7 @@
                                         {% endif %}
                                     </td>
                                     <td>
-                                        <a href="{{ path('statistics_per_user', {'id': user.id}) }}"><i class="fas fa-search-plus text-blue"></i></a>&nbsp;&nbsp;
+                                        <a href="{{ path('statistics_per_user_new', {'id': user.id}) }}"><i class="fas fa-search-plus text-blue"></i></a>&nbsp;&nbsp;
                                     </td>
                                 </tr>
                             {% endfor %}

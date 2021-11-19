@@ -1416,7 +1416,7 @@
                                         {% set sorted_processes = sorted_processes|merge([user.processes[i]]) %}
                                     {% endfor %}
                                 {% endif %}
-                                <tr class="clickable-row" data-href="{{ path('statistics_per_user', {'id': user.id}) }}">
+                                <tr class="clickable-row" data-href="{{ path('statistics_per_user_new', {'id': user.id}) }}">
                                     <th scope="row">
                                         {{ user.firstName ~ ' ' ~ user.lastName }}
                                     </th>
@@ -1457,7 +1457,6 @@
                                         0
                                     </td>#}
                                     <td>
-                                        {#{{ dump(sorted_processes) }}#}
                                         {% set Q_unique_client_processes = newArray %}
                                         {% if app.session.get('date_filter_value') is not null %}
                                             {% set Q_clients_counter_by_user = 0 %}
@@ -1664,7 +1663,7 @@
                                         {% endif %}
                                     </td>
                                     <td>
-                                        <a href="{{ path('statistics_per_user', {'id': user.id}) }}"><i class="fas fa-search-plus text-blue"></i></a>&nbsp;&nbsp;
+                                        <a href="{{ path('statistics_per_user_new', {'id': user.id}) }}"><i class="fas fa-search-plus text-blue"></i></a>&nbsp;&nbsp;
                                     </td>
                                 </tr>
                             {% endfor %}
