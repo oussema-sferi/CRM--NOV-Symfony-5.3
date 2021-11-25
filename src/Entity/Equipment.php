@@ -29,11 +29,17 @@ class Equipment
      */
     private $clients;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Project::class, mappedBy="equipment")
+     */
+    private $projects;
+
    
 
     public function __construct()
     {
         $this->clients = new ArrayCollection();
+        $this->projects = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -88,6 +94,36 @@ class Equipment
         return $this->designation;
         // to show the id of the Category in the select
         // return $this->id;
+    }
+
+    /**
+     * @return Collection|Project[]
+     */
+    public function getProjects(): Collection
+    {
+        return $this->projects;
+    }
+
+    public function addProject(Project $project): self
+    {
+        if (!$this->projects->contains($project)) {
+            $this->projects[] = $project;
+            $project->setEquipment($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProject(Project $project): self
+    {
+        if ($this->projects->removeElement($project)) {
+            // set the owning side to null (unless already changed)
+            if ($project->getEquipment() === $this) {
+                $project->setEquipment(null);
+            }
+        }
+
+        return $this;
     }
 
 }

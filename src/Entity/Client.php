@@ -164,6 +164,11 @@ class Client
      */
     private $isProcessed;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Project::class, mappedBy="client")
+     */
+    private $projects;
+
 
     public function __construct()
     {
@@ -172,6 +177,7 @@ class Client
         $this->callersUsers = new ArrayCollection();
         $this->processingUsers = new ArrayCollection();
         $this->processes = new ArrayCollection();
+        $this->projects = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -587,6 +593,36 @@ class Client
     public function setIsProcessed(bool $isProcessed): self
     {
         $this->isProcessed = $isProcessed;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Project[]
+     */
+    public function getProjects(): Collection
+    {
+        return $this->projects;
+    }
+
+    public function addProject(Project $project): self
+    {
+        if (!$this->projects->contains($project)) {
+            $this->projects[] = $project;
+            $project->setClient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProject(Project $project): self
+    {
+        if ($this->projects->removeElement($project)) {
+            // set the owning side to null (unless already changed)
+            if ($project->getClient() === $this) {
+                $project->setClient(null);
+            }
+        }
 
         return $this;
     }

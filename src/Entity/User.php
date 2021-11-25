@@ -161,6 +161,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $processes;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Project::class, mappedBy="projectMakerUser")
+     */
+    private $projects;
+
 
     public function __construct()
     {
@@ -178,6 +183,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->deletedCalls = new ArrayCollection();
         $this->deletedAppointments = new ArrayCollection();
         $this->processes = new ArrayCollection();
+        $this->projects = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -765,6 +771,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($process->getProcessorUser() === $this) {
                 $process->setProcessorUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Project[]
+     */
+    public function getProjects(): Collection
+    {
+        return $this->projects;
+    }
+
+    public function addProject(Project $project): self
+    {
+        if (!$this->projects->contains($project)) {
+            $this->projects[] = $project;
+            $project->setProjectMakerUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProject(Project $project): self
+    {
+        if ($this->projects->removeElement($project)) {
+            // set the owning side to null (unless already changed)
+            if ($project->getProjectMakerUser() === $this) {
+                $project->setProjectMakerUser(null);
             }
         }
 

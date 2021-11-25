@@ -95,7 +95,7 @@
                                 </div>
 
                                 <div class="text-center">
-                                    <button type="submit" class="btn btn-success mt-4">Confirmer</button>
+                                    <button id="confirm" type="submit" class="btn btn-success mt-4">Confirmer</button>
                                 </div>
 
                             </form>
@@ -108,7 +108,6 @@
 {% endblock %}
 
 {% block additionalJs %}
-
     <script>
         window.onload = () => {
             /*let startTime = $("#start_datetime");
@@ -122,8 +121,18 @@
                     $("#notes").prop('required', false)
                 }
             })*/
+            $('input[type=radio][name=appointment_status]').change(function() {
+                if (this.value == 'vente') {
+                    $("#confirm").html('Vers Projet');
+                    $("#confirm").removeClass("btn-success");
+                    $("#confirm").addClass("btn-primary");
+                } else {
+                    $("#confirm").html('Confirmer');
+                    $("#confirm").removeClass("btn-primary");
+                    $("#confirm").addClass("btn-success");
+                }
+            });
         }
-
     </script>
 
 {% endblock %}
