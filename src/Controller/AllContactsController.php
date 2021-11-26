@@ -52,13 +52,15 @@ class AllContactsController extends AbstractController
         }
         $loggedUserRolesArray = $this->getUser()->getRoles();
         if (in_array("ROLE_TELEPRO",$loggedUserRolesArray) || in_array("ROLE_COMMERCIAL",$loggedUserRolesArray)) {
-            $data = $this->getDoctrine()->getRepository(Client::class)->findAllClientsByUserDepartments($loggedUserGeographicAreasIdsArray, $loggedUser->getId());
+           if(count($loggedUserGeographicAreasIdsArray) === 0) {
+               $data = $this->getDoctrine()->getRepository(Client::class)->getNotDeletedClients();
+           } else {
+               $data = $this->getDoctrine()->getRepository(Client::class)->findAllClientsByUserDepartments($loggedUserGeographicAreasIdsArray, $loggedUser->getId());
+           }
 
         } else {
             $data = $this->getDoctrine()->getRepository(Client::class)->getNotDeletedClients();
         }
-
-        /*dd(count($data));*/
 
         /*$data = $this->getDoctrine()->getRepository(Client::class)->getNotDeletedClients();*/
         $session->set('total_contacts',

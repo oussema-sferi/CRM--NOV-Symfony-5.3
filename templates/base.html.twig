@@ -45,8 +45,8 @@
                 <div class="scrollbar-inner">
                     <!-- Brand -->
                     <div class="sidenav-header  align-items-center">
-                        <a class="navbar-brand" href="javascript:void(0)">
-                            <img src="{{ asset('assets/img/brand/Novuus.png') }}" class="navbar-brand-img" alt="...">
+                        <a class="navbar-brand" href="{{ path('all_contacts') }}">
+                            <img src="{{ asset('assets/img/brand/Novuusicontest.png') }}" class="navbar-brand-img" alt="..." width="140px">
                         </a>
                     </div>
                     <div class="navbar-inner">
@@ -205,7 +205,7 @@
                                                 </li>
                                             {% endif %}
 
-                                            {% if (is_granted('ROLE_COMMERCIAL') or is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPERADMIN')) %}
+                                            {#{% if (is_granted('ROLE_COMMERCIAL') or is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPERADMIN')) %}
 
                                             <li class="nav-item">
                                                 <a class="nav-link" href="#navbar-dashboards20" data-toggle="collapse" role="button" aria-controls="navbar-dashboards20">
@@ -220,17 +220,17 @@
                                                                 <span class="sidenav-normal"> Liste des Projets </span>
                                                             </a>
                                                         </li>
-                                                        {#<li class="nav-item">
+                                                        #}{#<li class="nav-item">
                                                             <a href="{{ path('commercial_my_contacts') }}" class="nav-link">
                                                                 <i class="ni fas fa-calendar-alt text-yellow"></i>
                                                                 <span class="sidenav-normal"> Mes contacts </span>
                                                             </a>
-                                                        </li>#}
+                                                        </li>#}{#
                                                     </ul>
                                                 </div>
                                             </li>
 
-                                            {% endif %}
+                                            {% endif %}#}
                                             {#<li class="nav-item">
                                                 <a class="nav-link" href="{{ path('project') }}">
                                                     <i class="ni ni-archive-2 text-blue"></i>

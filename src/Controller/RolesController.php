@@ -326,7 +326,6 @@ class RolesController extends AbstractController
 
         $manager = $this->getDoctrine()->getManager();
         if($request->isMethod('Post')) {
-
             $teleproId = $request->request->get('teleproid');
             $myString = $request->request->get('commercials');
             $commercialsArray = explode(',', $myString);

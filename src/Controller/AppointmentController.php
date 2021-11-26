@@ -51,7 +51,13 @@ class AppointmentController extends AbstractController
                 $teleproGeographicAreasIdsArray[] =  $geographicArea->getId();
             }
             $clients = $this->getDoctrine()->getRepository(Client::class)->findClientsByTeleproDepartments($teleproGeographicAreasIdsArray, $this->getUser()->getId());
-            $data = $this->getDoctrine()->getRepository(User::class)->findAssignedUsersByCommercialRole($loggedUserId, "ROLE_COMMERCIAL");
+            $myAssignedCommercials = $this->getUser()->getCommercials();
+            if(count($myAssignedCommercials) === 0) {
+                $data = $this->getDoctrine()->getRepository(User::class)->findUsersByCommercialRole("ROLE_COMMERCIAL");
+            } else {
+                $data = $this->getDoctrine()->getRepository(User::class)->findAssignedUsersByCommercialRole($loggedUserId, "ROLE_COMMERCIAL");
+            }
+
         }
 
         //pagination
@@ -107,15 +113,25 @@ class AppointmentController extends AbstractController
                         /*$busyCommercialId = $busyAppointmentsTime[0]->getUser()->getId();*/
                         /*dd($busyCommercialId);*/
                         /*dd($result);*/
-                        $freeCommercials = $this->getDoctrine()->getRepository(User::class)->findFreeCommercials($busyCommercialsIdsArray, "ROLE_COMMERCIAL", $loggedUserId);
+
                         /*dd($freeCommercials);*/
+                        if(count($myAssignedCommercials) === 0) {
+                            $freeCommercials = $this->getDoctrine()->getRepository(User::class)->findFreeCommercialsForSuperAdmin($busyCommercialsIdsArray, "ROLE_COMMERCIAL");
+                        } else {
+                            $freeCommercials = $this->getDoctrine()->getRepository(User::class)->findFreeCommercials($busyCommercialsIdsArray, "ROLE_COMMERCIAL", $loggedUserId);
+                        }
                     }
 
                 } else {
                     if(in_array("ROLE_SUPERADMIN", $this->getUser()->getRoles())) {
                         $freeCommercials = $this->getDoctrine()->getRepository(User::class)->findUsersByCommercialRole("ROLE_COMMERCIAL");
                     } else {
-                        $freeCommercials = $this->getDoctrine()->getRepository(User::class)->findAssignedUsersByCommercialRole($loggedUserId,"ROLE_COMMERCIAL");
+                        if(count($myAssignedCommercials) === 0) {
+                            $freeCommercials = $this->getDoctrine()->getRepository(User::class)->findUsersByCommercialRole("ROLE_COMMERCIAL");
+                        } else {
+                            $freeCommercials = $this->getDoctrine()->getRepository(User::class)->findAssignedUsersByCommercialRole($loggedUserId,"ROLE_COMMERCIAL");
+                        }
+
                     }
                 }
 
