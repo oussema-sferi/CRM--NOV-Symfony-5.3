@@ -2678,7 +2678,7 @@ pre code
 {
     display: block;
     overflow-x: auto;
-
+    height: 700px;
     width: 100%;
 
     -webkit-overflow-scrolling: touch;

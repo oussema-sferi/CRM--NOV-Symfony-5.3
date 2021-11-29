@@ -2,6 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Client;
+use App\Entity\Project;
+use App\Form\ProjectFormType;
+use App\Repository\EquipmentRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,12 +24,15 @@ class ProjectController extends AbstractController
     }
 
     /**
-     * @Route("/dashboard/project/add", name="new_project")
+     * @Route("/dashboard/project/{clientId}/add", name="new_project")
      */
-    public function addProject(Request $request): Response
+    public function addProject($clientId,Request $request, EquipmentRepository $equipmentRepository): Response
     {
-        return $this->render('project/index.html.twig', [
-            'controller_name' => 'ProjectController',
+        $client = $this->getDoctrine()->getRepository(Client::class)->find($clientId);
+        $equipmentsList = $equipmentRepository->findAll();
+        return $this->render('project/add.html.twig', [
+            'client' => $client,
+            'equipments_list' => $equipmentsList,
         ]);
     }
 }

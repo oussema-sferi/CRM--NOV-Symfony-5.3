@@ -171,8 +171,11 @@ class CommercialController extends AbstractController
             $appointmentToProcess->setPostAppointmentNotes($request->request->get('notes'));
             $manager->persist($appointmentToProcess);
             $manager->flush();
+            $clientId = $appointmentToProcess->getClient()->getId();
             if($isDoneStatus === "vente") {
-                return $this->redirectToRoute('new_project');
+                return $this->redirectToRoute('new_project', [
+                    'client_id' => $clientId
+                ]);
             } else {
                 $this->flashy->success("RDV traité avec succès !");
                 return $this->redirectToRoute('commercial');

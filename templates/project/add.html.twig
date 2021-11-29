@@ -1,0 +1,214 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouveau projet{% endblock %}
+
+{% block body %}
+
+    <div class="header pb-6" style="background-color: #EDA200">
+        <div class="container-fluid">
+            <div class="header-body">
+                <div class="row align-items-center py-4">
+                    <div class="col-lg-6 col-7">
+                        <h6 class="h2 text-white d-inline-block mb-0">CRM</h6>
+                        <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+                            <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                                <li class="breadcrumb-item"><i class="fas fa-chalkboard-teacher text-blue"></i></li>
+                                <li class="breadcrumb-item">Service Commercial</li>
+                                <li class="breadcrumb-item active" aria-current="page">Nouveau Projet</li>
+                            </ol>
+                        </nav>
+                    </div>
+                    <div class="col-lg-6 col-5 text-right">
+                        <a href="" class="btn btn-sm btn-neutral">Retour</a>
+                    </div>
+                </div>
+                <!-- Card stats -->
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container-fluid mt--8">
+
+            <div class="header pb-8 pt-5 pt-md-14">
+                <div class="container-fluid">
+                    <div class="header-body" style="text-align: center">
+                        {#<h1 style="color: black"></h1>#}
+                    </div>
+                </div>
+            </div>
+
+        <div class="container mt--8 pb-5">
+            <!-- Table -->
+            <div class="row justify-content-center">
+                <div class="col-lg-6 col-md-8">
+                    <div class="card bg-secondary border-0">
+
+                        <div class="card-body px-lg-5 py-lg-5">
+                            <div class="text-center text-muted mb-4">
+                            </div>
+                            <form action="" method="post">
+                                <div class="form-group">
+                                    <div>
+                                        <label class="form-control-label" for="client">Client</label>
+                                    </div>
+                                    <input type="text" id="client" class="form-control" value="{{ client.firstName ~ ' ' ~ client.lastName }}" disabled>
+                                </div>
+
+                                <div class="form-group">
+                                    <div>
+                                        <label class="form-control-label required" for="equipment">Technologie Vendue</label>
+                                    </div>
+                                    <select id="equipment" name="equipment" class="form-control" required>
+                                        <option value="" selected>Choisir la technologie vendue...</option>
+                                        {% for equipment in equipments_list %}
+                                        <option value="{{ equipment.id }}">{{ equipment.designation }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <div>
+                                        <label class="form-control-label required" for="monthlyPayment">Mensualité</label>
+                                    </div>
+                                    <select id="monthlyPayment" name="monthlyPayment" class="form-control" required>
+                                        <option value="" selected>Choisir la mensualité...</option>
+                                        <option value="1">79€</option>
+                                        <option value="2">99€</option>
+                                        <option value="3">119€</option>
+                                        <option value="4">129€</option>
+                                        <option value="5">149€</option>
+                                        <option value="6">169€</option>
+                                        <option value="7">189€</option>
+                                        <option value="8">269,21€</option>
+                                        <option value="9">291,84€</option>
+                                        <option value="10">Autre...</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <input id="monthlyPaymentCustomValue" type="number" class="form-control" placeholder="Saisir la mensualité..." style="display: none">
+                                </div>
+
+                                <div class="form-group">
+                                    <div>
+                                        <label class="form-control-label required" for="numberOfMonthlyPayments">Nombre de Mensualités</label>
+                                    </div>
+                                    <select id="numberOfMonthlyPayments" name="numberOfMonthlyPayments" class="form-control" required>
+                                        <option value="" selected>Choisir le nombre de mensualités...</option>
+                                        <option value="1">12</option>
+                                        <option value="2">24</option>
+                                        <option value="3">36</option>
+                                        <option value="4">48</option>
+                                        <option value="5">60</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <div class="form-group">
+                                        <label class="form-control-label required" for="totalHT">Total HT</label>
+                                        <input type="text" id="totalHT" class="form-control">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-control-label required" for="rachat">Rachat</label>
+                                    <div>
+                                        <label class="custom-toggle">
+                                            <input id="rachat" type="checkbox" name="rachat">
+                                            <span class="custom-toggle-slider rounded-circle" data-label-off="Non" data-label-on="Oui"></span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div>
+                                        <label class="form-control-label required" for="monthlyPaymentsPostpone">Report Mensualité</label>
+                                    </div>
+                                    <select id="monthlyPaymentsPostpone" name="monthlyPaymentsPostpone" class="form-control" required>
+                                        <option value="" selected>Choisir le report de mensualités...</option>
+                                        <option value="1">3 Mois</option>
+                                        <option value="2">6 Mois</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <div>
+                                        <label class="form-control-label required" for="projectNotes">Observations Projet</label>
+                                    </div>
+                                    <textarea id="projectNotes" class="form-control" name="projectNotes" cols="30" rows="6" placeholder="..." resize="none"></textarea>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <div>
+                                        <label class="form-control-label required" for="projectStatus">Statut Projet</label>
+                                    </div>
+                                    <select id="projectStatus" name="projectStatus" class="form-control" required>
+                                        <option value="" selected>Choisir le statut du projet...</option>
+                                        <option value="1">En cours</option>
+                                        <option value="2">Accepté</option>
+                                        <option value="3">Refusé</option>
+                                    </select>
+                                </div>
+
+                                <hr class="my-4" />
+                                <h1 class="heading-small text-muted">Bloc Livraison</h1>
+                                    <div class="form-group">
+                                        <div>
+                                            <label class="form-control-label required" for="projectShipmentStatus">Etat Livraison</label>
+                                        </div>
+                                        <select id="projectShipmentStatus" name="projectShipmentStatus" class="form-control" required>
+                                            <option value="" selected>Choisir l'état de la livraison'...</option>
+                                            <option value="1">A commander</option>
+                                            <option value="2">Commandé</option>
+                                            <option value="3">Colis en préparation</option>
+                                            <option value="4">A livrer</option>
+                                            <option value="5">En cours de Livraison</option>
+                                            <option value="6">Livré</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div>
+                                            <label for="projectShipmentStatusDate" class="form-control-label required">Date de l'état</label>
+                                        </div>
+                                        <input type="date" name="projectShipmentStatusDate" class="form-control" required>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div>
+                                            <label class="form-control-label required" for="projectShipmentStatusNotes">Observations Etat Livraison</label>
+                                        </div>
+                                        <textarea id="projectShipmentStatusNotes" class="form-control" name="projectShipmentStatusNotes" cols="30" rows="6" placeholder="..." resize="none" required></textarea>
+                                    </div>
+
+
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-success mt-4">Confirmer</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block additionalJs %}
+    <script>
+        window.onload = () => {
+             $("#monthlyPayment").change(function () {
+                 if($(this).val() === "10") {
+                     $("#monthlyPaymentCustomValue").show();
+                     $("#monthlyPaymentCustomValue").prop('required', true);
+                 } else {
+                     $("#monthlyPaymentCustomValue").hide();
+                     $("#monthlyPaymentCustomValue").prop('required', false);
+                 }
+             })
+
+        }
+    </script>
+
+{% endblock %}
