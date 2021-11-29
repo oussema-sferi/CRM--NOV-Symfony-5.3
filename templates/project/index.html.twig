@@ -1,7 +1,183 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello Project!{% endblock %}
+{% block title %}
+    Liste des projets
+{% endblock %}
 
 {% block body %}
+    <div class="header pb-6" style="background-color: #EDA200">
+        <div class="container-fluid">
+            <div class="header-body">
+                <div class="row align-items-center py-4">
+                    <div class="col-lg-6 col-7">
+                        <h6 class="h2 text-white d-inline-block mb-0">CRM</h6>
+                        <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+                            <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                                <li class="breadcrumb-item"><i class="fas fa-chalkboard-teacher text-blue"></i></li>
+                                <li class="breadcrumb-item">Projet</li>
+                                <li class="breadcrumb-item active" aria-current="page">Liste des projets</li>
+                            </ol>
+                        </nav>
+                    </div>
+                    <div class="col-lg-6 col-5 text-right">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container-fluid mt--6">
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <!-- Card header -->
+                    <form action="{{ path('appointments_search_filters') }}" method="post">
+                        <div class="card-header border-0">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    {% if app.session.get('total_appointments_search_results') and app.session.get('total_appointments_search_results') != "nothing" %}
+                                        <h3 class="mb-0">Nombre de résultats: {{ app.session.get('total_projects_search_results')}}</h3>
+                                    {% elseif app.session.get('total_appointments_search_results') and app.session.get('total_projects_search_results') == "nothing" %}
+                                        <h3 class="mb-0" style="color: red">Aucun résultat correspondant à votre recherche!</h3>
+                                    {% else %}
+                                        <h3 class="mb-0">Total: {{ projects|length }} Projet(s)</h3>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-4 text-right">
+                                   {# <button class="btn btn-sm btn-success" type="submit">Appliquer les filtres</button>
+                                    <a class="btn btn-sm btn-primary" href="{{ path('commercial') }}">Réinitialiser les filtres</a>#}
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Light table -->
+                        <div class="table-responsive">
+                            <table class="table align-items-center table-flush">
+                                <thead class="thead-light">
+                                <tr>
+                                    <th scope="col">Prénom Client</th>
+                                    <th scope="col">Nom Client</th>
+                                    {% if "ROLE_COMMERCIAL" in app.user.roles  %}
+                                    {% else %}
+                                        <th scope="col">Commercial</th>
+                                    {% endif %}
+                                    <th scope="col">Technologie Vendue</th>
+                                    <th scope="col">Total HT Contrat</th>
+                                    <th scope="col">Statut</th>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <input id="firstName" name="firstName" class="test" type="text">
+                                    </td>
+                                    <td>
+                                        <input id="lastName" name="lastName" class="test" type="text">
+                                    </td>
+
+                                    {% if "ROLE_COMMERCIAL" in app.user.roles  %}
+                                    {% else %}
+                                        <td>
+                                            <select id="user" name="user" class="form-control-sm">
+                                                <option value="" selected>--- Choisir ---</option>
+                                                {% for commercial_user in commercial_users %}
+                                                    <option value="{{ commercial_user.id }}">{{ commercial_user.firstName ~ ' ' ~ commercial_user.lastName }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </td>
+                                    {% endif %}
+
+                                    <td>
+                                        <select id="equipment" name="equipment" class="form-control-sm">
+                                            <option value="" selected>--- Choisir ---</option>
+                                            {% for equipment in equipments %}
+                                                <option value="{{ equipment.id }}">{{ equipment.designation }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input id="contratHT" name="contratHT" class="test" type="text">
+                                    </td>
+                                    <td>
+                                        <select id="projectStatus" name="projectStatus" class="form-control-sm">
+                                            <option value="" selected>--- Choisir ---</option>
+                                            <option value="1">En cours</option>
+                                            <option value="2">Accepté</option>
+                                            <option value="3">Refusé</option>
+                                        </select>
+                                    </td>
+
+                                </tr>
+
+
+                                </thead>
+                                <tbody class="list">
+
+                                {% for project in projects %}
+                                    <tr>
+                                        <td>
+                                            {{ project.client.firstName }}
+                                        </td>
+
+                                        <td class="budget">
+                                            {{ project.client.lastName }}
+                                        </td>
+
+                                        {% if "ROLE_COMMERCIAL" in app.user.roles  %}
+                                        {% else %}
+                                            <td class="budget">
+                                                {{ project.projectMakerUser.firstName ~ ' ' ~ project.projectMakerUser.lastName }}
+                                            </td>
+                                        {% endif %}
+
+                                        <td class="budget">
+                                            {{ project.equipment.designation }}
+                                        </td>
+
+                                        <td class="budget">
+                                            test
+                                        </td>
+
+                                        <td class="budget">
+                                            {% if project.status == 1 %}
+                                                <span class="badge badge-primary badge-lg">
+                                                    <i class="bg-primary"></i>
+                                                    En cours
+                                                </span>
+                                            {% elseif project.status == 2 %}
+                                                <span class="badge badge-success badge-lg">
+                                                    <i class="bg-success"></i>
+                                                    Accepté
+                                                </span>
+                                            {% elseif project.status == 3 %}
+                                                <span class="badge badge-warning badge-lg">
+                                                    <i class="bg-warning"></i>
+                                                    Refusé
+                                                </span>
+                                            {% endif %}
+                                        </td>
+
+
+                                        {#<td>
+                                            <a href="{{ path('show_contact', {'id': commercial_appointment.client.id}) }}"><i class="fas fa-search-plus text-blue"></i></a>&nbsp;&nbsp;
+                                            <a href="{{ path('full_update_contact', {'id': commercial_appointment.client.id}) }}"><i class="fas fa-edit text-yellow"></i></a>&nbsp;&nbsp;
+                                            <a href="" data-toggle="modal" data-target="#deleteModal{{ commercial_appointment.id }}"><i class="fas fa-trash-alt text-red"></i></a>
+                                        </td>#}
+
+                                    </tr>
+                                {% endfor %}
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </form>
+                    <!-- Card footer -->
+                    {{ knp_pagination_render(projects) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block additionalJs %}
 
 {% endblock %}

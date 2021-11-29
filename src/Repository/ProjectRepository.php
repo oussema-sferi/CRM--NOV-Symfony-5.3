@@ -47,4 +47,12 @@ class ProjectRepository extends ServiceEntityRepository
         ;
     }
     */
+    public function getProjectsOfLoggedUser($loggedUserId)
+    {
+        $qb = $this->createQueryBuilder('p');
+        $qb->select('p')
+            ->join('p.user', 'u')
+            ->where("u.id =$loggedUserId" );
+        return $qb->orderBy('a.createdAt', 'DESC')->getQuery()->getResult();
+    }
 }
