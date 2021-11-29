@@ -32,21 +32,21 @@
             <div class="col">
                 <div class="card">
                     <!-- Card header -->
-                    <form action="{{ path('appointments_search_filters') }}" method="post">
+                    <form action="{{ path('projects_search_filters') }}" method="post">
                         <div class="card-header border-0">
                             <div class="row">
                                 <div class="col-md-8">
-                                    {% if app.session.get('total_appointments_search_results') and app.session.get('total_appointments_search_results') != "nothing" %}
+                                    {% if app.session.get('total_projects_search_results') and app.session.get('total_projects_search_results') != "nothing" %}
                                         <h3 class="mb-0">Nombre de résultats: {{ app.session.get('total_projects_search_results')}}</h3>
-                                    {% elseif app.session.get('total_appointments_search_results') and app.session.get('total_projects_search_results') == "nothing" %}
+                                    {% elseif app.session.get('total_projects_search_results') and app.session.get('total_projects_search_results') == "nothing" %}
                                         <h3 class="mb-0" style="color: red">Aucun résultat correspondant à votre recherche!</h3>
                                     {% else %}
-                                        <h3 class="mb-0">Total: {{ projects|length }} Projet(s)</h3>
+                                        <h3 class="mb-0">Total: {{ all_projects|length }} Projet(s)</h3>
                                     {% endif %}
                                 </div>
                                 <div class="col-md-4 text-right">
-                                   {# <button class="btn btn-sm btn-success" type="submit">Appliquer les filtres</button>
-                                    <a class="btn btn-sm btn-primary" href="{{ path('commercial') }}">Réinitialiser les filtres</a>#}
+                                    <button class="btn btn-sm btn-success" type="submit">Appliquer les filtres</button>
+                                    <a class="btn btn-sm btn-primary" href="{{ path('projects_list') }}">Réinitialiser les filtres</a>
                                 </div>
                             </div>
                         </div>
@@ -65,6 +65,8 @@
                                     <th scope="col">Total HT Contrat</th>
                                     <th scope="col">Statut</th>
                                 </tr>
+
+                                {% if projects|length != 0 %}
 
                                 <tr>
                                     <td>
@@ -98,7 +100,7 @@
                                         <input id="contratHT" name="contratHT" class="test" type="text">
                                     </td>
                                     <td>
-                                        <select id="projectStatus" name="projectStatus" class="form-control-sm">
+                                        <select id="status" name="status" class="form-control-sm">
                                             <option value="" selected>--- Choisir ---</option>
                                             <option value="1">En cours</option>
                                             <option value="2">Accepté</option>
@@ -108,12 +110,13 @@
 
                                 </tr>
 
+                                {% endif %}
 
                                 </thead>
                                 <tbody class="list">
 
                                 {% for project in projects %}
-                                    <tr>
+                                    <tr class="clickable-row" data-href="{{ path('show_contact', {'id': project.client.id}) }}">
                                         <td>
                                             {{ project.client.firstName }}
                                         </td>
@@ -179,5 +182,15 @@
 {% endblock %}
 
 {% block additionalJs %}
+    <script>
+        $(document).ready(function() {
+            $(".clickable-row").hover(function() {
+                $(this).css('cursor', 'pointer');
+            });
 
+            $(".clickable-row").dblclick(function() {
+                window.location = $(this).data("href");
+            });
+        })
+    </script>
 {% endblock %}

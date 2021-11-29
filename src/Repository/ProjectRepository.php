@@ -14,6 +14,9 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ProjectRepository extends ServiceEntityRepository
 {
+    public const USER = 'user';
+    public const EQUIPMENT = 'equipment';
+    public const STATUS = 'status';
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Project::class);
@@ -54,5 +57,61 @@ class ProjectRepository extends ServiceEntityRepository
             ->join('p.user', 'u')
             ->where("u.id =$loggedUserId" );
         return $qb->orderBy('a.createdAt', 'DESC')->getQuery()->getResult();
+    }
+
+    /**
+     * @param array<mixed> $filters
+     * @return array<string>
+     **/
+    private function _trimFiltersApp(array $filters): array
+    {
+        /** @var array<string> $result **/
+        $result = [];
+        foreach ($filters as $key => $value) {
+            if (trim($value) !== "") {
+                if (($key !== self::USER) && ($key !== self::EQUIPMENT) && ($key !== self::STATUS)) {
+                    $result[$key] = '%'.$value.'%';
+                }
+                else {
+                    $result[$key] = $value;
+                }
+
+            }
+        }
+        return $result;
+    }
+
+
+    public function fetchAllProjectsByFilters(array $filters): array
+    {
+        $builder = $this->createQueryBuilder('p');
+        $query = $builder->select('p')
+            ->join('p.projectMakerUser', 'u')
+            ->join('p.client', 'c')
+            ->join('p.equipment', 'e');
+        $counter = 0;
+        $filters = $this->_trimFiltersApp($filters);
+        /*dd($filters);*/
+        foreach ($this->_trimFiltersApp($filters) as $key => $value) {
+            if($key === self::USER) {
+                $statement = " u.id = :$key";
+            } elseif ($key === self::STATUS) {
+                $statement = "p.status = :$key";
+            } elseif ($key === self::EQUIPMENT) {
+                $statement = "e.id = :$key";
+            } else {
+                $statement = "c.$key LIKE :$key";
+            }
+
+            if ($counter === 0) {
+                $query->where($statement);
+            }
+            else {
+                $query->andWhere($statement);
+            }
+            $counter ++;
+        }
+        $query->setParameters($filters);
+        return $query->getQuery()->getResult();
     }
 }

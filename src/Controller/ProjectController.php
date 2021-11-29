@@ -24,7 +24,7 @@ class ProjectController extends AbstractController
     {
         $session = $request->getSession();
         $loggedUserId = $this->getUser()->getId();
-        $commercialUsers = $userRepository->findUsersByCommercialRole("ROLE_COMMERCIAL");
+        $commercialUsers = $userRepository->findUsersTeleproStats("ROLE_COMMERCIAL", "ROLE_SUPERADMIN");
         $equipments = $equipmentRepository->findAll();
         $allProjects = $projectRepository->findAll();
        /* dd($allProjects);*/
@@ -49,7 +49,7 @@ class ProjectController extends AbstractController
             );
         }
         return $this->render('project/index.html.twig', [
-            'all_projects_for_pagination' => $data,
+            'all_projects' => $data,
             'projects' => $projects,
             'equipments'=> $equipments,
             'commercial_users' => $commercialUsers
