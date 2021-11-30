@@ -70,6 +70,61 @@ class Project
      */
     private $updatedAt;
 
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $totalHT;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $reportMensualite;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $shipmentStatus;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $shipmentStatusDate;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $shipmentNotes;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $cni;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $rib;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $declaration2035;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $declaration2042;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $bilanComptable;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $partenariat;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -191,6 +246,138 @@ class Project
     public function setUpdatedAt(\DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getTotalHT(): ?float
+    {
+        return $this->totalHT;
+    }
+
+    public function setTotalHT(?float $totalHT): self
+    {
+        $this->totalHT = $totalHT;
+
+        return $this;
+    }
+
+    public function getReportMensualite(): ?int
+    {
+        return $this->reportMensualite;
+    }
+
+    public function setReportMensualite(?int $reportMensualite): self
+    {
+        $this->reportMensualite = $reportMensualite;
+
+        return $this;
+    }
+
+    public function getShipmentStatus(): ?int
+    {
+        return $this->shipmentStatus;
+    }
+
+    public function setShipmentStatus(?int $shipmentStatus): self
+    {
+        $this->shipmentStatus = $shipmentStatus;
+
+        return $this;
+    }
+
+    public function getShipmentStatusDate(): ?\DateTimeInterface
+    {
+        return $this->shipmentStatusDate;
+    }
+
+    public function setShipmentStatusDate(?\DateTimeInterface $shipmentStatusDate): self
+    {
+        $this->shipmentStatusDate = $shipmentStatusDate;
+
+        return $this;
+    }
+
+    public function getShipmentNotes(): ?string
+    {
+        return $this->shipmentNotes;
+    }
+
+    public function setShipmentNotes(?string $shipmentNotes): self
+    {
+        $this->shipmentNotes = $shipmentNotes;
+
+        return $this;
+    }
+
+    public function getCni(): ?string
+    {
+        return $this->cni;
+    }
+
+    public function setCni(?string $cni): self
+    {
+        $this->cni = $cni;
+
+        return $this;
+    }
+
+    public function getRib(): ?string
+    {
+        return $this->rib;
+    }
+
+    public function setRib(?string $rib): self
+    {
+        $this->rib = $rib;
+
+        return $this;
+    }
+
+    public function getDeclaration2035(): ?string
+    {
+        return $this->declaration2035;
+    }
+
+    public function setDeclaration2035(?string $declaration2035): self
+    {
+        $this->declaration2035 = $declaration2035;
+
+        return $this;
+    }
+
+    public function getDeclaration2042(): ?string
+    {
+        return $this->declaration2042;
+    }
+
+    public function setDeclaration2042(?string $declaration2042): self
+    {
+        $this->declaration2042 = $declaration2042;
+
+        return $this;
+    }
+
+    public function getBilanComptable(): ?string
+    {
+        return $this->bilanComptable;
+    }
+
+    public function setBilanComptable(?string $bilanComptable): self
+    {
+        $this->bilanComptable = $bilanComptable;
+
+        return $this;
+    }
+
+    public function getPartenariat(): ?string
+    {
+        return $this->partenariat;
+    }
+
+    public function setPartenariat(?string $partenariat): self
+    {
+        $this->partenariat = $partenariat;
 
         return $this;
     }

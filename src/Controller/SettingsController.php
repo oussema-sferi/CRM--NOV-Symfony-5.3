@@ -97,6 +97,5 @@ class SettingsController extends AbstractController
             $this->flashy->warning("Suppression impossible, Equipement déja affecté à un Client/Projet !");
         }
         return $this->redirectToRoute('equipments_list');
-
     }
 }

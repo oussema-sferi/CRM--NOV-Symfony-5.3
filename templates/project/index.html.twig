@@ -64,6 +64,8 @@
                                     <th scope="col">Technologie Vendue</th>
                                     <th scope="col">Total HT Contrat</th>
                                     <th scope="col">Statut</th>
+                                    <th scope="col">CNI</th>
+                                    <th scope="col">Déclaration 2035</th>
                                 </tr>
 
                                 {% if projects|length != 0 %}
@@ -107,6 +109,7 @@
                                             <option value="3">Refusé</option>
                                         </select>
                                     </td>
+
 
                                 </tr>
 
@@ -160,6 +163,12 @@
                                         </td>
 
 
+                                        <td class="text-center">
+                                            <a href="{{ asset('attachments/') ~ project.cni }}"><i class="fas fa-download text-green"></i></a>
+                                        </td>
+                                        <td class="text-center">
+                                            <a class="center"  href="{{ asset('attachments/') ~ project.declaration2035 }}"><i class="fas fa-download text-green"></i></a>
+                                        </td>
                                         {#<td>
                                             <a href="{{ path('show_contact', {'id': commercial_appointment.client.id}) }}"><i class="fas fa-search-plus text-blue"></i></a>&nbsp;&nbsp;
                                             <a href="{{ path('full_update_contact', {'id': commercial_appointment.client.id}) }}"><i class="fas fa-edit text-yellow"></i></a>&nbsp;&nbsp;

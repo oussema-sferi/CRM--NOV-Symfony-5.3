@@ -47,7 +47,7 @@
                         <div class="card-body px-lg-5 py-lg-5">
                             <div class="text-center text-muted mb-4">
                             </div>
-                            <form action="" method="post">
+                            <form action="{{ path('new_project', {'clientId': client.id }) }}" method="post" enctype="multipart/form-data">
                                 <div class="form-group">
                                     <div>
                                         <label class="form-control-label" for="client">Client</label>
@@ -86,7 +86,7 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <input id="monthlyPaymentCustomValue" type="number" class="form-control" placeholder="Saisir la mensualité..." style="display: none">
+                                    <input id="monthlyPaymentCustomValue" name="monthlyPaymentCustomValue" type="number" class="form-control" placeholder="Saisir la mensualité..." style="display: none">
                                 </div>
 
                                 <div class="form-group">
@@ -106,7 +106,7 @@
                                 <div>
                                     <div class="form-group">
                                         <label class="form-control-label required" for="totalHT">Total HT</label>
-                                        <input type="text" id="totalHT" class="form-control">
+                                        <input type="text" id="totalHT" name="totalHT" class="form-control">
                                     </div>
                                 </div>
 
@@ -122,9 +122,9 @@
 
                                 <div class="form-group">
                                     <div>
-                                        <label class="form-control-label required" for="monthlyPaymentsPostpone">Report Mensualité</label>
+                                        <label class="form-control-label required" for="reportMensualite">Report Mensualité</label>
                                     </div>
-                                    <select id="monthlyPaymentsPostpone" name="monthlyPaymentsPostpone" class="form-control" required>
+                                    <select id="reportMensualite" name="reportMensualite" class="form-control" required>
                                         <option value="" selected>Choisir le report de mensualités...</option>
                                         <option value="1">3 Mois</option>
                                         <option value="2">6 Mois</option>
@@ -141,9 +141,9 @@
 
                                 <div class="form-group">
                                     <div>
-                                        <label class="form-control-label required" for="projectStatus">Statut Projet</label>
+                                        <label class="form-control-label required" for="status">Statut Projet</label>
                                     </div>
-                                    <select id="projectStatus" name="projectStatus" class="form-control" required>
+                                    <select id="status" name="status" class="form-control" required>
                                         <option value="" selected>Choisir le statut du projet...</option>
                                         <option value="1">En cours</option>
                                         <option value="2">Accepté</option>
@@ -156,53 +156,53 @@
 
                                 <div class="form-group">
                                     <div>
-                                        <label class="form-control-label" for="projectStatus">CNI R/V</label>
+                                        <label class="form-control-label" for="cni">CNI R/V</label>
                                     </div>
-                                    <input type="file" id="customFileLang" lang="en">
+                                    <input type="file" id="cni" name="cni" lang="en">
                                 </div>
 
                                 <div class="form-group">
                                     <div>
-                                        <label class="form-control-label" for="projectStatus">RIB</label>
+                                        <label class="form-control-label" for="rib">RIB</label>
                                     </div>
-                                    <input type="file" id="customFileLang" lang="en">
+                                    <input type="file" id="rib" name="rib" lang="en">
                                 </div>
 
                                 <div class="form-group">
                                     <div>
-                                        <label class="form-control-label" for="projectStatus">Déclaration 2035</label>
+                                        <label class="form-control-label" for="declaration2035">Déclaration 2035</label>
                                     </div>
-                                    <input type="file" id="customFileLang" lang="en">
+                                    <input type="file" id="declaration2035" name="declaration2035" lang="en">
                                 </div>
 
                                 <div class="form-group">
                                     <div>
-                                        <label class="form-control-label" for="projectStatus">Déclaration 2042</label>
+                                        <label class="form-control-label" for="declaration2042">Déclaration 2042</label>
                                     </div>
-                                    <input type="file" id="customFileLang" lang="en">
+                                    <input type="file" id="declaration2042" name="declaration2042" lang="en">
                                 </div>
 
                                 <div class="form-group">
                                     <div>
-                                        <label class="form-control-label" for="projectStatus">Bilan Comptable</label>
+                                        <label class="form-control-label" for="bilanComptable">Bilan Comptable</label>
                                     </div>
-                                    <input type="file" id="customFileLang" lang="en">
+                                    <input type="file" id="bilanComptable" name="bilanComptable" lang="en">
                                 </div>
 
                                 <div class="form-group">
                                     <div>
-                                        <label class="form-control-label" for="projectStatus">Feuille de Partenariat</label>
+                                        <label class="form-control-label" for="partenariat">Feuille de Partenariat</label>
                                     </div>
-                                    <input type="file" id="customFileLang" lang="en">
+                                    <input type="file" id="partenariat" name="partenariat" lang="en">
                                 </div>
 
                                 <hr class="my-4" />
                                 <h1 class="heading-small text-muted">Bloc Livraison</h1>
                                     <div class="form-group">
                                         <div>
-                                            <label class="form-control-label required" for="projectShipmentStatus">Etat Livraison</label>
+                                            <label class="form-control-label required" for="shipmentStatus">Etat Livraison</label>
                                         </div>
-                                        <select id="projectShipmentStatus" name="projectShipmentStatus" class="form-control" required>
+                                        <select id="shipmentStatus" name="shipmentStatus" class="form-control" required>
                                             <option value="" selected>Choisir l'état de la livraison...</option>
                                             <option value="1">A commander</option>
                                             <option value="2">Commandé</option>
@@ -215,16 +215,16 @@
 
                                     <div class="form-group">
                                         <div>
-                                            <label for="projectShipmentStatusDate" class="form-control-label required">Date de l'état</label>
+                                            <label for="shipmentStatusDate" class="form-control-label required">Date de l'état</label>
                                         </div>
-                                        <input type="date" name="projectShipmentStatusDate" class="form-control" required>
+                                        <input type="date" id="shipmentStatusDate" name="shipmentStatusDate" class="form-control" required>
                                     </div>
 
                                     <div class="form-group">
                                         <div>
-                                            <label class="form-control-label required" for="projectShipmentStatusNotes">Observations Etat Livraison</label>
+                                            <label class="form-control-label required" for="shipmentNotes">Observations Etat Livraison</label>
                                         </div>
-                                        <textarea id="projectShipmentStatusNotes" class="form-control" name="projectShipmentStatusNotes" cols="30" rows="6" placeholder="..." resize="none" required></textarea>
+                                        <textarea id="shipmentNotes" class="form-control" name="shipmentNotes" cols="30" rows="6" placeholder="..." resize="none" required></textarea>
                                     </div>
 
 

@@ -10,6 +10,8 @@ use App\Repository\EquipmentRepository;
 use App\Repository\ProjectRepository;
 use App\Repository\UserRepository;
 use Knp\Component\Pager\PaginatorInterface;
+use MercurySeries\FlashyBundle\FlashyNotifier;
+use phpDocumentor\Reflection\Types\This;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,6 +19,10 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ProjectController extends AbstractController
 {
+    public function __construct(FlashyNotifier $flashy)
+    {
+        $this->flashy = $flashy;
+    }
     /**
      * @Route("/dashboard/project/list", name="projects_list")
      */
@@ -61,8 +67,120 @@ class ProjectController extends AbstractController
      */
     public function addProject($clientId,Request $request, EquipmentRepository $equipmentRepository): Response
     {
+        $loggedUser = $this->getUser();
         $client = $this->getDoctrine()->getRepository(Client::class)->find($clientId);
         $equipmentsList = $equipmentRepository->findAll();
+        if($request->isMethod('Post')) {
+            $manager = $this->getDoctrine()->getManager();
+            // Save Files
+            $newProject = new Project();
+            $attachmentsDirectory = $this->getParameter('attachments_directory');
+            //get request files
+            $cni = $request->files->get('cni');
+            if($cni) {
+                $cniFilename = md5(uniqid()) . '.' . $cni->guessExtension();
+            }
+            $rib = $request->files->get('rib');
+            if($rib) {
+                $ribFilename = md5(uniqid()) . '.' . $rib->guessExtension();
+            }
+            $declaration2035 = $request->files->get('declaration2035');
+            if($declaration2035) {
+                $declaration2035Filename = md5(uniqid()) . '.' . $declaration2035->guessExtension();
+            }
+            $declaration2042 = $request->files->get('declaration2042');
+            if($declaration2042) {
+                $declaration2042Filename = md5(uniqid()) . '.' . $declaration2042->guessExtension();
+            }
+            $bilanComptable = $request->files->get('bilanComptable');
+            if($bilanComptable) {
+                $bilanComptableFilename = md5(uniqid()) . '.' . $bilanComptable->guessExtension();
+            }
+            $partenariat = $request->files->get('partenariat');
+            if($partenariat) {
+                $partenariatFilename = md5(uniqid()) . '.' . $partenariat->guessExtension();
+            }
+           if($cni) {
+               $cni->move(
+                   $attachmentsDirectory,
+                   $cniFilename
+               );
+               $newProject->setCni($cniFilename);
+           }
+            if($rib) {
+                $rib->move(
+                    $attachmentsDirectory,
+                    $ribFilename
+                );
+                $newProject->setRib($ribFilename);
+            }
+            if($declaration2035) {
+                $declaration2035->move(
+                    $attachmentsDirectory,
+                    $declaration2035Filename
+                );
+                $newProject->setDeclaration2035($declaration2035Filename);
+            }
+            if($declaration2042) {
+                $declaration2042->move(
+                    $attachmentsDirectory,
+                    $declaration2042Filename
+                );
+                $newProject->setDeclaration2042($declaration2042Filename);
+            }
+            if($bilanComptable) {
+                $bilanComptable->move(
+                    $attachmentsDirectory,
+                    $bilanComptableFilename
+                );
+                $newProject->setBilanComptable($bilanComptableFilename);
+            }
+            if($partenariat) {
+                $partenariat->move(
+                    $attachmentsDirectory,
+                    $partenariatFilename
+                );
+                $newProject->setPartenariat($partenariatFilename);
+            }
+
+            /*foreach ($request->files as $key => $attachment) {
+                if($attachment) {
+                    $attachment->move(
+                        $attachmentsDirectory,
+                        md5(uniqid()) . '.' . $attachment->guessExtension()
+                    );
+                }
+
+            }*/
+            $equipment = $equipmentRepository->find((int)($request->request->get('equipment')));
+            $newProject->setClient($client);
+            $newProject->setProjectMakerUser($loggedUser);
+            $newProject->setEquipment($equipment);
+            if($request->request->get('monthlyPayment')) {
+                $newProject->setMonthlyPayment($request->request->get('monthlyPayment'));
+            } else {
+                $newProject->setMonthlyPayment($request->request->get('monthlyPaymentCustomValue'));
+            }
+            $newProject->setNumberOfMonthlyPayments($request->request->get('numberOfMonthlyPayments'));
+            $newProject->setTotalHT($request->request->get('totalHT'));
+            if($request->request->get('rachat') === "on") {
+                $newProject->setRachat(true);
+            } else {
+                $newProject->setRachat(false);
+            }
+            $newProject->setReportMensualite((int)($request->request->get('reportMensualite')));
+            $newProject->setProjectNotes($request->request->get('projectNotes'));
+            $newProject->setStatus((int)($request->request->get('status')));
+            $newProject->setShipmentStatus((int)($request->request->get('shipmentStatus')));
+            $newProject->setShipmentStatusDate(new \DateTime($request->request->get('shipmentStatusDate')));
+            $newProject->setShipmentNotes($request->request->get('shipmentNotes'));
+            $newProject->setCreatedAt(new \DateTime());
+            $newProject->setUpdatedAt(new \DateTime());
+            $manager->persist($newProject);
+            $manager->flush();
+            $this->flashy->success("Projet créé avec succès !");
+            return $this->redirectToRoute('projects_list');
+        }
         return $this->render('project/add.html.twig', [
             'client' => $client,
             'equipments_list' => $equipmentsList,
