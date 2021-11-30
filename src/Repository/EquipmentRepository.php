@@ -47,4 +47,11 @@ class EquipmentRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function getSortedByDateEquipments()
+    {
+        $qb = $this->createQueryBuilder('e');
+        $qb->select('e');
+        return $qb->orderBy('e.createdAt', 'DESC')->getQuery()->getResult();
+    }
 }
