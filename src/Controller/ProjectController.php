@@ -32,7 +32,7 @@ class ProjectController extends AbstractController
         $loggedUserId = $this->getUser()->getId();
         $commercialUsers = $userRepository->findUsersTeleproStats("ROLE_COMMERCIAL", "ROLE_SUPERADMIN");
         $equipments = $equipmentRepository->findAll();
-        $allProjects = $projectRepository->findAll();
+        /*$allProjects = $projectRepository->findAll();*/
        /* dd($allProjects);*/
         $loggedUserRolesArray = $this->getUser()->getRoles();
         if (in_array("ROLE_COMMERCIAL",$loggedUserRolesArray)) {
@@ -156,10 +156,10 @@ class ProjectController extends AbstractController
             $newProject->setClient($client);
             $newProject->setProjectMakerUser($loggedUser);
             $newProject->setEquipment($equipment);
-            if($request->request->get('monthlyPayment')) {
-                $newProject->setMonthlyPayment($request->request->get('monthlyPayment'));
-            } else {
+            if($request->request->get('monthlyPayment') === "10") {
                 $newProject->setMonthlyPayment($request->request->get('monthlyPaymentCustomValue'));
+            } else {
+                $newProject->setMonthlyPayment($request->request->get('monthlyPayment'));
             }
             $newProject->setNumberOfMonthlyPayments($request->request->get('numberOfMonthlyPayments'));
             $newProject->setTotalHT($request->request->get('totalHT'));

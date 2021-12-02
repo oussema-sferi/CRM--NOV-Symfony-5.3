@@ -17,6 +17,7 @@ class ProjectRepository extends ServiceEntityRepository
     public const USER = 'user';
     public const EQUIPMENT = 'equipment';
     public const STATUS = 'status';
+    public const TOTALHT = 'totalHT';
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Project::class);
@@ -97,7 +98,10 @@ class ProjectRepository extends ServiceEntityRepository
                 $statement = " u.id = :$key";
             } elseif ($key === self::STATUS) {
                 $statement = "p.status = :$key";
-            } elseif ($key === self::EQUIPMENT) {
+            } elseif ($key === self::TOTALHT) {
+                $statement = "p.totalHT LIKE :$key";
+            }
+            elseif ($key === self::EQUIPMENT) {
                 $statement = "e.id = :$key";
             } else {
                 $statement = "c.$key LIKE :$key";
