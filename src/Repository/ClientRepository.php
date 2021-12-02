@@ -15,6 +15,7 @@ use Doctrine\Persistence\ManagerRegistry;
 class ClientRepository extends ServiceEntityRepository
 {
     public const GEOGRAPHIC_AREA = 'geographicArea';
+    public const CLIENT_CATEGORY = 'clientCategory';
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Client::class);
@@ -67,7 +68,14 @@ class ClientRepository extends ServiceEntityRepository
         $counter = 0;
         $filters = $this->_trimFilters($filters);
         foreach ($this->_trimFilters($filters) as $key => $value) {
-            $statement = $key === self::GEOGRAPHIC_AREA ? " g.id = :$key" : "c.$key LIKE :$key";
+            if($key === self::GEOGRAPHIC_AREA) {
+                $statement = " g.id = :$key";
+            } elseif ($key === self::CLIENT_CATEGORY) {
+                $query->join('c.clientCategory', 'cat');
+                $statement = "cat.id = :$key";
+            } else {
+                $statement = "c.$key LIKE :$key";
+            }
             if ($counter === 0) {
                 $query->where($statement);
             }
@@ -92,7 +100,7 @@ class ClientRepository extends ServiceEntityRepository
         $result = [];
         foreach ($filters as $key => $value) {
             if (trim($value) !== "") {
-                if ($key !== self::GEOGRAPHIC_AREA) {
+                if (($key !== self::GEOGRAPHIC_AREA) && ($key !== self::CLIENT_CATEGORY)) {
                     $result[$key] = '%'.$value.'%';
                 }
                 else {
@@ -226,7 +234,14 @@ class ClientRepository extends ServiceEntityRepository
         $counter = 0;
         $filters = $this->_trimFilters($filters);
         foreach ($this->_trimFilters($filters) as $key => $value) {
-            $statement1 = $key === self::GEOGRAPHIC_AREA ? " g.id = :$key" : "c.$key LIKE :$key";
+            if($key === self::GEOGRAPHIC_AREA) {
+                $statement1 = " g.id = :$key";
+            } elseif ($key === self::CLIENT_CATEGORY) {
+                $query->join('c.clientCategory', 'cat');
+                $statement1 = "cat.id = :$key";
+            } else {
+                $statement1 = "c.$key LIKE :$key";
+            }
             $query->andWhere($statement1);
             /*dd($query->getQuery());*/
         }
@@ -262,9 +277,22 @@ class ClientRepository extends ServiceEntityRepository
         $query = $builder->select('c')
             ->join('c.geographicArea', 'g');
         $counter = 0;
+
         $filters = $this->_trimFilters($filters);
+        /*dd($filters);*/
+
         foreach ($this->_trimFilters($filters) as $key => $value) {
-            $statement = $key === self::GEOGRAPHIC_AREA ? " g.id = :$key" : "c.$key LIKE :$key";
+            /*$statement = $key === self::GEOGRAPHIC_AREA ? " g.id = :$key" : "c.$key LIKE :$key";*/
+
+            if($key === self::GEOGRAPHIC_AREA) {
+                $statement = " g.id = :$key";
+            } elseif ($key === self::CLIENT_CATEGORY) {
+                $query->join('c.clientCategory', 'cat');
+                $statement = "cat.id = :$key";
+            } else {
+                $statement = "c.$key LIKE :$key";
+            }
+
             if ($counter === 0) {
                 $query->where($statement);
             }
@@ -273,8 +301,10 @@ class ClientRepository extends ServiceEntityRepository
             }
             $counter ++;
         }
-        $query->setParameters($filters);
-        $query->andWhere('c.isDeleted = 0');
+
+        $query->setParameters($filters)
+                ->andWhere('c.isDeleted = 0');
+        /*dd($query->getQuery()->getResult());*/
         return $query->getQuery()->getResult();
     }
 
@@ -286,11 +316,20 @@ class ClientRepository extends ServiceEntityRepository
         $counter = 0;
         $filters = $this->_trimFilters($filters);
         foreach ($this->_trimFilters($filters) as $key => $value) {
-            $statement1 = $key === self::GEOGRAPHIC_AREA ? " g.id = :$key" : "c.$key LIKE :$key";
+            /*$statement1 = $key === self::GEOGRAPHIC_AREA ? " g.id = :$key" : "c.$key LIKE :$key";*/
+            if($key === self::GEOGRAPHIC_AREA) {
+                $statement1 = " g.id = :$key";
+            } elseif ($key === self::CLIENT_CATEGORY) {
+                $query->join('c.clientCategory', 'cat');
+                $statement1 = "cat.id = :$key";
+            } else {
+                $statement1 = "c.$key LIKE :$key";
+            }
             $query->andWhere($statement1);
             /*dd($query->getQuery());*/
         }
         $statement2 = "";
+
         for($i = 0; $i < (count($departmentsArrayIds) - 1); $i++) {
 
             $statement2 = $statement2 . "g.id = $departmentsArrayIds[$i] OR ";
@@ -303,12 +342,21 @@ class ClientRepository extends ServiceEntityRepository
         $query2 = $this->createQueryBuilder('c')->select('c')->join('c.geographicArea', 'g')
             ->join('c.creatorUser', 'u');
         foreach ($this->_trimFilters($filters) as $key => $value) {
-            $statement3 = $key === self::GEOGRAPHIC_AREA ? " g.id = :$key" : "c.$key LIKE :$key";
+            /*$statement3 = $key === self::GEOGRAPHIC_AREA ? " g.id = :$key" : "c.$key LIKE :$key";*/
+            if($key === self::GEOGRAPHIC_AREA) {
+                $statement3 = " g.id = :$key";
+            } elseif ($key === self::CLIENT_CATEGORY) {
+                $query2->join('c.clientCategory', 'cat');
+                $statement3 = "cat.id = :$key";
+            } else {
+                $statement3 = "c.$key LIKE :$key";
+            }
             $query2->andWhere($statement3);
         }
         $query2->andWhere("u.id = $loggedUserId")
                 ->andWhere('c.isDeleted = 0');
         $query2->setParameters($filters);
+        /*dd($query2->getQuery());*/
         return array_merge($query->getQuery()->getResult(),$query2->getQuery()->getResult());
     }
 

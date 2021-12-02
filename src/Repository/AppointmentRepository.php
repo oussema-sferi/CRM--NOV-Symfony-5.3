@@ -183,6 +183,7 @@ class AppointmentRepository extends ServiceEntityRepository
         $query->setParameters($filters)
             ->andWhere('a.isDeleted = 0');
 
+        /*dd($query->getQuery());*/
         return $query->getQuery()->getResult();
     }
 

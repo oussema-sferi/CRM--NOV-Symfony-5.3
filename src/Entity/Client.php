@@ -169,6 +169,11 @@ class Client
      */
     private $projects;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=ClientCategory::class, inversedBy="clients")
+     */
+    private $clientCategory;
+
 
     public function __construct()
     {
@@ -623,6 +628,18 @@ class Client
                 $project->setClient(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getClientCategory(): ?ClientCategory
+    {
+        return $this->clientCategory;
+    }
+
+    public function setClientCategory(?ClientCategory $clientCategory): self
+    {
+        $this->clientCategory = $clientCategory;
 
         return $this;
     }

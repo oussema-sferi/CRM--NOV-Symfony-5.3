@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Call;
 use App\Entity\Client;
+use App\Entity\ClientCategory;
 use App\Entity\Equipment;
 use App\Entity\GeographicArea;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -43,13 +44,18 @@ class ClientFormType extends AbstractType
                 'required' => true
             ])
             ->add('mobileNumber')
-            ->add('category', ChoiceType::class, [
+            /*->add('category', ChoiceType::class, [
                 'choices'  => [
                     'Médecin' => 1,
                     'Vétérinaire' => 2,
                     'Chirurgien' => 3
                 ],
                 'placeholder' => 'Choisir la catégorie...',
+                'required' => false
+            ])*/
+            ->add('clientCategory', EntityType::class, [
+                'class' => ClientCategory::class,
+                'placeholder' => "Choisir la catégorie...",
                 'required' => false
             ])
             ->add('providedEquipment', EntityType::class, [

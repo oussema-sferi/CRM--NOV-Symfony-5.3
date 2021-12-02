@@ -7,6 +7,7 @@ use App\Entity\Client;
 use App\Entity\GeographicArea;
 use App\Entity\Project;
 use App\Entity\User;
+use App\Repository\ClientCategoryRepository;
 use App\Repository\EquipmentRepository;
 use App\Repository\UserRepository;
 use Knp\Component\Pager\PaginatorInterface;
@@ -24,7 +25,7 @@ class SearchFiltersController extends AbstractController
     /**
      * @Route("/dashboard/teleprospecting/search/filters", name="telepro_search_filters")
      */
-    public function teleproSearchFilters(Request $request, PaginatorInterface $paginator): Response
+    public function teleproSearchFilters(Request $request, PaginatorInterface $paginator, ClientCategoryRepository $clientCategoryRepository): Response
     {
         $loggedTelepro = $this->getUser();
         $teleproGeographicAreasArray = $loggedTelepro->getGeographicAreas();
@@ -59,6 +60,7 @@ class SearchFiltersController extends AbstractController
         //search without ajax
             $session = $request->getSession();
             $geographicAreas = $this->getDoctrine()->getRepository(GeographicArea::class)->findAll();
+            $clientsCategories = $clientCategoryRepository->findAll();
             if($request->isMethod('POST')) {
                 /*dd($request->request->all());*/
                 $session->set('criterias',
@@ -112,18 +114,20 @@ class SearchFiltersController extends AbstractController
 
         return $this->render('teleprospecting/index.html.twig', [
             'clients' => $clients,
-            'geographic_areas'=> $geographicAreas
+            'geographic_areas'=> $geographicAreas,
+            'clients_categories' => $clientsCategories
         ]);
     }
 
     /**
      * @Route("/dashboard/allcontacts/search/filters", name="all_contacts_search_filters")
      */
-    public function allContactsSearchFilters(Request $request, PaginatorInterface $paginator): Response
+    public function allContactsSearchFilters(Request $request, PaginatorInterface $paginator, ClientCategoryRepository $clientCategoryRepository): Response
     {
         //search without ajax
         $session = $request->getSession();
         $geographicAreas = $this->getDoctrine()->getRepository(GeographicArea::class)->findAll();
+        $clientsCategories = $clientCategoryRepository->findAll();
         if($request->isMethod('POST')) {
             /*dd($request->request->all());*/
             $session->set('criterias',
@@ -181,7 +185,8 @@ class SearchFiltersController extends AbstractController
 
         return $this->render('all_contacts/index.html.twig', [
             'clients' => $clients,
-            'geographic_areas'=> $geographicAreas
+            'geographic_areas'=> $geographicAreas,
+            'clients_categories' => $clientsCategories
         ]);
     }
 

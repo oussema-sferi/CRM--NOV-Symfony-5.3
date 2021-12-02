@@ -13,6 +13,7 @@ use App\Form\CallFormType;
 use App\Form\ClientFormType;
 use App\Repository\AppointmentRepository;
 use App\Repository\CallRepository;
+use App\Repository\ClientCategoryRepository;
 use App\Repository\ClientRepository;
 use App\Repository\ProcessRepository;
 use App\Repository\UserRepository;
@@ -36,9 +37,10 @@ class TeleprospectingController extends AbstractController
     /**
      * @Route("/dashboard/teleprospecting", name="teleprospecting")
      */
-    public function index(Request $request, PaginatorInterface $paginator): Response
+    public function index(Request $request, PaginatorInterface $paginator, ClientCategoryRepository $clientCategoryRepository): Response
     {
         $loggedTelepro = $this->getUser();
+        $clientsCategories = $clientCategoryRepository->findAll();
         $teleproGeographicAreasArray = $loggedTelepro->getGeographicAreas();
         $teleproGeographicAreasIdsArray = [];
         foreach ($teleproGeographicAreasArray as $geographicArea) {
@@ -82,7 +84,8 @@ class TeleprospectingController extends AbstractController
         /*dd($clients);*/
         return $this->render('teleprospecting/index.html.twig', [
             'clients' => $clients,
-            'geographic_areas'=> $geographicAreas
+            'geographic_areas'=> $geographicAreas,
+            'clients_categories' => $clientsCategories
         ]);
     }
 
@@ -104,6 +107,7 @@ class TeleprospectingController extends AbstractController
             $newClient->setCreatorUser($loggedUser);
             $newClient->setIsDeleted(false);
             $newClient->setDeletionDate(null);
+            $newClient->setIsProcessed(false);
             $manager->persist($newClient);
             $manager->flush();
             $this->flashy->success("Contact créé avec succès !");

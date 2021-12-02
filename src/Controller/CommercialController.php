@@ -174,7 +174,7 @@ class CommercialController extends AbstractController
             $clientId = $appointmentToProcess->getClient()->getId();
             if($isDoneStatus === "vente") {
                 return $this->redirectToRoute('new_project', [
-                    'client_id' => $clientId
+                    'clientId' => $clientId
                 ]);
             } else {
                 $this->flashy->success("RDV traité avec succès !");

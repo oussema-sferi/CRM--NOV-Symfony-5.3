@@ -210,12 +210,12 @@
                                                                     <span class="sidenav-normal"> Liste des Projets </span>
                                                                 </a>
                                                             </li>
-                                                            <li class="nav-item">
+                                                            {#<li class="nav-item">
                                                                 <a href="" class="nav-link">
                                                                     <i class="ni fas fa-calendar-alt text-blue"></i>
                                                                     <span class="sidenav-normal"> Mes contacts </span>
                                                                 </a>
-                                                            </li>
+                                                            </li>#}
                                                         </ul>
                                                     </div>
                                                 </li>
@@ -486,14 +486,12 @@
                                                         <span class="sidenav-normal"> Equipements </span>
                                                     </a>
                                                 </li>
-
                                                 <li class="nav-item">
-                                                    <a href="" class="nav-link">
+                                                    <a href="{{ path('clients_categories_list') }}" class="nav-link">
                                                         <i class="ni fas fa-stethoscope text-purple"></i>
                                                         <span class="sidenav-normal"> Catégories Clients </span>
                                                     </a>
                                                 </li>
-
                                             </ul>
                                         </div>
                                     </li>

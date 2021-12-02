@@ -20,6 +20,7 @@
                         </nav>
                     </div>
                     <div class="col-lg-6 col-5 text-right">
+                        {#<a href="{{ path('new_contact') }}" class="btn btn-sm btn-success">Nouveau Projet</a>#}
                     </div>
                 </div>
             </div>
@@ -64,8 +65,12 @@
                                     <th scope="col">Technologie Vendue</th>
                                     <th scope="col">Total HT Contrat</th>
                                     <th scope="col">Statut</th>
-                                    <th scope="col">CNI</th>
+                                    <th scope="col">CNI R/V</th>
+                                    <th scope="col">RIB</th>
                                     <th scope="col">Déclaration 2035</th>
+                                    <th scope="col">Déclaration 2042</th>
+                                    <th scope="col">Bilan Comptable</th>
+                                    <th scope="col">Feuille de Partenariat</th>
                                 </tr>
 
                                 {% if projects|length != 0 %}
@@ -163,12 +168,64 @@
                                         </td>
 
 
+                                        {% if project.cni is not null %}
                                         <td class="text-center">
-                                            <a href="{{ asset('attachments/') ~ project.cni }}"><i class="fas fa-download text-green"></i></a>
+                                            <a href="{{ asset('attachments/') ~ project.cni }}" target="_blank"><i class="fas fa-download text-green"></i></a>
                                         </td>
+                                        {% else %}
+                                            <td class="text-center">
+                                                <i class="fas fa-times-circle text-red"></i>
+                                            </td>
+                                        {% endif %}
+
+                                        {% if project.rib is not null %}
                                         <td class="text-center">
-                                            <a class="center"  href="{{ asset('attachments/') ~ project.declaration2035 }}"><i class="fas fa-download text-green"></i></a>
+                                            <a href="{{ asset('attachments/') ~ project.rib }}" target="_blank"><i class="fas fa-download text-green"></i></a>
                                         </td>
+                                        {% else %}
+                                            <td class="text-center">
+                                                <i class="fas fa-times-circle text-red"></i>
+                                            </td>
+                                        {% endif %}
+
+                                        {% if project.declaration2035 is not null %}
+                                        <td class="text-center">
+                                            <a class="center"  href="{{ asset('attachments/') ~ project.declaration2035 }}" target="_blank"><i class="fas fa-download text-green"></i></a>
+                                        </td>
+                                        {% else %}
+                                            <td class="text-center">
+                                                <i class="fas fa-times-circle text-red"></i>
+                                            </td>
+                                        {% endif %}
+
+                                        {% if project.declaration2042 is not null %}
+                                        <td class="text-center">
+                                            <a class="center"  href="{{ asset('attachments/') ~ project.declaration2042 }}" target="_blank"><i class="fas fa-download text-green"></i></a>
+                                        </td>
+                                        {% else %}
+                                            <td class="text-center">
+                                                <i class="fas fa-times-circle text-red"></i>
+                                            </td>
+                                        {% endif %}
+
+                                        {% if project.bilanComptable is not null %}
+                                        <td class="text-center">
+                                            <a class="center"  href="{{ asset('attachments/') ~ project.bilanComptable }}" target="_blank"><i class="fas fa-download text-green"></i></a>
+                                        </td>
+                                        {% else %}
+                                            <td class="text-center">
+                                                <i class="fas fa-times-circle text-red"></i>
+                                            </td>
+                                        {% endif %}
+                                        {% if project.partenariat is not null %}
+                                        <td class="text-center">
+                                            <a class="center"  href="{{ asset('attachments/') ~ project.partenariat }}" target="_blank"><i class="fas fa-download text-green"></i></a>
+                                        </td>
+                                        {% else %}
+                                            <td class="text-center">
+                                                <i class="fas fa-times-circle text-red"></i>
+                                            </td>
+                                        {% endif %}
                                         {#<td>
                                             <a href="{{ path('show_contact', {'id': commercial_appointment.client.id}) }}"><i class="fas fa-search-plus text-blue"></i></a>&nbsp;&nbsp;
                                             <a href="{{ path('full_update_contact', {'id': commercial_appointment.client.id}) }}"><i class="fas fa-edit text-yellow"></i></a>&nbsp;&nbsp;

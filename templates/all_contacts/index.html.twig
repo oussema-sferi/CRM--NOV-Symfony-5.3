@@ -189,11 +189,11 @@
                                 </td>
 
                                 <td>
-                                    <select id="category" name="category" class="form-control-sm">
+                                    <select id="clientCategory" name="clientCategory" class="form-control-sm">
                                         <option value="" selected>--- Choisir ---</option>
-                                        <option value="1">Médecin</option>
-                                        <option value="2">Vétérinaire</option>
-                                        <option value="3">Chirurgien</option>
+                                        {% for category in clients_categories %}
+                                            <option value="{{ category.id }}">{{ category.designation }}</option>
+                                        {% endfor %}
                                     </select>
                                 </td>
                                 <td>
@@ -323,7 +323,7 @@
                                                     <td >Non Défini</td>
                                                 {% else %}
                                                     {% if client.calls[call_index].callNotes is not null %}
-                                                        <td class="budget" style="text-align: center">
+                                                        <td class="budget">
                                                             <button class="notes" data-container="body" type="button" data-toggle="popover" data-color="info" data-placement="top" data-content= "{{ client.calls[call_index].callNotes }}">
                                                                 <i class="far fa-comment text-cyan"></i>
                                                             </button>
@@ -352,7 +352,7 @@
                                                 <td >Non Défini</td>
                                             {% else %}
                                                 {% if client.appointments[appointment_index].appointmentNotes is not null %}
-                                                    <td class="budget" style="text-align: center">
+                                                    <td class="budget">
                                                         <button class="notes" data-container="body" type="button" data-toggle="popover" data-color="info" data-placement="top" data-content= "{{ client.appointments[appointment_index].appointmentNotes }}">
                                                             <i class="far fa-comment text-cyan"></i>
                                                         </button>
@@ -382,12 +382,9 @@
 
 
                                     <td class="budget">
-                                        {% if  client.category == 1 %}
-                                            Médecin
-                                        {% elseif client.category == 2 %}
-                                            Vétérinaire
-                                        {% elseif client.category == 3 %}
-                                            Chirurgien
+                                        {% if client.clientCategory %}
+                                            {{ client.clientCategory.designation }}
+                                        {% else %}
                                         {% endif %}
                                     </td>
 

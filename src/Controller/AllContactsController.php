@@ -12,6 +12,7 @@ use App\Entity\User;
 use App\Form\AppointmentFormType;
 use App\Form\CallFormType;
 use App\Form\ClientFormType;
+use App\Repository\ClientCategoryRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use MercurySeries\FlashyBundle\FlashyNotifier;
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -31,7 +32,7 @@ class AllContactsController extends AbstractController
     /**
      * @Route("/dashboard/allcontacts", name="all_contacts")
      */
-    public function index(Request $request, PaginatorInterface $paginator): Response
+    public function index(Request $request, PaginatorInterface $paginator, ClientCategoryRepository $clientCategoryRepository): Response
     {
         $loggedUserRolesArray = $this->getUser()->getRoles();
         /*if (in_array("ROLE_TELEPRO",$loggedUserRolesArray)) {
@@ -44,6 +45,7 @@ class AllContactsController extends AbstractController
         $session = $request->getSession();
         $loggedUser = $this->getUser();
         $geographicAreas = $this->getDoctrine()->getRepository(GeographicArea::class)->findAll();
+        $clientsCategories = $clientCategoryRepository->findAll();
 
         $loggedUserGeographicAreasArray = $loggedUser->getGeographicAreas();
         $loggedUserGeographicAreasIdsArray = [];
@@ -89,7 +91,8 @@ class AllContactsController extends AbstractController
 
         return $this->render('all_contacts/index.html.twig', [
             'clients' => $clients,
-            'geographic_areas'=> $geographicAreas
+            'geographic_areas'=> $geographicAreas,
+            'clients_categories' => $clientsCategories
         ]);
     }
 
@@ -110,6 +113,7 @@ class AllContactsController extends AbstractController
             $newClient->setUpdatedAt(new \DateTime());
             $newClient->setCreatorUser($loggedUser);
             $newClient->setIsDeleted(false);
+            $newClient->setIsProcessed(false);
             $manager->persist($newClient);
             $manager->flush();
             $this->flashy->success("Contact créé avec succès !");
