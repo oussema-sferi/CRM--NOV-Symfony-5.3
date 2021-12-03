@@ -62,791 +62,569 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <form action="{{ path('full_update_contact', {'id': client_to_update.id}) }}" method="post">
-                        <h6 class="heading-small text-muted mb-4">Données Client</h6>
-                        <div class="pl-lg-4">
-                            <div class="row">
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        {{ form_label(client_form.firstName, 'Prénom') }}
-                                        {{ form_widget(client_form.firstName, {'attr': {'class': 'form-control', 'value': client_to_update.firstName }}) }}
-                                    </div>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        {{ form_label(client_form.lastName, 'Nom') }}
-                                        {{ form_widget(client_form.lastName, {'attr': {'class': 'form-control', 'value': client_to_update.lastName }}) }}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
 
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        {{ form_label(client_form.companyName, 'Société') }}
-                                        {{ form_widget(client_form.companyName, {'attr': {'class': 'form-control', 'value': client_to_update.companyName }}) }}
+                    <ul class="nav nav-tabs mb-3">
+                        <li><a class="nav-link heading-small text-muted mb-4 men_client" data-toggle="tab" href="#menu_client">Données Client</a></li>
+                        <li><a class="nav-link heading-small text-muted mb-4" data-toggle="tab" href="#menu_appels">Appels</a></li>
+                        <li><a class="nav-link heading-small text-muted mb-4" data-toggle="tab" href="#menu_rdvs">RDVs</a></li>
+                        <li><a class="nav-link heading-small text-muted mb-4" data-toggle="tab" href="#menu_projets">Projets</a></li>
+                    </ul>
 
-                                    </div>
-                                </div>
+                    <div class="tab-content">
 
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        {{ form_label(client_form.email, 'Email') }}
-                                        {{ form_widget(client_form.email, {'attr': {'class': 'form-control', 'value': client_to_update.email }}) }}
-                                    </div>
-                                </div>
-                            </div>
+                        <div id="menu_client" class="tab-pane fade">
 
-                            <div class="row">
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        {{ form_label(client_form.address, 'Addresse') }}
-                                        {{ form_widget(client_form.address, {'attr': {'class': 'form-control', 'value': client_to_update.address }}) }}
-                                    </div>
-                                </div>
-
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        {{ form_label(client_form.postalCode, 'Code Postal') }}
-                                        {{ form_widget(client_form.postalCode, {'attr': {'class': 'form-control', 'value': client_to_update.postalCode }}) }}
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            <div class="row">
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        {{ form_label(client_form.city, 'Commune') }}
-                                        {{ form_widget(client_form.city, {'attr': {'class': 'form-control', 'value': client_to_update.city }}) }}
-                                    </div>
-                                </div>
-
-                               {# <div class="col-lg-6">
-                                    <div class="form-group">
-                                        {{ form_label(client_form.postalCode, 'Code Postal') }}
-                                        {{ form_widget(client_form.postalCode, {'attr': {'class': 'form-control', 'value': client_to_update.postalCode }}) }}
-                                    </div>
-                                </div>#}
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        {{ form_label(client_form.geographicArea, 'Département') }}
-                                        {{ form_widget(client_form.geographicArea, {'attr': {'class': 'form-control'}}) }}
-                                    </div>
-                                </div>
-
-                            </div>
-
-
-
-                            <div class="row">
-                               {# <div class="col-lg-6">
-                                    <div class="form-group">
-                                        {{ form_label(client_form.geographicArea, 'Département') }}
-                                        {{ form_widget(client_form.geographicArea, {'attr': {'class': 'form-control'}}) }}
-                                    </div>
-                                </div>#}
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        {{ form_label(client_form.country, 'Pays') }}
-                                        {{ form_widget(client_form.country, {'attr': {'class': 'form-control', 'value': client_to_update.country }}) }}
-                                    </div>
-                                </div>
-
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        {{ form_label(client_form.phoneNumber, 'Numéro Domicile') }}
-                                        {{ form_widget(client_form.phoneNumber, {'attr': {'class': 'form-control', 'value': client_to_update.phoneNumber }}) }}
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            <div class="row">
-
-
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        {{ form_label(client_form.mobileNumber, 'Numéro Mobile') }}
-                                        {{ form_widget(client_form.mobileNumber, {'attr': {'class': 'form-control', 'value': client_to_update.mobileNumber }}) }}
-                                    </div>
-                                </div>
-
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        {{ form_label(client_form.clientCategory, 'Catégorie') }}
-                                        {{ form_widget(client_form.clientCategory, {'attr': {'class': 'form-control', 'value': client_to_update.clientCategory }}) }}
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            <div class="row">
-                                {#<div class="col-lg-6">
-                                    <div class="form-group">
-                                        {{ form_label(client_form.category, 'Catégorie') }}
-                                        {{ form_widget(client_form.category, {'attr': {'class': 'form-control', 'value': client_to_update.category }}) }}
-                                    </div>
-                                </div>#}
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        {{ form_label(client_form.providedEquipment, 'Equipement') }}
-                                        {{ form_widget(client_form.providedEquipment, {'attr': {'class': 'form-control', 'value': client_to_update.providedEquipment }}) }}
-                                    </div>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        {{ form_label(client_form.isUnderContract, 'Sous contrat') }}
-                                        {{ form_widget(client_form.isUnderContract, {'attr': {'class': 'form-control', 'value': client_to_update.isUnderContract }}) }}
-                                    </div>
-                                </div>
-
-                            </div>
-
-                        </div>
-                        {#<hr class="my-4" />#}
-                        <!-- Address -->
-                        {#<h6 class="heading-small text-muted mb-4">Données Utiles</h6>#}
-                        {#<div class="pl-lg-4">#}
-
-                            {#<div class="row">
-                                #}{#<div class="col-lg-6">
-                                    <div class="form-group">
-                                        {{ form_label(client_form.category, 'Catégorie') }}
-                                        {{ form_widget(client_form.category, {'attr': {'class': 'form-control', 'value': client_to_update.category }}) }}
-                                    </div>
-                                </div>#}{#
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        {{ form_label(client_form.providedEquipment, 'Equipement') }}
-                                        {{ form_widget(client_form.providedEquipment, {'attr': {'class': 'form-control', 'value': client_to_update.providedEquipment }}) }}
-                                    </div>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        {{ form_label(client_form.isUnderContract, 'Sous contrat') }}
-                                        {{ form_widget(client_form.isUnderContract, {'attr': {'class': 'form-control', 'value': client_to_update.isUnderContract }}) }}
-                                    </div>
-                                </div>
-
-                            </div>#}
-
-                           {# <div class="row">
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        {{ form_label(client_form.isUnderContract, 'Sous contrat') }}
-                                        {{ form_widget(client_form.isUnderContract, {'attr': {'class': 'form-control', 'value': client_to_update.isUnderContract }}) }}
-                                    </div>
-                                </div>
-                            </div>#}
-
-                        {#</div>#}
-                        <div class="text-right">
-                            <button type="submit" class="btn btn-sm btn-success mt-4">Enregistrer les modifications</button>
-                        </div>
-                        </form>
-                        {% if client_to_update.calls|length > 0 %}
-                            {% set calls_counter = 0 %}
-                            <hr class="my-4" />
-
-                            <h6 class="heading-small text-muted mb-4">Historique des Appels</h6>
-                            {#{{ dump(client_form.calls) }}#}
-                                    {% for call in client_to_update.calls %}
-                                        {#{{ dump(client_form.calls) }}#}
-                                        <div class="pl-lg-4">
-                                        {% set calls_counter = calls_counter + 1 %}
-                                            <h3 class="heading-small text-muted mb-4">Appel {{ calls_counter }}</h3>
-                                                <div class="row">
-                                                    <div class="col-lg-6">
-                                                        {#<div class="form-group">
-                                                            <label class="form-control-label" for="input-city">Etat</label>
-                                                            <input type="text" id="input-city" class="form-control" value="{% if client_to_show.status == 0 %}Non traité{% elseif client_to_show.status == 1 %}Appel non qualifié{% else %}Appel qualifié{% endif %}" disabled>
-                                                        </div>#}
-                                                        {#<div class="form-group">
-                                                            <label class="form-control-label" for="status">Etat</label>
-                                                           #}{# <input type="text" id="input-status" class="form-control" value="{% if client_to_show.status == 0 %}Non traité{% elseif client_to_show.status == 1 %}Appel non qualifié{% else %}Appel qualifié{% endif %}" disabled>#}{#
-                                                            <select name="status" id="status" class="form-control">
-                                                                <option value="" selected>Choisir...</option>
-                                                                <option value="1">Appel non Qualifié</option>
-                                                                <option value="2">Appel Qualifié</option>
-                                                            </select>
-                                                        </div>#}
-                                                        <div class="form-group">
-                                                            <label class="form-control-label" for="input-city">Etat</label>
-                                                            <input type="text" id="input-city" class="form-control" value="{% if call.generalStatus == 0 %}Non traité{% elseif call.generalStatus == 1 %}Appel non qualifié{% else %}Appel qualifié{% endif %}" disabled>
-                                                        </div>
-                                                        {#<div class="form-group">
-                                                            {{ form_label(call.vars.value.generalStatus, 'Sous contrat') }}
-                                                            {{ form_widget(call.vars.value.generalStatus, {'attr': {'class': 'form-control', 'value': 'hi' }}) }}
-                                                        </div>#}
-                                                    </div>
-                                                    <div class="col-lg-6">
-                                                        {#<div class="form-group">
-                                                            <label class="form-control-label" for="input-country">Détails</label>
-                                                            <input type="text" id="input-country" class="form-control" value="{% if client_to_update.statusDetail == 1 %}Ne répond pas{% elseif client_to_update.statusDetail == 2 %}Répondeur{% elseif client_to_update.statusDetail == 3 %}Barrage Secrétaire{% elseif client_to_update.statusDetail == 4 %}Pas Intéressé{% elseif client_to_update.statusDetail == 5 %}A Rappeler{% elseif client_to_update.statusDetail == 6 %}RDV à prendre{% elseif client_to_update.statusDetail == 7 %}RDV fixé {% else %}Non traité{% endif %}" disabled>
-                                                        </div>#}
-                                                        {#<div class="form-group">
-                                                            <label class="form-control-label" for="status_details">Détails</label>
-                                                            #}{#<input type="text" id="input-status" class="form-control" value="{% if client_to_show.status == 0 %}Non traité{% elseif client_to_show.status == 1 %}Appel non qualifié{% else %}Appel qualifié{% endif %}" disabled>#}{#
-                                                            <select name="status_details" id="status_details" class="form-control">
-                                                                <option value="" selected>Choisir...</option>
-                                                                <option value="1">Ne répond pas</option>
-                                                                <option value="2">Répondeur</option>
-                                                                <option value="3">Barrage Secrétaire</option>
-                                                                <option value="4">Pas Intéressé</option>
-                                                                <option value="5">A Rappeler</option>
-                                                                <option value="6">RDV à prendre</option>
-                                                                <option value="7">RDV fixé</option>
-                                                            </select>
-                                                        </div>#}
-                                                        <div class="form-group">
-                                                            <label class="form-control-label" for="input-country">Détails</label>
-                                                            <input type="text" id="input-country" class="form-control" value="{% if call.statusDetails == 1 %}Ne répond pas{% elseif call.statusDetails == 2 %}Répondeur{% elseif call.statusDetails == 3 %}Barrage Secrétaire{% elseif call.statusDetails == 5 %}Pas Intéressé{% elseif call.statusDetails == 6 %}A Rappeler{% elseif call.statusDetails == 7 %}RDV fixé {% else %}Non traité{% endif %}" disabled>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                        </div>
-
-                                        <div class="pl-lg-4">
-                                            <div class="row">
-                                                <div class="col-lg-6">
-                                                    <div class="form-group">
-                                                        <label class="form-control-label" for="input-city">Appelé Par</label>
-                                                        <input type="text" id="input-city" class="form-control" value="{{ call.user.firstName ~ ' ' ~ call.user.lastName }}" disabled>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-6">
-                                                    <div class="form-group">
-                                                        <label class="form-control-label" for="input-country">Date</label>
-                                                        <input type="text" id="input-country" class="form-control" value="{{ call.createdAt | format_datetime(locale='fr') }}" disabled>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    {#<hr class="my-4" />#}
-                        <!-- Description -->
-
-                        {#<h6 class="heading-small text-muted mb-4">Notes Appel</h6>#}
-                                        <div class="pl-lg-4">
-                                            {#<h3 class="heading-small text-muted mb-4">Notes Appel {{ calls_counter }}</h3>#}
+                            <form action="{{ path('full_update_contact', {'id': client_to_update.id}) }}" method="post">
+                                <h6 class="heading-small text-muted mb-4">Données Client</h6>
+                                <div class="pl-lg-4">
+                                    <div class="row">
+                                        <div class="col-lg-6">
                                             <div class="form-group">
-                                                <label class="form-control-label">Observations Appel</label>
-                                                {#<textarea rows="4" class="form-control" placeholder="Pas de notes ..." resize="none" disabled>{{ call.callNotes }}</textarea>#}
-                                                {% if call.statusDetails != 7 %}<textarea rows="4" class="form-control" placeholder="Pas de notes ..." resize="none" disabled>{{ call.callNotes }}</textarea>{% else %}
-                                                    {#{% set value = "" %}
-                                                    {% set break = false %}
-                                                    {% for appointment in client_appointments_list %}
-                                                        {% if break == false %}
-                                                            {% if appointment.appointmentCallNotes is not null %}
-                                                                {% set value = appointment.appointmentCallNotes %}
-                                                                {% set break = true %}
-                                                            {% endif%}
-                                                        {% endif %}
-                                                    {% endfor %}#}<textarea rows="4" class="form-control" placeholder="Pas de notes ..." resize="none" disabled>{{ call.callIfAppointmentNotes }}</textarea>{% endif%}
+                                                {{ form_label(client_form.firstName, 'Prénom') }}
+                                                {{ form_widget(client_form.firstName, {'attr': {'class': 'form-control', 'value': client_to_update.firstName }}) }}
                                             </div>
                                         </div>
-                                        {#{% if not (is_granted('ROLE_TELEPRO')) %}#}
-                                        <div class="text-right">
-                                            {% if call.isDeleted != 1  %}
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                {{ form_label(client_form.lastName, 'Nom') }}
+                                                {{ form_widget(client_form.lastName, {'attr': {'class': 'form-control', 'value': client_to_update.lastName }}) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                {{ form_label(client_form.companyName, 'Société') }}
+                                                {{ form_widget(client_form.companyName, {'attr': {'class': 'form-control', 'value': client_to_update.companyName }}) }}
+
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                {{ form_label(client_form.email, 'Email') }}
+                                                {{ form_widget(client_form.email, {'attr': {'class': 'form-control', 'value': client_to_update.email }}) }}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                {{ form_label(client_form.address, 'Addresse') }}
+                                                {{ form_widget(client_form.address, {'attr': {'class': 'form-control', 'value': client_to_update.address }}) }}
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                {{ form_label(client_form.postalCode, 'Code Postal') }}
+                                                {{ form_widget(client_form.postalCode, {'attr': {'class': 'form-control', 'value': client_to_update.postalCode }}) }}
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                {{ form_label(client_form.city, 'Commune') }}
+                                                {{ form_widget(client_form.city, {'attr': {'class': 'form-control', 'value': client_to_update.city }}) }}
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                {{ form_label(client_form.geographicArea, 'Département') }}
+                                                {{ form_widget(client_form.geographicArea, {'attr': {'class': 'form-control'}}) }}
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                {{ form_label(client_form.country, 'Pays') }}
+                                                {{ form_widget(client_form.country, {'attr': {'class': 'form-control', 'value': client_to_update.country }}) }}
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                {{ form_label(client_form.phoneNumber, 'Numéro Domicile') }}
+                                                {{ form_widget(client_form.phoneNumber, {'attr': {'class': 'form-control', 'value': client_to_update.phoneNumber }}) }}
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row">
+
+
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                {{ form_label(client_form.mobileNumber, 'Numéro Mobile') }}
+                                                {{ form_widget(client_form.mobileNumber, {'attr': {'class': 'form-control', 'value': client_to_update.mobileNumber }}) }}
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                {{ form_label(client_form.clientCategory, 'Catégorie') }}
+                                                {{ form_widget(client_form.clientCategory, {'attr': {'class': 'form-control', 'value': client_to_update.clientCategory }}) }}
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                {{ form_label(client_form.providedEquipment, 'Equipement') }}
+                                                {{ form_widget(client_form.providedEquipment, {'attr': {'class': 'form-control', 'value': client_to_update.providedEquipment }}) }}
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                {{ form_label(client_form.isUnderContract, 'Sous contrat') }}
+                                                {{ form_widget(client_form.isUnderContract, {'attr': {'class': 'form-control', 'value': client_to_update.isUnderContract }}) }}
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                                <div class="text-right">
+                                    <button type="submit" class="btn btn-sm btn-success mt-4">Enregistrer les modifications</button>
+                                </div>
+                            </form>
+
+                        </div>
+
+                        <div id="menu_appels" class="tab-pane fade">
+                            {% if client_to_update.calls|length > 0 %}
+                                {% set calls_counter = 0 %}
+                                <h6 class="heading-small text-muted mb-4">Historique des Appels</h6>
+                                {% for call in client_to_update.calls %}
+                                    <div class="pl-lg-4">
+                                        {% set calls_counter = calls_counter + 1 %}
+                                        <h3 class="heading-small text-muted mb-4">Appel {{ calls_counter }}</h3>
+                                        <div class="row">
+                                            <div class="col-lg-6">
+
+                                                <div class="form-group">
+                                                    <label class="form-control-label" for="input-city">Etat</label>
+                                                    <input type="text" id="input-city" class="form-control" value="{% if call.generalStatus == 0 %}Non traité{% elseif call.generalStatus == 1 %}Appel non qualifié{% else %}Appel qualifié{% endif %}" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label class="form-control-label" for="input-country">Détails</label>
+                                                    <input type="text" id="input-country" class="form-control" value="{% if call.statusDetails == 1 %}Ne répond pas{% elseif call.statusDetails == 2 %}Répondeur{% elseif call.statusDetails == 3 %}Barrage Secrétaire{% elseif call.statusDetails == 5 %}Pas Intéressé{% elseif call.statusDetails == 6 %}A Rappeler{% elseif call.statusDetails == 7 %}RDV fixé {% else %}Non traité{% endif %}" disabled>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="pl-lg-4">
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label class="form-control-label" for="input-city">Appelé Par</label>
+                                                    <input type="text" id="input-city" class="form-control" value="{{ call.user.firstName ~ ' ' ~ call.user.lastName }}" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label class="form-control-label" for="input-country">Date</label>
+                                                    <input type="text" id="input-country" class="form-control" value="{{ call.createdAt | format_datetime(locale='fr') }}" disabled>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="pl-lg-4">
+                                        <div class="form-group">
+                                            <label class="form-control-label">Observations Appel</label>
+                                            {% if call.statusDetails != 7 %}<textarea rows="4" class="form-control" placeholder="Pas de notes ..." resize="none" disabled>{{ call.callNotes }}</textarea>{% else %}
+                                                <textarea rows="4" class="form-control" placeholder="Pas de notes ..." resize="none" disabled>{{ call.callIfAppointmentNotes }}</textarea>{% endif%}
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        {% if call.isDeleted != 1  %}
                                             <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal-edit-call-form{{ call.id }}">Editer Appel {{ calls_counter }}</button>
                                             <button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#modal-delete-call-form{{ call.id }}">Supprimer Appel {{ calls_counter }}</button>
-                                            {#<button type="button" data-toggle="modal" data-target="#deleteModal" class="btn btn-sm btn-warning">Supprimer</button>#}
-                                                {% else %}
-                                                    <a class="badge bg-gradient-red text-white"><i class="fas fa-times fa-lg"></i> Appel Supprimé</a>
-                                            {% endif %}
-                                        </div>
-                                        {#{% endif %}#}
-                                        <hr class="my-4" />
-
-                                        <div class="modal fade" id="modal-edit-call-form{{ call.id }}" tabindex="-1" role="dialog" aria-labelledby="modal-edit-call-form{{ call.id }}" aria-hidden="true">
-                                            <div class="modal-dialog modal- modal-dialog-centered modal-sm" role="document">
-                                                <div class="modal-content">
-                                                    <div class="modal-body">
-                                                        <form action="{{ path('update_call', {'id': call.id}) }}" method="post">
-
-                                                            <div class="form-group">
-                                                                <div class="form-group">
-                                                                    <label class="form-control-label" for="input-username">Client</label>
-                                                                    <input type="text" id="client-show" class="form-control" value="{{ client_to_update.firstName ~ ' ' ~ client_to_update.lastName }}" disabled>
-                                                                </div>
-                                                            </div>
-
-                                                            <div>
-                                                                {#<div class="form-group">
-                                                                    <label class="form-control-label" for="input-username">Date et heure de Début</label>
-                                                                    <input type="datetime-local" id="start_appointment" name="start_appointment" class="form-control" value="{{ appointment.start|date }}" required>
-                                                                </div>#}
-                                                                <div class="form-group">
-                                                                    <label class="form-control-label" for="status">Etat</label>
-                                                                    <select name="status" id="status" class="form-control">
-                                                                        <option value="" selected>Choisir...</option>
-                                                                        <option value="1" {% if call.generalStatus == 1 %} selected {% endif %}>Appel non Qualifié</option>
-                                                                        <option value="2" {% if call.generalStatus == 2 %} selected {% endif %}>Appel Qualifié</option>
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-
-                                                            <div>
-                                                                {#<div class="form-group">
-                                                                    <label class="form-control-label" for="input-username">Date et heure de Fin</label>
-                                                                    <input type="datetime-local" id="end_appointment" name="end_appointment" class="form-control" value="{{ appointment.end|date }}" required>
-                                                                </div>#}
-                                                                <div class="form-group">
-                                                                    <label class="form-control-label" for="status_details">Détails</label>
-                                                                    <select name="status_details" id="status_details" class="form-control">
-                                                                        <option value="" selected>Choisir...</option>
-                                                                        <option value="1" {% if call.statusDetails == 1 %} selected {% endif %}>Ne répond pas</option>
-                                                                        <option value="2" {% if call.statusDetails == 2 %} selected {% endif %}>Répondeur</option>
-                                                                        <option value="3" {% if call.statusDetails == 3 %} selected {% endif %}>Barrage Secrétaire</option>
-                                                                        {#<option value="4" {% if call.statusDetails == 4 %} selected {% endif %}></option>#}
-                                                                        <option value="5" {% if call.statusDetails == 5 %} selected {% endif %}>Pas Intéressé</option>
-                                                                        <option value="6" {% if call.statusDetails == 6 %} selected {% endif %}>A Rappeler</option>
-                                                                        <option value="7" {% if call.statusDetails == 7 %} selected {% endif %}>RDV fixé</option>
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-
-                                                            <div>
-                                                                <div class="form-group">
-                                                                    <label class="form-control-label" for="input-username">Observations Appel</label>
-                                                                    {#<textarea id="notes-show" class="form-control" name="notes_call" id="notes" cols="30" rows="6" placeholder="..." resize="none" required>{{ call.callNotes }}</textarea>#}
-                                                                    {% if call.statusDetails != 7 %}<textarea rows="4" class="form-control" name="notes_call" placeholder="Pas de notes ..." resize="none">{{ call.callNotes }}</textarea>{% else %}
-                                                                        {#{% set value = "" %}
-                                                                        {% set break = false %}
-                                                                        {% for appointment in client_appointments_list %}
-                                                                            {% if break == false %}
-                                                                                {% if appointment.appointmentCallNotes is not null %}
-                                                                                    {% set value = appointment.appointmentCallNotes %}
-                                                                                    {% set break = true %}
-                                                                                {% endif%}
-                                                                            {% endif %}
-                                                                        {% endfor %}#}<textarea rows="4" class="form-control" name="notes_call" placeholder="Pas de notes ..." resize="none">{{ call.callIfAppointmentNotes }}</textarea>{% endif%}
-                                                                </div>
-                                                            </div>
-                                                            <hr class="my-3">
-                                                            <div class="text-center">
-                                                                <button type="submit" class="btn btn-sm btn-success">Confirmer</button>
-                                                                {#<a class="btn btn-sm btn-success" href="{{ path('full_update_appointment', {'id': appointment.id}) }}">Confirmer</a>#}
-                                                            </div>
-
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-
-                                        <div class="modal fade" id="modal-delete-call-form{{ call.id }}" tabindex="-1" role="dialog" aria-labelledby="emodal-delete-call-form" aria-hidden="true">
-                                            <div class="modal-dialog modal-dialog-centered" role="document">
-                                                {#<form action="{{ path('delete_contact', {'id': client.id}) }}" method="post">#}
-                                                <div class="modal-content">
-                                                    <div class="modal-header" style="margin: 0 auto">
-                                                        <h5 class="modal-title" id="exampleModalLabel">Avertissement</h5>
-                                                        {#<button type="button" class="close" data-dismiss="modal" aria-label="Close">#}{#
-                                                        #}{#<span aria-hidden="true">&times;</span>#}{#
-                                                        </button>#}
-                                                    </div>
-                                                    <div class="modal-body" style="margin: 0 auto">
-                                                        Êtes-vous sûr de vouloir supprimer cet appel?
-                                                    </div>
-                                                    <div class="modal-footer" style="margin: 0 auto">
-                                                        <button type="button" class="btn btn-success" data-dismiss="modal">Annuler</button>
-                                                        <a href="{{ path('delete_call', {'id': call.id}) }}" class="btn btn-danger">Confirmer</a>
-                                                    </div>
-
-                                                </div>
-                                                {#</form>#}
-                                            </div>
-                                        </div>
-                                    {% endfor %}
-                        {% endif %}
-
-                        {% if client_appointments_list|length > 0 %}
-                        <hr class="my-4" />
-
-                        <div class="row align-items-center py-4">
-                            <div class="col-lg-6 col-7">
-                                <h6 class="heading-small text-muted mb-4">Historique des RDV</h6>
-                            </div>
-                        </div>
-                            {% set appointments_counter = 0 %}
-                            {% for appointment in client_appointments_list %}
-                        <div class="pl-lg-4">
-
-
-                                <input type="text" name="{{ appointment.id }}" hidden>
-                                {% set appointments_counter = appointments_counter + 1 %}
-                                <h3 class="heading-small text-muted mb-4">RDV {{ appointments_counter }}</h3>
-                                <div class="row">
-                                    <div class="col-lg-3">
-                                        <div class="form-group">
-                                            <label class="form-control-label" for="input-city">Date et Heure de Début</label>
-                                            <input type="text" id="input-city" class="form-control" value="{{ appointment.start|date }}" disabled>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-3">
-                                        <div class="form-group">
-                                            <label class="form-control-label" for="input-country">Date et Heure de Fin</label>
-                                            <input type="text" id="input-country" class="form-control" value="{{ appointment.end|date }}" disabled>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-3">
-                                        {#<div class="form-group">
-                                            <label class="form-control-label" for="input-city">Commercial Affecté</label>
-                                            #}{#<input type="text" id="input-city" class="form-control" value="{{ appointment.user.firstName ~ ' ' ~ appointment.user.lastName }}">#}{#
-                                            <select name="assigned_commercial" id="assigned_commercial" class="form-control appointment_commercial{{ appointment.id }}">
-                                                <option value="">Choisir...</option>
-                                                {% for commercial in commercials %}
-                                                    <option value="{{ commercial.id }}">{{ commercial.firstName ~ ' ' ~ commercial.lastName }}</option>
-                                                {% endfor %}
-                                            </select>
-                                        </div>#}
-                                        <div class="form-group">
-                                            <label class="form-control-label" for="input-city">Commercial Affecté</label>
-                                            <input type="text" id="input-city" class="form-control" value="{{ appointment.user.firstName ~ ' ' ~ appointment.user.lastName }}" disabled>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-3">
-                                       {# <div class="form-group">
-                                            <label class="form-control-label" for="input-city">Etat</label>
-                                            <select name="appointment_status" id="appointment_status" class="form-control appointment_status{{ appointment.id }}">
-                                                <option value="" selected>Choisir...</option>
-                                                <option value="0">A Venir</option>
-                                                <option value="1">Effectué</option>
-                                            </select>
-                                        </div>#}
-                                        <div class="form-group">
-                                            <label class="form-control-label" for="input-city">Etat</label>
-                                            <input type="text" id="input-city" class="form-control" value="{% if appointment.isDone == 0 %}A Venir{% elseif appointment.isDone == 1 %}Reporté{% elseif appointment.isDone == 2 %}Argu{% elseif appointment.isDone == 3 %}Vente{% endif %}" disabled>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-lg-6">
-                                        <div class="form-group">
-                                            <label class="form-control-label" for="input-city">Pris Par</label>
-                                            <input type="text" id="input-city" class="form-control" value="{{ appointment.appointmentFixer.firstName ~ ' ' ~ appointment.appointmentFixer.lastName }}" disabled>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <div class="form-group">
-                                            <label class="form-control-label" for="input-country">Date</label>
-                                            <input type="text" id="input-country" class="form-control" value="{{ appointment.createdAt | format_datetime(locale='fr') }}" disabled>
-                                        </div>
-                                    </div>
-                                </div>
-
-
-                                <div class="row">
-                                    <div class="col-lg-12">
-                                        {#<div class="form-group">
-                                            <label class="form-control-label" for="input-city">Notes RDV</label>
-                                            <textarea rows="4" class="form-control appointment_notes{{ appointment.id }}" placeholder="Pas de notes ..." resize="none">{{ appointment.appointmentNotes }}</textarea>
-                                        </div>#}
-                                        <div class="form-group">
-                                            <label class="form-control-label" for="input-city">Observations avant RDV</label>
-                                            <textarea rows="4" class="form-control" placeholder="Pas de notes ..." resize="none" disabled>{{ appointment.appointmentNotes }}</textarea>
-                                        </div>
-                                    </div>
-
-                                </div>
-                                {% if not (is_granted('ROLE_TELEPRO')) %}
-                                <div class="text-right">
-                                    {% if appointment.isDeleted != 1 %}
-                                    <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal-appointment-form{{ appointment.id }}">Editer RDV {{ appointments_counter }}</button>
-                                    <button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#modal-delete-appointment-form{{ appointment.id }}">Supprimer RDV {{ appointments_counter }}</button>
                                         {% else %}
-                                            <a class="badge bg-gradient-red text-white"><i class="fas fa-times fa-lg"></i> RDV Supprimé</a>
-                                            {% endif %}
-                                </div>
-                                {% endif %}
-                                <hr class="my-4" />
+                                            <a class="badge bg-gradient-red text-white"><i class="fas fa-times fa-lg"></i> Appel Supprimé</a>
+                                        {% endif %}
+                                    </div>
 
-                                <div class="modal fade" id="modal-appointment-form{{ appointment.id }}" tabindex="-1" role="dialog" aria-labelledby="modal-appointment-form{{ appointment.id }}" aria-hidden="true">
-                                    <div class="modal-dialog modal- modal-dialog-centered modal-sm" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-body">
-                                                <form action="{{ path('update_appointment', {'id': appointment.id}) }}" method="post">
+                                    <hr class="my-4" />
 
-                                                    <div class="form-group">
+                                    <div class="modal fade" id="modal-edit-call-form{{ call.id }}" tabindex="-1" role="dialog" aria-labelledby="modal-edit-call-form{{ call.id }}" aria-hidden="true">
+                                        <div class="modal-dialog modal- modal-dialog-centered modal-sm" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-body">
+                                                    <form action="{{ path('update_call', {'id': call.id}) }}" method="post">
                                                         <div class="form-group">
-                                                            <label class="form-control-label" for="input-username">Client</label>
-                                                            <input type="text" id="client-show" class="form-control" value="{{ client_to_update.firstName ~ ' ' ~ client_to_update.lastName }}" disabled>
-                                                        </div>
-                                                    </div>
-
-                                                    {#<div>
-                                                        <div class="form-group">
-                                                            <label class="form-control-label" for="input-username">Date et heure de Début</label>
-                                                            <input type="datetime-local" id="start_appointment" name="start_appointment" class="form-control" value="{{ appointment.start|date }}" required>
-                                                        </div>
-                                                    </div>
-
-                                                    <div>
-                                                        <div class="form-group">
-                                                            <label class="form-control-label" for="input-username">Date et heure de Fin</label>
-                                                            <input type="datetime-local" id="end_appointment" name="end_appointment" class="form-control" value="{{ appointment.end|date }}" required>
-                                                        </div>
-                                                    </div>#}
-                                                    {#{{ dump(appointment.start|date('i')) }}#}
-                                                    <div>
-                                                        <div class="form-group">
-                                                            <label class="form-control-label" for="input-username">Date et heure de Début</label>
-                                                            <div id="edit_form_start"><input type="date" id="edit_form_start_date" name="edit_form[start][date]" value="{{ appointment.start|date('Y-m-d') }}" required="required">
-                                                                <div id="edit_form_start_time">
-                                                                    <select id="edit_form_start_time_hour" name="edit_form[start][time][hour]">
-                                                                        <option value="0">00</option><option value="1">01</option><option value="2">02</option><option value="3">03</option><option value="4">04</option><option value="5">05</option><option value="6">06</option><option value="7">07</option><option value="8">08</option><option value="9">09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option>
-                                                                    </select>:
-                                                                    <select id="edit_form_start_time_minute" name="edit_form[start][time][minute]"><option value="0">00</option><option value="1">01</option><option value="2">02</option><option value="3">03</option><option value="4">04</option><option value="5">05</option><option value="6">06</option><option value="7">07</option><option value="8">08</option><option value="9">09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option><option value="26">26</option><option value="27">27</option><option value="28">28</option><option value="29">29</option><option value="30">30</option><option value="31">31</option><option value="32">32</option><option value="33">33</option><option value="34">34</option><option value="35">35</option><option value="36">36</option><option value="37">37</option><option value="38">38</option><option value="39">39</option><option value="40">40</option><option value="41">41</option><option value="42">42</option><option value="43">43</option><option value="44">44</option><option value="45">45</option><option value="46">46</option><option value="47">47</option><option value="48">48</option><option value="49">49</option><option value="50">50</option><option value="51">51</option><option value="52">52</option><option value="53">53</option><option value="54">54</option><option value="55">55</option><option value="56">56</option><option value="57">57</option><option value="58">58</option><option value="59">59</option>
-                                                                    </select>
-                                                                </div>
+                                                            <div class="form-group">
+                                                                <label class="form-control-label" for="input-username">Client</label>
+                                                                <input type="text" id="client-show" class="form-control" value="{{ client_to_update.firstName ~ ' ' ~ client_to_update.lastName }}" disabled>
                                                             </div>
                                                         </div>
-                                                    </div>
 
-                                                    <div>
-                                                        <div class="form-group">
-                                                            <label class="form-control-label" for="input-username">Date et heure de Fin</label>
-                                                            <div id="edit_form_end"><input type="date" id="edit_form_end_date" name="edit_form[end][date]" value="{{ appointment.end|date('Y-m-d') }}" required="required">
-                                                                <div id="edit_form_end_time">
-                                                                    <select id="edit_form_end_time_hour" name="edit_form[end][time][hour]">
-                                                                        <option value="0">00</option><option value="1">01</option><option value="2">02</option><option value="3">03</option><option value="4">04</option><option value="5">05</option><option value="6">06</option><option value="7">07</option><option value="8">08</option><option value="9">09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option>
-                                                                    </select>:
-                                                                    <select id="edit_form_end_time_minute" name="edit_form[end][time][minute]"><option value="0">00</option><option value="1">01</option><option value="2">02</option><option value="3">03</option><option value="4">04</option><option value="5">05</option><option value="6">06</option><option value="7">07</option><option value="8">08</option><option value="9">09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option><option value="26">26</option><option value="27">27</option><option value="28">28</option><option value="29">29</option><option value="30">30</option><option value="31">31</option><option value="32">32</option><option value="33">33</option><option value="34">34</option><option value="35">35</option><option value="36">36</option><option value="37">37</option><option value="38">38</option><option value="39">39</option><option value="40">40</option><option value="41">41</option><option value="42">42</option><option value="43">43</option><option value="44">44</option><option value="45">45</option><option value="46">46</option><option value="47">47</option><option value="48">48</option><option value="49">49</option><option value="50">50</option><option value="51">51</option><option value="52">52</option><option value="53">53</option><option value="54">54</option><option value="55">55</option><option value="56">56</option><option value="57">57</option><option value="58">58</option><option value="59">59</option>
-                                                                    </select>
-                                                                </div>
+                                                        <div>
+                                                            <div class="form-group">
+                                                                <label class="form-control-label" for="status">Etat</label>
+                                                                <select name="status" id="status" class="form-control">
+                                                                    <option value="" selected>Choisir...</option>
+                                                                    <option value="1" {% if call.generalStatus == 1 %} selected {% endif %}>Appel non Qualifié</option>
+                                                                    <option value="2" {% if call.generalStatus == 2 %} selected {% endif %}>Appel Qualifié</option>
+                                                                </select>
                                                             </div>
                                                         </div>
-                                                    </div>
 
-
-                                                    <div class="form-group">
-                                                        <label class="form-control-label" for="input-city">Commercial Affecté</label>
-                                                        {#<input type="text" id="input-city" class="form-control" value="{{ appointment.user.firstName ~ ' ' ~ appointment.user.lastName }}">#}
-                                                        <select name="assigned_commercial_appointment" id="assigned_commercial_appointment" class="form-control appointment_commercial" required>
-                                                            <option value="">Choisir...</option>
-                                                            {% for commercial in commercials %}
-                                                                <option value="{{ commercial.id }}" {% if appointment.user.id == commercial.id %} selected {% endif %}>{{ commercial.firstName ~ ' ' ~ commercial.lastName }}</option>
-                                                            {% endfor %}
-                                                        </select>
-                                                    </div>
-
-                                                    <div class="form-group">
-                                                        <label class="form-control-label" for="status_details">Etat</label>
-                                                        {#<select name="status_details" id="status_details" class="form-control">
-                                                            <option value="" selected>Choisir...</option>
-                                                            <option value="1" {% if call.statusDetails == 1 %} selected {% endif %}>Ne répond pas</option>
-                                                            <option value="2" {% if call.statusDetails == 2 %} selected {% endif %}>Répondeur</option>
-                                                            <option value="3" {% if call.statusDetails == 3 %} selected {% endif %}>Barrage Secrétaire</option>
-                                                            #}{#<option value="4" {% if call.statusDetails == 4 %} selected {% endif %}></option>#}{#
-                                                            <option value="5" {% if call.statusDetails == 5 %} selected {% endif %}>Pas Intéressé</option>
-                                                            <option value="6" {% if call.statusDetails == 6 %} selected {% endif %}>A Rappeler</option>
-                                                            <option value="7" {% if call.statusDetails == 7 %} selected {% endif %}>RDV fixé</option>
-                                                        </select>#}
-                                                        <select id="is_done" name="is_done" class="form-control">
-                                                            <option value="" selected>--- Choisir ---</option>
-                                                            <option value="0" {% if appointment.isDone == 0 %} selected {% endif %}>A venir</option>
-                                                            <option value="1" {% if appointment.isDone == 1 %} selected {% endif %}>Reporté</option>
-                                                            {#<option value="2" {% if appointment.isDone == 2 %} selected {% endif %}>Argu</option>
-                                                            <option value="3" {% if appointment.isDone == 3 %} selected {% endif %}>Vente</option>#}
-                                                        </select>
-                                                    </div>
-
-                                                    <div>
-                                                        <div class="form-group">
-                                                            <label class="form-control-label" for="input-username">Observations avant RDV</label>
-                                                            <textarea id="notes-show" class="form-control" name="notes_appointment" id="notes" cols="30" rows="6" placeholder="..." resize="none" required>{{ appointment.appointmentNotes }}</textarea>
+                                                        <div>
+                                                            <div class="form-group">
+                                                                <label class="form-control-label" for="status_details">Détails</label>
+                                                                <select name="status_details" id="status_details" class="form-control">
+                                                                    <option value="" selected>Choisir...</option>
+                                                                    <option value="1" {% if call.statusDetails == 1 %} selected {% endif %}>Ne répond pas</option>
+                                                                    <option value="2" {% if call.statusDetails == 2 %} selected {% endif %}>Répondeur</option>
+                                                                    <option value="3" {% if call.statusDetails == 3 %} selected {% endif %}>Barrage Secrétaire</option>
+                                                                    <option value="5" {% if call.statusDetails == 5 %} selected {% endif %}>Pas Intéressé</option>
+                                                                    <option value="6" {% if call.statusDetails == 6 %} selected {% endif %}>A Rappeler</option>
+                                                                    <option value="7" {% if call.statusDetails == 7 %} selected {% endif %}>RDV fixé</option>
+                                                                </select>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <hr class="my-3">
-                                                    <div class="text-center">
-                                                        <button type="submit" class="btn btn-sm btn-success">Confirmer</button>
-                                                        {#<a class="btn btn-sm btn-success" href="{{ path('full_update_appointment', {'id': appointment.id}) }}">Confirmer</a>#}
-                                                    </div>
 
-                                                </form>
+                                                        <div>
+                                                            <div class="form-group">
+                                                                <label class="form-control-label" for="input-username">Observations Appel</label>
+                                                                {% if call.statusDetails != 7 %}<textarea rows="4" class="form-control" name="notes_call" placeholder="Pas de notes ..." resize="none">{{ call.callNotes }}</textarea>{% else %}
+                                                                    <textarea rows="4" class="form-control" name="notes_call" placeholder="Pas de notes ..." resize="none">{{ call.callIfAppointmentNotes }}</textarea>{% endif%}
+                                                            </div>
+                                                        </div>
+                                                        <hr class="my-3">
+                                                        <div class="text-center">
+                                                            <button type="submit" class="btn btn-sm btn-success">Confirmer</button>
+                                                        </div>
+
+                                                    </form>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
 
 
-                                <div class="modal fade" id="modal-delete-appointment-form{{ appointment.id }}" tabindex="-1" role="dialog" aria-labelledby="emodal-appointment-call-form" aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered" role="document">
-                                        {#<form action="{{ path('delete_contact', {'id': client.id}) }}" method="post">#}
-                                        <div class="modal-content">
-                                            <div class="modal-header" style="margin: 0 auto">
-                                                <h5 class="modal-title" id="exampleModalLabel">Avertissement</h5>
-                                                {#<button type="button" class="close" data-dismiss="modal" aria-label="Close">#}{#
-                                                #}{#<span aria-hidden="true">&times;</span>#}{#
-                                                </button>#}
-                                            </div>
-                                            <div class="modal-body" style="margin: 0 auto">
-                                                Êtes-vous sûr de vouloir supprimer ce RDV?
-                                            </div>
-                                            <div class="modal-footer" style="margin: 0 auto">
-                                                <button type="button" class="btn btn-success" data-dismiss="modal">Annuler</button>
-                                                <a href="{{ path('delete_appointment', {'id': appointment.id}) }}" class="btn btn-danger">Confirmer</a>
-                                            </div>
+                                    <div class="modal fade" id="modal-delete-call-form{{ call.id }}" tabindex="-1" role="dialog" aria-labelledby="emodal-delete-call-form" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header" style="margin: 0 auto">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Avertissement</h5>
+                                                </div>
+                                                <div class="modal-body" style="margin: 0 auto">
+                                                    Êtes-vous sûr de vouloir supprimer cet appel?
+                                                </div>
+                                                <div class="modal-footer" style="margin: 0 auto">
+                                                    <button type="button" class="btn btn-success" data-dismiss="modal">Annuler</button>
+                                                    <a href="{{ path('delete_call', {'id': call.id}) }}" class="btn btn-danger">Confirmer</a>
+                                                </div>
 
+                                            </div>
                                         </div>
-                                        {#</form>#}
                                     </div>
-                                </div>
+                                    <hr class="my-4" />
+                                {% endfor %}
+                            {% endif %}
 
-
-                            {% endfor %}
                         </div>
 
-                        {% endif %}
-
-                    {% if client_to_update.projects|length > 0 %}
-                        {% set projects_counter = 0 %}
-                        <hr class="my-4" />
-                        <h6 class="heading-small text-muted mb-4">Historique des Projets</h6>
-                        {#{{ dump(client_form.calls) }}#}
-                        {% for project in client_to_update.projects %}
-                            {#{{ dump(client_form.calls) }}#}
-                            <div class="pl-lg-4">
-                                {% set projects_counter = projects_counter + 1 %}
-                                <h3 class="heading-small text-muted mb-4">Projet {{ projects_counter }}</h3>
-                                <div class="row">
-                                    <div class="col-lg-6">
-                                        <div class="form-group">
-                                            <label class="form-control-label" for="input-city">Statut</label>
-                                            <input type="text" id="input-city" class="form-control" value="{% if project.status == 1 %}En cours{% elseif project.status == 2 %}Accepté{% elseif project.status == 3 %}Refusé{% endif %}" disabled>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <div class="form-group">
-                                            <label class="form-control-label" for="input-country">Technologie Vendue</label>
-                                            <input type="text" id="input-country" class="form-control" value="{{ project.equipment.designation }}" disabled>
-                                        </div>
+                        <div id="menu_rdvs" class="tab-pane fade">
+                            {% if client_appointments_list|length > 0 %}
+                                <div class="row align-items-center py-4">
+                                    <div class="col-lg-6 col-7">
+                                        <h6 class="heading-small text-muted mb-4">Historique des RDV</h6>
                                     </div>
                                 </div>
-                            </div>
+                                {% set appointments_counter = 0 %}
+                                {% for appointment in client_appointments_list %}
+                                    <div class="pl-lg-4">
 
-                            <div class="pl-lg-4">
-                                <div class="row">
-                                    <div class="col-lg-6">
-                                        <div class="form-group">
-                                            <label class="form-control-label" for="input-city">Utilisateur</label>
-                                            <input type="text" id="input-city" class="form-control" value="{{ project.projectMakerUser.firstName ~ ' ' ~ project.projectMakerUser.lastName }}" disabled>
+                                    <input type="text" name="{{ appointment.id }}" hidden>
+                                    {% set appointments_counter = appointments_counter + 1 %}
+                                    <h3 class="heading-small text-muted mb-4">RDV {{ appointments_counter }}</h3>
+                                    <div class="row">
+                                        <div class="col-lg-3">
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="input-city">Date et Heure de Début</label>
+                                                <input type="text" id="input-city" class="form-control" value="{{ appointment.start|date }}" disabled>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-3">
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="input-country">Date et Heure de Fin</label>
+                                                <input type="text" id="input-country" class="form-control" value="{{ appointment.end|date }}" disabled>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-3">
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="input-city">Commercial Affecté</label>
+                                                <input type="text" id="input-city" class="form-control" value="{{ appointment.user.firstName ~ ' ' ~ appointment.user.lastName }}" disabled>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-3">
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="input-city">Etat</label>
+                                                <input type="text" id="input-city" class="form-control" value="{% if appointment.isDone == 0 %}A Venir{% elseif appointment.isDone == 1 %}Reporté{% elseif appointment.isDone == 2 %}Argu{% elseif appointment.isDone == 3 %}Vente{% endif %}" disabled>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-lg-6">
-                                        <div class="form-group">
-                                            <label class="form-control-label" for="input-country">Date</label>
-                                            <input type="text" id="input-country" class="form-control" value="{{ project.createdAt | format_datetime(locale='fr') }}" disabled>
+
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="input-city">Pris Par</label>
+                                                <input type="text" id="input-city" class="form-control" value="{{ appointment.appointmentFixer.firstName ~ ' ' ~ appointment.appointmentFixer.lastName }}" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="input-country">Date</label>
+                                                <input type="text" id="input-country" class="form-control" value="{{ appointment.createdAt | format_datetime(locale='fr') }}" disabled>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
 
-                            <div class="pl-lg-4">
-                                <div class="form-group">
-                                    <label class="form-control-label">Observations Projet</label>
-                                    <textarea rows="4" class="form-control" placeholder="Pas de notes ..." resize="none" disabled>{{ project.projectNotes }}</textarea>
-                                </div>
-                            </div>
-                            {#{% if not (is_granted('ROLE_TELEPRO')) %}#}
-                            <div class="text-right">
-                                {#{% if call.isDeleted != 1  %}
-                                    <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal-edit-call-form{{ call.id }}">Editer Appel {{ calls_counter }}</button>
-                                    <button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#modal-delete-call-form{{ call.id }}">Supprimer Appel {{ calls_counter }}</button>
-                                {% else %}
-                                    <a class="badge bg-gradient-red text-white"><i class="fas fa-times fa-lg"></i> Appel Supprimé</a>
-                                {% endif %}#}
-                            </div>
-                            {#{% endif %}#}
-                            <hr class="my-4" />
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="input-city">Observations avant RDV</label>
+                                                <textarea rows="4" class="form-control" placeholder="Pas de notes ..." resize="none" disabled>{{ appointment.appointmentNotes }}</textarea>
+                                            </div>
+                                        </div>
 
-                            <div class="modal fade" id="modal-edit-project-form{{ project.id }}" tabindex="-1" role="dialog" aria-labelledby="modal-edit-project-form{{ project.id }}" aria-hidden="true">
-                                <div class="modal-dialog modal- modal-dialog-centered modal-sm" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-body">
-                                            <form action="{{ path('update_call', {'id': project.id}) }}" method="post">
+                                    </div>
+                                    {% if not (is_granted('ROLE_TELEPRO')) %}
+                                        <div class="text-right">
+                                            {% if appointment.isDeleted != 1 %}
+                                                <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal-appointment-form{{ appointment.id }}">Editer RDV {{ appointments_counter }}</button>
+                                                <button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#modal-delete-appointment-form{{ appointment.id }}">Supprimer RDV {{ appointments_counter }}</button>
+                                            {% else %}
+                                                <a class="badge bg-gradient-red text-white"><i class="fas fa-times fa-lg"></i> RDV Supprimé</a>
+                                            {% endif %}
+                                        </div>
+                                    {% endif %}
+                                    <hr class="my-4" />
+
+                                    <div class="modal fade" id="modal-appointment-form{{ appointment.id }}" tabindex="-1" role="dialog" aria-labelledby="modal-appointment-form{{ appointment.id }}" aria-hidden="true">
+                                        <div class="modal-dialog modal- modal-dialog-centered modal-sm" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-body">
+                                                    <form action="{{ path('update_appointment', {'id': appointment.id}) }}" method="post">
+
+                                                        <div class="form-group">
+                                                            <div class="form-group">
+                                                                <label class="form-control-label" for="input-username">Client</label>
+                                                                <input type="text" id="client-show" class="form-control" value="{{ client_to_update.firstName ~ ' ' ~ client_to_update.lastName }}" disabled>
+                                                            </div>
+                                                        </div>
+
+                                                        <div>
+                                                            <div class="form-group">
+                                                                <label class="form-control-label" for="input-username">Date et heure de Début</label>
+                                                                <div id="edit_form_start"><input type="date" id="edit_form_start_date" name="edit_form[start][date]" value="{{ appointment.start|date('Y-m-d') }}" required="required">
+                                                                    <div id="edit_form_start_time">
+                                                                        <select id="edit_form_start_time_hour" name="edit_form[start][time][hour]">
+                                                                            <option value="0">00</option><option value="1">01</option><option value="2">02</option><option value="3">03</option><option value="4">04</option><option value="5">05</option><option value="6">06</option><option value="7">07</option><option value="8">08</option><option value="9">09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option>
+                                                                        </select>:
+                                                                        <select id="edit_form_start_time_minute" name="edit_form[start][time][minute]"><option value="0">00</option><option value="1">01</option><option value="2">02</option><option value="3">03</option><option value="4">04</option><option value="5">05</option><option value="6">06</option><option value="7">07</option><option value="8">08</option><option value="9">09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option><option value="26">26</option><option value="27">27</option><option value="28">28</option><option value="29">29</option><option value="30">30</option><option value="31">31</option><option value="32">32</option><option value="33">33</option><option value="34">34</option><option value="35">35</option><option value="36">36</option><option value="37">37</option><option value="38">38</option><option value="39">39</option><option value="40">40</option><option value="41">41</option><option value="42">42</option><option value="43">43</option><option value="44">44</option><option value="45">45</option><option value="46">46</option><option value="47">47</option><option value="48">48</option><option value="49">49</option><option value="50">50</option><option value="51">51</option><option value="52">52</option><option value="53">53</option><option value="54">54</option><option value="55">55</option><option value="56">56</option><option value="57">57</option><option value="58">58</option><option value="59">59</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div>
+                                                            <div class="form-group">
+                                                                <label class="form-control-label" for="input-username">Date et heure de Fin</label>
+                                                                <div id="edit_form_end"><input type="date" id="edit_form_end_date" name="edit_form[end][date]" value="{{ appointment.end|date('Y-m-d') }}" required="required">
+                                                                    <div id="edit_form_end_time">
+                                                                        <select id="edit_form_end_time_hour" name="edit_form[end][time][hour]">
+                                                                            <option value="0">00</option><option value="1">01</option><option value="2">02</option><option value="3">03</option><option value="4">04</option><option value="5">05</option><option value="6">06</option><option value="7">07</option><option value="8">08</option><option value="9">09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option>
+                                                                        </select>:
+                                                                        <select id="edit_form_end_time_minute" name="edit_form[end][time][minute]"><option value="0">00</option><option value="1">01</option><option value="2">02</option><option value="3">03</option><option value="4">04</option><option value="5">05</option><option value="6">06</option><option value="7">07</option><option value="8">08</option><option value="9">09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option><option value="26">26</option><option value="27">27</option><option value="28">28</option><option value="29">29</option><option value="30">30</option><option value="31">31</option><option value="32">32</option><option value="33">33</option><option value="34">34</option><option value="35">35</option><option value="36">36</option><option value="37">37</option><option value="38">38</option><option value="39">39</option><option value="40">40</option><option value="41">41</option><option value="42">42</option><option value="43">43</option><option value="44">44</option><option value="45">45</option><option value="46">46</option><option value="47">47</option><option value="48">48</option><option value="49">49</option><option value="50">50</option><option value="51">51</option><option value="52">52</option><option value="53">53</option><option value="54">54</option><option value="55">55</option><option value="56">56</option><option value="57">57</option><option value="58">58</option><option value="59">59</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div class="form-group">
+                                                            <label class="form-control-label" for="input-city">Commercial Affecté</label>
+                                                            <select name="assigned_commercial_appointment" id="assigned_commercial_appointment" class="form-control appointment_commercial" required>
+                                                                <option value="">Choisir...</option>
+                                                                {% for commercial in commercials %}
+                                                                    <option value="{{ commercial.id }}" {% if appointment.user.id == commercial.id %} selected {% endif %}>{{ commercial.firstName ~ ' ' ~ commercial.lastName }}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label class="form-control-label" for="status_details">Etat</label>
+                                                            <select id="is_done" name="is_done" class="form-control">
+                                                                <option value="" selected>--- Choisir ---</option>
+                                                                <option value="0" {% if appointment.isDone == 0 %} selected {% endif %}>A venir</option>
+                                                                <option value="1" {% if appointment.isDone == 1 %} selected {% endif %}>Reporté</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <div>
+                                                            <div class="form-group">
+                                                                <label class="form-control-label" for="input-username">Observations avant RDV</label>
+                                                                <textarea id="notes-show" class="form-control" name="notes_appointment" id="notes" cols="30" rows="6" placeholder="..." resize="none" required>{{ appointment.appointmentNotes }}</textarea>
+                                                            </div>
+                                                        </div>
+                                                        <hr class="my-3">
+                                                        <div class="text-center">
+                                                            <button type="submit" class="btn btn-sm btn-success">Confirmer</button>
+                                                        </div>
+
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="modal fade" id="modal-delete-appointment-form{{ appointment.id }}" tabindex="-1" role="dialog" aria-labelledby="emodal-appointment-call-form" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header" style="margin: 0 auto">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Avertissement</h5>
+                                                </div>
+                                                <div class="modal-body" style="margin: 0 auto">
+                                                    Êtes-vous sûr de vouloir supprimer ce RDV?
+                                                </div>
+                                                <div class="modal-footer" style="margin: 0 auto">
+                                                    <button type="button" class="btn btn-success" data-dismiss="modal">Annuler</button>
+                                                    <a href="{{ path('delete_appointment', {'id': appointment.id}) }}" class="btn btn-danger">Confirmer</a>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr class="my-4" />
+                                {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div id="menu_projets" class="tab-pane fade">
+                            {% if client_to_update.projects|length > 0 %}
+                                {% set projects_counter = 0 %}
+                                <h6 class="heading-small text-muted mb-4">Historique des Projets</h6>
+                                {#{{ dump(client_form.calls) }}#}
+                                {% for project in client_to_update.projects %}
+                                    {#{{ dump(client_form.calls) }}#}
+                                    <div class="pl-lg-4">
+                                        {% set projects_counter = projects_counter + 1 %}
+                                        <h3 class="heading-small text-muted mb-4">Projet {{ projects_counter }}</h3>
+                                        <div class="row">
+                                            <div class="col-lg-6">
                                                 <div class="form-group">
-                                                    <div class="form-group">
-                                                        <label class="form-control-label" for="input-username">Client</label>
-                                                        <input type="text" id="client-show" class="form-control" value="{{ client_to_update.firstName ~ ' ' ~ client_to_update.lastName }}" disabled>
-                                                    </div>
+                                                    <label class="form-control-label" for="input-city">Statut</label>
+                                                    <input type="text" id="input-city" class="form-control" value="{% if project.status == 1 %}En cours{% elseif project.status == 2 %}Accepté{% elseif project.status == 3 %}Refusé{% endif %}" disabled>
                                                 </div>
-
-                                                {#<div>
-                                                    <div class="form-group">
-                                                        <label class="form-control-label" for="status">Etat</label>
-                                                        <select name="status" id="status" class="form-control">
-                                                            <option value="" selected>Choisir...</option>
-                                                            <option value="1" {% if call.generalStatus == 1 %} selected {% endif %}>Appel non Qualifié</option>
-                                                            <option value="2" {% if call.generalStatus == 2 %} selected {% endif %}>Appel Qualifié</option>
-                                                        </select>
-                                                    </div>
-                                                </div>#}
-
-                                                {#<div>
-                                                    <div class="form-group">
-                                                        <label class="form-control-label" for="status_details">Détails</label>
-                                                        <select name="status_details" id="status_details" class="form-control">
-                                                            <option value="" selected>Choisir...</option>
-                                                            <option value="1" {% if call.statusDetails == 1 %} selected {% endif %}>Ne répond pas</option>
-                                                            <option value="2" {% if call.statusDetails == 2 %} selected {% endif %}>Répondeur</option>
-                                                            <option value="3" {% if call.statusDetails == 3 %} selected {% endif %}>Barrage Secrétaire</option>
-                                                            #}{#<option value="4" {% if call.statusDetails == 4 %} selected {% endif %}></option>#}{#
-                                                            <option value="5" {% if call.statusDetails == 5 %} selected {% endif %}>Pas Intéressé</option>
-                                                            <option value="6" {% if call.statusDetails == 6 %} selected {% endif %}>A Rappeler</option>
-                                                            <option value="7" {% if call.statusDetails == 7 %} selected {% endif %}>RDV fixé</option>
-                                                        </select>
-                                                    </div>
-                                                </div>#}
-
-                                                {#<div>
-                                                    <div class="form-group">
-                                                        <label class="form-control-label" for="input-username">Observations Projet</label>
-                                                        {% if call.statusDetails != 7 %}<textarea rows="4" class="form-control" name="notes_call" placeholder="Pas de notes ..." resize="none">{{ call.callNotes }}</textarea>{% else %}
-                                                           <textarea rows="4" class="form-control" name="notes_call" placeholder="Pas de notes ..." resize="none">{{ call.callIfAppointmentNotes }}</textarea>{% endif%}
-                                                    </div>
-                                                </div>#}
-                                                <hr class="my-3">
-                                                <div class="text-center">
-                                                    <button type="submit" class="btn btn-sm btn-success">Confirmer</button>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label class="form-control-label" for="input-country">Technologie Vendue</label>
+                                                    <input type="text" id="input-country" class="form-control" value="{{ project.equipment.designation }}" disabled>
                                                 </div>
-
-                                            </form>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
 
-
-                            <div class="modal fade" id="modal-delete-project-form{{ project.id }}" tabindex="-1" role="dialog" aria-labelledby="modal-delete-project-form" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header" style="margin: 0 auto">
-                                            <h5 class="modal-title" id="exampleModalLabel">Avertissement</h5>
+                                    <div class="pl-lg-4">
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label class="form-control-label" for="input-city">Utilisateur</label>
+                                                    <input type="text" id="input-city" class="form-control" value="{{ project.projectMakerUser.firstName ~ ' ' ~ project.projectMakerUser.lastName }}" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label class="form-control-label" for="input-country">Date</label>
+                                                    <input type="text" id="input-country" class="form-control" value="{{ project.createdAt | format_datetime(locale='fr') }}" disabled>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="modal-body" style="margin: 0 auto">
-                                            Êtes-vous sûr de vouloir supprimer ce projet?
-                                        </div>
-                                        <div class="modal-footer" style="margin: 0 auto">
-                                            <button type="button" class="btn btn-success" data-dismiss="modal">Annuler</button>
-                                            <a href="{{ path('delete_call', {'id': project.id}) }}" class="btn btn-danger">Confirmer</a>
-                                        </div>
-
                                     </div>
-                                    {#</form>#}
-                                </div>
-                            </div>
-                        {% endfor %}
-                    {% endif %}
-                    {#<div class="text-center">
-                        <button type="button" class="btn btn-success mt-4">Confirmer</button>
-                    </div>#}
-                    {#</form>#}
+
+                                    <div class="pl-lg-4">
+                                        <div class="form-group">
+                                            <label class="form-control-label">Observations Projet</label>
+                                            <textarea rows="4" class="form-control" placeholder="Pas de notes ..." resize="none" disabled>{{ project.projectNotes }}</textarea>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                    </div>
+                                    <hr class="my-4" />
+
+                                    <div class="modal fade" id="modal-edit-project-form{{ project.id }}" tabindex="-1" role="dialog" aria-labelledby="modal-edit-project-form{{ project.id }}" aria-hidden="true">
+                                        <div class="modal-dialog modal- modal-dialog-centered modal-sm" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-body">
+                                                    <form action="{{ path('update_call', {'id': project.id}) }}" method="post">
+                                                        <div class="form-group">
+                                                            <div class="form-group">
+                                                                <label class="form-control-label" for="input-username">Client</label>
+                                                                <input type="text" id="client-show" class="form-control" value="{{ client_to_update.firstName ~ ' ' ~ client_to_update.lastName }}" disabled>
+                                                            </div>
+                                                        </div>
+                                                        <hr class="my-3">
+                                                        <div class="text-center">
+                                                            <button type="submit" class="btn btn-sm btn-success">Confirmer</button>
+                                                        </div>
+
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="modal fade" id="modal-delete-project-form{{ project.id }}" tabindex="-1" role="dialog" aria-labelledby="modal-delete-project-form" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header" style="margin: 0 auto">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Avertissement</h5>
+                                                </div>
+                                                <div class="modal-body" style="margin: 0 auto">
+                                                    Êtes-vous sûr de vouloir supprimer ce projet?
+                                                </div>
+                                                <div class="modal-footer" style="margin: 0 auto">
+                                                    <button type="button" class="btn btn-success" data-dismiss="modal">Annuler</button>
+                                                    <a href="{{ path('delete_call', {'id': project.id}) }}" class="btn btn-danger">Confirmer</a>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <hr class="my-4" />
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -915,6 +693,7 @@
                 }
             })
 
+            $(".men_client").click()
         });
     </script>
 
