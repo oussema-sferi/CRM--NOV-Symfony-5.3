@@ -174,8 +174,8 @@
 
                                 <div class="col-lg-6">
                                     <div class="form-group">
-                                        {{ form_label(client_form.category, 'Catégorie') }}
-                                        {{ form_widget(client_form.category, {'attr': {'class': 'form-control', 'value': client_to_update.category }}) }}
+                                        {{ form_label(client_form.clientCategory, 'Catégorie') }}
+                                        {{ form_widget(client_form.clientCategory, {'attr': {'class': 'form-control', 'value': client_to_update.clientCategory }}) }}
                                     </div>
                                 </div>
 
@@ -703,6 +703,146 @@
                         </div>
 
                         {% endif %}
+
+                    {% if client_to_update.projects|length > 0 %}
+                        {% set projects_counter = 0 %}
+                        <hr class="my-4" />
+                        <h6 class="heading-small text-muted mb-4">Historique des Projets</h6>
+                        {#{{ dump(client_form.calls) }}#}
+                        {% for project in client_to_update.projects %}
+                            {#{{ dump(client_form.calls) }}#}
+                            <div class="pl-lg-4">
+                                {% set projects_counter = projects_counter + 1 %}
+                                <h3 class="heading-small text-muted mb-4">Projet {{ projects_counter }}</h3>
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="input-city">Statut</label>
+                                            <input type="text" id="input-city" class="form-control" value="{% if project.status == 1 %}En cours{% elseif project.status == 2 %}Accepté{% elseif project.status == 3 %}Refusé{% endif %}" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="input-country">Technologie Vendue</label>
+                                            <input type="text" id="input-country" class="form-control" value="{{ project.equipment.designation }}" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="pl-lg-4">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="input-city">Utilisateur</label>
+                                            <input type="text" id="input-city" class="form-control" value="{{ project.projectMakerUser.firstName ~ ' ' ~ project.projectMakerUser.lastName }}" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="input-country">Date</label>
+                                            <input type="text" id="input-country" class="form-control" value="{{ project.createdAt | format_datetime(locale='fr') }}" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="pl-lg-4">
+                                <div class="form-group">
+                                    <label class="form-control-label">Observations Projet</label>
+                                    <textarea rows="4" class="form-control" placeholder="Pas de notes ..." resize="none" disabled>{{ project.projectNotes }}</textarea>
+                                </div>
+                            </div>
+                            {#{% if not (is_granted('ROLE_TELEPRO')) %}#}
+                            <div class="text-right">
+                                {#{% if call.isDeleted != 1  %}
+                                    <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal-edit-call-form{{ call.id }}">Editer Appel {{ calls_counter }}</button>
+                                    <button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#modal-delete-call-form{{ call.id }}">Supprimer Appel {{ calls_counter }}</button>
+                                {% else %}
+                                    <a class="badge bg-gradient-red text-white"><i class="fas fa-times fa-lg"></i> Appel Supprimé</a>
+                                {% endif %}#}
+                            </div>
+                            {#{% endif %}#}
+                            <hr class="my-4" />
+
+                            <div class="modal fade" id="modal-edit-project-form{{ project.id }}" tabindex="-1" role="dialog" aria-labelledby="modal-edit-project-form{{ project.id }}" aria-hidden="true">
+                                <div class="modal-dialog modal- modal-dialog-centered modal-sm" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-body">
+                                            <form action="{{ path('update_call', {'id': project.id}) }}" method="post">
+                                                <div class="form-group">
+                                                    <div class="form-group">
+                                                        <label class="form-control-label" for="input-username">Client</label>
+                                                        <input type="text" id="client-show" class="form-control" value="{{ client_to_update.firstName ~ ' ' ~ client_to_update.lastName }}" disabled>
+                                                    </div>
+                                                </div>
+
+                                                {#<div>
+                                                    <div class="form-group">
+                                                        <label class="form-control-label" for="status">Etat</label>
+                                                        <select name="status" id="status" class="form-control">
+                                                            <option value="" selected>Choisir...</option>
+                                                            <option value="1" {% if call.generalStatus == 1 %} selected {% endif %}>Appel non Qualifié</option>
+                                                            <option value="2" {% if call.generalStatus == 2 %} selected {% endif %}>Appel Qualifié</option>
+                                                        </select>
+                                                    </div>
+                                                </div>#}
+
+                                                {#<div>
+                                                    <div class="form-group">
+                                                        <label class="form-control-label" for="status_details">Détails</label>
+                                                        <select name="status_details" id="status_details" class="form-control">
+                                                            <option value="" selected>Choisir...</option>
+                                                            <option value="1" {% if call.statusDetails == 1 %} selected {% endif %}>Ne répond pas</option>
+                                                            <option value="2" {% if call.statusDetails == 2 %} selected {% endif %}>Répondeur</option>
+                                                            <option value="3" {% if call.statusDetails == 3 %} selected {% endif %}>Barrage Secrétaire</option>
+                                                            #}{#<option value="4" {% if call.statusDetails == 4 %} selected {% endif %}></option>#}{#
+                                                            <option value="5" {% if call.statusDetails == 5 %} selected {% endif %}>Pas Intéressé</option>
+                                                            <option value="6" {% if call.statusDetails == 6 %} selected {% endif %}>A Rappeler</option>
+                                                            <option value="7" {% if call.statusDetails == 7 %} selected {% endif %}>RDV fixé</option>
+                                                        </select>
+                                                    </div>
+                                                </div>#}
+
+                                                {#<div>
+                                                    <div class="form-group">
+                                                        <label class="form-control-label" for="input-username">Observations Projet</label>
+                                                        {% if call.statusDetails != 7 %}<textarea rows="4" class="form-control" name="notes_call" placeholder="Pas de notes ..." resize="none">{{ call.callNotes }}</textarea>{% else %}
+                                                           <textarea rows="4" class="form-control" name="notes_call" placeholder="Pas de notes ..." resize="none">{{ call.callIfAppointmentNotes }}</textarea>{% endif%}
+                                                    </div>
+                                                </div>#}
+                                                <hr class="my-3">
+                                                <div class="text-center">
+                                                    <button type="submit" class="btn btn-sm btn-success">Confirmer</button>
+                                                </div>
+
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="modal fade" id="modal-delete-project-form{{ project.id }}" tabindex="-1" role="dialog" aria-labelledby="modal-delete-project-form" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header" style="margin: 0 auto">
+                                            <h5 class="modal-title" id="exampleModalLabel">Avertissement</h5>
+                                        </div>
+                                        <div class="modal-body" style="margin: 0 auto">
+                                            Êtes-vous sûr de vouloir supprimer ce projet?
+                                        </div>
+                                        <div class="modal-footer" style="margin: 0 auto">
+                                            <button type="button" class="btn btn-success" data-dismiss="modal">Annuler</button>
+                                            <a href="{{ path('delete_call', {'id': project.id}) }}" class="btn btn-danger">Confirmer</a>
+                                        </div>
+
+                                    </div>
+                                    {#</form>#}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
                     {#<div class="text-center">
                         <button type="button" class="btn btn-success mt-4">Confirmer</button>
                     </div>#}
@@ -748,7 +888,16 @@
     <script type="text/javascript">
         $(document).ready(function() {
             $('#client_form_geographicArea').val({{ client_to_update.geographicArea.id }})
-            $('#client_form_category').val({{ client_to_update.category }})
+            {% if client_to_update.clientCategory|default%}
+            $('#client_form_clientCategory').val({{ client_to_update.clientCategory.id }})
+            {% endif %}
+            {% if client_to_update.providedEquipment|default%}
+            $('#client_form_providedEquipment').val({{ client_to_update.providedEquipment.id }})
+            {% endif %}
+
+
+
+
 
 
             $("#edit_form_start_time_hour").val(9)

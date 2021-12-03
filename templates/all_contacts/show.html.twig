@@ -187,55 +187,7 @@
 
 
                         </div>
-                        {#<hr class="my-4" />#}
-                        <!-- Address -->
-                        {#<h6 class="heading-small text-muted mb-4">Données Utiles</h6>#}
-                        {#<div class="pl-lg-4">#}
 
-                            {#<div class="row">
-                                #}{#<div class="col-lg-6">
-                                    <div class="form-group">
-                                        <label class="form-control-label" for="input-city">Catégorie</label>
-                                        <input type="text" id="input-city" class="form-control" value="{% if  client_to_show.category == 1 %}
-                                            Médecin
-                                        {% elseif client_to_show.category == 2 %}
-                                            Vétérinaire
-                                        {% elseif client_to_show.category == 3 %}
-                                            Chirurgien
-                                        {% endif %}" disabled>
-                                    </div>
-                                </div>#}{#
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        <label class="form-control-label" for="input-country">Equipement</label>
-                                        <input type="text" id="input-country" class="form-control" value="{{ client_to_show.providedEquipment }}" disabled>
-                                    </div>
-                                </div>
-
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        <label class="form-control-label" for="input-city">Sous Contrat</label>
-                                        <input type="text" id="input-city" class="form-control" value="{% if client_to_show.isUnderContract is null %}{% elseif client_to_show.isUnderContract == 0 %}Non{% elseif client_to_show.isUnderContract == 1 %}Oui{% endif %}" disabled>
-                                    </div>
-                                </div>
-                            </div>#}
-
-                            {#<div class="row">
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        <label class="form-control-label" for="input-city">Sous Contrat</label>
-                                        <input type="text" id="input-city" class="form-control" value="{% if client_to_show.isUnderContract is null %}{% elseif client_to_show.isUnderContract == 0 %}Non{% elseif client_to_show.isUnderContract == 1 %}Oui{% endif %}" disabled>
-                                    </div>
-                                </div>
-                                #}{#<div class="col-lg-6">
-                                    <div class="form-group">
-                                        <label class="form-control-label" for="input-country">Etat Appel</label>
-                                        <input type="text" id="input-country" class="form-control" value="{% if appointment_to_show.client.status == 0 %}Non traité{% elseif appointment_to_show.client.status == 1 %}Appel non qualifié{% else %}Appel qualifié{% endif %}" disabled>
-                                    </div>
-                                </div>#}{#
-                            </div>#}
-
-                        {#</div>#}
 
                         {% if client_to_show.calls|length > 0 %}
                             {% set calls_counter = 0 %}
@@ -372,7 +324,169 @@
                                 <hr class="my-4" />
                             {% endfor %}
                         </div>
+                        {% endif %}
 
+                        {% if client_to_show.projects|length > 0 %}
+                            {% set projects_counter = 0 %}
+                            <hr class="my-4" />
+
+                            <h6 class="heading-small text-muted mb-4">Historique des Projets</h6>
+
+                            {% for project in client_to_show.projects %}
+                                <div class="pl-lg-4">
+                                    {% set projects_counter = projects_counter + 1 %}
+                                    <h3 class="heading-small text-muted mb-4">Projet {{ projects_counter }}</h3>
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="input-country">Statut</label>
+                                                <input type="text" id="input-country" class="form-control" value="{% if project.status == 1 %}En cours{% elseif project.status == 2 %}Accepté{% elseif project.status == 3 %}Refusé{% endif %}" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="input-city">Technologie Vendue</label>
+                                                <input type="text" id="input-city" class="form-control" value="{{ project.equipment.designation }}" disabled>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="pl-lg-4">
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="input-city">Utilisateur</label>
+                                                <input type="text" id="input-city" class="form-control" value="{{ project.projectMakerUser.firstName ~ ' ' ~ project.projectMakerUser.lastName }}" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="input-country">Date</label>
+                                                <input type="text" id="input-country" class="form-control" value="{{ project.createdAt | format_datetime(locale='fr') }}" disabled>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="pl-lg-4">
+                                    <div class="form-group">
+                                        <label class="form-control-label">Observations Projet</label>
+                                        <textarea rows="4" class="form-control" placeholder="Pas de notes ..." resize="none" disabled>{{ project.projectNotes }}</textarea>
+                                    </div>
+                                </div>
+                                <hr style="width:50%;text-align:center">
+
+                                <div class="pl-lg-4">
+                                    <h3 class="heading-small text-muted mb-4">Pièces Jointes</h3>
+                                    <div class="row">
+                                        <div class="col-lg-4 text-center">
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="input-country">CNI R/V</label>
+                                                <div>
+                                                    {% if project.cni is not null %}
+                                                        <a href="{{ asset('attachments/') ~ project.cni }}" target="_blank"><i class="fas fa-download text-green"></i></a>
+                                                    {% else %}
+                                                        <i class="fas fa-times-circle text-red"></i>
+                                                    {% endif %}
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 text-center">
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="input-city">RIB</label>
+                                                <div>
+                                                    {% if project.rib is not null %}
+                                                        <a href="{{ asset('attachments/') ~ project.rib }}" target="_blank"><i class="fas fa-download text-green"></i></a>
+                                                    {% else %}
+                                                        <i class="fas fa-times-circle text-red"></i>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 text-center">
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="input-city">Déclaration 2035</label>
+                                                <div>
+                                                    {% if project.declaration2035 is not null %}
+                                                        <a href="{{ asset('attachments/') ~ project.declaration2035 }}" target="_blank"><i class="fas fa-download text-green"></i></a>
+                                                    {% else %}
+                                                        <i class="fas fa-times-circle text-red"></i>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="pl-lg-4">
+                                    <div class="row">
+                                        <div class="col-lg-4 text-center">
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="input-country">Déclaration 2042</label>
+                                                <div>
+                                                    {% if project.declaration2042 is not null %}
+                                                        <a href="{{ asset('attachments/') ~ project.declaration2042 }}" target="_blank"><i class="fas fa-download text-green"></i></a>
+                                                    {% else %}
+                                                        <i class="fas fa-times-circle text-red"></i>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 text-center">
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="input-city">Bilan Comptable</label>
+                                                <div>
+                                                    {% if project.bilanComptable is not null %}
+                                                        <a href="{{ asset('attachments/') ~ project.bilanComptable }}" target="_blank"><i class="fas fa-download text-green"></i></a>
+                                                    {% else %}
+                                                        <i class="fas fa-times-circle text-red"></i>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 text-center">
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="input-city">Feuille de Partenariat</label>
+                                                <div>
+                                                    {% if project.partenariat is not null %}
+                                                        <a href="{{ asset('attachments/') ~ project.partenariat }}" target="_blank"><i class="fas fa-download text-green"></i></a>
+                                                    {% else %}
+                                                        <i class="fas fa-times-circle text-red"></i>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr style="width:50%;text-align:center">
+
+                                <div class="pl-lg-4">
+                                    <h3 class="heading-small text-muted mb-4">Bloc Livraison</h3>
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="input-country">Etat Livraison</label>
+                                                <input type="text" id="input-country" class="form-control" value="{% if project.shipmentStatus == 1 %}A commander{% elseif project.shipmentStatus == 2 %}Commandé{% elseif project.shipmentStatus == 3 %}Colis en préparation{% elseif project.shipmentStatus == 4 %}A livrer{% elseif project.shipmentStatus == 5 %}En cours de Livraison{% elseif project.shipmentStatus == 6 %}Livré{% endif %}" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="input-city">Date de l'état</label>
+                                                <input type="text" id="input-city" class="form-control" value="{{ project.shipmentStatusDate | format_datetime(locale='fr') }}" disabled>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="pl-lg-4">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-country">Observations Etat Livraison</label>
+                                        <textarea rows="4" class="form-control" placeholder="Pas de notes ..." resize="none" disabled>{{ project.shipmentNotes }}</textarea>
+                                    </div>
+                                </div>
+
+
+                                <hr class="my-4" />
+                            {% endfor %}
                         {% endif %}
                     </form>
                 </div>

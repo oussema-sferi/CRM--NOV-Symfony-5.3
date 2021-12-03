@@ -65,6 +65,7 @@
                                     <th scope="col">Technologie Vendue</th>
                                     <th scope="col">Total HT Contrat</th>
                                     <th scope="col">Statut</th>
+                                    <th scope="col">Actions</th>
                                     <th scope="col">CNI R/V</th>
                                     <th scope="col">RIB</th>
                                     <th scope="col">Déclaration 2035</th>
@@ -114,7 +115,7 @@
                                             <option value="3">Refusé</option>
                                         </select>
                                     </td>
-
+                                    <td></td>
 
                                 </tr>
 
@@ -165,6 +166,14 @@
                                                     Refusé
                                                 </span>
                                             {% endif %}
+                                        </td>
+
+                                        <td>
+                                            {#<a href="{{ path('show_contact', {'id': client.id}) }}"  class="badge badge-default" >Consulter Fiche</a>#}
+                                            <a href="{{ path('show_contact', {'id': project.client.id}) }}"><i class="fas fa-search-plus text-blue"></i></a>&nbsp;&nbsp;
+                                            <a href="{{ path('full_update_contact', {'id': project.client.id}) }}"><i class="fas fa-edit text-yellow"></i></a>&nbsp;&nbsp;
+                                            <a href="" data-toggle="modal" data-target="#deleteModal{{ project.id }}"><i class="fas fa-trash-alt text-red"></i></a>
+
                                         </td>
 
 

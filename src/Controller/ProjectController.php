@@ -30,7 +30,7 @@ class ProjectController extends AbstractController
     {
         $session = $request->getSession();
         $loggedUserId = $this->getUser()->getId();
-        $commercialUsers = $userRepository->findUsersTeleproStats("ROLE_COMMERCIAL", "ROLE_SUPERADMIN");
+        $commercialAndSuperadminUsers = $userRepository->findUsersTeleproStats("ROLE_COMMERCIAL", "ROLE_SUPERADMIN");
         $equipments = $equipmentRepository->findAll();
         /*$allProjects = $projectRepository->findAll();*/
        /* dd($allProjects);*/
@@ -58,7 +58,7 @@ class ProjectController extends AbstractController
             'all_projects' => $data,
             'projects' => $projects,
             'equipments'=> $equipments,
-            'commercial_users' => $commercialUsers
+            'commercial_users' => $commercialAndSuperadminUsers
         ]);
     }
 
@@ -168,7 +168,12 @@ class ProjectController extends AbstractController
             } else {
                 $newProject->setRachat(false);
             }
-            $newProject->setReportMensualite((int)($request->request->get('reportMensualite')));
+
+            if($request->request->get('reportMensualite') === "10") {
+                $newProject->setReportMensualite((int)($request->request->get('reportMensualiteCustomValue')));
+            } else {
+                $newProject->setReportMensualite((int)($request->request->get('reportMensualite')));
+            }
             $newProject->setProjectNotes($request->request->get('projectNotes'));
             $newProject->setStatus((int)($request->request->get('status')));
             $newProject->setShipmentStatus((int)($request->request->get('shipmentStatus')));

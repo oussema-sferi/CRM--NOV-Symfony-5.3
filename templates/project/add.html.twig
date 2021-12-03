@@ -128,7 +128,12 @@
                                         <option value="" selected>Choisir le report de mensualités...</option>
                                         <option value="3">3 Mois</option>
                                         <option value="6">6 Mois</option>
+                                        <option value="10">Autre...</option>
                                     </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <input id="reportMensualiteCustomValue" name="reportMensualiteCustomValue" type="number" class="form-control" placeholder="Saisir le report mensualité..." style="display: none">
                                 </div>
 
                                 <div class="form-group">
@@ -245,13 +250,26 @@
         window.onload = () => {
              $("#monthlyPayment").change(function () {
                  if($(this).val() === "10") {
+                     $(this).prop('required', false);
                      $("#monthlyPaymentCustomValue").show();
                      $("#monthlyPaymentCustomValue").prop('required', true);
                  } else {
+                     $(this).prop('required', true);
                      $("#monthlyPaymentCustomValue").hide();
                      $("#monthlyPaymentCustomValue").prop('required', false);
                  }
              })
+            $("#reportMensualite").change(function () {
+                if($(this).val() === "10") {
+                    $(this).prop('required', false);
+                    $("#reportMensualiteCustomValue").show();
+                    $("#reportMensualiteCustomValue").prop('required', true);
+                } else {
+                    $(this).prop('required', true);
+                    $("#reportMensualiteCustomValue").hide();
+                    $("#reportMensualiteCustomValue").prop('required', false);
+                }
+            })
             /*$("#rachat").change(function () {
                 if ($(this).is(':checked')) {
                     $("#appointment_notes_block").show('1500')
