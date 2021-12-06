@@ -166,6 +166,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $projects;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Project::class, mappedBy="whoDeletedIt")
+     */
+    private $deletedProjects;
+
 
     public function __construct()
     {
@@ -184,6 +189,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->deletedAppointments = new ArrayCollection();
         $this->processes = new ArrayCollection();
         $this->projects = new ArrayCollection();
+        $this->deletedProjects = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -801,6 +807,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($project->getProjectMakerUser() === $this) {
                 $project->setProjectMakerUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Project[]
+     */
+    public function getDeletedProjects(): Collection
+    {
+        return $this->deletedProjects;
+    }
+
+    public function addDeletedProject(Project $deletedProject): self
+    {
+        if (!$this->deletedProjects->contains($deletedProject)) {
+            $this->deletedProjects[] = $deletedProject;
+            $deletedProject->setWhoDeletedIt($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDeletedProject(Project $deletedProject): self
+    {
+        if ($this->deletedProjects->removeElement($deletedProject)) {
+            // set the owning side to null (unless already changed)
+            if ($deletedProject->getWhoDeletedIt() === $this) {
+                $deletedProject->setWhoDeletedIt(null);
             }
         }
 

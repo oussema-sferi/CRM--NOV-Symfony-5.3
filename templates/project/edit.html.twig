@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Nouveau projet{% endblock %}
+{% block title %}Edition projet{% endblock %}
 
 {% block body %}
 
@@ -14,7 +14,7 @@
                             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
                                 <li class="breadcrumb-item"><i class="fas fa-chalkboard-teacher text-blue"></i></li>
                                 <li class="breadcrumb-item">Projet</li>
-                                <li class="breadcrumb-item active" aria-current="page">Nouveau Projet</li>
+                                <li class="breadcrumb-item active" aria-current="page">Edition Projet</li>
                             </ol>
                         </nav>
                     </div>
@@ -43,11 +43,11 @@
             <div class="row justify-content-center">
                 <div class="col-lg-6 col-md-8">
                     <div class="card bg-secondary border-0">
-
                         <div class="card-body px-lg-5 py-lg-5">
                             <div class="text-center text-muted mb-4">
                             </div>
-                            <form action="{{ path('new_project', {'clientId': client.id }) }}" method="post" enctype="multipart/form-data">
+                            <form action="{{ path('edit_project', {'projectId': project_to_update.id }) }}" method="post" enctype="multipart/form-data">
+                                <input type="hidden" name="referer" value="{{ app.request.headers.get('referer') }}"/>
                                 <div class="form-group">
                                     <div>
                                         <label class="form-control-label" for="client">Client</label>
@@ -106,7 +106,7 @@
                                 <div>
                                     <div class="form-group">
                                         <label class="form-control-label required" for="totalHT">Total HT</label>
-                                        <input type="text" id="totalHT" name="totalHT" class="form-control">
+                                        <input type="text" id="totalHT" name="totalHT" class="form-control" value="{{ project_to_update.totalHT }}">
                                     </div>
                                 </div>
 
@@ -140,7 +140,7 @@
                                     <div>
                                         <label class="form-control-label required" for="projectNotes">Observations Projet</label>
                                     </div>
-                                    <textarea id="projectNotes" class="form-control" name="projectNotes" cols="30" rows="6" placeholder="..." resize="none"></textarea>
+                                    <textarea id="projectNotes" class="form-control" name="projectNotes" cols="30" rows="6" placeholder="..." resize="none">{{ project_to_update.projectNotes }}</textarea>
                                 </div>
 
 
@@ -224,12 +224,13 @@
                                         </div>
                                         <input type="date" id="shipmentStatusDate" name="shipmentStatusDate" class="form-control" required>
                                     </div>
+                                <input id="shipmentStatusDateHidden" type="text" value="{{ project_to_update.shipmentStatusDate|date('Y-m-d') }}" hidden>
 
                                     <div class="form-group">
                                         <div>
                                             <label class="form-control-label required" for="shipmentNotes">Observations Etat Livraison</label>
                                         </div>
-                                        <textarea id="shipmentNotes" class="form-control" name="shipmentNotes" cols="30" rows="6" placeholder="..." resize="none" required></textarea>
+                                        <textarea id="shipmentNotes" class="form-control" name="shipmentNotes" cols="30" rows="6" placeholder="..." resize="none" required>{{ project_to_update.shipmentNotes }}</textarea>
                                     </div>
 
 
@@ -270,6 +271,33 @@
                     $("#reportMensualiteCustomValue").prop('required', false);
                 }
             })
+
+            $('#equipment').val({{ project_to_update.equipment.id }})
+
+            {% if (project_to_update.monthlyPayment == "79") or (project_to_update.monthlyPayment == "99") or (project_to_update.monthlyPayment == "119") or (project_to_update.monthlyPayment == "129")
+                or (project_to_update.monthlyPayment == "149") or (project_to_update.monthlyPayment == "169") or (project_to_update.monthlyPayment == "189") or (project_to_update.monthlyPayment == "269,21")
+                or (project_to_update.monthlyPayment == "291,84")%}
+            $('#monthlyPayment').val({{ project_to_update.monthlyPayment }})
+            {% else %}
+            $('#monthlyPaymentCustomValue').val({{ project_to_update.monthlyPayment }})
+            $("#monthlyPayment").val("10")
+            $('#monthlyPaymentCustomValue').show()
+            {% endif %}
+
+            $('#numberOfMonthlyPayments').val({{ project_to_update.numberOfMonthlyPayments }})
+
+            {% if (project_to_update.reportMensualite == "3") or (project_to_update.reportMensualite == "6") %}
+            $('#reportMensualite').val({{ project_to_update.reportMensualite }})
+            {% else %}
+            $('#reportMensualiteCustomValue').val({{ project_to_update.reportMensualite }})
+            $("#reportMensualite").val("10")
+            $('#reportMensualiteCustomValue').show()
+            {% endif %}
+
+            $('#status').val({{ project_to_update.status }})
+            $('#shipmentStatus').val({{ project_to_update.shipmentStatus }})
+
+            $('#shipmentStatusDate').val($("#shipmentStatusDateHidden").val());
             /*$("#rachat").change(function () {
                 if ($(this).is(':checked')) {
                     $("#appointment_notes_block").show('1500')

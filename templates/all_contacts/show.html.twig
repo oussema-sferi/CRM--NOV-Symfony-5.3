@@ -49,7 +49,7 @@
                         <div class="col-6 text-right">
                             <a href="{{ path('call_handle', {'id': client_to_show.id}) }}" class="btn btn-sm btn-slack">Ajouter Appel</a>
                             <button type="button" class="btn btn-sm btn-slack" data-toggle="modal" data-target="#add-appointment-form">Ajouter RDV</button>
-                            {#<a href="" class="btn btn-sm btn-slack">Ajouter projet</a>#}
+                            <a href="{{ path('new_project', {'clientId': client_to_show.id}) }}" class="btn btn-sm btn-slack">Ajouter projet</a>
                             <a href="{{ path('full_update_contact', {'id': client_to_show.id}) }}" class="btn btn-sm btn-info">Editer</a>
                             {#<a href="{{ path('full_update_contact', {'id': client_to_show.id}) }}" class="btn btn-sm btn-warning">Supprimer</a>#}
                             <a href="" data-toggle="modal" data-target="#deleteModal" class="btn btn-sm btn-warning">Supprimer</a>
@@ -221,7 +221,7 @@
 
                             {% if client_to_show.calls|length > 0 %}
                                 {% set calls_counter = 0 %}
-                                <hr class="my-4" />
+
 
                                 <h6 class="heading-small text-muted mb-4">Historique des Appels</h6>
 
@@ -510,7 +510,7 @@
                                             <div class="col-lg-6">
                                                 <div class="form-group">
                                                     <label class="form-control-label" for="input-city">Date de l'état</label>
-                                                    <input type="text" id="input-city" class="form-control" value="{{ project.shipmentStatusDate | format_datetime(locale='fr') }}" disabled>
+                                                    <input type="text" id="input-city" class="form-control" value="{{ project.shipmentStatusDate | format_datetime('full', 'none', locale='fr') }}" disabled>
                                                 </div>
                                             </div>
                                         </div>

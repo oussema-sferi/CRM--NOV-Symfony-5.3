@@ -125,6 +125,21 @@ class Project
      */
     private $partenariat;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isDeleted;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $deletedAt;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="deletedProjects")
+     */
+    private $whoDeletedIt;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -378,6 +393,42 @@ class Project
     public function setPartenariat(?string $partenariat): self
     {
         $this->partenariat = $partenariat;
+
+        return $this;
+    }
+
+    public function getIsDeleted(): ?bool
+    {
+        return $this->isDeleted;
+    }
+
+    public function setIsDeleted(bool $isDeleted): self
+    {
+        $this->isDeleted = $isDeleted;
+
+        return $this;
+    }
+
+    public function getDeletedAt(): ?\DateTimeInterface
+    {
+        return $this->deletedAt;
+    }
+
+    public function setDeletedAt(?\DateTimeInterface $deletedAt): self
+    {
+        $this->deletedAt = $deletedAt;
+
+        return $this;
+    }
+
+    public function getWhoDeletedIt(): ?User
+    {
+        return $this->whoDeletedIt;
+    }
+
+    public function setWhoDeletedIt(?User $whoDeletedIt): self
+    {
+        $this->whoDeletedIt = $whoDeletedIt;
 
         return $this;
     }

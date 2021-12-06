@@ -191,4 +191,125 @@ class ProjectController extends AbstractController
             'equipments_list' => $equipmentsList,
         ]);
     }
+
+
+    /**
+     * @Route("/dashboard/project/{projectId}/edit", name="edit_project")
+     */
+    public function editProject($projectId,Request $request, EquipmentRepository $equipmentRepository, ProjectRepository $projectRepository): Response
+    {
+        $loggedUser = $this->getUser();
+        /*$referrer = $request->headers->get('referer');*/
+        $projectToUpdate = $projectRepository->find($projectId);
+        $client = $projectToUpdate->getClient();
+        $equipmentsList = $equipmentRepository->findAll();
+        if($request->isMethod('Post')) {
+            $manager = $this->getDoctrine()->getManager();
+            // Save Files
+            $attachmentsDirectory = $this->getParameter('attachments_directory');
+            //get request files
+            $cni = $request->files->get('cni');
+            if($cni) {
+                $cniFilename = md5(uniqid()) . '.' . $cni->guessExtension();
+            }
+            $rib = $request->files->get('rib');
+            if($rib) {
+                $ribFilename = md5(uniqid()) . '.' . $rib->guessExtension();
+            }
+            $declaration2035 = $request->files->get('declaration2035');
+            if($declaration2035) {
+                $declaration2035Filename = md5(uniqid()) . '.' . $declaration2035->guessExtension();
+            }
+            $declaration2042 = $request->files->get('declaration2042');
+            if($declaration2042) {
+                $declaration2042Filename = md5(uniqid()) . '.' . $declaration2042->guessExtension();
+            }
+            $bilanComptable = $request->files->get('bilanComptable');
+            if($bilanComptable) {
+                $bilanComptableFilename = md5(uniqid()) . '.' . $bilanComptable->guessExtension();
+            }
+            $partenariat = $request->files->get('partenariat');
+            if($partenariat) {
+                $partenariatFilename = md5(uniqid()) . '.' . $partenariat->guessExtension();
+            }
+            if($cni) {
+                $cni->move(
+                    $attachmentsDirectory,
+                    $cniFilename
+                );
+                $projectToUpdate->setCni($cniFilename);
+            }
+            if($rib) {
+                $rib->move(
+                    $attachmentsDirectory,
+                    $ribFilename
+                );
+                $projectToUpdate->setRib($ribFilename);
+            }
+            if($declaration2035) {
+                $declaration2035->move(
+                    $attachmentsDirectory,
+                    $declaration2035Filename
+                );
+                $projectToUpdate->setDeclaration2035($declaration2035Filename);
+            }
+            if($declaration2042) {
+                $declaration2042->move(
+                    $attachmentsDirectory,
+                    $declaration2042Filename
+                );
+                $projectToUpdate->setDeclaration2042($declaration2042Filename);
+            }
+            if($bilanComptable) {
+                $bilanComptable->move(
+                    $attachmentsDirectory,
+                    $bilanComptableFilename
+                );
+                $projectToUpdate->setBilanComptable($bilanComptableFilename);
+            }
+            if($partenariat) {
+                $partenariat->move(
+                    $attachmentsDirectory,
+                    $partenariatFilename
+                );
+                $projectToUpdate->setPartenariat($partenariatFilename);
+            }
+
+            $equipment = $equipmentRepository->find((int)($request->request->get('equipment')));
+            $projectToUpdate->setEquipment($equipment);
+            if($request->request->get('monthlyPayment') === "10") {
+                $projectToUpdate->setMonthlyPayment($request->request->get('monthlyPaymentCustomValue'));
+            } else {
+                $projectToUpdate->setMonthlyPayment($request->request->get('monthlyPayment'));
+            }
+            $projectToUpdate->setNumberOfMonthlyPayments($request->request->get('numberOfMonthlyPayments'));
+            $projectToUpdate->setTotalHT($request->request->get('totalHT'));
+            if($request->request->get('rachat') === "on") {
+                $projectToUpdate->setRachat(true);
+            } else {
+                $projectToUpdate->setRachat(false);
+            }
+
+            if($request->request->get('reportMensualite') === "10") {
+                $projectToUpdate->setReportMensualite((int)($request->request->get('reportMensualiteCustomValue')));
+            } else {
+                $projectToUpdate->setReportMensualite((int)($request->request->get('reportMensualite')));
+            }
+            $projectToUpdate->setProjectNotes($request->request->get('projectNotes'));
+            $projectToUpdate->setStatus((int)($request->request->get('status')));
+            $projectToUpdate->setShipmentStatus((int)($request->request->get('shipmentStatus')));
+            $projectToUpdate->setShipmentStatusDate(new \DateTime($request->request->get('shipmentStatusDate')));
+            $projectToUpdate->setShipmentNotes($request->request->get('shipmentNotes'));
+            $projectToUpdate->setUpdatedAt(new \DateTime());
+            $manager->persist($projectToUpdate);
+            $manager->flush();
+            $this->flashy->success("Projet mis à jour avec succès !");
+            return $this->redirect($request->request->get('referer'));
+        }
+        return $this->render('project/edit.html.twig', [
+            'project_to_update' => $projectToUpdate,
+            'client' => $client,
+            'equipments_list' => $equipmentsList,
+        ]);
+    }
 }

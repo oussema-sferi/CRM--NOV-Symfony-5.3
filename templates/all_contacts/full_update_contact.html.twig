@@ -575,11 +575,120 @@
                                             <textarea rows="4" class="form-control" placeholder="Pas de notes ..." resize="none" disabled>{{ project.projectNotes }}</textarea>
                                         </div>
                                     </div>
-                                    <div class="text-right">
-                                    </div>
-                                    <hr class="my-4" />
+                                    <hr style="width:50%;text-align:center">
 
-                                    <div class="modal fade" id="modal-edit-project-form{{ project.id }}" tabindex="-1" role="dialog" aria-labelledby="modal-edit-project-form{{ project.id }}" aria-hidden="true">
+                                    <div class="pl-lg-4">
+                                        <h3 class="heading-small text-muted mb-4">Pièces Jointes</h3>
+                                        <div class="row">
+                                            <div class="col-lg-4 text-center">
+                                                <div class="form-group">
+                                                    <label class="form-control-label" for="input-country">CNI R/V</label>
+                                                    <div>
+                                                        {% if project.cni is not null %}
+                                                            <a href="{{ asset('attachments/') ~ project.cni }}" target="_blank"><i class="fas fa-download text-green"></i></a>
+                                                        {% else %}
+                                                            <i class="fas fa-times-circle text-red"></i>
+                                                        {% endif %}
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4 text-center">
+                                                <div class="form-group">
+                                                    <label class="form-control-label" for="input-city">RIB</label>
+                                                    <div>
+                                                        {% if project.rib is not null %}
+                                                            <a href="{{ asset('attachments/') ~ project.rib }}" target="_blank"><i class="fas fa-download text-green"></i></a>
+                                                        {% else %}
+                                                            <i class="fas fa-times-circle text-red"></i>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4 text-center">
+                                                <div class="form-group">
+                                                    <label class="form-control-label" for="input-city">Déclaration 2035</label>
+                                                    <div>
+                                                        {% if project.declaration2035 is not null %}
+                                                            <a href="{{ asset('attachments/') ~ project.declaration2035 }}" target="_blank"><i class="fas fa-download text-green"></i></a>
+                                                        {% else %}
+                                                            <i class="fas fa-times-circle text-red"></i>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="pl-lg-4">
+                                        <div class="row">
+                                            <div class="col-lg-4 text-center">
+                                                <div class="form-group">
+                                                    <label class="form-control-label" for="input-country">Déclaration 2042</label>
+                                                    <div>
+                                                        {% if project.declaration2042 is not null %}
+                                                            <a href="{{ asset('attachments/') ~ project.declaration2042 }}" target="_blank"><i class="fas fa-download text-green"></i></a>
+                                                        {% else %}
+                                                            <i class="fas fa-times-circle text-red"></i>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4 text-center">
+                                                <div class="form-group">
+                                                    <label class="form-control-label" for="input-city">Bilan Comptable</label>
+                                                    <div>
+                                                        {% if project.bilanComptable is not null %}
+                                                            <a href="{{ asset('attachments/') ~ project.bilanComptable }}" target="_blank"><i class="fas fa-download text-green"></i></a>
+                                                        {% else %}
+                                                            <i class="fas fa-times-circle text-red"></i>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4 text-center">
+                                                <div class="form-group">
+                                                    <label class="form-control-label" for="input-city">Feuille de Partenariat</label>
+                                                    <div>
+                                                        {% if project.partenariat is not null %}
+                                                            <a href="{{ asset('attachments/') ~ project.partenariat }}" target="_blank"><i class="fas fa-download text-green"></i></a>
+                                                        {% else %}
+                                                            <i class="fas fa-times-circle text-red"></i>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr style="width:50%;text-align:center">
+
+                                    <div class="pl-lg-4">
+                                        <h3 class="heading-small text-muted mb-4">Bloc Livraison</h3>
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label class="form-control-label" for="input-country">Etat Livraison</label>
+                                                    <input type="text" id="input-country" class="form-control" value="{% if project.shipmentStatus == 1 %}A commander{% elseif project.shipmentStatus == 2 %}Commandé{% elseif project.shipmentStatus == 3 %}Colis en préparation{% elseif project.shipmentStatus == 4 %}A livrer{% elseif project.shipmentStatus == 5 %}En cours de Livraison{% elseif project.shipmentStatus == 6 %}Livré{% endif %}" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label class="form-control-label" for="input-city">Date de l'état</label>
+                                                    <input type="text" id="input-city" class="form-control" value="{{ project.shipmentStatusDate | format_datetime('full', 'none', locale='fr') }}" disabled>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="pl-lg-4">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="input-country">Observations Etat Livraison</label>
+                                            <textarea rows="4" class="form-control" placeholder="Pas de notes ..." resize="none" disabled>{{ project.shipmentNotes }}</textarea>
+                                        </div>
+                                    </div>
+
+
+
+                                    {#<div class="modal fade" id="modal-edit-project-form{{ project.id }}" tabindex="-1" role="dialog" aria-labelledby="modal-edit-project-form{{ project.id }}" aria-hidden="true">
                                         <div class="modal-dialog modal- modal-dialog-centered modal-sm" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-body">
@@ -599,9 +708,20 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div>#}
 
-                                    <div class="modal fade" id="modal-delete-project-form{{ project.id }}" tabindex="-1" role="dialog" aria-labelledby="modal-delete-project-form" aria-hidden="true">
+                                    {% if not (is_granted('ROLE_TELEPRO')) %}
+                                        <div class="text-right">
+                                            {% if project.isDeleted != 1 %}
+                                                <a class="btn btn-sm btn-info" href="{{ path('edit_project', {'projectId': project.id }) }}">Editer Projet {{ projects_counter }}</a>
+                                                {#<button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#modal-delete-project-form{{ project.id }}">Supprimer Projet {{ projects_counter }}</button>#}
+                                            {% else %}
+                                                <a class="badge bg-gradient-red text-white"><i class="fas fa-times fa-lg"></i> RDV Supprimé</a>
+                                            {% endif %}
+                                        </div>
+                                    {% endif %}
+
+                                    {#<div class="modal fade" id="modal-delete-project-form{{ project.id }}" tabindex="-1" role="dialog" aria-labelledby="modal-delete-project-form" aria-hidden="true">
                                         <div class="modal-dialog modal-dialog-centered" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header" style="margin: 0 auto">
@@ -617,7 +737,8 @@
 
                                             </div>
                                         </div>
-                                    </div>
+                                    </div>#}
+
 
                                     <hr class="my-4" />
                                 {% endfor %}
