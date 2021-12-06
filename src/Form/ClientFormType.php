@@ -58,11 +58,11 @@ class ClientFormType extends AbstractType
                 'placeholder' => "Choisir la catégorie...",
                 'required' => false
             ])
-            ->add('providedEquipment', EntityType::class, [
+            /*->add('providedEquipment', EntityType::class, [
                 'class' => Equipment::class,
                 'placeholder' => "Choisir l'équipement...",
                 'required' => false
-            ])
+            ])*/
             ->add('geographicArea', EntityType::class, [
                 'class' => GeographicArea::class,
                 'placeholder' => 'Choisir le département...',

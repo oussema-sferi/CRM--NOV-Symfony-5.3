@@ -181,6 +181,7 @@ class ProjectController extends AbstractController
             $newProject->setShipmentNotes($request->request->get('shipmentNotes'));
             $newProject->setCreatedAt(new \DateTime());
             $newProject->setUpdatedAt(new \DateTime());
+            $newProject->setIsDeleted(false);
             $manager->persist($newProject);
             $manager->flush();
             $this->flashy->success("Projet créé avec succès !");

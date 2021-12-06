@@ -245,15 +245,18 @@ class ClientRepository extends ServiceEntityRepository
             $query->andWhere($statement1);
             /*dd($query->getQuery());*/
         }
-        $statement2 = "";
-        for($i = 0; $i < (count($departmentsArrayIds) - 1); $i++) {
+        if ($departmentsArrayIds) {
+            $statement2 = "";
+            for($i = 0; $i < (count($departmentsArrayIds) - 1); $i++) {
 
-            $statement2 = $statement2 . "g.id = $departmentsArrayIds[$i] OR ";
+                $statement2 = $statement2 . "g.id = $departmentsArrayIds[$i] OR ";
 
-        };
-        $statement2 = $statement2 . "g.id = $departmentsArrayIds[$i]";
-        $query->andWhere($statement2);
-        $query->andWhere('c.statusDetail != 7');
+            };
+            $statement2 = $statement2 . "g.id = $departmentsArrayIds[$i]";
+            $query->andWhere($statement2);
+            $query->andWhere('c.statusDetail != 7');
+        }
+
         $query->setParameters($filters);
         /*dd($query->getQuery());*/
         $query2 = $this->createQueryBuilder('c')->select('c')->join('c.geographicArea', 'g')
@@ -328,15 +331,18 @@ class ClientRepository extends ServiceEntityRepository
             $query->andWhere($statement1);
             /*dd($query->getQuery());*/
         }
-        $statement2 = "";
+        if ($departmentsArrayIds) {
+            $statement2 = "";
 
-        for($i = 0; $i < (count($departmentsArrayIds) - 1); $i++) {
+            for($i = 0; $i < (count($departmentsArrayIds) - 1); $i++) {
 
-            $statement2 = $statement2 . "g.id = $departmentsArrayIds[$i] OR ";
+                $statement2 = $statement2 . "g.id = $departmentsArrayIds[$i] OR ";
 
-        };
-        $statement2 = $statement2 . "g.id = $departmentsArrayIds[$i]";
-        $query->andWhere($statement2);
+            };
+            $statement2 = $statement2 . "g.id = $departmentsArrayIds[$i]";
+            $query->andWhere($statement2);
+        }
+
         $query->setParameters($filters);
         /*dd($query->getQuery());*/
         $query2 = $this->createQueryBuilder('c')->select('c')->join('c.geographicArea', 'g')

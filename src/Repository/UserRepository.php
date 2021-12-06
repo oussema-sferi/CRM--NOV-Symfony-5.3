@@ -103,6 +103,19 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         return $query->getQuery()->getResult();
     }
 
+    public function findFreeCommercialsIfNoneAssigned($busyCommercialsIdsArray, $role)
+    {
+        $qb = $this->createQueryBuilder('u');
+        $query = $qb->select('u');
+        foreach ($busyCommercialsIdsArray as $id) {
+            $query->andWhere("u.id != $id");
+        }
+        $query->andWhere('u.roles LIKE :roles')
+            ->andWhere('u.isDeleted = 0')
+            ->setParameter('roles', '%"'.$role.'"%');
+        return $query->getQuery()->getResult();
+    }
+
     public function findFreeCommercialsForSuperAdmin($busyCommercialsIdsArray, $role)
     {
         $qb = $this->createQueryBuilder('u');

@@ -36,7 +36,7 @@
                     <form action="{{ path('projects_search_filters') }}" method="post">
                         <div class="card-header border-0">
                             <div class="row">
-                                <div class="col-md-8">
+                                <div class="col-md-6">
                                     {% if app.session.get('total_projects_search_results') and app.session.get('total_projects_search_results') != "nothing" %}
                                         <h3 class="mb-0">Nombre de résultats: {{ app.session.get('total_projects_search_results')}}</h3>
                                     {% elseif app.session.get('total_projects_search_results') and app.session.get('total_projects_search_results') == "nothing" %}
@@ -45,9 +45,13 @@
                                         <h3 class="mb-0">Total: {{ all_projects|length }} Projet(s)</h3>
                                     {% endif %}
                                 </div>
-                                <div class="col-md-4 text-right">
-                                    <button class="btn btn-sm btn-success" type="submit">Appliquer les filtres</button>
-                                    <a class="btn btn-sm btn-primary" href="{{ path('projects_list') }}">Réinitialiser les filtres</a>
+                                <div class="col-md-6 text-right">
+                                    {% if all_projects|length != 0 %}
+                                        <button class="btn btn-sm btn-success" type="submit">Appliquer les filtres</button>
+                                        <a class="btn btn-sm btn-primary" href="{{ path('projects_list') }}">Réinitialiser les filtres</a>
+                                    {% else %}
+                                        <a class="btn btn-sm btn-primary" href="{{ path('projects_list') }}">Réinitialiser les filtres</a>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -172,7 +176,7 @@
                                             {#<a href="{{ path('show_contact', {'id': client.id}) }}"  class="badge badge-default" >Consulter Fiche</a>#}
                                             <a href="{{ path('show_contact', {'id': project.client.id}) }}"><i class="fas fa-search-plus text-blue"></i></a>&nbsp;&nbsp;
                                             <a href="{{ path('full_update_contact', {'id': project.client.id}) }}"><i class="fas fa-edit text-yellow"></i></a>&nbsp;&nbsp;
-                                            <a href="" data-toggle="modal" data-target="#deleteModal{{ project.id }}"><i class="fas fa-trash-alt text-red"></i></a>
+                                            {#<a href="" data-toggle="modal" data-target="#deleteModal{{ project.id }}"><i class="fas fa-trash-alt text-red"></i></a>#}
 
                                         </td>
 

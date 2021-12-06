@@ -298,6 +298,20 @@
             $('#shipmentStatus').val({{ project_to_update.shipmentStatus }})
 
             $('#shipmentStatusDate').val($("#shipmentStatusDateHidden").val());
+
+            {% if project_to_update.rachat == 1 %}
+            $("#rachat").prop('checked', true)
+            {% else %}
+            $("#rachat").prop('checked', false)
+            {% endif %}
+                /*if ($("#rachat").is(':checked')) {
+                    $("#appointment_notes_block").show('1500')
+                    $("#notes").prop('required', true)
+                } else {
+                    $("#appointment_notes_block").hide('500')
+                    $("#notes").prop('required', false)
+                }*/
+
             /*$("#rachat").change(function () {
                 if ($(this).is(':checked')) {
                     $("#appointment_notes_block").show('1500')

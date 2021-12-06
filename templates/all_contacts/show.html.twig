@@ -12,15 +12,15 @@
                         <h6 class="h2 text-white d-inline-block mb-0">CRM</h6>
                         <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
                             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
-                                {% if not (is_granted('ROLE_COMMERCIAL')) %}
+                                {#{% if not (is_granted('ROLE_COMMERCIAL')) %}#}
                                     <li class="breadcrumb-item"><i class="ni fas fa-address-book text-black-50"></i></li>
                                     <li class="breadcrumb-item">Gestion des contacts</li>
                                     <li class="breadcrumb-item"><a href="{{ path('all_contacts') }}">Liste des contacts</a></li>
-                                {% else %}
+                                {#{% else %}
                                     <li class="breadcrumb-item"><i class="fas fa-chalkboard-teacher text-yellow"></i></li>
                                     <li class="breadcrumb-item">Service Commercial</li>
                                     <li class="breadcrumb-item"><a href="{{ path('commercial_my_contacts') }}">Mes contacts</a></li>
-                                {% endif %}
+                                {% endif %}#}
                                 <li class="breadcrumb-item active" aria-current="page">Fiche contact</li>
                             </ol>
                         </nav>
@@ -49,7 +49,9 @@
                         <div class="col-6 text-right">
                             <a href="{{ path('call_handle', {'id': client_to_show.id}) }}" class="btn btn-sm btn-slack">Ajouter Appel</a>
                             <button type="button" class="btn btn-sm btn-slack" data-toggle="modal" data-target="#add-appointment-form">Ajouter RDV</button>
+                            {% if not (is_granted('ROLE_TELEPRO')) %}
                             <a href="{{ path('new_project', {'clientId': client_to_show.id}) }}" class="btn btn-sm btn-slack">Ajouter projet</a>
+                            {% endif %}
                             <a href="{{ path('full_update_contact', {'id': client_to_show.id}) }}" class="btn btn-sm btn-info">Editer</a>
                             {#<a href="{{ path('full_update_contact', {'id': client_to_show.id}) }}" class="btn btn-sm btn-warning">Supprimer</a>#}
                             <a href="" data-toggle="modal" data-target="#deleteModal" class="btn btn-sm btn-warning">Supprimer</a>
@@ -198,12 +200,12 @@
                                 </div>
 
                                 <div class="row">
-                                    <div class="col-lg-6">
+                                    {#<div class="col-lg-6">
                                         <div class="form-group">
                                             <label class="form-control-label" for="input-country">Equipement</label>
                                             <input type="text" id="input-country" class="form-control" value="{{ client_to_show.providedEquipment }}" disabled>
                                         </div>
-                                    </div>
+                                    </div>#}
 
                                     <div class="col-lg-6">
                                         <div class="form-group">
@@ -277,6 +279,8 @@
                                     </div>
                                     <hr class="my-4" />
                                 {% endfor %}
+                            {% else %}
+                                0 Appel(s) !
                             {% endif %}
 
 
@@ -285,7 +289,7 @@
 
 
                             {% if client_appointments_list|length > 0 %}
-                                <hr class="my-4" />
+
                                 <div class="row align-items-center py-4">
                                     <div class="col-lg-6 col-7">
                                         <h6 class="heading-small text-muted mb-4">Historique des RDV</h6>
@@ -360,6 +364,8 @@
                                     <hr class="my-4" />
                                 {% endfor %}
                                 </div>
+                            {% else %}
+                                0 Rdv(s) !
                             {% endif %}
 
                         </div>
@@ -388,19 +394,61 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="pl-lg-4">
+
+
                                         <div class="row">
                                             <div class="col-lg-6">
                                                 <div class="form-group">
-                                                    <label class="form-control-label" for="input-city">Utilisateur</label>
-                                                    <input type="text" id="input-city" class="form-control" value="{{ project.projectMakerUser.firstName ~ ' ' ~ project.projectMakerUser.lastName }}" disabled>
+                                                    <label class="form-control-label" for="input-country">Mensualité</label>
+                                                    <input type="text" id="input-country" class="form-control" value="{{ project.monthlyPayment }}" disabled>
                                                 </div>
                                             </div>
                                             <div class="col-lg-6">
                                                 <div class="form-group">
-                                                    <label class="form-control-label" for="input-country">Date</label>
+                                                    <label class="form-control-label" for="input-city">Nombre de Mensualités</label>
+                                                    <input type="text" id="input-city" class="form-control" value="{{ project.numberOfMonthlyPayments }}" disabled>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label class="form-control-label" for="input-country">Total HT</label>
+                                                    <input type="text" id="input-country" class="form-control" value="{{ project.totalHT }}" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label class="form-control-label" for="input-city">Rachat</label>
+                                                    <input type="text" id="input-city" class="form-control" value="{% if project.rachat == 0 %}Non{% elseif project.rachat == 1 %}Oui {% endif %}" disabled>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label class="form-control-label" for="input-country">Report Mensualité</label>
+                                                    <input type="text" id="input-country" class="form-control" value="{{ project.reportMensualite }}" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label class="form-control-label" for="input-country">Date de création</label>
                                                     <input type="text" id="input-country" class="form-control" value="{{ project.createdAt | format_datetime(locale='fr') }}" disabled>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="pl-lg-4">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="form-group">
+                                                    <label class="form-control-label" for="input-city">Utilisateur</label>
+                                                    <input type="text" id="input-city" class="form-control" value="{{ project.projectMakerUser.firstName ~ ' ' ~ project.projectMakerUser.lastName }}" disabled>
                                                 </div>
                                             </div>
                                         </div>
@@ -524,6 +572,8 @@
 
                                     <hr class="my-4" />
                                 {% endfor %}
+                            {% else %}
+                                0 Projet(s) !
                             {% endif %}
                         </div>
                     </div>

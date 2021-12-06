@@ -62,10 +62,13 @@ class AppointmentRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();*/
         return $this->createQueryBuilder("a")
-            ->andWhere('a.start <= :start AND a.end >= :start')
-            ->andWhere('a.start <= :end AND a.end >= :end')
-            ->orWhere('a.end >= :end AND a.start < :end')
-            ->orWhere('a.end > :start AND a.start <= :start')
+            ->andWhere('a.start <= :start AND a.end > :start')
+            ->orWhere('a.start < :end AND a.end >= :end')
+            /*->orWhere('a.end >= :end AND a.start < :end')*/
+            /*->orWhere('a.end > :end AND a.start <= :start')*/
+            ->orWhere('a.start <= :start AND :end <= a.end')
+            ->orWhere(':start <= a.start AND :end >= a.end')
+           /* ->orWhere('a.start > :start AND a.end <= :end')*/
             ->setParameter('start', $start)
             ->setParameter('end', $end)
             ->andWhere('a.isDeleted = 0')

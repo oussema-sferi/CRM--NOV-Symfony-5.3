@@ -519,10 +519,11 @@ class AppointmentController extends AbstractController
                 $newEvent->setCreatedAt(new \DateTime());
                 $newEvent->setUser($commercial);
                 $newEvent->setEventType($eventType);
-                $newEvent->setStatus(0);
                 $newEvent->setStart(new \DateTime($request->request->get('start')));
                 $newEvent->setEnd(new \DateTime($request->request->get('end')));
                 $newEvent->setIsDone(0);
+                $newEvent->setIsPostponed(0);
+                $newEvent->setPostponedAt(null);
                 $newEvent->setAppointmentNotes($request->request->get('event_notes'));
                 $newEvent->setIsDeleted(false);
                 $newEvent->setAppointmentFixer($this->getUser());

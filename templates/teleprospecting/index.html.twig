@@ -138,7 +138,7 @@
                                 {% elseif app.session.get('total_telepro_search_results') and app.session.get('total_telepro_search_results') == "nothing" %}
                                     <h3 class="mb-0" style="color: red">Aucun résultat correspondant à votre recherche!</h3>
                                 {% else %}
-                                    <h3 class="mb-0">Total: {{ app.session.get('total_telepro')}} Prospects</h3>
+                                    <h3 class="mb-0">Total: {{ app.session.get('total_telepro')}} Prospect(s)</h3>
                                 {% endif %}
                             </div>
 
@@ -171,7 +171,7 @@
                                     <th scope="col">Traitement</th>
                                     <th scope="col">Actions</th>
                                     <th scope="col">Email</th>
-                                    <th scope="col">Catégorie</th>
+                                    {#<th scope="col">Catégorie</th>#}
                                     <th scope="col">Adresse</th>
                                     <th scope="col">Code Postal</th>
                                     <th scope="col">Département</th>
@@ -226,14 +226,14 @@
                                         <input id="email" name="email" class="test" type="text">
                                     </td>
 
-                                    <td>
+                                    {#<td>
                                         <select id="clientCategory" name="clientCategory" class="form-control-sm">
                                             <option value="" selected>--- Choisir ---</option>
                                             {% for category in clients_categories %}
                                                 <option value="{{ category.id }}">{{ category.designation }}</option>
                                             {% endfor %}
                                         </select>
-                                    </td>
+                                    </td>#}
 
 
                                     <td>
@@ -373,12 +373,12 @@
                                     {{ client.email }}
                                 </td>
 
-                                <td class="budget">
+                                {#<td class="budget">
                                     {% if client.clientCategory %}
                                         {{ client.clientCategory.designation }}
                                     {% else %}
                                     {% endif %}
-                                </td>
+                                </td>#}
 
 
                                 <td class="budget">

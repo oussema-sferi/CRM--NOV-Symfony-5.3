@@ -55,9 +55,9 @@ class ProjectRepository extends ServiceEntityRepository
     {
         $qb = $this->createQueryBuilder('p');
         $qb->select('p')
-            ->join('p.user', 'u')
+            ->join('p.projectMakerUser', 'u')
             ->where("u.id =$loggedUserId" );
-        return $qb->orderBy('a.createdAt', 'DESC')->getQuery()->getResult();
+        return $qb->orderBy('p.createdAt', 'DESC')->getQuery()->getResult();
     }
 
     /**

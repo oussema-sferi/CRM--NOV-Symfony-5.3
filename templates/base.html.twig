@@ -471,7 +471,7 @@
                                 </li>
                                 {% endif %}
 
-                                {% if is_granted('ROLE_SUPERADMIN') %}
+                                {% if (is_granted('ROLE_COMMERCIAL') or is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPERADMIN')) %}
 
                                     <li class="nav-item">
                                         <a class="nav-link" href="#navbar-dashboards40" data-toggle="collapse" role="button" aria-controls="navbar-dashboards40">

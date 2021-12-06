@@ -61,7 +61,7 @@
                                 {% elseif app.session.get('total_contacts_search_results') and app.session.get('total_contacts_search_results') == "nothing" %}
                                     <h3 class="mb-0" style="color: red">Aucun résultat correspondant à votre recherche!</h3>
                                 {% else %}
-                                    <h3 class="mb-0">Total: {{ app.session.get('total_contacts')}} Contacts</h3>
+                                    <h3 class="mb-0">Total: {{ app.session.get('total_contacts')}} Contact(s)</h3>
                                 {% endif %}
                                 <span>
                                     {% for message in app.flashes('import_file_type_error') %}
@@ -133,7 +133,7 @@
                                 <th scope="col">Actions</th>
 
                                 <th scope="col">Email</th>
-                                <th scope="col">Catégorie</th>
+                                {#<th scope="col">Catégorie</th>#}
                                 {#<th scope="col">Equipement</th>#}
 
                                 <th scope="col">Adresse</th>
@@ -188,14 +188,14 @@
                                     <input id="email" name="email" class="test" type="text">
                                 </td>
 
-                                <td>
+                                {#<td>
                                     <select id="clientCategory" name="clientCategory" class="form-control-sm">
                                         <option value="" selected>--- Choisir ---</option>
                                         {% for category in clients_categories %}
                                             <option value="{{ category.id }}">{{ category.designation }}</option>
                                         {% endfor %}
                                     </select>
-                                </td>
+                                </td>#}
                                 <td>
                                     <input id="address" name="address" class="test" type="text">
                                 </td>
@@ -381,12 +381,12 @@
                                     </td>
 
 
-                                    <td class="budget">
+                                    {#<td class="budget">
                                         {% if client.clientCategory %}
                                             {{ client.clientCategory.designation }}
                                         {% else %}
                                         {% endif %}
-                                    </td>
+                                    </td>#}
 
                                     {#<td class="budget">
                                         {% if client.providedEquipment %}

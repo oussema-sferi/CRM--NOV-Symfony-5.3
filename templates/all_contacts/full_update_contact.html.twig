@@ -12,11 +12,11 @@
                         <h6 class="h2 text-white d-inline-block mb-0">CRM</h6>
                         <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
                             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
-                                {% if (is_granted('ROLE_SUPERADMIN')) %}
+                                {#{% if (is_granted('ROLE_SUPERADMIN')) %}#}
                                     <li class="breadcrumb-item"><i class="ni fas fa-address-book text-black-50"></i></li>
                                     <li class="breadcrumb-item">Gestion des contacts</li>
                                     <li class="breadcrumb-item"><a href="{{ path('all_contacts') }}">Liste des contacts</a></li>
-                                {% elseif (is_granted('ROLE_COMMERCIAL')) %}
+                                {#{% elseif (is_granted('ROLE_COMMERCIAL')) %}
                                     <li class="breadcrumb-item"><i class="fas fa-chalkboard-teacher text-yellow"></i></li>
                                     <li class="breadcrumb-item">Service Commercial</li>
                                     <li class="breadcrumb-item"><a href="{{ path('commercial_my_contacts') }}">Mes contacts</a></li>
@@ -24,7 +24,7 @@
                                     <li class="breadcrumb-item"><i class="fas fa-phone-volume text-orange"></i></li>
                                     <li class="breadcrumb-item">Service Téléprospection</li>
                                     <li class="breadcrumb-item"><a href="{{ path('teleprospecting') }}">Liste des prospects</a></li>
-                                {% endif %}
+                                {% endif %}#}
                                 <li class="breadcrumb-item active" aria-current="page">Fiche contact</li>
                             </ol>
                         </nav>
@@ -179,12 +179,12 @@
                                     </div>
 
                                     <div class="row">
-                                        <div class="col-lg-6">
+                                        {#<div class="col-lg-6">
                                             <div class="form-group">
                                                 {{ form_label(client_form.providedEquipment, 'Equipement') }}
                                                 {{ form_widget(client_form.providedEquipment, {'attr': {'class': 'form-control', 'value': client_to_update.providedEquipment }}) }}
                                             </div>
-                                        </div>
+                                        </div>#}
                                         <div class="col-lg-6">
                                             <div class="form-group">
                                                 {{ form_label(client_form.isUnderContract, 'Sous contrat') }}
@@ -338,6 +338,8 @@
                                     </div>
                                     <hr class="my-4" />
                                 {% endfor %}
+                            {% else %}
+                                0 Appel(s) !
                             {% endif %}
 
                         </div>
@@ -410,7 +412,7 @@
                                         </div>
 
                                     </div>
-                                    {% if not (is_granted('ROLE_TELEPRO')) %}
+
                                         <div class="text-right">
                                             {% if appointment.isDeleted != 1 %}
                                                 <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal-appointment-form{{ appointment.id }}">Editer RDV {{ appointments_counter }}</button>
@@ -419,8 +421,7 @@
                                                 <a class="badge bg-gradient-red text-white"><i class="fas fa-times fa-lg"></i> RDV Supprimé</a>
                                             {% endif %}
                                         </div>
-                                    {% endif %}
-                                    <hr class="my-4" />
+
 
                                     <div class="modal fade" id="modal-appointment-form{{ appointment.id }}" tabindex="-1" role="dialog" aria-labelledby="modal-appointment-form{{ appointment.id }}" aria-hidden="true">
                                         <div class="modal-dialog modal- modal-dialog-centered modal-sm" role="document">
@@ -523,6 +524,8 @@
                                     <hr class="my-4" />
                                 {% endfor %}
                                 </div>
+                            {% else %}
+                                0 Rdv(s) !
                             {% endif %}
                         </div>
 
@@ -550,20 +553,59 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
 
-                                    <div class="pl-lg-4">
                                         <div class="row">
                                             <div class="col-lg-6">
                                                 <div class="form-group">
-                                                    <label class="form-control-label" for="input-city">Utilisateur</label>
-                                                    <input type="text" id="input-city" class="form-control" value="{{ project.projectMakerUser.firstName ~ ' ' ~ project.projectMakerUser.lastName }}" disabled>
+                                                    <label class="form-control-label" for="input-country">Mensualité</label>
+                                                    <input type="text" id="input-country" class="form-control" value="{{ project.monthlyPayment }}" disabled>
                                                 </div>
                                             </div>
                                             <div class="col-lg-6">
                                                 <div class="form-group">
-                                                    <label class="form-control-label" for="input-country">Date</label>
+                                                    <label class="form-control-label" for="input-city">Nombre de Mensualités</label>
+                                                    <input type="text" id="input-city" class="form-control" value="{{ project.numberOfMonthlyPayments }}" disabled>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label class="form-control-label" for="input-country">Total HT</label>
+                                                    <input type="text" id="input-country" class="form-control" value="{{ project.totalHT }}" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label class="form-control-label" for="input-city">Rachat</label>
+                                                    <input type="text" id="input-city" class="form-control" value="{% if project.rachat == 0 %}Non{% elseif project.rachat == 1 %}Oui {% endif %}" disabled>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label class="form-control-label" for="input-country">Report Mensualité</label>
+                                                    <input type="text" id="input-country" class="form-control" value="{{ project.reportMensualite }}" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label class="form-control-label" for="input-country">Date de création</label>
                                                     <input type="text" id="input-country" class="form-control" value="{{ project.createdAt | format_datetime(locale='fr') }}" disabled>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="pl-lg-4">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="form-group">
+                                                    <label class="form-control-label" for="input-city">Utilisateur</label>
+                                                    <input type="text" id="input-city" class="form-control" value="{{ project.projectMakerUser.firstName ~ ' ' ~ project.projectMakerUser.lastName }}" disabled>
                                                 </div>
                                             </div>
                                         </div>
@@ -742,6 +784,8 @@
 
                                     <hr class="my-4" />
                                 {% endfor %}
+                            {% else %}
+                                0 Projet(s) !
                             {% endif %}
                         </div>
                     </div>
