@@ -154,21 +154,28 @@
                                         </td>
 
                                         <td class="budget">
-                                            {% if project.status == 1 %}
-                                                <span class="badge badge-primary badge-lg">
+                                            {% if project.isDeleted == 1 %}
+                                                <span class="badge badge-warning badge-lg">
+                                                    <i class="bg-warning"></i>
+                                                    Supprimé
+                                                </span>
+                                            {% else %}
+                                                {% if project.status == 1 %}
+                                                    <span class="badge badge-primary badge-lg">
                                                     <i class="bg-primary"></i>
                                                     En cours
                                                 </span>
-                                            {% elseif project.status == 2 %}
-                                                <span class="badge badge-success badge-lg">
+                                                {% elseif project.status == 2 %}
+                                                    <span class="badge badge-success badge-lg">
                                                     <i class="bg-success"></i>
                                                     Accepté
                                                 </span>
-                                            {% elseif project.status == 3 %}
-                                                <span class="badge badge-warning badge-lg">
-                                                    <i class="bg-warning"></i>
+                                                {% elseif project.status == 3 %}
+                                                    <span class="badge badge-info badge-lg">
+                                                    <i class="bg-info"></i>
                                                     Refusé
                                                 </span>
+                                                {% endif %}
                                             {% endif %}
                                         </td>
 
@@ -176,7 +183,9 @@
                                             {#<a href="{{ path('show_contact', {'id': client.id}) }}"  class="badge badge-default" >Consulter Fiche</a>#}
                                             <a href="{{ path('show_contact', {'id': project.client.id}) }}"><i class="fas fa-search-plus text-blue"></i></a>&nbsp;&nbsp;
                                             <a href="{{ path('full_update_contact', {'id': project.client.id}) }}"><i class="fas fa-edit text-yellow"></i></a>&nbsp;&nbsp;
-                                            {#<a href="" data-toggle="modal" data-target="#deleteModal{{ project.id }}"><i class="fas fa-trash-alt text-red"></i></a>#}
+                                            {% if project.isDeleted != 1 %}
+                                            <a href="" data-toggle="modal" data-target="#deleteModal{{ project.id }}"><i class="fas fa-trash-alt text-red"></i></a>
+                                            {% endif %}
 
                                         </td>
 
@@ -246,6 +255,23 @@
                                         </td>#}
 
                                     </tr>
+                                    <div class="modal fade" id="deleteModal{{ project.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header" style="margin: 0 auto">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Avertissement</h5>
+                                                </div>
+                                                <div class="modal-body" style="margin: 0 auto">
+                                                    Êtes-vous sûr de vouloir supprimer ce Projet ?
+                                                </div>
+                                                <div class="modal-footer" style="margin: 0 auto">
+                                                    <button type="button" class="btn btn-success" data-dismiss="modal">Annuler</button>
+                                                    <a href="{{ path('delete_project', {'id': project.id}) }}" class="btn btn-danger">Confirmer</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                 {% endfor %}
 
                                 </tbody>

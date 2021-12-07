@@ -313,4 +313,38 @@ class ProjectController extends AbstractController
             'equipments_list' => $equipmentsList,
         ]);
     }
+
+    /**
+     * @Route("/dashboard/calls/delete/project/{id}", name="delete_project")
+     */
+    public function deleteCall(Request $request, $id, ProjectRepository $projectRepository): Response
+    {
+        $manager = $this->getDoctrine()->getManager();
+        $referrer = $request->headers->get('referer');
+        $loggedUser = $this->getUser();
+        $projectToDelete = $projectRepository->find($id);
+        $projectToDelete->setIsDeleted(true);
+        $projectToDelete->setDeletedAt(new \DateTime());
+        $projectToDelete->setWhoDeletedIt($loggedUser);
+        $manager->persist($projectToDelete);
+        $manager->flush();
+        $this->flashy->success('Projet supprimé avec succès !');
+        return $this->redirect($referrer);
+    }
+
+    /**
+     * @Route("/dashboard/appointments/restore/project/{id}", name="restore_project")
+     */
+    public function restoreCall(Request $request, $id, ProjectRepository $projectRepository): Response
+    {
+        $manager = $this->getDoctrine()->getManager();
+        $projectToRestore = $projectRepository->find($id);
+        $projectToRestore->setIsDeleted(false);
+        $projectToRestore->setDeletedAt(null);
+        $projectToRestore->setWhoDeletedIt(null);
+        $manager->persist($projectToRestore);
+        $manager->flush();
+        $this->flashy->success("Projet restauré avec succès !");
+        return $this->redirectToRoute('trash_projects');
+    }
 }

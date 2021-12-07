@@ -118,4 +118,13 @@ class ProjectRepository extends ServiceEntityRepository
         $query->setParameters($filters);
         return $query->getQuery()->getResult();
     }
+
+    public function getDeletedProjects()
+    {
+        $qb = $this->createQueryBuilder('p');
+        $qb->select('p')
+            ->where('p.isDeleted = 1')
+            ->orderBy('p.deletedAt', 'DESC');
+        return $qb->getQuery()->getResult();
+    }
 }

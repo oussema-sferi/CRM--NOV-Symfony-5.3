@@ -122,7 +122,7 @@
                                 <td>
                                     <select id="isDone" name="isDone" class="form-control-sm">
                                         <option value="" selected>--- Choisir ---</option>
-                                        <option value="0">A venir</option>
+                                        <option value="0">Pris</option>
                                         <option value="1">Reporté</option>
                                         <option value="2">Argu</option>
                                         <option value="3">Vente</option>
@@ -208,7 +208,7 @@
                                             {% if commercial_appointment.isDone == 1 %}
                                                 <span class="badge badge-primary badge-lg">
                                                     <i class="bg-primary"></i>
-                                                    reporté
+                                                    Reporté
                                                 </span>
                                             {% elseif commercial_appointment.isDone == 2 %}
                                                 <span class="badge badge-success badge-lg">
@@ -222,8 +222,8 @@
                                                 </span>
                                             {% else %}
                                                 <span class="badge badge-info badge-lg">
-                                                <i class="bg-info"></i>
-                                                à venir
+                                                    <i class="bg-info"></i>
+                                                    Pris
                                                 </span>
                                             {% endif %}
                                         {% endif %}
@@ -264,7 +264,9 @@
                                         {#<a href="{{ path('show_contact', {'id': client.id}) }}"  class="badge badge-default" >Consulter Fiche</a>#}
                                         <a href="{{ path('show_contact', {'id': commercial_appointment.client.id}) }}"><i class="fas fa-search-plus text-blue"></i></a>&nbsp;&nbsp;
                                         <a href="{{ path('full_update_contact', {'id': commercial_appointment.client.id}) }}"><i class="fas fa-edit text-yellow"></i></a>&nbsp;&nbsp;
+                                        {% if commercial_appointment.isDeleted != 1 %}
                                         <a href="" data-toggle="modal" data-target="#deleteModal{{ commercial_appointment.id }}"><i class="fas fa-trash-alt text-red"></i></a>
+                                        {% endif %}
 
                                     </td>
 

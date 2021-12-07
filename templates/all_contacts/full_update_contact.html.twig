@@ -756,14 +756,14 @@
                                         <div class="text-right">
                                             {% if project.isDeleted != 1 %}
                                                 <a class="btn btn-sm btn-info" href="{{ path('edit_project', {'projectId': project.id }) }}">Editer Projet {{ projects_counter }}</a>
-                                                {#<button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#modal-delete-project-form{{ project.id }}">Supprimer Projet {{ projects_counter }}</button>#}
+                                                <button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#modal-delete-project-form{{ project.id }}">Supprimer Projet {{ projects_counter }}</button>
                                             {% else %}
-                                                <a class="badge bg-gradient-red text-white"><i class="fas fa-times fa-lg"></i> RDV Supprimé</a>
+                                                <a class="badge bg-gradient-red text-white"><i class="fas fa-times fa-lg"></i> Projet Supprimé</a>
                                             {% endif %}
                                         </div>
                                     {% endif %}
 
-                                    {#<div class="modal fade" id="modal-delete-project-form{{ project.id }}" tabindex="-1" role="dialog" aria-labelledby="modal-delete-project-form" aria-hidden="true">
+                                    <div class="modal fade" id="modal-delete-project-form{{ project.id }}" tabindex="-1" role="dialog" aria-labelledby="modal-delete-project-form" aria-hidden="true">
                                         <div class="modal-dialog modal-dialog-centered" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header" style="margin: 0 auto">
@@ -774,12 +774,12 @@
                                                 </div>
                                                 <div class="modal-footer" style="margin: 0 auto">
                                                     <button type="button" class="btn btn-success" data-dismiss="modal">Annuler</button>
-                                                    <a href="{{ path('delete_call', {'id': project.id}) }}" class="btn btn-danger">Confirmer</a>
+                                                    <a href="{{ path('delete_project', {'id': project.id}) }}" class="btn btn-danger">Confirmer</a>
                                                 </div>
 
                                             </div>
                                         </div>
-                                    </div>#}
+                                    </div>
 
 
                                     <hr class="my-4" />

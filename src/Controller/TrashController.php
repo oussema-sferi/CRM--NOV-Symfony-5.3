@@ -6,6 +6,7 @@ use App\Entity\Appointment;
 use App\Entity\Call;
 use App\Entity\Client;
 use App\Entity\User;
+use App\Repository\ProjectRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -181,6 +182,51 @@ class TrashController extends AbstractController
      * @Route("/dashboard/trash/appointments/pagination", name="deleted_appointments_pagination")
      */
     public function deletedAppointmentsPagination(Request $request): Response
+    {
+        $session = $request->getSession();
+        if($request->isXmlHttpRequest()) {
+            $paginationValue = $request->get('paginationValue');
+            $session->set('pagination_value',
+                $paginationValue
+            );
+            return new JsonResponse(['message'=> 'Task Success!']);
+        } else {
+            return new JsonResponse(['message'=> 'Task Fails!']);
+        }
+        /*return new Response('use Ajax');*/
+    }
+
+    /**
+     * @Route("/dashboard/trash/projects", name="trash_projects")
+     */
+    public function deletedProjectsList(Request $request, PaginatorInterface $paginator, ProjectRepository $projectRepository): Response
+    {
+        $session = $request->getSession();
+        $data = $projectRepository->getDeletedProjects();
+        if($session->get('pagination_value')) {
+            $deletedProjects = $paginator->paginate(
+                $data,
+                $request->query->getInt('page', 1),
+                $session->get('pagination_value')
+            );
+        } else {
+            $deletedProjects = $paginator->paginate(
+                $data,
+                $request->query->getInt('page', 1),
+                10
+            );
+        }
+
+        return $this->render('trash/projects.html.twig', [
+            'all_deleted_projects' => $data,
+            'deleted_projects' => $deletedProjects
+        ]);
+    }
+
+    /**
+     * @Route("/dashboard/trash/projects/pagination", name="deleted_projects_pagination")
+     */
+    public function deletedProjectsPagination(Request $request): Response
     {
         $session = $request->getSession();
         if($request->isXmlHttpRequest()) {

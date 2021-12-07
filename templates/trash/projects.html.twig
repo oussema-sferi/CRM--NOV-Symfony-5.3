@@ -1,0 +1,155 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Projets Supprimés{% endblock %}
+
+{% block body %}
+
+    <div class="header pb-6" style="background-color: #EDA200">
+        <div class="container-fluid">
+            <div class="header-body">
+                <div class="row align-items-center py-4">
+                    <div class="col-lg-6 col-7">
+                        <h6 class="h2 text-white d-inline-block mb-0">CRM</h6>
+                        <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+                            <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                                <li class="breadcrumb-item"><i class="ni fas fa-trash-alt text-teal"></i></li>
+                                <li class="breadcrumb-item">Corbeille</li>
+                                <li class="breadcrumb-item active" aria-current="page">Liste des Projets supprimés</li>
+                            </ol>
+                        </nav>
+                    </div>
+                    <div class="col-lg-6 col-5 text-right">
+                        {#<a href="{{ path('new_user') }}" class="btn btn-sm btn-success">Nouveau utilisateur</a>#}
+                        {#<a href="#" class="btn btn-sm btn-neutral">Filters</a>#}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container-fluid mt--6">
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <!-- Card header -->
+                    <div class="card-header border-0">
+                        <div class="row">
+                            <div class="col-md-9">
+                                <h3 class="mb-0">Total: {{ all_deleted_projects|length }} RDV</h3>
+                            </div>
+                            <div class="col-md-3">
+                                {#<input type="text" class="form-control " placeholder="Recherche" id="contact-filter">#}
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Light table -->
+                    <div class="table-responsive">
+                        <table class="table align-items-center table-flush">
+                            <thead class="thead-light">
+                            <tr>
+                                <th scope="col">client</th>
+                                <th scope="col">Utilisateur</th>
+                                <th scope="col">Statut</th>
+                                <th scope="col">Date de suppression</th>
+                                <th scope="col">Supprimé par</th>
+                                <th scope="col">Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody class="list">
+
+                            {% for project in deleted_projects %}
+                                <tr>
+                                    <td class="budget">
+                                        {{ project.client.firstName ~ ' ' ~ project.client.lastName }}
+                                    </td>
+
+                                    <td class="budget">
+                                        {{ project.projectMakerUser.firstName ~ ' ' ~ project.projectMakerUser.lastName }}
+                                    </td>
+
+
+                                    <td class="budget">
+                                        {% if project.status == 1 %}
+                                            <span class="badge badge-primary badge-lg">
+                                                    <i class="bg-primary"></i>
+                                                    En cours
+                                                </span>
+                                        {% elseif project.status == 2 %}
+                                            <span class="badge badge-success badge-lg">
+                                                    <i class="bg-success"></i>
+                                                    Accepté
+                                                </span>
+                                        {% elseif project.status == 3 %}
+                                            <span class="badge badge-warning badge-lg">
+                                                    <i class="bg-warning"></i>
+                                                    Refusé
+                                                </span>
+                                        {% endif %}
+                                    </td>
+
+                                    <td class="budget">
+                                        {{ project.deletedAt|format_datetime(locale='fr') }}
+                                    </td>
+                                    <td class="budget">
+                                        {{ project.whoDeletedIt.firstName ~ ' ' ~ project.whoDeletedIt.lastName }}
+                                    </td>
+                                    <td >
+                                        <a href="" data-toggle="modal" data-target="#restoreModal{{ project.id }}" class="badge badge-success" >Restaurer Projet</a>
+                                    </td>
+
+                                </tr>
+
+                                <div class="modal fade" id="restoreModal{{ project.id }}" tabindex="-1" role="dialog" aria-labelledby="restoreModal" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header" style="margin: 0 auto">
+                                                <h5 class="modal-title" id="exampleModalLabel">Avertissement</h5>
+                                            </div>
+                                            <div class="modal-body" style="margin: 0 auto">
+                                                Êtes-vous sûr de vouloir restaurer ce Projet ?
+                                            </div>
+                                            <div class="modal-footer" style="margin: 0 auto">
+                                                <button type="button" class="btn btn-success" data-dismiss="modal">Annuler</button>
+                                                <a href="{{ path('restore_project', {'id': project.id}) }}" class="btn btn-danger">Confirmer</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- Card footer -->
+                    {{ knp_pagination_render(deleted_projects) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block additionalJs %}
+    <script>
+        $('#pagination').hover(function () {
+            $(this).css('cursor','pointer');
+        })
+
+        $('#pagination').change(function () {
+
+            $.ajax({
+                url:"{{ path('deleted_projects_pagination') }}",
+                method: "POST",
+                dataType: 'json',
+                data : { paginationValue: this.value },
+                success: (e) => {
+                    location.reload();
+                },
+                error : (f) => {
+                    console.log(f);
+                }
+            })
+
+        })
+
+    </script>
+{% endblock %}
