@@ -471,8 +471,9 @@ class AllContactsController extends AbstractController
                         $contact->setCreatedAt(new \DateTime());
                         $contact->setUpdatedAt(new \DateTime());
                         $contact->setIsDeleted(false);
+                        $contact->setIsProcessed(false);
                         $entityManager->persist($contact);
-                        $entityManager->flush();
+
                         // here Doctrine checks all the fields of all fetched data and make a transaction to the database.
                         $counterOfAdded++;
                     } elseif (!$existingContactByLastName) {
@@ -491,8 +492,9 @@ class AllContactsController extends AbstractController
                         $contact->setCreatedAt(new \DateTime());
                         $contact->setUpdatedAt(new \DateTime());
                         $contact->setIsDeleted(false);
+                        $contact->setIsProcessed(false);
                         $entityManager->persist($contact);
-                        $entityManager->flush();
+
                         // here Doctrine checks all the fields of all fetched data and make a transaction to the database.
                         $counterOfAdded++;
                     } elseif (!$existingContactByFirstName) {
@@ -511,8 +513,9 @@ class AllContactsController extends AbstractController
                         $contact->setCreatedAt(new \DateTime());
                         $contact->setUpdatedAt(new \DateTime());
                         $contact->setIsDeleted(false);
+                        $contact->setIsProcessed(false);
                         $entityManager->persist($contact);
-                        $entityManager->flush();
+
                         // here Doctrine checks all the fields of all fetched data and make a transaction to the database.
                         $counterOfAdded++;
                     } else {
@@ -520,6 +523,7 @@ class AllContactsController extends AbstractController
                         $counterOfNonAdded++;
                     }
                 }
+                $entityManager->flush();
             }
 
             if($counterOfAdded === 0) {
