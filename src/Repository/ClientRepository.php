@@ -242,7 +242,8 @@ class ClientRepository extends ServiceEntityRepository
             } else {
                 $statement1 = "c.$key LIKE :$key";
             }
-            $query->andWhere($statement1);
+            $query->andWhere($statement1)
+                ->andWhere('c.statusDetail != 7');
             /*dd($query->getQuery());*/
         }
         if ($departmentsArrayIds) {

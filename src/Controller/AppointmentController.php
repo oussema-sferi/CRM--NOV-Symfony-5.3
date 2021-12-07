@@ -438,7 +438,7 @@ class AppointmentController extends AbstractController
                         if($eventTypeId === 4) {
                             return $this->render('/appointment/free_commercial_client_assignment.html.twig', [
                                 'commercial_user' => $commercialUser,
-                                'clients' => $clients,
+                                /*'clients' => $clients,*/
                                 'start' => $startTime,
                                 'end' => $endTime
                             ]);

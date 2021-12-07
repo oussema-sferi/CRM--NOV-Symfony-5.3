@@ -383,7 +383,7 @@
                                         <div class="col-lg-3">
                                             <div class="form-group">
                                                 <label class="form-control-label" for="input-city">Etat</label>
-                                                <input type="text" id="input-city" class="form-control" value="{% if appointment.isDone == 0 %}A Venir{% elseif appointment.isDone == 1 %}Reporté{% elseif appointment.isDone == 2 %}Argu{% elseif appointment.isDone == 3 %}Vente{% endif %}" disabled>
+                                                <input type="text" id="input-city" class="form-control" value="{% if appointment.isDone == 0 %}Pris{% elseif appointment.isDone == 1 %}Reporté{% elseif appointment.isDone == 2 %}Argu{% elseif appointment.isDone == 3 %}Vente{% endif %}" disabled>
                                             </div>
                                         </div>
                                     </div>
@@ -481,7 +481,7 @@
                                                             <label class="form-control-label" for="status_details">Etat</label>
                                                             <select id="is_done" name="is_done" class="form-control">
                                                                 <option value="" selected>--- Choisir ---</option>
-                                                                <option value="0" {% if appointment.isDone == 0 %} selected {% endif %}>A venir</option>
+                                                                <option value="0" {% if appointment.isDone == 0 %} selected {% endif %}>Pris</option>
                                                                 <option value="1" {% if appointment.isDone == 1 %} selected {% endif %}>Reporté</option>
                                                             </select>
                                                         </div>

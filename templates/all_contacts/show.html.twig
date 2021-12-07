@@ -326,7 +326,7 @@
                                         <div class="col-lg-3">
                                             <div class="form-group">
                                                 <label class="form-control-label" for="input-city">Etat</label>
-                                                <input type="text" id="input-city" class="form-control" value="{% if appointment.isDone == 0 %}A Venir{% elseif appointment.isDone == 1 %}Reporté{% elseif appointment.isDone == 2 %}Argu{% elseif appointment.isDone == 3 %}Vente{% endif %}" disabled>
+                                                <input type="text" id="input-city" class="form-control" value="{% if appointment.isDone == 0 %}Pris{% elseif appointment.isDone == 1 %}Reporté{% elseif appointment.isDone == 2 %}Argu{% elseif appointment.isDone == 3 %}Vente{% endif %}" disabled>
                                             </div>
                                         </div>
                                     </div>
@@ -568,6 +568,12 @@
                                             <label class="form-control-label" for="input-country">Observations Etat Livraison</label>
                                             <textarea rows="4" class="form-control" placeholder="Pas de notes ..." resize="none" disabled>{{ project.shipmentNotes }}</textarea>
                                         </div>
+                                    </div>
+
+                                    <div class="text-right">
+                                        {% if project.isDeleted == 1  %}
+                                            <a class="badge bg-gradient-red text-white"><i class="fas fa-times fa-lg"></i> Projet Supprimé</a>
+                                        {% endif %}
                                     </div>
 
                                     <hr class="my-4" />
