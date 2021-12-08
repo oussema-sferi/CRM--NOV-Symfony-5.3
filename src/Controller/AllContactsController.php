@@ -433,7 +433,11 @@ class AllContactsController extends AbstractController
                     $sheet->getCellByColumnAndRow(4,1)->getValue() === "Commune" &&
                     $sheet->getCellByColumnAndRow(5,1)->getValue() === "Code Postal")
                 ) {
-                    $this->flashy->warning("Désolé! Ce fichier ne suit pas les normes du modèle ! Veuillez vérifier la feuille '". $sheet->getTitle() . "'");
+                    $this->addFlash(
+                        'add_contacts_warning',
+                        "Désolé! Ce fichier ne suit pas les normes du modèle ! Veuillez vérifier la feuille '". $sheet->getTitle() . "'!"
+                    );
+                    $this->flashy->warning("Désolé! Une erreur a été détectée lors de l'import!");
                     return $this->redirectToRoute('all_contacts');
                 }
                 /*dd($sheet);*/
@@ -446,17 +450,37 @@ class AllContactsController extends AbstractController
                 {
                     $oneRowContactArray = [];
                     $allTheName = $Row['B'];
-                    $SplitedNameArray = explode(" ", $allTheName, 2);
-                    $firstName = $SplitedNameArray[0]; // store the first_name on each iteration
-                    $lastName = $SplitedNameArray[1]; // store the last_name on each iteration
+                    if($allTheName) {
+                        $SplitedNameArray = explode(" ", $allTheName, 2);
+                        $firstName = $SplitedNameArray[0]; // store the first_name on each iteration
+                        $lastName = $SplitedNameArray[1]; // store the last_name on each iteration
+                    } else {
+                        $this->addFlash(
+                            'add_contacts_warning',
+                            "Désolé! Le nom du contact ne doit pas être nul! Veuillez vérifier la feuille '". $sheet->getTitle() . "'!"
+                        );
+                        $this->flashy->warning("Désolé! Une erreur a été détectée lors de l'import!");
+                        return $this->redirectToRoute('all_contacts');
+                    }
+
                     /*$email= $Row['C'];*/     // store the email on each iteration
                     /*$companyName= $Row['D'];*/
                     $address= $Row['C'];
-                    if (strlen($Row['E']) === 4) {
-                        $postalCode= "0" . $Row['E'];
+                    if(is_numeric($Row['E'])) {
+                        if (strlen($Row['E']) === 4) {
+                            $postalCode= "0" . $Row['E'];
+                        } else {
+                            $postalCode= $Row['E'];
+                        }
                     } else {
-                        $postalCode= $Row['E'];
+                        $this->addFlash(
+                            'add_contacts_warning',
+                            "Désolé! Un code postal existant dans la feuille '". $sheet->getTitle() . "' n'est pas valide!"
+                        );
+                        $this->flashy->warning("Désolé! Une erreur a été détectée lors de l'import!");
+                        return $this->redirectToRoute('all_contacts');
                     }
+
                     $city = $Row['D'];
                     /*$country= $Row['G'];*/
                     if ($Row['A']) {
