@@ -417,8 +417,25 @@ class AllContactsController extends AbstractController
             /*dd(($spreadsheet->getAllSheets())[1]);
             (($spreadsheet->getAllSheets())[1])->removeRow(1);
             dd(($spreadsheet->getAllSheets())[1]);*/
+            $allExistingContacts = $this->getDoctrine()->getRepository(Client::class)->findAll();
+            $dbAllContactsArray = [];
+            foreach ($allExistingContacts as $existingContact) {
+                $oneExistingContactArray = ["firstName" => $existingContact->getFirstName(), "lastName" => $existingContact->getLastName(), "phoneNumber" => $existingContact->getPhoneNumber(), "address" =>$existingContact->getAddress(), "city" =>$existingContact->getCity(), "postalCode" =>$existingContact->getPostalCode(), "geographicArea" =>$existingContact->getGeographicArea()];
+                $dbAllContactsArray[] = $oneExistingContactArray;
+            }
             $excelAllContactsArray = [];
+
             foreach ($spreadsheet->getAllSheets() as $sheet) {
+
+                if(!($sheet->getCellByColumnAndRow(1,1)->getValue() === "Numéro de téléphone" &&
+                    $sheet->getCellByColumnAndRow(2,1)->getValue() === "Nom du professionnel" &&
+                    $sheet->getCellByColumnAndRow(3,1)->getValue() === "Adresse" &&
+                    $sheet->getCellByColumnAndRow(4,1)->getValue() === "Commune" &&
+                    $sheet->getCellByColumnAndRow(5,1)->getValue() === "Code Postal")
+                ) {
+                    $this->flashy->warning("Désolé! Ce fichier ne suit pas les normes du modèle ! Veuillez vérifier la feuille '". $sheet->getTitle() . "'");
+                    return $this->redirectToRoute('all_contacts');
+                }
                 /*dd($sheet);*/
                 $row = $sheet->removeRow(1);
                 $sheetData = $sheet-> toArray(null, true, true, true, true); // here, the read data is turned into an array*
@@ -461,7 +478,10 @@ class AllContactsController extends AbstractController
 
                     $oneRowContactArray = ["firstName" => $firstName, "lastName" => $lastName, "phoneNumber" => $phoneNumber, "address" =>$address, "city" =>$city, "postalCode" =>$postalCode, "geographicArea" =>$geographicArea];
 
-                    if(!in_array($oneRowContactArray, $excelAllContactsArray)) {
+
+
+
+                    if(!in_array($oneRowContactArray, $excelAllContactsArray) && !in_array($oneRowContactArray, $dbAllContactsArray)) {
                         $excelAllContactsArray[] = $oneRowContactArray;
                         $counterOfAdded++;
                     } else {
@@ -469,7 +489,10 @@ class AllContactsController extends AbstractController
                     }
                 }
             }
-            /*dd($counterOfNonAdded);*/
+
+            /*$dbAllExistingContactsCount = count($dbAllContactsArray);
+            dd($dbAllContactsArray);
+            dd($excelAllContactsArray);*/
             foreach ($excelAllContactsArray as $contactRow) {
                 $contact = new Client();
                 $contact->setFirstName($contactRow["firstName"]);
@@ -510,7 +533,7 @@ class AllContactsController extends AbstractController
                 );
             }
 
-            $this->flashy->info("Opération d'import des données terminée !");
+            $this->flashy->info("Opération d'import des contacts terminée !");
 
 
         } else {
