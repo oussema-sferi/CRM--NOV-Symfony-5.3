@@ -450,6 +450,7 @@ class AllContactsController extends AbstractController
                 {
                     $oneRowContactArray = [];
                     $allTheName = $Row['B'];
+
                     if($allTheName) {
                         $SplitedNameArray = explode(" ", $allTheName, 2);
                         $firstName = $SplitedNameArray[0]; // store the first_name on each iteration
@@ -496,15 +497,7 @@ class AllContactsController extends AbstractController
                     }
 
                     $geographicArea = $this->getDoctrine()->getRepository(GeographicArea::class)->findOneBy(array('code' => $departmentCode));
-
-                    $existingContactByLastName = $entityManager->getRepository(Client::class)->findOneBy(array('lastName' => $lastName));
-                    $existingContactByFirstName = $entityManager->getRepository(Client::class)->findOneBy(array('firstName' => $firstName));
-
                     $oneRowContactArray = ["firstName" => $firstName, "lastName" => $lastName, "phoneNumber" => $phoneNumber, "address" =>$address, "city" =>$city, "postalCode" =>$postalCode, "geographicArea" =>$geographicArea];
-
-
-
-
                     if(!in_array($oneRowContactArray, $excelAllContactsArray) && !in_array($oneRowContactArray, $dbAllContactsArray)) {
                         $excelAllContactsArray[] = $oneRowContactArray;
                         $counterOfAdded++;
