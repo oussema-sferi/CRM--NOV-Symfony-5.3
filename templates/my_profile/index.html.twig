@@ -1,0 +1,197 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+  Mon Profil
+{% endblock %}
+
+{% block body %}
+
+  <!-- Header -->
+  <!-- Header -->
+  <div class="header pb-6 d-flex align-items-center" style="min-height: 250px; background-image: url({{ asset('assets/img/brand/Novuus-profile-page.jpg') }}); background-size: cover; background-position: center top;">
+    <!-- Mask -->
+    <span class="mask bg-gradient-neutral opacity-8"></span>
+    <!-- Header container -->
+    {#<div class="container-fluid d-flex align-items-center">
+      <div class="row">
+        <div class="col-lg-7 col-md-10">
+          <h1 class="display-2 text-white">Hello Oussema</h1>
+          <p class="text-white mt-0 mb-5">This is your profile page. You can see the progress you've made with your work and manage your projects or assigned tasks</p>
+          <a href="#!" class="btn btn-neutral">Edit profile</a>
+        </div>
+      </div>
+    </div>#}
+  </div>
+  <!-- Page content -->
+  <div class="container-fluid mt--6">
+    <div class="row">
+      <div class="col-xl-4 order-xl-2">
+        <div class="card card-profile">
+          <img src="../assets/img/theme/img-1-1000x600.jpg" alt="Image placeholder" class="card-img-top" style="height: 208px">
+          <div class="row justify-content-center">
+            <div class="col-lg-3 order-lg-2">
+              <div class="card-profile-image">
+                <a href="#">
+                  <img src="../assets/img/theme/team-4.jpg" class="rounded-circle">
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="card-header text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4">
+            <div class="d-flex justify-content-between">
+              <a href="#" class="btn btn-sm btn-primary  mr-4 ">Charger Photo</a>
+              <a href="#" class="btn btn-sm btn-success float-right">Confirmer</a>
+            </div>
+          </div>
+          <div class="card-body pt-0">
+            {#<div class="row">
+              <div class="col">
+                <div class="card-profile-stats d-flex justify-content-center">
+                  <div>
+                    <span class="heading">22</span>
+                    <span class="description">Friends</span>
+                  </div>
+                  <div>
+                    <span class="heading">10</span>
+                    <span class="description">Photos</span>
+                  </div>
+                  <div>
+                    <span class="heading">89</span>
+                    <span class="description">Comments</span>
+                  </div>
+                </div>
+              </div>
+            </div>#}
+            <div class="text-center">
+              <h5 class="h3">
+                {{ app.user.firstName ~ ' ' ~ app.user.lastName }}{#<span class="font-weight-light">, 27</span>#}
+              </h5>
+              <div class="h5 font-weight-300">
+                <i class="ni location_pin mr-2"></i>
+                {% if app.user.roles[0] == "ROLE_TELEPRO" %}
+                  Téléprospecteur
+                {% elseif app.user.roles[0] == "ROLE_COMMERCIAL" %}
+                  Agent Commercial
+                {% elseif app.user.roles[0] == "ROLE_ADMIN" %}
+                  Admin
+                {% elseif app.user.roles[0] == "ROLE_SUPERADMIN" %}
+                  Super Admin
+                {% endif %}
+              </div>
+              {#<div class="h5 mt-4">
+                <i class="ni business_briefcase-24 mr-2"></i>Agent Commercial
+              </div>#}
+              {#<div>
+                <i class="ni education_hat mr-2"></i>Novuus
+              </div>#}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-8 order-xl-1">
+        <div class="card">
+          <div class="card-header">
+            <div class="row align-items-center">
+              <div class="col-8">
+                <h3 class="mb-0">Mon Profil </h3>
+              </div>
+              <div class="col-4 text-right">
+                <a id="edit-informations-button" class="btn btn-sm btn-info text-white">Editer</a>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <form  action="{{ path('edit_my_profile', {'id': app.user.id}) }}" method="post">
+              <h6 class="heading-small text-muted mb-4">Mes Informations Personnelles</h6>
+              <div class="pl-lg-4">
+                <div class="row">
+                  <div class="col-lg-6">
+                    <div class="form-group">
+                      <label class="form-control-label" for="input-username">Prénom</label>
+                      <input type="text" id="firstName" name="firstName" class="form-control" placeholder="Prénom" value="{{ app.user.firstName }}" disabled>
+                    </div>
+                  </div>
+                  <div class="col-lg-6">
+                    <div class="form-group">
+                      <label class="form-control-label" for="input-email">Nom</label>
+                      <input type="text" id="lastName" name="lastName" class="form-control" placeholder="jesse@example.com" value="{{ app.user.lastName }}" disabled>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-lg-6">
+                    <div class="form-group">
+                      <label class="form-control-label" for="input-first-name">Addresse email</label>
+                      <input type="email" id="email" name="email" class="form-control" value="{{ app.user.email }}" disabled>
+                    </div>
+                  </div>
+                  <div class="col-lg-6">
+                    <div class="form-group">
+                      <label class="form-control-label" for="input-last-name">Rôle</label>
+                      <input type="text" id="role" name="role" class="form-control" value="{{ app.user.roles[0] }}" disabled>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="text-right">
+                <a id="retour-informations-button" class="btn btn-sm btn-neutral" style="display: none">Retour</a>
+                <button id="save-informations-button" type="submit" class="btn btn-sm btn-success" style="display: none">Sauvegarder</button>
+              </div>
+            </form>
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block additionalJs %}
+  <script>
+    $(document).ready(function() {
+      $("#edit-informations-button").on("click", function () {
+        $("#firstName").prop('disabled', false)
+        $("#lastName").prop('disabled', false)
+        $(this).hide()
+        $("#retour-informations-button").show()
+        $("#save-informations-button").show()
+      })
+
+      $("#retour-informations-button").on("click", function () {
+        $(this).hide()
+        $("#save-informations-button").hide()
+        $("#edit-informations-button").show()
+      })
+
+    })
+  </script>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

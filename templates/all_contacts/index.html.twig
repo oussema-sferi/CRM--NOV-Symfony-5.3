@@ -35,7 +35,7 @@
 
                     <div id="import-block" class="col-lg-6 col-5 text-right" style="display: none">
                         <form action="{{ path('import_contacts') }}" method="post" enctype="multipart/form-data">
-                                <input id="excelcontactsfile" type="file" name="excelcontactsfile" class="btn btn-sm btn-secondary" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" value="Importer" required>
+                                <input id="excelcontactsfile" type="file" name="excelcontactsfile" class="btn btn-sm btn-secondary" accept=".csv,.ods, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" value="Importer" required>
                                 <input class="btn btn-sm btn-success" type="submit" value="Confirmer">
                                 <a id="retour-import" class="btn btn-sm btn-neutral">Retour</a>
                         </form>
