@@ -60,10 +60,9 @@
               <button id="upload-button" class="btn btn-sm btn-default">Charger Photo de Profil</button>
             </div>
             <div id="upload-form-block" style="display: none">
-              <form action="{{ path('my_profile_pic_upload', {'id': app.user.id }) }}" method="post" enctype="multipart/form-data">
+              <form id="profilePictureForm" action="{{ path('my_profile_pic_upload', {'id': app.user.id }) }}" method="post" enctype="multipart/form-data">
                 <div class="d-flex justify-content-between">
-                  {#<a href="#" class="btn btn-sm btn-primary  mr-4 ">Charger Photo</a>#}
-                  <input class="form-control-sm" type="file" id="profilePicture" name="profilePicture" lang="en" required>
+                  <input class="form-control-sm" type="file" id="profilePicture" name="profilePicture" lang="en" style="display: none" required>
                   <button type="submit" class="btn btn-sm btn-success">Confirmer</button>
                 </div>
               </form>
@@ -151,8 +150,11 @@
         $("#edit-informations-button").show()
       })
       $("#upload-button").on("click", function () {
-        $(this).hide()
-        $("#upload-form-block").show()
+        $("#profilePicture").trigger('click');
+      })
+
+      $("#profilePicture").on("change", function () {
+        $("#profilePictureForm").submit()
       })
 
     })
