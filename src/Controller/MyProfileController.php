@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Repository\UserRepository;
+use MercurySeries\FlashyBundle\FlashyNotifier;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -10,6 +11,11 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class MyProfileController extends AbstractController
 {
+    public function __construct(FlashyNotifier $flashy)
+    {
+        $this->flashy = $flashy;
+    }
+
     /**
      * @Route("/dashboard/myprofile", name="my_profile")
      */
@@ -30,6 +36,32 @@ class MyProfileController extends AbstractController
             $loggedUser->setLastName($request->request->get("lastName"));
             $em->persist($loggedUser);
             $em->flush();
+            $this->flashy->success("Profil mis à jour avec succès !");
+        }
+        return $this->redirectToRoute('my_profile');
+    }
+
+    /**
+     * @Route("/dashboard/myprofile/{id}/pictureupload", name="my_profile_pic_upload")
+     */
+    public function myProfilePictureUpload(Request $request, $id, UserRepository $userRepository): Response
+    {
+        $em = $this->getDoctrine()->getManager();
+        $loggedUser = $userRepository->find($id);
+        if($request->isMethod('Post')) {
+            $profilePicturesDirectory = $this->getParameter('profile_pictures_directory');
+            $profilePicture = $request->files->get('profilePicture');
+            if($profilePicture) {
+                $profilePictureFilename = md5(uniqid()) . '.' . $profilePicture->guessExtension();
+                $profilePicture->move(
+                    $profilePicturesDirectory,
+                    $profilePictureFilename
+                );
+                /*$newProject->setCni($cniFilename);*/
+                $loggedUser->setProfilePicture($profilePictureFilename);
+                $em->flush();
+                $this->flashy->success("Photo de profil mise à jour avec succès !");
+            }
         }
         return $this->redirectToRoute('my_profile');
     }

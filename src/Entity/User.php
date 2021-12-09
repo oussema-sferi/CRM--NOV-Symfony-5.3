@@ -171,6 +171,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $deletedProjects;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $profilePicture;
+
 
     public function __construct()
     {
@@ -839,6 +844,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $deletedProject->setWhoDeletedIt(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getProfilePicture(): ?string
+    {
+        return $this->profilePicture;
+    }
+
+    public function setProfilePicture(?string $profilePicture): self
+    {
+        $this->profilePicture = $profilePicture;
 
         return $this;
     }
