@@ -38,17 +38,10 @@
             </div>
           </div>
           <div class="card-header text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4">
-            <form action="{{ path('my_profile_pic_upload', {'id': app.user.id }) }}" method="post" enctype="multipart/form-data">
-              <div class="d-flex justify-content-between">
-                {#<a href="#" class="btn btn-sm btn-primary  mr-4 ">Charger Photo</a>#}
-                <input class="form-control-sm" type="file" id="profilePicture" name="profilePicture" lang="en" required>
-                <button type="submit" class="btn btn-sm btn-success">Confirmer</button>
-              </div>
-            </form>
-          </div>
-          <div class="card-body pt-0">
-            <div class="text-center">
 
+          </div>
+          <div class="card-body">
+            <div class="text-center">
               <h5 class="h3">
                 {{ app.user.firstName ~ ' ' ~ app.user.lastName }}
               </h5>
@@ -64,7 +57,18 @@
                   Super Admin
                 {% endif %}
               </div>
+              <button id="upload-button" class="btn btn-sm btn-default">Charger Photo de Profil</button>
             </div>
+            <div id="upload-form-block" style="display: none">
+              <form action="{{ path('my_profile_pic_upload', {'id': app.user.id }) }}" method="post" enctype="multipart/form-data">
+                <div class="d-flex justify-content-between">
+                  {#<a href="#" class="btn btn-sm btn-primary  mr-4 ">Charger Photo</a>#}
+                  <input class="form-control-sm" type="file" id="profilePicture" name="profilePicture" lang="en" required>
+                  <button type="submit" class="btn btn-sm btn-success">Confirmer</button>
+                </div>
+              </form>
+            </div>
+
           </div>
         </div>
       </div>
@@ -143,6 +147,10 @@
         $(this).hide()
         $("#save-informations-button").hide()
         $("#edit-informations-button").show()
+      })
+      $("#upload-button").on("click", function () {
+        $(this).hide()
+        $("#upload-form-block").show()
       })
 
     })
