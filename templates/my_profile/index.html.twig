@@ -144,6 +144,8 @@
       })
 
       $("#retour-informations-button").on("click", function () {
+        $("#firstName").prop('disabled', true)
+        $("#lastName").prop('disabled', true)
         $(this).hide()
         $("#save-informations-button").hide()
         $("#edit-informations-button").show()
