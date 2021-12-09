@@ -811,7 +811,7 @@
                             <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <div class="media align-items-center">
                       <span class="avatar avatar-sm rounded-circle">
-                        <img alt="Image placeholder" {#src="{{ asset('assets/img/theme/male.png') }}"#}src="{{ asset('profile_pictures/') ~ app.user.profilePicture }}" style="height: 100%">
+                        <img alt="Image placeholder" {#src="{{ asset('assets/img/theme/male.png') }}"#}src="{% if app.user.profilePicture|default %}{{ asset('profile_pictures/') ~ app.user.profilePicture }}{% else %}{{ asset('assets/img/theme/male.png') }}{% endif %}" style="height: 100%">
                       </span>
                                     <div class="media-body  ml-2  d-none d-lg-block">
                                         <span class="mb-0 text-sm  font-weight-bold">
