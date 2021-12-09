@@ -52,15 +52,19 @@ class MyProfileController extends AbstractController
             $profilePicturesDirectory = $this->getParameter('profile_pictures_directory');
             $profilePicture = $request->files->get('profilePicture');
             if($profilePicture) {
-                $profilePictureFilename = md5(uniqid()) . '.' . $profilePicture->guessExtension();
-                $profilePicture->move(
-                    $profilePicturesDirectory,
-                    $profilePictureFilename
-                );
-                /*$newProject->setCni($cniFilename);*/
-                $loggedUser->setProfilePicture($profilePictureFilename);
-                $em->flush();
-                $this->flashy->success("Photo de profil mise à jour avec succès !");
+                if (($profilePicture->guessExtension() === "jpg") || ($profilePicture->guessExtension() === "png")) {
+                    $profilePictureFilename = md5(uniqid()) . '.' . $profilePicture->guessExtension();
+                    $profilePicture->move(
+                        $profilePicturesDirectory,
+                        $profilePictureFilename
+                    );
+                    /*$newProject->setCni($cniFilename);*/
+                    $loggedUser->setProfilePicture($profilePictureFilename);
+                    $em->flush();
+                    $this->flashy->success("Photo de profil mise à jour avec succès !");
+                } else {
+                    $this->flashy->warning("Désolé ! Le format de la photo est invalide, veuillez choisir un format 'JPG' ou 'PNG !");
+                }
             }
         }
         return $this->redirectToRoute('my_profile');
