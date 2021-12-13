@@ -26,7 +26,7 @@ class Client
     private $firstName;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $lastName;
 
@@ -41,7 +41,7 @@ class Client
     private $companyName;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $address;
 
@@ -190,29 +190,41 @@ class Client
         return $this->id;
     }
 
-    public function getFirstName(): ?string
+    /**
+     * @return mixed
+     */
+    public function getFirstName()
     {
         return $this->firstName;
     }
 
-    public function setFirstName(string $firstName): self
+    /**
+     * @param mixed $firstName
+     */
+    public function setFirstName($firstName): void
     {
         $this->firstName = $firstName;
-
-        return $this;
     }
 
-    public function getLastName(): ?string
+
+
+    /**
+     * @return mixed
+     */
+    public function getLastName()
     {
         return $this->lastName;
     }
 
-    public function setLastName(string $lastName): self
+    /**
+     * @param mixed $lastName
+     */
+    public function setLastName($lastName): void
     {
         $this->lastName = $lastName;
-
-        return $this;
     }
+
+
 
     public function getEmail(): ?string
     {
@@ -238,17 +250,23 @@ class Client
         return $this;
     }
 
-    public function getAddress(): ?string
+    /**
+     * @return mixed
+     */
+    public function getAddress()
     {
         return $this->address;
     }
 
-    public function setAddress(string $address): self
+    /**
+     * @param mixed $address
+     */
+    public function setAddress($address): void
     {
         $this->address = $address;
-
-        return $this;
     }
+
+
 
     public function getPostalCode(): ?string
     {
@@ -274,53 +292,74 @@ class Client
         return $this;
     }
 
-    public function getPhoneNumber(): ?string
+    /**
+     * @return mixed
+     */
+    public function getPhoneNumber()
     {
         return $this->phoneNumber;
     }
 
-    public function setPhoneNumber(?string $phoneNumber): self
+    /**
+     * @param mixed $phoneNumber
+     */
+    public function setPhoneNumber($phoneNumber): void
     {
         $this->phoneNumber = $phoneNumber;
-
-        return $this;
     }
 
-    public function getMobileNumber(): ?string
+    /**
+     * @return mixed
+     */
+    public function getMobileNumber()
     {
         return $this->mobileNumber;
     }
 
-    public function setMobileNumber(string $mobileNumber): self
+    /**
+     * @param mixed $mobileNumber
+     */
+    public function setMobileNumber($mobileNumber): void
     {
         $this->mobileNumber = $mobileNumber;
-
-        return $this;
     }
 
-    public function getCategory(): ?string
+    /**
+     * @return mixed
+     */
+    public function getCategory()
     {
         return $this->category;
     }
 
-    public function setCategory(string $category): self
+    /**
+     * @param mixed $category
+     */
+    public function setCategory($category): void
     {
         $this->category = $category;
-
-        return $this;
     }
 
-    public function getIsUnderContract(): ?bool
+    /**
+     * @return mixed
+     */
+    public function getIsUnderContract()
     {
         return $this->isUnderContract;
     }
 
-    public function setIsUnderContract(bool $isUnderContract): self
+    /**
+     * @param mixed $isUnderContract
+     */
+    public function setIsUnderContract($isUnderContract): void
     {
         $this->isUnderContract = $isUnderContract;
-
-        return $this;
     }
+
+
+
+
+
 
     public function getStatus(): ?int
     {

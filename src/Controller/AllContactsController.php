@@ -185,18 +185,18 @@ class AllContactsController extends AbstractController
         $commercials = $this->getDoctrine()->getRepository(User::class)->findUsersByCommercialRole("ROLE_COMMERCIAL");
 
         if($clientForm->isSubmitted()) {
-            if ($newClient->getFirstName()) $clientToUpdate->setFirstName($newClient->getFirstName());
+            $clientToUpdate->setFirstName($newClient->getFirstName());
             $clientToUpdate->setLastName($newClient->getLastName());
-            if ($newClient->getCompanyName()) $clientToUpdate->setCompanyName($newClient->getCompanyName());
-            if ($newClient->getEmail()) $clientToUpdate->setEmail($newClient->getEmail());
+            $clientToUpdate->setCompanyName($newClient->getCompanyName());
+            $clientToUpdate->setEmail($newClient->getEmail());
             $clientToUpdate->setAddress($newClient->getAddress());
             $clientToUpdate->setPostalCode($newClient->getPostalCode());
             $clientToUpdate->setCountry($newClient->getCountry());
             $clientToUpdate->setPhoneNumber($newClient->getPhoneNumber());
-            if ($newClient->getMobileNumber()) $clientToUpdate->setMobileNumber($newClient->getMobileNumber());
-            if ($newClient->getCategory()) $clientToUpdate->setCategory($newClient->getCategory());
-            if ($newClient->getIsUnderContract()) $clientToUpdate->setIsUnderContract($newClient->getIsUnderContract());
-            if ($newClient->getProvidedEquipment()) $clientToUpdate->setProvidedEquipment($newClient->getProvidedEquipment());
+            $clientToUpdate->setMobileNumber($newClient->getMobileNumber());
+            $clientToUpdate->setCategory($newClient->getCategory());
+            $clientToUpdate->setIsUnderContract($newClient->getIsUnderContract());
+            $clientToUpdate->setProvidedEquipment($newClient->getProvidedEquipment());
             $clientToUpdate->setGeographicArea($newClient->getGeographicArea());
             $clientToUpdate->setUpdatedAt(new \DateTime());
             $manager->persist($clientToUpdate);
@@ -365,7 +365,7 @@ class AllContactsController extends AbstractController
         $file = $request->files->get('excelcontactsfile'); // get the file from the sent request
         // check the type of the uploaded file
         /*$mimes = array('application/vnd.ms-excel','text/plain','text/csv','text/tsv');*/
-        $mimes = array('application/vnd.oasis.opendocument.spreadsheet','application/vnd.ms-excel','text/plain','text/csv','text/tsv');
+        $mimes = array('application/vnd.oasis.opendocument.spreadsheet','application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','text/plain','text/csv','text/tsv');
         /*dd($_FILES['excelcontactsfile']['type']);*/
         if(in_array($_FILES['excelcontactsfile']['type'],$mimes)){
 
@@ -420,7 +420,7 @@ class AllContactsController extends AbstractController
             $allExistingContacts = $this->getDoctrine()->getRepository(Client::class)->findAll();
             $dbAllContactsArray = [];
             foreach ($allExistingContacts as $existingContact) {
-                $oneExistingContactArray = ["firstName" => $existingContact->getFirstName(), "lastName" => $existingContact->getLastName(), "phoneNumber" => $existingContact->getPhoneNumber(), "address" =>$existingContact->getAddress(), "city" =>$existingContact->getCity(), "postalCode" =>$existingContact->getPostalCode(), "geographicArea" =>$existingContact->getGeographicArea()];
+                $oneExistingContactArray = ["firstName" => $existingContact->getFirstName(), "lastName" => $existingContact->getLastName(), "email" => $existingContact->getEmail(), "phoneNumber" => $existingContact->getPhoneNumber(), "address" =>$existingContact->getAddress(), "city" =>$existingContact->getCity(), "postalCode" =>$existingContact->getPostalCode(), "geographicArea" =>$existingContact->getGeographicArea()];
                 $dbAllContactsArray[] = $oneExistingContactArray;
             }
             $excelAllContactsArray = [];
@@ -431,40 +431,51 @@ class AllContactsController extends AbstractController
                     $sheet->getCellByColumnAndRow(2,1)->getValue() === "Nom du professionnel" &&
                     $sheet->getCellByColumnAndRow(3,1)->getValue() === "Adresse" &&
                     $sheet->getCellByColumnAndRow(4,1)->getValue() === "Commune" &&
-                    $sheet->getCellByColumnAndRow(5,1)->getValue() === "Code Postal")
+                    $sheet->getCellByColumnAndRow(5,1)->getValue() === "Code Postal" &&
+                    $sheet->getCellByColumnAndRow(6,1)->getValue() === "Adresse mail")
                 ) {
                     $this->addFlash(
                         'add_contacts_warning',
-                        "Désolé! Ce fichier ne suit pas les normes du modèle ! Veuillez vérifier la feuille '". $sheet->getTitle() . "'!"
+                        "Désolé ! Ce fichier ne suit pas les normes du modèle ! Veuillez vérifier la feuille '". $sheet->getTitle() . "' !"
                     );
-                    $this->flashy->warning("Désolé! Une erreur a été détectée lors de l'import!");
+                    $this->flashy->warning("Désolé! Une erreur a été détectée lors de l'import !");
                     return $this->redirectToRoute('all_contacts');
                 }
                 /*dd($sheet);*/
                 $row = $sheet->removeRow(1);
                 $sheetData = $sheet-> toArray(null, true, true, true, true); // here, the read data is turned into an array*
 
-                /*dd($sheetData);*/
 
+                $rowsCounter = 1;
                 foreach ($sheetData as $Row)
                 {
+                    $rowsCounter++;
                     $oneRowContactArray = [];
                     $allTheName = $Row['B'];
 
                     if($allTheName) {
                         $SplitedNameArray = explode(" ", $allTheName, 2);
-                        $firstName = $SplitedNameArray[0]; // store the first_name on each iteration
-                        $lastName = $SplitedNameArray[1]; // store the last_name on each iteration
+                        if(count($SplitedNameArray) === 1) {
+                            $firstName = $SplitedNameArray[0];
+                            $lastName = "";
+                        } else {
+                            $firstName = $SplitedNameArray[0]; // store the first_name on each iteration
+                            $lastName = $SplitedNameArray[1]; // store the last_name on each iteration
+                        }
                     } else {
                         $this->addFlash(
                             'add_contacts_warning',
-                            "Désolé! Le nom du contact ne doit pas être nul! Veuillez vérifier la feuille '". $sheet->getTitle() . "'!"
+                            "Désolé! Le nom du contact ne doit pas être nul! Veuillez vérifier la feuille '". $sheet->getTitle() . "', ligne numéro " . $rowsCounter . " !"
                         );
-                        $this->flashy->warning("Désolé! Une erreur a été détectée lors de l'import!");
+                        $this->flashy->warning("Désolé! Une erreur a été détectée lors de l'import !");
                         return $this->redirectToRoute('all_contacts');
                     }
 
-                    /*$email= $Row['C'];*/     // store the email on each iteration
+                    if ($Row['F']) {
+                        $email= $Row['F'];     // store the email on each iteration
+                    } else {
+                        $email = "";
+                    }
                     /*$companyName= $Row['D'];*/
                     $address= $Row['C'];
                     if(is_numeric($Row['E'])) {
@@ -476,13 +487,17 @@ class AllContactsController extends AbstractController
                     } else {
                         $this->addFlash(
                             'add_contacts_warning',
-                            "Désolé! Un code postal existant dans la feuille '". $sheet->getTitle() . "' n'est pas valide!"
+                            "Désolé ! Un code postal existant dans la feuille '". $sheet->getTitle() . "' n'est pas valide, veuillez vérifier la ligne numéro " . $rowsCounter . " !"
                         );
-                        $this->flashy->warning("Désolé! Une erreur a été détectée lors de l'import!");
+                        $this->flashy->warning("Désolé ! Une erreur a été détectée lors de l'import!");
                         return $this->redirectToRoute('all_contacts');
                     }
 
-                    $city = $Row['D'];
+                    if ($Row['D']) {
+                        $city = $Row['D'];
+                    } else {
+                        $city = "";
+                    }
                     /*$country= $Row['G'];*/
                     if ($Row['A']) {
                         $phoneNumber= $Row['A'];
@@ -497,7 +512,7 @@ class AllContactsController extends AbstractController
                     }
 
                     $geographicArea = $this->getDoctrine()->getRepository(GeographicArea::class)->findOneBy(array('code' => $departmentCode));
-                    $oneRowContactArray = ["firstName" => $firstName, "lastName" => $lastName, "phoneNumber" => $phoneNumber, "address" =>$address, "city" =>$city, "postalCode" =>$postalCode, "geographicArea" =>$geographicArea];
+                    $oneRowContactArray = ["firstName" => $firstName, "lastName" => $lastName, "email" => $email,"phoneNumber" => $phoneNumber, "address" =>$address, "city" =>$city, "postalCode" =>$postalCode, "geographicArea" =>$geographicArea];
                     if(!in_array($oneRowContactArray, $excelAllContactsArray) && !in_array($oneRowContactArray, $dbAllContactsArray)) {
                         $excelAllContactsArray[] = $oneRowContactArray;
                         $counterOfAdded++;
@@ -514,6 +529,7 @@ class AllContactsController extends AbstractController
                 $contact = new Client();
                 $contact->setFirstName($contactRow["firstName"]);
                 $contact->setLastName($contactRow["lastName"]);
+                $contact->setEmail($contactRow["email"]);
                 $contact->setAddress($contactRow["address"]);
                 $contact->setPostalCode($contactRow["postalCode"]);
                 $contact->setCity($contactRow["city"]);
@@ -533,20 +549,20 @@ class AllContactsController extends AbstractController
             if($counterOfAdded === 0) {
                 $this->addFlash(
                     'add_contacts_warning',
-                    "Aucun contact n'a été ajouté!"
+                    "Aucun contact n'a été ajouté !"
                 );
                 $this->addFlash(
                     'add_contacts_confirmation2',
-                    $counterOfNonAdded . " Doublons ont été détectés!"
+                    $counterOfNonAdded . " Doublons ont été détecté(s) !"
                 );
             } else {
                 $this->addFlash(
                     'add_contacts_confirmation1',
-                    $counterOfAdded . " Contacts ont été ajoutés avec succès!"
+                    $counterOfAdded . " Contacts ont été ajouté(s) avec succès !"
                 );
                 $this->addFlash(
                     'add_contacts_confirmation2',
-                    $counterOfNonAdded . " Doublons ont été détectés!"
+                    $counterOfNonAdded . " Doublons ont été détecté(s)!"
                 );
             }
 

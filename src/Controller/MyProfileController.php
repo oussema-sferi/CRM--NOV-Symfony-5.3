@@ -63,7 +63,7 @@ class MyProfileController extends AbstractController
                     $em->flush();
                     $this->flashy->success("Photo de profil mise à jour avec succès !");
                 } else {
-                    $this->flashy->warning("Désolé ! Le format de la photo est invalide, veuillez choisir un format 'JPG' ou 'PNG !");
+                    $this->flashy->warning("Désolé ! L'extension du fichier est invalide, veuillez choisir un fichier 'jpg' ou bien 'png' !");
                 }
             }
         }

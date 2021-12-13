@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-  Mon Profil
+  Mon Espace Personnel
 {% endblock %}
 
 {% block body %}
@@ -62,7 +62,7 @@
             <div id="upload-form-block" style="display: none">
               <form id="profilePictureForm" action="{{ path('my_profile_pic_upload', {'id': app.user.id }) }}" method="post" enctype="multipart/form-data">
                 <div class="d-flex justify-content-between">
-                  <input class="form-control-sm" type="file" id="profilePicture" name="profilePicture" lang="en" style="display: none" required>
+                  <input class="form-control-sm" type="file" accept="image/jpeg, image/png" id="profilePicture" name="profilePicture" lang="en" style="display: none" required>
                   <button type="submit" class="btn btn-sm btn-success">Confirmer</button>
                 </div>
               </form>
@@ -119,8 +119,6 @@
                 <button id="save-informations-button" type="submit" class="btn btn-sm btn-success" style="display: none">Sauvegarder</button>
               </div>
             </form>
-
-
           </div>
         </div>
       </div>

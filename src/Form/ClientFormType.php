@@ -23,26 +23,18 @@ class ClientFormType extends AbstractType
             ->add('firstName', null,[
                 'required' => true
             ])
-            ->add('lastName', null,[
-                'required' => true
-            ])
+            ->add('lastName')
             ->add('email', EmailType::class,[
                 'required' => false
             ])
             ->add('companyName')
-            ->add('address', null,[
-                'required' => true
-            ])
+            ->add('address')
             ->add('postalCode', )
-            ->add('city', null,[
-                'required' => true
-            ])
+            ->add('city')
             ->add('country', null,[
                 'required' => true
             ])
-            ->add('phoneNumber', null,[
-                'required' => true
-            ])
+            ->add('phoneNumber')
             ->add('mobileNumber')
             /*->add('category', ChoiceType::class, [
                 'choices'  => [
