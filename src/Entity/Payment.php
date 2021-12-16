@@ -33,6 +33,11 @@ class Payment
      */
     private $associatedPaymentSchedule;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isPaid;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -70,6 +75,18 @@ class Payment
     public function setAssociatedPaymentSchedule(?PaymentSchedule $associatedPaymentSchedule): self
     {
         $this->associatedPaymentSchedule = $associatedPaymentSchedule;
+
+        return $this;
+    }
+
+    public function getIsPaid(): ?bool
+    {
+        return $this->isPaid;
+    }
+
+    public function setIsPaid(bool $isPaid): self
+    {
+        $this->isPaid = $isPaid;
 
         return $this;
     }

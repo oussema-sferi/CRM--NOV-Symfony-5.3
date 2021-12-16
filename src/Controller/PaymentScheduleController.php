@@ -33,6 +33,7 @@ class PaymentScheduleController extends AbstractController
             $paymentLine->setValue($paymentPerMonth);
             $paymentDate = date("m/d/y",mktime(0, 0, 0, ((int)(new \DateTime())->format("m") + $i + 1),18,((int)(new \DateTime())->format("Y"))));
             $paymentLine->setPaymentDate(new \DateTime($paymentDate));
+            $paymentLine->setIsPaid(false);
             $em->persist($paymentLine);
         }
         $paymentSchedule->setCreatedAt(new \DateTime());

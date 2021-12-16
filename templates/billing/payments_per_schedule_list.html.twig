@@ -15,7 +15,7 @@
                             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
                                 <li class="breadcrumb-item"><i class="fas fa-chalkboard-teacher text-indigo"></i></li>
                                 <li class="breadcrumb-item">Facturation</li>
-                                <li class="breadcrumb-item">Liste des échéanciers</li>
+                                <li class="breadcrumb-item"><a href="{{ path('payment_schedule_list') }}">Liste des échéanciers</a></li>
                                 <li class="breadcrumb-item active" aria-current="page">Liste des réglements</li>
                             </ol>
                         </nav>
@@ -41,7 +41,7 @@
                                     <h3 class="mb-0">Total: {{ all_payments|length }} Réglement(s)</h3>
                                 </div>
                                 <div class="col-md-6 text-right">
-
+                                    <button class="btn btn-sm btn-info" type="submit">Export vers PDF</button>
                                 </div>
                             </div>
                         </div>
@@ -53,6 +53,8 @@
                                     <th scope="col">Réglement N°</th>
                                     <th scope="col">Valeur</th>
                                     <th scope="col">Date</th>
+                                    <th scope="col">état</th>
+                                    <th scope="col">Impression</th>
                                 </tr>
                                 </thead>
                                 <tbody class="list">
@@ -70,6 +72,22 @@
 
                                         <td class="budget">
                                             {{ payment_row.paymentDate | date("m/Y") }}
+                                        </td>
+
+                                        <td class="budget">
+                                            {% if payment_row.isPaid == 1 %}
+                                                Payé
+                                            {% else %}
+                                                Non Payé
+                                            {% endif %}
+                                        </td>
+
+                                        <td>
+                                            {% if payment_row.isPaid == 1 %}
+                                                <a href="" class="badge badge-default" >Imprimer Bon de Réglement</a>
+                                            {% else %}
+                                                <button class="badge badge-neutral" disabled>Imprimer Bon de Réglement</button>
+                                            {% endif %}
                                         </td>
                                     </tr>
                                 {% endfor %}
