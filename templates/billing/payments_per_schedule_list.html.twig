@@ -1,0 +1,100 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Liste des réglements
+{% endblock %}
+
+{% block body %}
+    <div class="header pb-6" style="background-color: #EDA200">
+        <div class="container-fluid">
+            <div class="header-body">
+                <div class="row align-items-center py-4">
+                    <div class="col-lg-6 col-7">
+                        <h6 class="h2 text-white d-inline-block mb-0">CRM</h6>
+                        <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+                            <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                                <li class="breadcrumb-item"><i class="fas fa-chalkboard-teacher text-indigo"></i></li>
+                                <li class="breadcrumb-item">Facturation</li>
+                                <li class="breadcrumb-item">Liste des échéanciers</li>
+                                <li class="breadcrumb-item active" aria-current="page">Liste des réglements</li>
+                            </ol>
+                        </nav>
+                    </div>
+                    <div class="col-lg-6 col-5 text-right">
+                        {#<a href="{{ path('new_contact') }}" class="btn btn-sm btn-success">Nouveau Projet</a>#}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container-fluid mt--6">
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <!-- Card header -->
+                    <form action="{{ path('projects_search_filters') }}" method="post">
+                        <div class="card-header border-0">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h3 class="mb-0">Total: {{ all_payments|length }} Réglement(s)</h3>
+                                </div>
+                                <div class="col-md-6 text-right">
+
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Light table -->
+                        <div class="table-responsive">
+                            <table class="table align-items-center table-flush">
+                                <thead class="thead-light">
+                                <tr>
+                                    <th scope="col">Réglement N°</th>
+                                    <th scope="col">Valeur</th>
+                                    <th scope="col">Date</th>
+                                </tr>
+                                </thead>
+                                <tbody class="list">
+                                {%  set payments_counter = 0 %}
+                                {% for payment_row in payments %}
+                                    {%  set payments_counter = payments_counter + 1 %}
+                                    <tr>
+                                        <td class="budget">
+                                            {{ payments_counter }}
+                                        </td>
+
+                                        <td class="budget">
+                                            {{ payment_row.value }}
+                                        </td>
+
+                                        <td class="budget">
+                                            {{ payment_row.paymentDate | date("m/Y") }}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </form>
+                    <!-- Card footer -->
+                    {{ knp_pagination_render(payments) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block additionalJs %}
+    <script>
+        $(document).ready(function() {
+            /*$(".clickable-row").hover(function() {
+                $(this).css('cursor', 'pointer');
+            });
+
+            $(".clickable-row").dblclick(function() {
+                window.location = $(this).data("href");
+            });*/
+        })
+    </script>
+{% endblock %}

@@ -250,13 +250,6 @@
                                     </td>
 
                                     <td >
-                                        {#{% if commercial_appointment.isDone != 1 %}
-                                            <a href="{{ path('appointment_handle', {'id': commercial_appointment.id}) }}"  class="badge badge-default" >Traiter RDV</a>
-                                        {% else %}
-                                            <a href="{{ path('show_contact', {'id': commercial_appointment.client.id}) }}"><i class="fas fa-search-plus text-blue"></i></a>&nbsp;&nbsp;
-                                            <a href="{{ path('full_update_contact', {'id': commercial_appointment.client.id}) }}"><i class="fas fa-edit text-yellow"></i></a>
-                                            <a href="" data-toggle="modal" data-target="#deleteModal"><i class="fas fa-trash-alt text-red"></i></a>
-                                        {% endif %}#}
                                         <a href="{{ path('appointment_handle', {'id': commercial_appointment.id}) }}"  class="badge badge-default" >Traiter RDV</a>
                                     </td>
 

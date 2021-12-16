@@ -176,6 +176,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $profilePicture;
 
+    /**
+     * @ORM\OneToMany(targetEntity=PaymentSchedule::class, mappedBy="whoGenerateIt")
+     */
+    private $paymentSchedules;
+
+    /**
+     * @ORM\OneToMany(targetEntity=PaymentSchedule::class, mappedBy="whoDeletedIt")
+     */
+    private $deletedPaymentSchedules;
+
 
     public function __construct()
     {
@@ -195,6 +205,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->processes = new ArrayCollection();
         $this->projects = new ArrayCollection();
         $this->deletedProjects = new ArrayCollection();
+        $this->paymentSchedules = new ArrayCollection();
+        $this->deletedPaymentSchedules = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -856,6 +868,66 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setProfilePicture(?string $profilePicture): self
     {
         $this->profilePicture = $profilePicture;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PaymentSchedule[]
+     */
+    public function getPaymentSchedules(): Collection
+    {
+        return $this->paymentSchedules;
+    }
+
+    public function addPaymentSchedule(PaymentSchedule $paymentSchedule): self
+    {
+        if (!$this->paymentSchedules->contains($paymentSchedule)) {
+            $this->paymentSchedules[] = $paymentSchedule;
+            $paymentSchedule->setWhoGenerateIt($this);
+        }
+
+        return $this;
+    }
+
+    public function removePaymentSchedule(PaymentSchedule $paymentSchedule): self
+    {
+        if ($this->paymentSchedules->removeElement($paymentSchedule)) {
+            // set the owning side to null (unless already changed)
+            if ($paymentSchedule->getWhoGenerateIt() === $this) {
+                $paymentSchedule->setWhoGenerateIt(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PaymentSchedule[]
+     */
+    public function getDeletedPaymentSchedules(): Collection
+    {
+        return $this->deletedPaymentSchedules;
+    }
+
+    public function addDeletedPaymentSchedule(PaymentSchedule $deletedPaymentSchedule): self
+    {
+        if (!$this->deletedPaymentSchedules->contains($deletedPaymentSchedule)) {
+            $this->deletedPaymentSchedules[] = $deletedPaymentSchedule;
+            $deletedPaymentSchedule->setWhoDeletedIt($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDeletedPaymentSchedule(PaymentSchedule $deletedPaymentSchedule): self
+    {
+        if ($this->deletedPaymentSchedules->removeElement($deletedPaymentSchedule)) {
+            // set the owning side to null (unless already changed)
+            if ($deletedPaymentSchedule->getWhoDeletedIt() === $this) {
+                $deletedPaymentSchedule->setWhoDeletedIt(null);
+            }
+        }
 
         return $this;
     }

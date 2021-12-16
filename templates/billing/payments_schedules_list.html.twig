@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-    Liste des projets
+    Liste des échéanciers
 {% endblock %}
 
 {% block body %}
@@ -13,9 +13,9 @@
                         <h6 class="h2 text-white d-inline-block mb-0">CRM</h6>
                         <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
                             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
-                                <li class="breadcrumb-item"><i class="fas fa-chalkboard-teacher text-blue"></i></li>
-                                <li class="breadcrumb-item">Projet</li>
-                                <li class="breadcrumb-item active" aria-current="page">Liste des projets</li>
+                                <li class="breadcrumb-item"><i class="fas fa-chalkboard-teacher text-indigo"></i></li>
+                                <li class="breadcrumb-item">Facturation</li>
+                                <li class="breadcrumb-item active" aria-current="page">Liste des échéanciers</li>
                             </ol>
                         </nav>
                     </div>
@@ -42,15 +42,15 @@
                                     {% elseif app.session.get('total_projects_search_results') and app.session.get('total_projects_search_results') == "nothing" %}
                                         <h3 class="mb-0" style="color: red">Aucun résultat correspondant à votre recherche!</h3>
                                     {% else %}
-                                        <h3 class="mb-0">Total: {{ all_projects|length }} Projet(s)</h3>
+                                        <h3 class="mb-0">Total: {{ all_payments_schedules|length }} Échéancier(s)</h3>
                                     {% endif %}
                                 </div>
                                 <div class="col-md-6 text-right">
-                                    {% if all_projects|length != 0 %}
+                                    {% if all_payments_schedules|length != 0 %}
                                         <button class="btn btn-sm btn-success" type="submit">Appliquer les filtres</button>
-                                        <a class="btn btn-sm btn-primary" href="{{ path('projects_list') }}">Réinitialiser les filtres</a>
+                                        <a class="btn btn-sm btn-primary" href="{#{{ path('projects_list') }}#}">Réinitialiser les filtres</a>
                                     {% else %}
-                                        <a class="btn btn-sm btn-primary" href="{{ path('projects_list') }}">Réinitialiser les filtres</a>
+                                        <a class="btn btn-sm btn-primary" href="{#{{ path('projects_list') }}#}">Réinitialiser les filtres</a>
                                     {% endif %}
                                 </div>
                             </div>
@@ -62,24 +62,26 @@
                                 <tr>
                                     <th scope="col">Prénom Client</th>
                                     <th scope="col">Nom Client</th>
-                                    {% if "ROLE_COMMERCIAL" in app.user.roles  %}
+                                    {#{% if "ROLE_COMMERCIAL" in app.user.roles  %}
                                     {% else %}
                                         <th scope="col">Commercial</th>
-                                    {% endif %}
+                                    {% endif %}#}
                                     <th scope="col">Technologie Vendue</th>
                                     <th scope="col">Total HT Contrat</th>
-                                    <th scope="col">Statut</th>
-                                    <th scope="col">Facturation</th>
+                                    <th scope="col">Nombre de Mensualités</th>
+                                    <th scope="col">Consultation</th>
+                                    {#<th scope="col">Statut</th>
+                                    <th scope="col">Facturation</th>#}
                                     <th scope="col">Actions</th>
-                                    <th scope="col">CNI R/V</th>
+                                    {#<th scope="col">CNI R/V</th>
                                     <th scope="col">RIB</th>
                                     <th scope="col">Déclaration 2035</th>
                                     <th scope="col">Déclaration 2042</th>
                                     <th scope="col">Bilan Comptable</th>
-                                    <th scope="col">Feuille de Partenariat</th>
+                                    <th scope="col">Feuille de Partenariat</th>#}
                                 </tr>
 
-                                {% if projects|length != 0 %}
+                                {% if all_payments_schedules|length != 0 %}
 
                                 <tr>
                                     <td>
@@ -89,7 +91,7 @@
                                         <input id="lastName" name="lastName" class="test" type="text">
                                     </td>
 
-                                    {% if "ROLE_COMMERCIAL" in app.user.roles  %}
+                                    {#{% if "ROLE_COMMERCIAL" in app.user.roles  %}
                                     {% else %}
                                         <td>
                                             <select id="user" name="user" class="form-control-sm">
@@ -99,7 +101,7 @@
                                                 {% endfor %}
                                             </select>
                                         </td>
-                                    {% endif %}
+                                    {% endif %}#}
 
                                     <td>
                                         <select id="equipment" name="equipment" class="form-control-sm">
@@ -113,6 +115,10 @@
                                         <input id="totalHT" name="totalHT" class="test" type="text">
                                     </td>
                                     <td>
+                                        <input id="numberOfMonthlyPayments" name="numberOfMonthlyPayments" class="test" type="number">
+                                    </td>
+                                    <td></td>
+                                    {#<td>
                                         <select id="status" name="status" class="form-control-sm">
                                             <option value="" selected>--- Choisir ---</option>
                                             <option value="1">En cours</option>
@@ -120,7 +126,7 @@
                                             <option value="3">Refusé</option>
                                         </select>
                                     </td>
-                                    <td ></td>
+                                    <td ></td>#}
                                     <td></td>
 
                                 </tr>
@@ -130,32 +136,40 @@
                                 </thead>
                                 <tbody class="list">
 
-                                {% for project in projects %}
-                                    <tr class="clickable-row" data-href="{{ path('show_contact', {'id': project.client.id}) }}">
+                                {% for payment_schedule in payments_schedules %}
+                                    <tr class="clickable-row" data-href="{{ path('show_contact', {'id': payment_schedule.project.client.id}) }}">
                                         <td>
-                                            {{ project.client.firstName }}
+                                            {{ payment_schedule.client.firstName }}
                                         </td>
 
                                         <td class="budget">
-                                            {{ project.client.lastName }}
+                                            {{ payment_schedule.client.lastName }}
                                         </td>
 
-                                        {% if "ROLE_COMMERCIAL" in app.user.roles  %}
+                                        {#{% if "ROLE_COMMERCIAL" in app.user.roles  %}
                                         {% else %}
                                             <td class="budget">
                                                 {{ project.projectMakerUser.firstName ~ ' ' ~ project.projectMakerUser.lastName }}
                                             </td>
-                                        {% endif %}
+                                        {% endif %}#}
 
                                         <td class="budget">
-                                            {{ project.equipment.designation }}
+                                            {{ payment_schedule.project.equipment.designation }}
                                         </td>
 
                                         <td class="budget">
-                                            {{ project.totalHT }} €
+                                            {{ payment_schedule.project.totalHT }} €
                                         </td>
 
                                         <td class="budget">
+                                            {{ payment_schedule.project.numberOfMonthlyPayments }}
+                                        </td>
+
+                                        <td>
+                                            <a href="{{ path('payments_per_schedule', {'id': payment_schedule.id}) }}" class="badge badge-default" >Consulter échéancier</a>
+                                        </td>
+
+                                        {#<td class="budget">
                                             {% if project.isDeleted == 1 %}
                                                 <span class="badge badge-warning badge-lg">
                                                     <i class="bg-warning"></i>
@@ -187,20 +201,20 @@
                                             {% else %}
                                                 <button class="badge badge-neutral" disabled>Générer échéancier</button>
                                             {% endif %}
-                                        </td>
+                                        </td>#}
 
                                         <td>
                                             {#<a href="{{ path('show_contact', {'id': client.id}) }}"  class="badge badge-default" >Consulter Fiche</a>#}
-                                            <a href="{{ path('show_contact', {'id': project.client.id}) }}"><i class="fas fa-search-plus text-blue"></i></a>&nbsp;&nbsp;
-                                            <a href="{{ path('full_update_contact', {'id': project.client.id}) }}"><i class="fas fa-edit text-yellow"></i></a>&nbsp;&nbsp;
-                                            {% if project.isDeleted != 1 %}
-                                            <a href="" data-toggle="modal" data-target="#deleteModal{{ project.id }}"><i class="fas fa-trash-alt text-red"></i></a>
+                                            <a href="{{ path('show_contact', {'id': payment_schedule.project.client.id}) }}"><i class="fas fa-search-plus text-blue"></i></a>&nbsp;&nbsp;
+                                            <a href="{{ path('full_update_contact', {'id': payment_schedule.project.client.id}) }}"><i class="fas fa-edit text-yellow"></i></a>&nbsp;&nbsp;
+                                            {% if payment_schedule.isDeleted != 1 %}
+                                            <a href="" data-toggle="modal" data-target="#deleteModal{{ payment_schedule.project.id }}"><i class="fas fa-trash-alt text-red"></i></a>
                                             {% endif %}
 
                                         </td>
 
 
-                                        {% if project.cni is not null %}
+                                        {#{% if project.cni is not null %}
                                         <td class="text-center">
                                             <a href="{{ asset('attachments/') ~ project.cni }}" target="_blank"><i class="fas fa-download text-green"></i></a>
                                         </td>
@@ -257,9 +271,9 @@
                                             <td class="text-center">
                                                 <i class="fas fa-times-circle text-red"></i>
                                             </td>
-                                        {% endif %}
+                                        {% endif %}#}
                                     </tr>
-                                    <div class="modal fade" id="deleteModal{{ project.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    {#<div class="modal fade" id="deleteModal{{ project.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                         <div class="modal-dialog modal-dialog-centered" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header" style="margin: 0 auto">
@@ -291,7 +305,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div>#}
 
                                 {% endfor %}
 
@@ -300,7 +314,7 @@
                         </div>
                     </form>
                     <!-- Card footer -->
-                    {{ knp_pagination_render(projects) }}
+                    {{ knp_pagination_render(payments_schedules) }}
                 </div>
             </div>
         </div>

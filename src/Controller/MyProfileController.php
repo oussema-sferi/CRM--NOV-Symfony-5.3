@@ -58,7 +58,6 @@ class MyProfileController extends AbstractController
                         $profilePicturesDirectory,
                         $profilePictureFilename
                     );
-                    /*$newProject->setCni($cniFilename);*/
                     $loggedUser->setProfilePicture($profilePictureFilename);
                     $em->flush();
                     $this->flashy->success("Photo de profil mise à jour avec succès !");

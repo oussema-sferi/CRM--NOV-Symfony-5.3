@@ -140,6 +140,11 @@ class Project
      */
     private $whoDeletedIt;
 
+    /**
+     * @ORM\OneToOne(targetEntity=PaymentSchedule::class, mappedBy="project", cascade={"persist", "remove"})
+     */
+    private $paymentSchedule;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -429,6 +434,23 @@ class Project
     public function setWhoDeletedIt(?User $whoDeletedIt): self
     {
         $this->whoDeletedIt = $whoDeletedIt;
+
+        return $this;
+    }
+
+    public function getPaymentSchedule(): ?PaymentSchedule
+    {
+        return $this->paymentSchedule;
+    }
+
+    public function setPaymentSchedule(PaymentSchedule $paymentSchedule): self
+    {
+        // set the owning side of the relation if necessary
+        if ($paymentSchedule->getProject() !== $this) {
+            $paymentSchedule->setProject($this);
+        }
+
+        $this->paymentSchedule = $paymentSchedule;
 
         return $this;
     }

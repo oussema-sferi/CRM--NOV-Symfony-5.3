@@ -174,6 +174,11 @@ class Client
      */
     private $clientCategory;
 
+    /**
+     * @ORM\OneToMany(targetEntity=PaymentSchedule::class, mappedBy="client")
+     */
+    private $paymentSchedules;
+
 
     public function __construct()
     {
@@ -183,6 +188,7 @@ class Client
         $this->processingUsers = new ArrayCollection();
         $this->processes = new ArrayCollection();
         $this->projects = new ArrayCollection();
+        $this->paymentSchedules = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -679,6 +685,36 @@ class Client
     public function setClientCategory(?ClientCategory $clientCategory): self
     {
         $this->clientCategory = $clientCategory;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PaymentSchedule[]
+     */
+    public function getPaymentSchedules(): Collection
+    {
+        return $this->paymentSchedules;
+    }
+
+    public function addPaymentSchedule(PaymentSchedule $paymentSchedule): self
+    {
+        if (!$this->paymentSchedules->contains($paymentSchedule)) {
+            $this->paymentSchedules[] = $paymentSchedule;
+            $paymentSchedule->setClient($this);
+        }
+
+        return $this;
+    }
+
+    public function removePaymentSchedule(PaymentSchedule $paymentSchedule): self
+    {
+        if ($this->paymentSchedules->removeElement($paymentSchedule)) {
+            // set the owning side to null (unless already changed)
+            if ($paymentSchedule->getClient() === $this) {
+                $paymentSchedule->setClient(null);
+            }
+        }
 
         return $this;
     }
