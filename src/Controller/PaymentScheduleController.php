@@ -34,6 +34,7 @@ class PaymentScheduleController extends AbstractController
             $paymentDate = date("m/d/y",mktime(0, 0, 0, ((int)(new \DateTime())->format("m") + $i + 1),18,((int)(new \DateTime())->format("Y"))));
             $paymentLine->setPaymentDate(new \DateTime($paymentDate));
             $paymentLine->setIsPaid(false);
+            $paymentLine->setPaymentNumber($i + 1);
             $em->persist($paymentLine);
         }
         $paymentSchedule->setCreatedAt(new \DateTime());

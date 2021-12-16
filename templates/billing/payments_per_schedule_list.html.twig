@@ -41,7 +41,7 @@
                                     <h3 class="mb-0">Total: {{ all_payments|length }} Réglement(s)</h3>
                                 </div>
                                 <div class="col-md-6 text-right">
-                                    <button class="btn btn-sm btn-info" type="submit">Export vers PDF</button>
+                                    <button class="btn btn-sm btn-info" type="submit">Exporter vers PDF</button>
                                 </div>
                             </div>
                         </div>
@@ -58,12 +58,10 @@
                                 </tr>
                                 </thead>
                                 <tbody class="list">
-                                {%  set payments_counter = 0 %}
                                 {% for payment_row in payments %}
-                                    {%  set payments_counter = payments_counter + 1 %}
                                     <tr>
                                         <td class="budget">
-                                            {{ payments_counter }}
+                                            {{ payment_row.paymentNumber }}
                                         </td>
 
                                         <td class="budget">

@@ -38,6 +38,11 @@ class Payment
      */
     private $isPaid;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $paymentNumber;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -87,6 +92,18 @@ class Payment
     public function setIsPaid(bool $isPaid): self
     {
         $this->isPaid = $isPaid;
+
+        return $this;
+    }
+
+    public function getPaymentNumber(): ?int
+    {
+        return $this->paymentNumber;
+    }
+
+    public function setPaymentNumber(int $paymentNumber): self
+    {
+        $this->paymentNumber = $paymentNumber;
 
         return $this;
     }
