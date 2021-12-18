@@ -1,0 +1,77 @@
+{% extends 'base-PDF.html.twig' %}
+{% block head %}
+    <style>
+        #customers {
+            font-family: Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        #customers td, #customers th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        #customers tr:nth-child(even){background-color: #f2f2f2;}
+
+        #customers tr:hover {background-color: #ddd;}
+
+        #customers th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: #04AA6D;
+            color: white;
+        }
+    </style>
+{% endblock %}
+{% block title %}
+    Échéancier
+{% endblock %}
+{% block body %}
+    <h1 class="text-center">Bon de Réglement</h1>
+    <div class="table-responsive">
+        <table id="customers" class="table align-items-center table-flush">
+            <thead class="thead-light">
+            <tr>
+                <th scope="col">N° Réglement</th>
+                <th scope="col">Valeur</th>
+                <th scope="col">Date</th>
+                <th scope="col">état</th>
+            </tr>
+            </thead>
+            <tbody class="list">
+                <tr>
+                    <td class="budget">
+                        {{ payment.paymentNumber }}
+                    </td>
+
+                    <td class="budget">
+                        {{ payment.value }} €
+                    </td>
+
+                    <td class="budget">
+                        {{ payment.paymentDate | date("m/Y") }}
+                    </td>
+
+                    <td class="budget">
+                        {% if payment.isPaid == 1 %}
+                            Payé
+                        {% else %}
+                            Non Payé
+                        {% endif %}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+
+
+
+
+
+
+
+
+
