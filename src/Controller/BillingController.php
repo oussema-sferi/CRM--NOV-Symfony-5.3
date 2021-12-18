@@ -109,9 +109,9 @@ class BillingController extends AbstractController
     }
 
     /**
-     * @Route("/dashboard/billing/paymentschedulelist/paymentsperschedule/{paymentId}/onepaymentpdfexport", name="one_payment_pdf_export")
+     * @Route("/dashboard/billing/paymentschedulelist/{paymentScheduleId}/paymentsperschedule/{paymentId}/onepaymentpdfexport", name="one_payment_pdf_export")
      */
-    public function onePaymentPdfExport(Request $request, $paymentId, PaymentRepository $paymentRepository): Response
+    public function onePaymentPdfExport(Request $request, $paymentScheduleId, $paymentId, PaymentRepository $paymentRepository): Response
     {
         $payment = $paymentRepository->find($paymentId);
         $pdfOptions = new Options();
@@ -132,7 +132,7 @@ class BillingController extends AbstractController
         $domPdf->loadHtml($html);
         $domPdf->setPaper('A4', 'portrait');
         $domPdf->render();
-        $pdfFile = 'réglement' . $paymentId . '.pdf';
+        $pdfFile = 'réglement' . $payment->getPaymentNumber() . '-' . $paymentScheduleId . '.pdf';
         $domPdf->stream($pdfFile, [
             'Attachment' => true
         ]);

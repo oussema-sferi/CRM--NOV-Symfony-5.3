@@ -52,8 +52,8 @@
                                 <tr>
                                     <th scope="col">Réglement N°</th>
                                     <th scope="col">Valeur</th>
-                                    <th scope="col">Date</th>
-                                    <th scope="col">état</th>
+                                    <th scope="col">Date prévue de paiement</th>
+                                    <th scope="col">État</th>
                                     <th scope="col">Mise à jour</th>
                                     <th scope="col">Impression</th>
                                 </tr>
@@ -87,7 +87,7 @@
 
                                         <td>
                                             {% if payment_row.isPaid == 1 %}
-                                                <a href="{{ path('one_payment_pdf_export', {'paymentId': payment_row.id}) }}" class="badge badge-default" >Imprimer Bon de Réglement</a>
+                                                <a href="{{ path('one_payment_pdf_export', {'paymentScheduleId': payment_schedule_id,'paymentId': payment_row.id}) }}" class="badge badge-default" >Imprimer Bon de Réglement</a>
                                             {% else %}
                                                 <button class="badge badge-neutral" disabled>Imprimer Bon de Réglement</button>
                                             {% endif %}
