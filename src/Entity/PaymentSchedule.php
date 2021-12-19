@@ -62,6 +62,11 @@ class PaymentSchedule
      */
     private $payments;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isCompleted;
+
     public function __construct()
     {
         $this->payments = new ArrayCollection();
@@ -182,6 +187,18 @@ class PaymentSchedule
                 $payment->setAssociatedPaymentSchedule(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getIsCompleted(): ?bool
+    {
+        return $this->isCompleted;
+    }
+
+    public function setIsCompleted(bool $isCompleted): self
+    {
+        $this->isCompleted = $isCompleted;
 
         return $this;
     }

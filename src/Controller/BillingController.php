@@ -171,15 +171,28 @@ class BillingController extends AbstractController
     /**
      * @Route("/dashboard/billing/paymentschedulelist/{paymentScheduleId}/paymentsperschedule/{paymentRowId}/edit", name="payments_row_edit")
      */
-    public function paymentsRowEdit(Request $request, $paymentScheduleId, $paymentRowId, PaginatorInterface $paginator, PaymentRepository $paymentRepository): Response
+    public function paymentsRowEdit(Request $request, $paymentScheduleId, $paymentRowId, PaginatorInterface $paginator, PaymentRepository $paymentRepository, PaymentScheduleRepository $paymentScheduleRepository): Response
     {
         $paymentRow = $paymentRepository->find($paymentRowId);
+        $paymentSchedule = $paymentScheduleRepository->find($paymentScheduleId);
         if ($request->isMethod('Post')) {
             if($request->request->get('payment_status') === 'paid') {
                 $em = $this->getDoctrine()->getManager();
                 $paymentRow->setIsPaid(true);
                 $paymentRow->setPaymentReceiptDate(new \DateTime($request->request->get('payment_receipt_date')));
                 $em->persist($paymentRow);
+                $em->flush();
+                $allPayments = $paymentSchedule->getPayments();
+                $counter = 0;
+                foreach ($allPayments as $payment) {
+                    if ($payment->getIsPaid() === false) {
+                        $counter ++;
+                    }
+                }
+                if ($counter === 0) {
+                    $paymentSchedule->setIsCompleted(true);
+                }
+                $em->persist($paymentSchedule);
                 $em->flush();
                 $this->flashy->success("Le réglement a été traité avec succès !");
             } else {

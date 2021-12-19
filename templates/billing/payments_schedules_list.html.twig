@@ -69,6 +69,7 @@
                                     <th scope="col">Technologie Vendue</th>
                                     <th scope="col">Total HT Contrat</th>
                                     <th scope="col">Nombre de Mensualités</th>
+                                    <th scope="col">état</th>
                                     <th scope="col">Consultation</th>
                                     {#<th scope="col">Statut</th>
                                     <th scope="col">Facturation</th>#}
@@ -163,6 +164,20 @@
 
                                         <td class="budget">
                                             {{ payment_schedule.project.numberOfMonthlyPayments }}
+                                        </td>
+
+                                        <td>
+                                            {% if payment_schedule.isCompleted == 0 %}
+                                                <span class="badge badge-info badge-lg">
+                                                    <i class="bg-info"></i>
+                                                    En cours
+                                                </span>
+                                            {% elseif  payment_schedule.isCompleted == 1 %}
+                                                <span class="badge badge-success badge-lg">
+                                                    <i class="bg-success"></i>
+                                                    Totalement encaissé
+                                                </span>
+                                            {% endif %}
                                         </td>
 
                                         <td>
