@@ -60,7 +60,7 @@
                                 </thead>
                                 <tbody class="list">
                                 {% for payment_row in payments %}
-                                    <tr>
+                                    <tr class="clickable-row" data-href="{{ path('payments_row_show', {'paymentScheduleId': payment_schedule_id, 'paymentRowId': payment_row.id}) }}">
                                         <td class="budget">
                                             {{ payment_row.paymentNumber }}
                                         </td>
@@ -197,6 +197,12 @@
                     $("#payment_receive_date_block").hide();
                     $("#payment_receive_date").prop('required', false);
                 }
+            });
+            $(".clickable-row").hover(function() {
+                $(this).css('cursor', 'pointer');
+            });
+            $(".clickable-row").dblclick(function() {
+                window.location = $(this).data("href");
             });
         })
     </script>
