@@ -38,6 +38,7 @@
                 <th scope="col">Valeur</th>
                 <th scope="col">Date prévue de paiement</th>
                 <th scope="col">État</th>
+                <th scope="col">Date d'encaissement</th>
             </tr>
             </thead>
             <tbody class="list">
@@ -59,6 +60,13 @@
                             Payé
                         {% else %}
                             Non Payé
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if payment.isPaid == 1 %}
+                            {{ payment.paymentReceiptDate | format_datetime('short', 'none', locale='fr') }}
+                        {% else %}
+                            N/A
                         {% endif %}
                     </td>
                 </tr>

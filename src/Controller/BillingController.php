@@ -8,6 +8,7 @@ use App\Repository\PaymentScheduleRepository;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use Knp\Component\Pager\PaginatorInterface;
+use MercurySeries\FlashyBundle\FlashyNotifier;
 use phpDocumentor\Reflection\Types\This;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,6 +17,11 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class BillingController extends AbstractController
 {
+    public function __construct(FlashyNotifier $flashy)
+    {
+        $this->flashy = $flashy;
+    }
+
     /**
      * @Route("/dashboard/billing/paymentschedulelist", name="payment_schedule_list")
      */
@@ -168,8 +174,21 @@ class BillingController extends AbstractController
     public function paymentsRowEdit(Request $request, $paymentScheduleId, $paymentRowId, PaginatorInterface $paginator, PaymentRepository $paymentRepository): Response
     {
         $paymentRow = $paymentRepository->find($paymentRowId);
-        return $this->render('billing/payment_row_form.html.twig', [
-            'payment_row' => $paymentRow,
+        if ($request->isMethod('Post')) {
+            if($request->request->get('payment_status') === 'paid') {
+                $em = $this->getDoctrine()->getManager();
+                $paymentRow->setIsPaid(true);
+                $paymentRow->setPaymentReceiptDate(new \DateTime($request->request->get('payment_receipt_date')));
+                $em->persist($paymentRow);
+                $em->flush();
+                $this->flashy->success("Le réglement a été traité avec succès !");
+            } else {
+                $this->flashy->info("Aucun traitement n'a été effectué !");
+            }
+        }
+        return $this->redirectToRoute('payments_row_show', [
+            'paymentScheduleId' => $paymentScheduleId,
+            'paymentRowId' => $paymentRowId,
         ]);
     }
 }

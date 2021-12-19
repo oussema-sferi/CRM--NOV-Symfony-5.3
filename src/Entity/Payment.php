@@ -43,6 +43,11 @@ class Payment
      */
     private $paymentNumber;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $paymentReceiptDate;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -104,6 +109,18 @@ class Payment
     public function setPaymentNumber(int $paymentNumber): self
     {
         $this->paymentNumber = $paymentNumber;
+
+        return $this;
+    }
+
+    public function getPaymentReceiptDate(): ?\DateTimeInterface
+    {
+        return $this->paymentReceiptDate;
+    }
+
+    public function setPaymentReceiptDate(?\DateTimeInterface $paymentReceiptDate): self
+    {
+        $this->paymentReceiptDate = $paymentReceiptDate;
 
         return $this;
     }

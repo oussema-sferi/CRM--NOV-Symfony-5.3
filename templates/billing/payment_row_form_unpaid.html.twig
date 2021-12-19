@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-    Réglement N° {{ payment_row.id }}
+    Réglement N° {{ payment_row.paymentNumber }}
 {% endblock %}
 
 {% block body %}
@@ -18,7 +18,7 @@
                                 <li class="breadcrumb-item">Facturation</li>
                                 <li class="breadcrumb-item"><a href="{{ path('payment_schedule_list') }}">Liste des échéanciers</a></li>
                                 <li class="breadcrumb-item"><a href="{{ path('payments_per_schedule', {'id': payment_schedule_id}) }}">Liste des réglements</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Réglement N° {{ payment_row.id }}</li>
+                                <li class="breadcrumb-item active" aria-current="page">Réglement N° {{ payment_row.paymentNumber }}</li>
                             </ol>
                         </nav>
                     </div>
@@ -79,14 +79,14 @@
                                 </div>
 
 
-                                <div id="payment_receive_date_block" class="form-group" style="display: none">
+                                <div id="payment_receipt_date_block" class="form-group" style="display: none">
                                     <label class="form-control-label" for="input-username">Date d'encaissement</label>
-                                    <input id="payment_receive_date" type="date" class="form-control">
+                                    <input id="payment_receipt_date" type="date" name="payment_receipt_date" class="form-control">
                                 </div>
 
 
                                 <div class="text-center">
-                                    <button id="submit_button" type="submit" class="btn btn-success mt-4" disabled>Confirmer</button>
+                                    <button type="submit" class="btn btn-success mt-4">Sauvegarder</button>
                                 </div>
                             </form>
                         </div>
@@ -106,24 +106,20 @@
         let today = d.getFullYear() + '-' +
             ((''+month).length<2 ? '0' : '') + month + '-' +
             ((''+day).length<2 ? '0' : '') + day;
-        $("#payment_receive_date").val(today)
+        $("#payment_receipt_date").val(today)
         {% if payment_row.isPaid == 1 %}
-        $('input[type=radio][name=payment_status][value=paid]').prop('checked', true);
+            $('input[type=radio][name=payment_status][value=paid]').prop('checked', true);
         {% else %}
-        $('input[type=radio][name=payment_status][value=unpaid]').prop('checked', true);
+            $('input[type=radio][name=payment_status][value=unpaid]').prop('checked', true);
         {% endif %}
-
-
 
         $('input[type=radio][name=payment_status]').change(function() {
             if (this.value == "paid") {
-                console.log("Oui")
-                $("#payment_receive_date_block").show();
-                $("#payment_receive_date").prop('required', true);
+                $("#payment_receipt_date_block").show();
+                $("#payment_receipt_date").prop('required', true);
             } else {
-                console.log("no")
-                $("#payment_receive_date_block").hide();
-                $("#payment_receive_date").prop('required', false);
+                $("#payment_receipt_date_block").hide();
+                $("#payment_receipt_date").prop('required', false);
             }
         });
     });

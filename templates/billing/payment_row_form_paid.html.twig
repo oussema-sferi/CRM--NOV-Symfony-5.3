@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-    Réglement N° {{ payment_row.id }}
+    Réglement N° {{ payment_row.paymentNumber }}
 {% endblock %}
 
 {% block body %}
@@ -18,7 +18,7 @@
                                 <li class="breadcrumb-item">Facturation</li>
                                 <li class="breadcrumb-item"><a href="{{ path('payment_schedule_list') }}">Liste des échéanciers</a></li>
                                 <li class="breadcrumb-item"><a href="{{ path('payments_per_schedule', {'id': payment_schedule_id}) }}">Liste des réglements</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Réglement N° {{ payment_row.id }}</li>
+                                <li class="breadcrumb-item active" aria-current="page">Réglement N° {{ payment_row.paymentNumber }}</li>
                             </ol>
                         </nav>
                     </div>
@@ -53,8 +53,6 @@
                             <div class="text-center text-muted mb-4">
                             </div>
 
-                            <form action="{{ path('payments_row_edit', {'paymentScheduleId': payment_schedule_id, 'paymentRowId': payment_row.id}) }}" method="post">
-
                                 <div class="form-group">
                                     <label class="form-control-label" for="input-username">Valeur</label>
                                     <input type="text" id="value" class="form-control" value="{{ payment_row.value }} €" disabled>
@@ -74,26 +72,17 @@
 
                                 <div class="form-group">
                                     <label class="form-control-label" for="input-username">Date d'encaissement</label>
-                                    <input id="payment_receive_date" type="text" class="form-control" value="{{ payment_row.paymentDate | date("m/Y") }}" disabled>
+                                    <input id="payment_receive_date" type="text" class="form-control" value="{{ payment_row.paymentReceiptDate | format_datetime('short', 'none', locale='fr') }}" disabled>
                                 </div>
 
 
                                 <div class="text-center">
-                                    <button id="submit_button" type="submit" class="btn btn-success mt-4" disabled>Confirmer</button>
+                                    <a href="{{ path('one_payment_pdf_export', {'paymentScheduleId': payment_schedule_id,'paymentId': payment_row.id}) }}" class="btn btn-info mt-4" disabled>Télécharger Bon de Réglement N° {{ payment_row.paymentNumber }}</a>
                                 </div>
-                            </form>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-{% endblock %}
-
-{% block additionalJs %}
-<script type="text/javascript">
-    $(document).ready(function() {
-
-    });
-</script>
 {% endblock %}
