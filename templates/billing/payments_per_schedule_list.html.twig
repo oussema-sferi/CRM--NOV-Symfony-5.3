@@ -34,7 +34,6 @@
             <div class="col">
                 <div class="card">
                     <!-- Card header -->
-                    <form action="{{ path('projects_search_filters') }}" method="post">
                         <div class="card-header border-0">
                             <div class="row">
                                 <div class="col-md-6">
@@ -82,14 +81,17 @@
                                         </td>
 
                                         <td>
-                                            <a href="" data-toggle="modal" data-target="#editpayment{{ payment_row.id }}"  class="badge badge-default" >Mettre à jour</a>
+                                            {#<a href="" data-toggle="modal" data-target="#editpayment{{ payment_row.id }}"  class="badge badge-default" >Mettre à jour</a>#}
+                                            <a href="{{ path('payments_row_show', {'paymentScheduleId': payment_schedule_id, 'paymentRowId': payment_row.id}) }}"  class="badge badge-default" >Consulter</a>
                                         </td>
 
                                         <td>
                                             {% if payment_row.isPaid == 1 %}
-                                                <a href="{{ path('one_payment_pdf_export', {'paymentScheduleId': payment_schedule_id,'paymentId': payment_row.id}) }}" class="badge badge-default" >Imprimer Bon de Réglement</a>
+                                                <a href="{{ path('one_payment_pdf_export', {'paymentScheduleId': payment_schedule_id,'paymentId': payment_row.id}) }}"><i class="fas fa-file-pdf text-black-50"></i></a>
+                                                {#<a href="{{ path('one_payment_pdf_export', {'paymentScheduleId': payment_schedule_id,'paymentId': payment_row.id}) }}" class="badge badge-default" >Imprimer Bon de Réglement</a>#}
                                             {% else %}
-                                                <button class="badge badge-neutral" disabled>Imprimer Bon de Réglement</button>
+                                                <i class="fas fa-times-circle text-red"></i>
+                                                {#<button class="badge badge-neutral" disabled>Imprimer Bon de Réglement</button>#}
                                             {% endif %}
                                         </td>
                                     </tr>
@@ -105,31 +107,46 @@
 
                                                     <div class="form-group">
                                                         <label class="form-control-label" for="input-username">Valeur</label>
-                                                        <input type="text" id="value" class="form-control" value="{{ payment_row.value }}" disabled>
+                                                        <input type="text" id="value{{ payment_row.id }}" class="form-control" value="{{ payment_row.value }}" disabled>
                                                     </div>
 
                                                     <div class="form-group">
-                                                        <label class="form-control-label" for="input-username">Date</label>
-                                                        <input type="text" id="value" class="form-control" value="{{ payment_row.paymentDate | date("m/Y") }}" disabled>
+                                                        <label class="form-control-label" for="input-username">Date prévue de paiement</label>
+                                                        <input type="text" id="paymentDate{{ payment_row.id }}" class="form-control" value="{{ payment_row.paymentDate | date("m/Y") }}" disabled>
                                                     </div>
 
                                                     <div class="form-group">
                                                         <label class="form-control-label" for="payment_status">Etat</label>
                                                         <div class="custom-control custom-radio mb-3">
-                                                            <input type="radio" id="not_paid" name="payment_status" class="custom-control-input">
-                                                            <label class="custom-control-label" for="not_paid">Non Payé</label>
+                                                            <input type="radio" id="unpaid" name="payment_status" value="unpaid" class="custom-control-input">
+                                                            <label class="custom-control-label" for="unpaid">Non Payé</label>
                                                         </div>
                                                         <div class="custom-control custom-radio">
-                                                            <input type="radio" id="paid" name="payment_status" class="custom-control-input">
+                                                            <input type="radio" id="paid" name="payment_status" value="paid" class="custom-control-input">
                                                             <label class="custom-control-label" for="paid">Payé</label>
                                                         </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="form-control-label" for="input-username">Payé ?</label>
+                                                        <div>
+                                                            <label class="custom-toggle">
+                                                                <input id="payment_status{{ payment_row.id }}" type="checkbox" name="payment_status">
+                                                                <span class="custom-toggle-slider rounded-circle" data-label-off="Non" data-label-on="Oui"></span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div id="payment_receive_date_block{{ payment_row.id }}" class="form-group" style="display: none">
+                                                        <label class="form-control-label" for="input-username">Date d'encaissement</label>
+                                                        <input id="payment_receive_date{{ payment_row.id }}" type="date" class="form-control">
                                                     </div>
 
                                                 </div>
 
                                                 <div class="modal-footer" style="margin: 0 auto">
-                                                    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">Annuler</button>
-                                                    <a href="{{ path('payment_schedule', {'id': payment_row.id}) }}" class="btn btn-sm btn-success">Confirmer</a>
+                                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Annuler</button>
+                                                    <a href="{{ path('payment_schedule', {'id': payment_row.id}) }}" class="btn btn-success">Confirmer</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -139,7 +156,6 @@
                                 </tbody>
                             </table>
                         </div>
-                    </form>
                     <!-- Card footer -->
                     {{ knp_pagination_render(payments) }}
                 </div>
@@ -158,6 +174,18 @@
             $(".clickable-row").dblclick(function() {
                 window.location = $(this).data("href");
             });*/
+            $('input[type=checkbox][name=payment_status]').change(function() {
+                if ($(this).is(':checked')) {
+                    console.log("Oui")
+                    $("#payment_receive_date_block").show();
+                    $("#payment_receive_date").prop('required', true);
+                } else {
+                    console.log("no")
+                    $("#payment_receive_date_block").hide();
+                    $("#payment_receive_date").prop('required', false);
+                }
+            });
         })
     </script>
 {% endblock %}
+

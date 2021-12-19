@@ -142,4 +142,34 @@ class BillingController extends AbstractController
             'payments' => $payments
         ]);*/
     }
+
+    /**
+     * @Route("/dashboard/billing/paymentschedulelist/{paymentScheduleId}/paymentsperschedule/{paymentRowId}", name="payments_row_show")
+     */
+    public function paymentsRowShow(Request $request, $paymentScheduleId, $paymentRowId, PaginatorInterface $paginator, PaymentRepository $paymentRepository): Response
+    {
+        $paymentRow = $paymentRepository->find($paymentRowId);
+        if($paymentRow->getIsPaid() === true) {
+            return $this->render('billing/payment_row_form_paid.html.twig', [
+                'payment_schedule_id' => $paymentScheduleId,
+                'payment_row' => $paymentRow,
+            ]);
+        } else {
+            return $this->render('billing/payment_row_form_unpaid.html.twig', [
+                'payment_schedule_id' => $paymentScheduleId,
+                'payment_row' => $paymentRow,
+            ]);
+        }
+    }
+
+    /**
+     * @Route("/dashboard/billing/paymentschedulelist/{paymentScheduleId}/paymentsperschedule/{paymentRowId}/edit", name="payments_row_edit")
+     */
+    public function paymentsRowEdit(Request $request, $paymentScheduleId, $paymentRowId, PaginatorInterface $paginator, PaymentRepository $paymentRepository): Response
+    {
+        $paymentRow = $paymentRepository->find($paymentRowId);
+        return $this->render('billing/payment_row_form.html.twig', [
+            'payment_row' => $paymentRow,
+        ]);
+    }
 }
