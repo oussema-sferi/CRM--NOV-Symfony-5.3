@@ -82,17 +82,7 @@
                                             {% endif %}
                                         </td>
                                         <td class="budget">
-                                            {% if payment_row.paymentMethod == 1 %}
-                                                Carte Bancaire
-                                            {% elseif payment_row.paymentMethod == 2 %}
-                                                Virement Bancaire
-                                            {% elseif payment_row.paymentMethod == 3 %}
-                                                Chèque
-                                            {% elseif payment_row.paymentMethod == 4 %}
-                                                Espèces
-                                            {% else %}
-                                                N/A
-                                            {% endif %}
+                                            {% if payment_row.paymentMethod == 1 %}Carte Bancaire{% elseif payment_row.paymentMethod == 2 %}Virement Bancaire{% elseif payment_row.paymentMethod == 3 %}Chèque{% elseif payment_row.paymentMethod == 4 %}Espèces{% else %}N/A{% endif %}
                                         </td>
 
                                         <td>

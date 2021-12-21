@@ -1,6 +1,6 @@
 {% extends 'base-PDF.html.twig' %}
 {% block head %}
-    {#<style>
+    <style>
         #payments {
             font-family: Arial, Helvetica, sans-serif;
             border-collapse: collapse;
@@ -23,10 +23,10 @@
             background-color: #04AA6D;
             color: white;
         }
-    </style>#}
+    </style>
 {% endblock %}
 {% block title %}
-    Échéancier
+    Réglement
 {% endblock %}
 {% block body %}
     <h1 class="text-center">Bon de Réglement</h1>
@@ -38,6 +38,7 @@
                 <th scope="col">Valeur</th>
                 <th scope="col">Date prévue de paiement</th>
                 <th scope="col">État</th>
+                <th scope="col">Méthode de paiement</th>
                 <th scope="col">Date d'encaissement</th>
             </tr>
             </thead>
@@ -52,7 +53,7 @@
                     </td>
 
                     <td class="budget">
-                        {{ payment.paymentDate | date("m/Y") }}
+                        {{ payment.paymentDate | format_datetime('short', 'none', locale='fr') }}
                     </td>
 
                     <td class="budget">
@@ -61,6 +62,9 @@
                         {% else %}
                             Non Payé
                         {% endif %}
+                    </td>
+                    <td class="budget">
+                        {% if payment.paymentMethod == 1 %}Carte Bancaire{% elseif payment.paymentMethod == 2 %}Virement Bancaire{% elseif payment.paymentMethod == 3 %}Chèque{% elseif payment.paymentMethod == 4 %}Espèces{% else %}N/A{% endif %}
                     </td>
                     <td>
                         {% if payment.isPaid == 1 %}
