@@ -53,6 +53,7 @@
                                     <th scope="col">Valeur</th>
                                     <th scope="col">Date prévue de paiement</th>
                                     <th scope="col">État</th>
+                                    <th scope="col">Méthode de paiement</th>
                                     <th scope="col">Date d'encaissement</th>
                                     <th scope="col">Traitement</th>
                                     <th scope="col">Impression</th>
@@ -70,7 +71,7 @@
                                         </td>
 
                                         <td class="budget">
-                                            {{ payment_row.paymentDate | date("m/Y") }}
+                                            {{ payment_row.paymentDate | format_datetime('short', 'none', locale='fr') }}
                                         </td>
 
                                         <td class="budget">
@@ -78,6 +79,19 @@
                                                 Payé
                                             {% else %}
                                                 Non Payé
+                                            {% endif %}
+                                        </td>
+                                        <td class="budget">
+                                            {% if payment_row.paymentMethod == 1 %}
+                                                Carte Bancaire
+                                            {% elseif payment_row.paymentMethod == 2 %}
+                                                Virement Bancaire
+                                            {% elseif payment_row.paymentMethod == 3 %}
+                                                Chèque
+                                            {% elseif payment_row.paymentMethod == 4 %}
+                                                Espèces
+                                            {% else %}
+                                                N/A
                                             {% endif %}
                                         </td>
 

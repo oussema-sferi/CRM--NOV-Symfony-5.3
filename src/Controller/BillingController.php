@@ -180,6 +180,7 @@ class BillingController extends AbstractController
                 $em = $this->getDoctrine()->getManager();
                 $paymentRow->setIsPaid(true);
                 $paymentRow->setPaymentReceiptDate(new \DateTime($request->request->get('payment_receipt_date')));
+                $paymentRow->setPaymentMethod((int)($request->request->get('paymentMethod')));
                 $em->persist($paymentRow);
                 $em->flush();
                 $allPayments = $paymentSchedule->getPayments();
@@ -194,7 +195,7 @@ class BillingController extends AbstractController
                 }
                 $em->persist($paymentSchedule);
                 $em->flush();
-                $this->flashy->success("Le réglement a été traité avec succès !");
+                $this->flashy->success("Réglement traité avec succès !");
             } else {
                 $this->flashy->info("Aucun traitement n'a été effectué !");
             }

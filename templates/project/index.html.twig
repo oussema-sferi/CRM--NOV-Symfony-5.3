@@ -67,7 +67,8 @@
                                         <th scope="col">Commercial</th>
                                     {% endif %}
                                     <th scope="col">Technologie Vendue</th>
-                                    <th scope="col">Total HT Contrat</th>
+                                    <th scope="col">Total Contrat</th>
+                                    <th scope="col">Nombre de Mensualités</th>
                                     <th scope="col">Statut</th>
                                     <th scope="col">Facturation</th>
                                     <th scope="col">Actions</th>
@@ -113,6 +114,9 @@
                                         <input id="totalHT" name="totalHT" class="test" type="text">
                                     </td>
                                     <td>
+                                        <input id="numberOfMonthlyPayments" name="numberOfMonthlyPayments" class="test" type="number">
+                                    </td>
+                                    <td>
                                         <select id="status" name="status" class="form-control-sm">
                                             <option value="" selected>--- Choisir ---</option>
                                             <option value="1">En cours</option>
@@ -153,6 +157,10 @@
 
                                         <td class="budget">
                                             {{ project.totalHT }} €
+                                        </td>
+
+                                        <td class="budget">
+                                            {{ project.numberOfMonthlyPayments }}
                                         </td>
 
                                         <td class="budget">

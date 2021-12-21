@@ -165,15 +165,16 @@ class ProjectController extends AbstractController
             $newProject->setTotalHT($request->request->get('totalHT'));
             if($request->request->get('rachat') === "on") {
                 $newProject->setRachat(true);
+                if($request->request->get('reportMensualite') === "10") {
+                    $newProject->setReportMensualite((int)($request->request->get('reportMensualiteCustomValue')));
+                } else {
+                    $newProject->setReportMensualite((int)($request->request->get('reportMensualite')));
+                }
             } else {
                 $newProject->setRachat(false);
             }
 
-            if($request->request->get('reportMensualite') === "10") {
-                $newProject->setReportMensualite((int)($request->request->get('reportMensualiteCustomValue')));
-            } else {
-                $newProject->setReportMensualite((int)($request->request->get('reportMensualite')));
-            }
+
             $newProject->setProjectNotes($request->request->get('projectNotes'));
             $newProject->setStatus((int)($request->request->get('status')));
             $newProject->setShipmentStatus((int)($request->request->get('shipmentStatus')));
@@ -287,14 +288,14 @@ class ProjectController extends AbstractController
             $projectToUpdate->setTotalHT($request->request->get('totalHT'));
             if($request->request->get('rachat') === "on") {
                 $projectToUpdate->setRachat(true);
+                if($request->request->get('reportMensualite') === "10") {
+                    $projectToUpdate->setReportMensualite((int)($request->request->get('reportMensualiteCustomValue')));
+                } else {
+                    $projectToUpdate->setReportMensualite((int)($request->request->get('reportMensualite')));
+                }
             } else {
                 $projectToUpdate->setRachat(false);
-            }
-
-            if($request->request->get('reportMensualite') === "10") {
-                $projectToUpdate->setReportMensualite((int)($request->request->get('reportMensualiteCustomValue')));
-            } else {
-                $projectToUpdate->setReportMensualite((int)($request->request->get('reportMensualite')));
+                $projectToUpdate->setReportMensualite(null);
             }
             $projectToUpdate->setProjectNotes($request->request->get('projectNotes'));
             $projectToUpdate->setStatus((int)($request->request->get('status')));

@@ -69,6 +69,11 @@
                                     <input id="payment_receive_date" type="text" class="form-control" value="Payé" disabled>
                                 </div>
 
+                                <div class="form-group">
+                                    <label class="form-control-label" for="payment_method">Méthode de paiement</label>
+                                    <input type="text" class="form-control" value="{% if payment_row.paymentMethod == 1 %}Carte Bancaire{% elseif payment_row.paymentMethod == 2 %}Virement Bancaire{% elseif payment_row.paymentMethod == 3 %}Chèque{% elseif payment_row.paymentMethod == 4 %}Espèces{% else %}N/A{% endif %}" disabled>
+                                </div>
+
 
                                 <div class="form-group">
                                     <label class="form-control-label" for="input-username">Date d'encaissement</label>

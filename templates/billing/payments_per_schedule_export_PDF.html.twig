@@ -1,29 +1,29 @@
 {% extends 'base-PDF.html.twig' %}
 {% block head %}
-    <style>
-        #customers {
+    {#<style>
+        #payments {
             font-family: Arial, Helvetica, sans-serif;
             border-collapse: collapse;
             width: 100%;
         }
 
-        #customers td, #customers th {
+        #payments td, #payments th {
             border: 1px solid #ddd;
             padding: 8px;
         }
 
-        #customers tr:nth-child(even){background-color: #f2f2f2;}
+        #payments tr:nth-child(even){background-color: #f2f2f2;}
 
-        #customers tr:hover {background-color: #ddd;}
+        #payments tr:hover {background-color: #ddd;}
 
-        #customers th {
+        #payments th {
             padding-top: 12px;
             padding-bottom: 12px;
             text-align: left;
             background-color: #04AA6D;
             color: white;
         }
-    </style>
+    </style>#}
 {% endblock %}
 {% block title %}
     Échéancier
@@ -31,7 +31,7 @@
 {% block body %}
     <h1 class="text-center">Échéancier</h1>
     <div class="table-responsive">
-        <table id="customers" class="table align-items-center table-flush">
+        <table id="payments" class="table align-items-center table-flush">
             <thead class="thead-light">
             <tr>
                 <th scope="col">N° Réglement</th>

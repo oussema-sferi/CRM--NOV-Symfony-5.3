@@ -2,6 +2,22 @@
 
 {% block title %}Nouveau projet{% endblock %}
 
+{% block stylesheets %}
+    <style>
+        /* Chrome, Safari, Edge, Opera */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* Firefox */
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+    </style>
+{% endblock %}
+
 {% block body %}
 
     <div class="header pb-6" style="background-color: #EDA200">
@@ -73,15 +89,15 @@
                                     </div>
                                     <select id="monthlyPayment" name="monthlyPayment" class="form-control" required>
                                         <option value="" selected>Choisir la mensualité...</option>
-                                        <option value="79">79€</option>
-                                        <option value="99">99€</option>
-                                        <option value="119">119€</option>
-                                        <option value="129">129€</option>
-                                        <option value="149">149€</option>
-                                        <option value="169">169€</option>
-                                        <option value="189">189€</option>
-                                        <option value="269,21">269,21€</option>
-                                        <option value="291,84">291,84€</option>
+                                        <option value="79">79 €</option>
+                                        <option value="99">99 €</option>
+                                        <option value="119">119 €</option>
+                                        <option value="129">129 €</option>
+                                        <option value="149">149 €</option>
+                                        <option value="169">169 €</option>
+                                        <option value="189">189 €</option>
+                                        <option value="269.21">269.21 €</option>
+                                        <option value="291.84">291.84 €</option>
                                         <option value="10">Autre...</option>
                                     </select>
                                 </div>
@@ -100,13 +116,14 @@
                                         <option value="36">36</option>
                                         <option value="48">48</option>
                                         <option value="60">60</option>
+                                        {#<option value="72">72</option>#}
                                     </select>
                                 </div>
 
                                 <div>
                                     <div class="form-group">
-                                        <label class="form-control-label required" for="totalHT">Total HT</label>
-                                        <input type="text" id="totalHT" name="totalHT" class="form-control">
+                                        <label class="form-control-label required" for="totalHT">Total</label>
+                                        <input type="text" id="totalHT" name="totalHT" class="form-control" readonly>
                                     </div>
                                 </div>
 
@@ -120,21 +137,25 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group">
-                                    <div>
-                                        <label class="form-control-label required" for="reportMensualite">Report Mensualité</label>
+                                <div id="report-mensualite-block" style="display: none">
+                                    <div class="form-group">
+                                        <div>
+                                            <label class="form-control-label required" for="reportMensualite">Report Mensualité</label>
+                                        </div>
+                                        <select id="reportMensualite" name="reportMensualite" class="form-control">
+                                            <option value="" selected>Choisir le report de mensualités...</option>
+                                            <option value="3">3 Mois</option>
+                                            <option value="6">6 Mois</option>
+                                            <option value="10">Autre...</option>
+                                        </select>
                                     </div>
-                                    <select id="reportMensualite" name="reportMensualite" class="form-control" required>
-                                        <option value="" selected>Choisir le report de mensualités...</option>
-                                        <option value="3">3 Mois</option>
-                                        <option value="6">6 Mois</option>
-                                        <option value="10">Autre...</option>
-                                    </select>
+
+                                    <div class="form-group">
+                                        <input id="reportMensualiteCustomValue" name="reportMensualiteCustomValue" type="number" class="form-control" placeholder="Saisir le report mensualité..." style="display: none">
+                                    </div>
                                 </div>
 
-                                <div class="form-group">
-                                    <input id="reportMensualiteCustomValue" name="reportMensualiteCustomValue" type="number" class="form-control" placeholder="Saisir le report mensualité..." style="display: none">
-                                </div>
+
 
                                 <div class="form-group">
                                     <div>
@@ -232,7 +253,6 @@
                                         <textarea id="shipmentNotes" class="form-control" name="shipmentNotes" cols="30" rows="6" placeholder="..." resize="none" required></textarea>
                                     </div>
 
-
                                 <div class="text-center">
                                     <button type="submit" class="btn btn-success mt-4">Confirmer</button>
                                 </div>
@@ -270,17 +290,29 @@
                     $("#reportMensualiteCustomValue").prop('required', false);
                 }
             })
-            /*$("#rachat").change(function () {
-                if ($(this).is(':checked')) {
-                    $("#appointment_notes_block").show('1500')
-                    $("#notes").prop('required', true)
-                } else {
-                    $("#appointment_notes_block").hide('500')
-                    $("#notes").prop('required', false)
-                }
-            })*/
 
+            $("#monthlyPaymentCustomValue").keyup(function () {
+                $("#totalHT").val($("#monthlyPaymentCustomValue").val() * $("#numberOfMonthlyPayments").val());
+            })
+            $("#numberOfMonthlyPayments").change(function () {
+                $("#totalHT").val($("#monthlyPaymentCustomValue").val() * $(this).val());
+            })
+            $("#monthlyPayment").change(function () {
+                $("#totalHT").val($("#numberOfMonthlyPayments").val() * $(this).val());
+            })
+            $("#numberOfMonthlyPayments").change(function () {
+                $("#totalHT").val($("#monthlyPayment").val() * $(this).val());
+            })
+            $("#rachat").change(function () {
+                if ($(this).is(':checked')) {
+                    $("#report-mensualite-block").show()
+                    $("#reportMensualite").prop('required', true)
+                } else {
+                    $("#report-mensualite-block").hide()
+                    $("#reportMensualite").prop('required', false)
+                    $("#reportMensualiteCustomValue").prop('required', false);
+                }
+            })
         }
     </script>
-
 {% endblock %}

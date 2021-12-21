@@ -2,6 +2,22 @@
 
 {% block title %}Edition projet{% endblock %}
 
+{% block stylesheets %}
+    <style>
+        /* Chrome, Safari, Edge, Opera */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* Firefox */
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+    </style>
+{% endblock %}
+
 {% block body %}
 
     <div class="header pb-6" style="background-color: #EDA200">
@@ -80,8 +96,8 @@
                                         <option value="149">149€</option>
                                         <option value="169">169€</option>
                                         <option value="189">189€</option>
-                                        <option value="269,21">269,21€</option>
-                                        <option value="291,84">291,84€</option>
+                                        <option value="269.21">269.21€</option>
+                                        <option value="291.84">291.84€</option>
                                         <option value="10">Autre...</option>
                                     </select>
                                 </div>
@@ -105,8 +121,8 @@
 
                                 <div>
                                     <div class="form-group">
-                                        <label class="form-control-label required" for="totalHT">Total HT</label>
-                                        <input type="text" id="totalHT" name="totalHT" class="form-control" value="{{ project_to_update.totalHT }}">
+                                        <label class="form-control-label required" for="totalHT">Total</label>
+                                        <input type="text" id="totalHT" name="totalHT" class="form-control" value="{{ project_to_update.totalHT }}" readonly>
                                     </div>
                                 </div>
 
@@ -120,21 +136,24 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group">
-                                    <div>
-                                        <label class="form-control-label required" for="reportMensualite">Report Mensualité</label>
+                                <div id="report-mensualite-block" style="display: none">
+                                    <div class="form-group">
+                                        <div>
+                                            <label class="form-control-label required" for="reportMensualite">Report Mensualité</label>
+                                        </div>
+                                        <select id="reportMensualite" name="reportMensualite" class="form-control" required>
+                                            <option value="" selected>Choisir le report de mensualités...</option>
+                                            <option value="3">3 Mois</option>
+                                            <option value="6">6 Mois</option>
+                                            <option value="10">Autre...</option>
+                                        </select>
                                     </div>
-                                    <select id="reportMensualite" name="reportMensualite" class="form-control" required>
-                                        <option value="" selected>Choisir le report de mensualités...</option>
-                                        <option value="3">3 Mois</option>
-                                        <option value="6">6 Mois</option>
-                                        <option value="10">Autre...</option>
-                                    </select>
+
+                                    <div class="form-group">
+                                        <input id="reportMensualiteCustomValue" name="reportMensualiteCustomValue" type="number" class="form-control" placeholder="Saisir le report mensualité..." style="display: none">
+                                    </div>
                                 </div>
 
-                                <div class="form-group">
-                                    <input id="reportMensualiteCustomValue" name="reportMensualiteCustomValue" type="number" class="form-control" placeholder="Saisir le report mensualité..." style="display: none">
-                                </div>
 
                                 <div class="form-group">
                                     <div>
@@ -272,6 +291,29 @@
                 }
             })
 
+            $("#monthlyPaymentCustomValue").keyup(function () {
+                $("#totalHT").val($("#monthlyPaymentCustomValue").val() * $("#numberOfMonthlyPayments").val());
+            })
+            $("#numberOfMonthlyPayments").change(function () {
+                $("#totalHT").val($("#monthlyPaymentCustomValue").val() * $(this).val());
+            })
+            $("#monthlyPayment").change(function () {
+                $("#totalHT").val($("#numberOfMonthlyPayments").val() * $(this).val());
+            })
+            $("#numberOfMonthlyPayments").change(function () {
+                $("#totalHT").val($("#monthlyPayment").val() * $(this).val());
+            })
+            $("#rachat").change(function () {
+                if ($(this).is(':checked')) {
+                    $("#report-mensualite-block").show()
+                    $("#reportMensualite").prop('required', true)
+                } else {
+                    $("#report-mensualite-block").hide()
+                    $("#reportMensualite").prop('required', false)
+                    $("#reportMensualiteCustomValue").prop('required', false);
+                }
+            })
+
             $('#equipment').val({{ project_to_update.equipment.id }})
 
             {% if (project_to_update.monthlyPayment == "79") or (project_to_update.monthlyPayment == "99") or (project_to_update.monthlyPayment == "119") or (project_to_update.monthlyPayment == "129")
@@ -286,7 +328,9 @@
 
             $('#numberOfMonthlyPayments').val({{ project_to_update.numberOfMonthlyPayments }})
 
-            {% if (project_to_update.reportMensualite == "3") or (project_to_update.reportMensualite == "6") %}
+            {% if not project_to_update.reportMensualite|default %}
+            $("#reportMensualite").val("")
+            {% elseif (project_to_update.reportMensualite == "3") or (project_to_update.reportMensualite == "6") %}
             $('#reportMensualite').val({{ project_to_update.reportMensualite }})
             {% else %}
             $('#reportMensualiteCustomValue').val({{ project_to_update.reportMensualite }})
@@ -301,6 +345,7 @@
 
             {% if project_to_update.rachat == 1 %}
             $("#rachat").prop('checked', true)
+            $("#report-mensualite-block").show()
             {% else %}
             $("#rachat").prop('checked', false)
             {% endif %}
@@ -321,6 +366,7 @@
                     $("#notes").prop('required', false)
                 }
             })*/
+
 
         }
     </script>

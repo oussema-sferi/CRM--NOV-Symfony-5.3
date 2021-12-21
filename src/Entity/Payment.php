@@ -48,6 +48,12 @@ class Payment
      */
     private $paymentReceiptDate;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $paymentMethod;
+
+
     public function getId(): ?int
     {
         return $this->id;
@@ -124,4 +130,17 @@ class Payment
 
         return $this;
     }
+
+    public function getPaymentMethod(): ?int
+    {
+        return $this->paymentMethod;
+    }
+
+    public function setPaymentMethod(?int $paymentMethod): self
+    {
+        $this->paymentMethod = $paymentMethod;
+
+        return $this;
+    }
+
 }

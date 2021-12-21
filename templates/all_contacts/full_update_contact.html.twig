@@ -588,7 +588,7 @@
                                             <div class="col-lg-6">
                                                 <div class="form-group">
                                                     <label class="form-control-label" for="input-country">Report Mensualité</label>
-                                                    <input type="text" id="input-country" class="form-control" value="{{ project.reportMensualite }}" disabled>
+                                                    <input type="text" id="input-country" class="form-control" value="{% if project.reportMensualite|default  %}{{ project.reportMensualite }}{% else %}N/A{% endif %}" disabled>
                                                 </div>
                                             </div>
                                             <div class="col-lg-6">

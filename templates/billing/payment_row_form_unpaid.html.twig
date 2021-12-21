@@ -79,10 +79,25 @@
                                 </div>
 
 
-                                <div id="payment_receipt_date_block" class="form-group" style="display: none">
-                                    <label class="form-control-label" for="input-username">Date d'encaissement</label>
-                                    <input id="payment_receipt_date" type="date" name="payment_receipt_date" class="form-control">
+                                <div id="payment_receipt_date_block" style="display: none">
+                                    <div class="form-group">
+                                        <div>
+                                            <label class="form-control-label required" for="paymentMethod">Report Mensualité</label>
+                                        </div>
+                                        <select id="paymentMethod" name="paymentMethod" class="form-control">
+                                            <option value="" selected>Choisir la méthode de paiement...</option>
+                                            <option value="1">Carte Bancaire</option>
+                                            <option value="2">Virement Bancaire</option>
+                                            <option value="3">Chèque</option>
+                                            <option value="4">Espèces</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-username">Date d'encaissement</label>
+                                        <input id="payment_receipt_date" type="date" name="payment_receipt_date" class="form-control">
+                                    </div>
                                 </div>
+
 
 
                                 <div class="text-center">
@@ -117,9 +132,11 @@
             if (this.value == "paid") {
                 $("#payment_receipt_date_block").show();
                 $("#payment_receipt_date").prop('required', true);
+                $("#paymentMethod").prop('required', true);
             } else {
                 $("#payment_receipt_date_block").hide();
                 $("#payment_receipt_date").prop('required', false);
+                $("#paymentMethod").prop('required', false);
             }
         });
     });
