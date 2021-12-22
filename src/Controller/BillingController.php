@@ -82,11 +82,20 @@ class BillingController extends AbstractController
     /**
      * @Route("/dashboard/billing/paymentschedulelist/{id}/paymentsperschedule/pdfexport", name="schedule_pdf_export")
      */
-    public function paymentsPerSchedulePdfExport(Request $request, $id, PaymentRepository $paymentRepository): Response
+    public function paymentsPerSchedulePdfExport(Request $request, $id, PaymentRepository $paymentRepository, PaymentScheduleRepository $paymentScheduleRepository): Response
     {
+        /*dd($this->getParameter('kernel.project_dir') . '\public\assets\css');*/
         $payments = $paymentRepository->getPaymentsOfPaymentSchedule($id);
+        $paymentSchedule = $paymentScheduleRepository->find($id);
+        $client = $paymentSchedule->getProject()->getClient();
+        /*return $this->render('billing/payments_per_schedule_export_PDF.html.twig', [
+            'payments' => $payments,
+            'payment_schedule' => $paymentSchedule,
+            'client' => $client,
+            'today' => new \DateTime()
+        ]);*/
         $pdfOptions = new Options();
-        $pdfOptions->set('defaultFont', 'Arial');
+        $pdfOptions->set('defaultFont', 'Cambria');
         $pdfOptions->setIsRemoteEnabled(true);
         $domPdf = new Dompdf($pdfOptions);
         $context = stream_context_create([
@@ -97,11 +106,15 @@ class BillingController extends AbstractController
             ]
         ]);
         $domPdf->setHttpContext($context);
+        /*$domPdf->setBasePath($this->getParameter('kernel.project_dir') . '/public/assets/css/');*/
         $html = $this->renderView('billing/payments_per_schedule_export_PDF.html.twig', [
-            'payments' => $payments
+            'payments' => $payments,
+            'payment_schedule' => $paymentSchedule,
+            'client' => $client,
+            'today' => new \DateTime()
         ]);
         $domPdf->loadHtml($html);
-        $domPdf->setPaper('A4', 'portrait');
+        $domPdf->setPaper('A4', 'landscape');
         $domPdf->render();
         $pdfFile = 'échéancier' . $id . '.pdf';
         $domPdf->stream($pdfFile, [
@@ -117,9 +130,17 @@ class BillingController extends AbstractController
     /**
      * @Route("/dashboard/billing/paymentschedulelist/{paymentScheduleId}/paymentsperschedule/{paymentId}/onepaymentpdfexport", name="one_payment_pdf_export")
      */
-    public function onePaymentPdfExport(Request $request, $paymentScheduleId, $paymentId, PaymentRepository $paymentRepository): Response
+    public function onePaymentPdfExport(Request $request, $paymentScheduleId, $paymentId, PaymentRepository $paymentRepository, PaymentScheduleRepository $paymentScheduleRepository): Response
     {
         $payment = $paymentRepository->find($paymentId);
+        $paymentSchedule = $paymentScheduleRepository->find($paymentScheduleId);
+        $client = $paymentSchedule->getProject()->getClient();
+        /*return $this->render('billing/one_payment_export_PDF.html.twig', [
+            'payment' => $payment,
+            'payment_schedule' => $paymentSchedule,
+            'client' => $client,
+            'today' => new \DateTime()
+        ]);*/
         $pdfOptions = new Options();
         $pdfOptions->set('defaultFont', 'Arial');
         $pdfOptions->setIsRemoteEnabled(true);
@@ -133,10 +154,13 @@ class BillingController extends AbstractController
         ]);
         $domPdf->setHttpContext($context);
         $html = $this->renderView('billing/one_payment_export_PDF.html.twig', [
-            'payment' => $payment
+            'payment' => $payment,
+            'payment_schedule' => $paymentSchedule,
+            'client' => $client,
+            'today' => new \DateTime()
         ]);
         $domPdf->loadHtml($html);
-        $domPdf->setPaper('A4', 'portrait');
+        $domPdf->setPaper('A4', 'landscape');
         $domPdf->render();
         $pdfFile = 'réglement' . $payment->getPaymentNumber() . '-' . $paymentScheduleId . '.pdf';
         $domPdf->stream($pdfFile, [
