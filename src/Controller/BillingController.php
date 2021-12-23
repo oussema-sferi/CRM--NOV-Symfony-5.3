@@ -167,7 +167,6 @@ class BillingController extends AbstractController
             'Attachment' => true
         ]);
         return new Response();
-
         /*return $this->render('billing/payments_per_schedule_export_PDF.html.twig', [
             'payments' => $payments
         ]);*/

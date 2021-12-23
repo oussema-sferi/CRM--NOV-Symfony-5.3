@@ -9,6 +9,7 @@ use App\Entity\Project;
 use App\Entity\User;
 use App\Repository\ClientCategoryRepository;
 use App\Repository\EquipmentRepository;
+use App\Repository\PaymentScheduleRepository;
 use App\Repository\UserRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -325,4 +326,49 @@ class SearchFiltersController extends AbstractController
     }
 
 
+    /**
+     * @Route("/dashboard/billing/paymentschedulelist/search/filters", name="payments_schedules_search_filters")
+     */
+    public function paymentsSchedulesSearchFilters(Request $request, PaginatorInterface $paginator, PaymentScheduleRepository $paymentScheduleRepository, EquipmentRepository $equipmentRepository): Response
+    {
+        //search without ajax
+        $session = $request->getSession();
+        $equipments = $equipmentRepository->findAll();
+        if($request->isMethod('POST')) {
+            $session->set('payments_schedules_criterias',
+                $request->request->all()
+            );
+        }
+        $criterias = $session->get('payments_schedules_criterias');
+        $payload = $paymentScheduleRepository->fetchAllPaymentsSchedulesByFilters($criterias);
+        if(count($payload) === 0) {
+            $session->set('total_payments_schedules_search_results',
+                'nothing'
+            );
+        } else {
+            $session->set('total_payments_schedules_search_results',
+                count($payload)
+            );
+        }
+        $data = $paymentScheduleRepository->findAll();
+        if($session->get('pagination_value')) {
+            $paymentsSchedules = $paginator->paginate(
+                $payload,
+                $request->query->getInt('page', 1),
+                $session->get('pagination_value')
+            );
+        } else {
+            $paymentsSchedules = $paginator->paginate(
+                $payload,
+                $request->query->getInt('page', 1),
+                10
+            );
+        }
+
+        return $this->render('billing/payments_schedules_list.html.twig', [
+            'all_payments_schedules' => $data,
+            'payments_schedules' => $paymentsSchedules,
+            'equipments'=> $equipments,
+        ]);
+    }
 }

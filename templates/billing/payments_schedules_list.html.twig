@@ -33,13 +33,13 @@
             <div class="col">
                 <div class="card">
                     <!-- Card header -->
-                    <form action="{{ path('projects_search_filters') }}" method="post">
+                    <form action="{{ path('payments_schedules_search_filters') }}" method="post">
                         <div class="card-header border-0">
                             <div class="row">
                                 <div class="col-md-6">
-                                    {% if app.session.get('total_projects_search_results') and app.session.get('total_projects_search_results') != "nothing" %}
-                                        <h3 class="mb-0">Nombre de résultats: {{ app.session.get('total_projects_search_results')}}</h3>
-                                    {% elseif app.session.get('total_projects_search_results') and app.session.get('total_projects_search_results') == "nothing" %}
+                                    {% if app.session.get('total_payments_schedules_search_results') and app.session.get('total_payments_schedules_search_results') != "nothing" %}
+                                        <h3 class="mb-0">Nombre de résultats: {{ app.session.get('total_payments_schedules_search_results')}}</h3>
+                                    {% elseif app.session.get('total_payments_schedules_search_results') and app.session.get('total_payments_schedules_search_results') == "nothing" %}
                                         <h3 class="mb-0" style="color: red">Aucun résultat correspondant à votre recherche!</h3>
                                     {% else %}
                                         <h3 class="mb-0">Total: {{ all_payments_schedules|length }} Échéancier(s)</h3>
@@ -93,6 +93,7 @@
                                     <td>
                                         <input id="lastName" name="lastName" class="test" type="text">
                                     </td>
+                                    <td></td>
 
                                     {#{% if "ROLE_COMMERCIAL" in app.user.roles  %}
                                     {% else %}
@@ -120,7 +121,13 @@
                                     <td>
                                         <input id="numberOfMonthlyPayments" name="numberOfMonthlyPayments" class="test" type="number">
                                     </td>
-                                    <td></td>
+                                    <td>
+                                        <select id="isCompleted" name="isCompleted" class="form-control-sm">
+                                            <option value="" selected>--- Choisir ---</option>
+                                            <option value="0">En cours</option>
+                                            <option value="1">Totalement encaissé</option>
+                                        </select>
+                                    </td>
                                     {#<td>
                                         <select id="status" name="status" class="form-control-sm">
                                             <option value="" selected>--- Choisir ---</option>
