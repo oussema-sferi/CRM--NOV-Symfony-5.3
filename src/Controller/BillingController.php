@@ -28,6 +28,7 @@ class BillingController extends AbstractController
     public function paymentScheduleList(Request $request, PaginatorInterface $paginator, EquipmentRepository $equipmentRepository, PaymentScheduleRepository $paymentScheduleRepository): Response
     {
         $session = $request->getSession();
+        $session->remove('total_payments_schedules_search_results');
         $equipments = $equipmentRepository->findAll();
         $data = $paymentScheduleRepository->findAll();
         if($session->get('pagination_value')) {
