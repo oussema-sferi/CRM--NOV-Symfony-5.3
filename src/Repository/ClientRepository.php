@@ -85,6 +85,10 @@ class ClientRepository extends ServiceEntityRepository
             $counter ++;
         }
         $query->andWhere('c.statusDetail != 7')
+            ->andWhere('c.statusDetail != 10')
+            ->andWhere('c.statusDetail != 11')
+            ->andWhere('c.statusDetail != 12')
+            ->andWhere('c.statusDetail != 20')
             ->andWhere('c.isDeleted = 0');
         $query->setParameters($filters);
         return $query->getQuery()->getResult();
@@ -140,6 +144,10 @@ class ClientRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('c');
         $qb->select('c')
             ->where('c.statusDetail != 7')
+            ->andWhere('c.statusDetail != 10')
+            ->andWhere('c.statusDetail != 11')
+            ->andWhere('c.statusDetail != 12')
+            ->andWhere('c.statusDetail != 20')
             ->andWhere('c.isDeleted = 0')
             ->orderBy('c.createdAt', 'DESC');
         return $qb->getQuery()->getResult();
@@ -187,6 +195,10 @@ class ClientRepository extends ServiceEntityRepository
             $counter ++;
         };
         $qb->andWhere('c.statusDetail != 7')
+            ->andWhere('c.statusDetail != 10')
+            ->andWhere('c.statusDetail != 11')
+            ->andWhere('c.statusDetail != 12')
+            ->andWhere('c.statusDetail != 20')
             ->andWhere('c.isDeleted = 0');
         /*dd($qb->getQuery()->getResult());*/
         /*$qb->orWhere('u.id = 15');*/
@@ -243,7 +255,11 @@ class ClientRepository extends ServiceEntityRepository
                 $statement1 = "c.$key LIKE :$key";
             }
             $query->andWhere($statement1)
-                ->andWhere('c.statusDetail != 7');
+                ->andWhere('c.statusDetail != 7')
+                ->andWhere('c.statusDetail != 10')
+                ->andWhere('c.statusDetail != 11')
+                ->andWhere('c.statusDetail != 12')
+                ->andWhere('c.statusDetail != 20');
             /*dd($query->getQuery());*/
         }
         if ($departmentsArrayIds) {
@@ -255,7 +271,11 @@ class ClientRepository extends ServiceEntityRepository
             };
             $statement2 = $statement2 . "g.id = $departmentsArrayIds[$i]";
             $query->andWhere($statement2);
-            $query->andWhere('c.statusDetail != 7');
+            $query->andWhere('c.statusDetail != 7')
+                ->andWhere('c.statusDetail != 10')
+                ->andWhere('c.statusDetail != 11')
+                ->andWhere('c.statusDetail != 12')
+                ->andWhere('c.statusDetail != 20');
         }
 
         $query->setParameters($filters);
@@ -267,6 +287,10 @@ class ClientRepository extends ServiceEntityRepository
             $query2->andWhere($statement3);
         }
         $query2->andWhere('c.statusDetail != 7')
+            ->andWhere('c.statusDetail != 10')
+            ->andWhere('c.statusDetail != 11')
+            ->andWhere('c.statusDetail != 12')
+            ->andWhere('c.statusDetail != 20')
             ->andWhere("u.id = $loggedUserId")
             ->andWhere('c.isDeleted = 0');
         $query2->setParameters($filters);

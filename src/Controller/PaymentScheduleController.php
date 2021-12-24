@@ -25,6 +25,7 @@ class PaymentScheduleController extends AbstractController
     {
         $em = $this->getDoctrine()->getManager();
         $associatedProject = $projectRepository->find($id);
+        $client = $associatedProject->getClient();
         $totalHT = $associatedProject->getTotalHT();
         $numberOfMonthlyPayments = $associatedProject->getNumberOfMonthlyPayments();
         /*$paymentPerMonth = $totalHT / $numberOfMonthlyPayments;*/
@@ -48,7 +49,10 @@ class PaymentScheduleController extends AbstractController
             $em->persist($paymentLine);
         }
         $paymentSchedule->setCreatedAt(new \DateTime());
+        $client->setStatus(4);
+        $client->setStatusDetail(20);
         $em->persist($paymentSchedule);
+        $em->persist($client);
         $em->flush();
         $this->flashy->success("Échéancier généré avec succès !");
         return $this->redirectToRoute('payment_schedule_list');

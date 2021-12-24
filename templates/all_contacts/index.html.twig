@@ -166,6 +166,8 @@
                                         <option value="0">Non traité</option>
                                         <option value="1">Appel non Qualifié</option>
                                         <option value="2">Appel Qualifié</option>
+                                        <option value="3">Projet</option>
+                                        <option value="4">Facturation</option>
                                     </select>
                                 </td>
                                 <td>
@@ -178,6 +180,10 @@
                                         <option value="5">A Rappeler</option>
                                         <option value="6">RDV à prendre</option>
                                         <option value="7">RDV fixé</option>
+                                        <option value="10">Projet Refusé</option>
+                                        <option value="11">Projet En cours</option>
+                                        <option value="12">Projet Accepté</option>
+                                        <option value="20">Facturation En cours</option>
                                     </select>
                                 </td>
                                 <td></td>
@@ -261,6 +267,16 @@
                                         <i class="bg-success"></i>
                                             Appel Qualifié
                                         </span>
+                                        {% elseif client.status == 3 %}
+                                            <span class="badge badge-success badge-lg">
+                                        <i class="bg-success"></i>
+                                            Projet
+                                        </span>
+                                        {% elseif client.status == 4 %}
+                                            <span class="badge badge-success badge-lg">
+                                        <i class="bg-success"></i>
+                                            Facturation
+                                        </span>
                                         {% else %}
                                             <span class="badge badge-info badge-lg">
                                         <i class="bg-info"></i>
@@ -299,6 +315,26 @@
                                             <span class="badge badge-success badge-lg">
                                         <i class="bg-success"></i>
                                             RDV fixé
+                                        </span>
+                                        {% elseif client.statusDetail == 10 %}
+                                            <span class="badge badge-warning badge-lg">
+                                        <i class="bg-warning"></i>
+                                            Refusé
+                                        </span>
+                                        {% elseif client.statusDetail == 11 %}
+                                            <span class="badge badge-primary badge-lg">
+                                        <i class="bg-primary"></i>
+                                            En cours
+                                        </span>
+                                        {% elseif client.statusDetail == 12 %}
+                                            <span class="badge badge-success badge-lg">
+                                        <i class="bg-success"></i>
+                                            Accepté
+                                        </span>
+                                        {% elseif client.statusDetail == 20 %}
+                                            <span class="badge badge-primary badge-lg">
+                                        <i class="bg-primary"></i>
+                                            En cours
                                         </span>
                                         {% else %}
                                             <span class="badge badge-info badge-lg">

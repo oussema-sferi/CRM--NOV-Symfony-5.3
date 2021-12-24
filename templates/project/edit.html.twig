@@ -330,6 +330,7 @@
 
             {% if not project_to_update.reportMensualite|default %}
             $("#reportMensualite").val("")
+            $("#reportMensualite").prop('required', false)
             {% elseif (project_to_update.reportMensualite == "3") or (project_to_update.reportMensualite == "6") %}
             $('#reportMensualite').val({{ project_to_update.reportMensualite }})
             {% else %}

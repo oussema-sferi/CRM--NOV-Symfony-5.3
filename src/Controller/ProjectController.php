@@ -6,6 +6,7 @@ use App\Entity\Client;
 use App\Entity\Project;
 use App\Entity\User;
 use App\Form\ProjectFormType;
+use App\Repository\ClientRepository;
 use App\Repository\EquipmentRepository;
 use App\Repository\ProjectRepository;
 use App\Repository\UserRepository;
@@ -65,10 +66,10 @@ class ProjectController extends AbstractController
     /**
      * @Route("/dashboard/project/{clientId}/add", name="new_project")
      */
-    public function addProject($clientId,Request $request, EquipmentRepository $equipmentRepository): Response
+    public function addProject($clientId,Request $request, EquipmentRepository $equipmentRepository, ClientRepository $clientRepository): Response
     {
         $loggedUser = $this->getUser();
-        $client = $this->getDoctrine()->getRepository(Client::class)->find($clientId);
+        $client = $clientRepository->find($clientId);
         $equipmentsList = $equipmentRepository->findAll();
         if($request->isMethod('Post')) {
             $manager = $this->getDoctrine()->getManager();
@@ -142,16 +143,6 @@ class ProjectController extends AbstractController
                 );
                 $newProject->setPartenariat($partenariatFilename);
             }
-
-            /*foreach ($request->files as $key => $attachment) {
-                if($attachment) {
-                    $attachment->move(
-                        $attachmentsDirectory,
-                        md5(uniqid()) . '.' . $attachment->guessExtension()
-                    );
-                }
-
-            }*/
             $equipment = $equipmentRepository->find((int)($request->request->get('equipment')));
             $newProject->setClient($client);
             $newProject->setProjectMakerUser($loggedUser);
@@ -173,8 +164,6 @@ class ProjectController extends AbstractController
             } else {
                 $newProject->setRachat(false);
             }
-
-
             $newProject->setProjectNotes($request->request->get('projectNotes'));
             $newProject->setStatus((int)($request->request->get('status')));
             $newProject->setShipmentStatus((int)($request->request->get('shipmentStatus')));
@@ -183,7 +172,16 @@ class ProjectController extends AbstractController
             $newProject->setCreatedAt(new \DateTime());
             $newProject->setUpdatedAt(new \DateTime());
             $newProject->setIsDeleted(false);
+            $client->setStatus(3);
+            if((int)($request->request->get('status')) === 1) {
+                $client->setStatusDetail(11);
+            } elseif ((int)($request->request->get('status')) === 2) {
+                $client->setStatusDetail(12);
+            } elseif ((int)($request->request->get('status')) === 3) {
+                $client->setStatusDetail(10);
+            }
             $manager->persist($newProject);
+            $manager->persist($client);
             $manager->flush();
             $this->flashy->success("Projet créé avec succès !");
             return $this->redirectToRoute('projects_list');
@@ -303,7 +301,15 @@ class ProjectController extends AbstractController
             $projectToUpdate->setShipmentStatusDate(new \DateTime($request->request->get('shipmentStatusDate')));
             $projectToUpdate->setShipmentNotes($request->request->get('shipmentNotes'));
             $projectToUpdate->setUpdatedAt(new \DateTime());
+            if((int)($request->request->get('status')) === 1) {
+                $client->setStatusDetail(11);
+            } elseif ((int)($request->request->get('status')) === 2) {
+                $client->setStatusDetail(12);
+            } elseif ((int)($request->request->get('status')) === 3) {
+                $client->setStatusDetail(10);
+            }
             $manager->persist($projectToUpdate);
+            $manager->persist($client);
             $manager->flush();
             $this->flashy->success("Projet mis à jour avec succès !");
             return $this->redirect($request->request->get('referer'));
