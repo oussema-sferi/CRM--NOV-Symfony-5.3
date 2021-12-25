@@ -192,7 +192,12 @@
                                         <td >
                                             {% if project.status == 2 and project.isDeleted != 1 and not project.paymentSchedule|default %}
                                                 <a href="" data-toggle="modal" data-target="#generatePaymentSchedule{{ project.id }}"  class="badge badge-default" >Générer échéancier</a>
-                                            {% else %}
+                                            {% elseif project.status == 2 and project.isDeleted != 1 and project.paymentSchedule|default%}
+                                                <span class="badge badge-success badge-lg">
+                                                    <i class="bg-success"></i>
+                                                    Échéancier généré
+                                                </span>
+                                                {% else %}
                                                 <button class="badge badge-neutral" disabled>Générer échéancier</button>
                                             {% endif %}
                                         </td>

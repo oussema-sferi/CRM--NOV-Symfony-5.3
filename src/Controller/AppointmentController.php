@@ -87,10 +87,10 @@ class AppointmentController extends AbstractController
             $appointmentDuration = date_diff($validationEndTime,$validationStartTime);
             if($validationEndTime < $validationStartTime) {
                 $this->flashy->warning("Veuillez revérifier vos entrées! L'heure de début doit être avant l'heure de fin !");
-               /* $this->addFlash(
-                    'appointment_duration_warning',
-                    "Veuillez revérifier vos entrées! L'heure de début doit être avant l'heure de fin!"
-                );*/
+                /* $this->addFlash(
+                     'appointment_duration_warning',
+                     "Veuillez revérifier vos entrées! L'heure de début doit être avant l'heure de fin!"
+                 );*/
                 return $this->render('/appointment/index.html.twig', [
                     'all_commercial_agents' => $data,
                     'commercial_agents' => $commercial_agents,
@@ -208,88 +208,88 @@ class AppointmentController extends AbstractController
 
         $data = json_encode($appointments);
 
-            $myPersonalEvent = new Appointment();
-            $myPersonalEventForm = $this->createForm(AppointmentFormType::class, $myPersonalEvent);
-            $myPersonalEventForm->handleRequest($request);
+        $myPersonalEvent = new Appointment();
+        $myPersonalEventForm = $this->createForm(AppointmentFormType::class, $myPersonalEvent);
+        $myPersonalEventForm->handleRequest($request);
 
 
 
-            if($myPersonalEventForm->isSubmitted()) {
+        if($myPersonalEventForm->isSubmitted()) {
 
-                $validationStartTime = $myPersonalEvent->getStart();
-                $validationEndTime = $myPersonalEvent->getEnd();
-                $appointmentDuration = date_diff($validationEndTime,$validationStartTime);
-                if($validationEndTime < $validationStartTime) {
-                    $this->flashy->warning("Veuillez revérifier vos entrées! L'heure de début doit être avant l'heure de fin !");
+            $validationStartTime = $myPersonalEvent->getStart();
+            $validationEndTime = $myPersonalEvent->getEnd();
+            $appointmentDuration = date_diff($validationEndTime,$validationStartTime);
+            if($validationEndTime < $validationStartTime) {
+                $this->flashy->warning("Veuillez revérifier vos entrées! L'heure de début doit être avant l'heure de fin !");
+                /*$this->addFlash(
+                    'event_duration_warning',
+                    "Veuillez revérifier vos entrées! L'heure de début doit être avant l'heure de fin!"
+                );*/
+                return $this->redirectToRoute('show_my_calendar');
+            }
+
+            if($validationEndTime > $validationStartTime) {
+                $startTime = $myPersonalEvent->getStart()->format('Y-m-d H:i:s');
+                $endTime = $myPersonalEvent->getEnd()->format('Y-m-d H:i:s');
+                $busyAppointmentsTime = $this->getDoctrine()->getRepository(Appointment::class)->getAppointmentsBetweenByDate($startTime, $endTime);
+                /*dd($busyAppointmentsTime);*/
+                if($busyAppointmentsTime) {
+                    foreach ($busyAppointmentsTime as $appointment) {
+                        if($appointment->getUser()->getId() === (int)$this->getUser()->getId()) {
+                            $this->flashy->info("Aucune disponibilité à l'intervalle de temps choisi, Veuillez sélectionner d'autres dates !");
+                            /*$this->addFlash(
+                                'event_busy_warning',
+                                "Aucune disponibilité à l'intervalle de temps choisi, Veuillez sélectionner d'autres dates!"
+                            );*/
+                            return $this->redirectToRoute('show_my_calendar');
+                        }
+                    }
+                    /* $busyCommercialId = $busyAppointmentsTime[0]->getUser()->getId();*/
+
+                } else {
+                    /* dd($request->request->get('notes'));*/
+
+                    $newEvent = new Appointment();
+                    $newEvent->setCreatedAt(new \DateTime());
+                    $newEvent->setUser($this->getUser());
+                    $newEvent->setStatus(0);
+                    $newEvent->setStart($validationStartTime);
+                    $newEvent->setEnd($validationEndTime);
+                    $newEvent->setIsDone(0);
+                    $newEvent->setAppointmentNotes($request->request->get('notes'));
+                    $newEvent->setIsDeleted(false);
+                    $manager->persist($newEvent);
+                    $manager->flush();
+                    $this->flashy->success("Evénement fixé avec succès !");
+
                     /*$this->addFlash(
-                        'event_duration_warning',
-                        "Veuillez revérifier vos entrées! L'heure de début doit être avant l'heure de fin!"
+                        'event_confirmation',
+                        "Félicitations! L'événement est fixé avec succès!"
                     );*/
                     return $this->redirectToRoute('show_my_calendar');
                 }
 
-                if($validationEndTime > $validationStartTime) {
-                    $startTime = $myPersonalEvent->getStart()->format('Y-m-d H:i:s');
-                    $endTime = $myPersonalEvent->getEnd()->format('Y-m-d H:i:s');
-                    $busyAppointmentsTime = $this->getDoctrine()->getRepository(Appointment::class)->getAppointmentsBetweenByDate($startTime, $endTime);
-                    /*dd($busyAppointmentsTime);*/
-                    if($busyAppointmentsTime) {
-                        foreach ($busyAppointmentsTime as $appointment) {
-                            if($appointment->getUser()->getId() === (int)$this->getUser()->getId()) {
-                                $this->flashy->info("Aucune disponibilité à l'intervalle de temps choisi, Veuillez sélectionner d'autres dates !");
-                                /*$this->addFlash(
-                                    'event_busy_warning',
-                                    "Aucune disponibilité à l'intervalle de temps choisi, Veuillez sélectionner d'autres dates!"
-                                );*/
-                                return $this->redirectToRoute('show_my_calendar');
-                            }
-                        }
-                        /* $busyCommercialId = $busyAppointmentsTime[0]->getUser()->getId();*/
-
-                    } else {
-                       /* dd($request->request->get('notes'));*/
-
-                        $newEvent = new Appointment();
-                        $newEvent->setCreatedAt(new \DateTime());
-                        $newEvent->setUser($this->getUser());
-                        $newEvent->setStatus(0);
-                        $newEvent->setStart($validationStartTime);
-                        $newEvent->setEnd($validationEndTime);
-                        $newEvent->setIsDone(0);
-                        $newEvent->setAppointmentNotes($request->request->get('notes'));
-                        $newEvent->setIsDeleted(false);
-                        $manager->persist($newEvent);
-                        $manager->flush();
-                        $this->flashy->success("Evénement fixé avec succès !");
-
-                        /*$this->addFlash(
-                            'event_confirmation',
-                            "Félicitations! L'événement est fixé avec succès!"
-                        );*/
-                        return $this->redirectToRoute('show_my_calendar');
-                    }
-
-                } else {
-                    if(($appointmentDuration->days === 0) && ($appointmentDuration->h === 0)
-                        && ($appointmentDuration->i === 0) && ($appointmentDuration->s === 0)) {
-                        /*dd($appointmentDuration);*/
-                        $this->flashy->warning("Veuillez revérifier vos entrées! La durée de l'événement ne doit pas être nulle !");
-                        /*$this->addFlash(
-                            'event_duration_warning',
-                            "Veuillez revérifier vos entrées! La durée de l'événement ne doit pas être nulle!"
-                        );*/
-                    } /*else {
+            } else {
+                if(($appointmentDuration->days === 0) && ($appointmentDuration->h === 0)
+                    && ($appointmentDuration->i === 0) && ($appointmentDuration->s === 0)) {
+                    /*dd($appointmentDuration);*/
+                    $this->flashy->warning("Veuillez revérifier vos entrées! La durée de l'événement ne doit pas être nulle !");
+                    /*$this->addFlash(
+                        'event_duration_warning',
+                        "Veuillez revérifier vos entrées! La durée de l'événement ne doit pas être nulle!"
+                    );*/
+                } /*else {
                         $this->flashy->warning("Veuillez revérifier vos entrées! La durée de l'événement ne doit pas dépasser trois heures !");
                     }*/
-                    return $this->redirectToRoute('show_my_calendar');
-                }
+                return $this->redirectToRoute('show_my_calendar');
             }
+        }
 
-            return $this->render('/appointment/show_my_calendar.html.twig', [
-                /*'calendar_to_show' => $calendarToShow,*/
-                'data' => compact('data'),
-                'my_personal_event_form' => $myPersonalEventForm->createView(),
-            ]);
+        return $this->render('/appointment/show_my_calendar.html.twig', [
+            /*'calendar_to_show' => $calendarToShow,*/
+            'data' => compact('data'),
+            'my_personal_event_form' => $myPersonalEventForm->createView(),
+        ]);
 
     }
 
@@ -339,28 +339,28 @@ class AppointmentController extends AbstractController
                     'allDay' => true,
                 ];
             }*/
-                if ($event->getClient()) {
-                    $appointments[] = [
-                        'id' => $event->getId(),
-                        'client' => $event->getClient()->getFirstName() . " " . $event->getClient()->getLastName(),
-                        'title' => $event->getEventType()->getDesignation(),
-                        'start' => $event->getStart()->format('Y-m-d H:i:s'),
-                        'end' => $event->getEnd()->format('Y-m-d H:i:s'),
-                        'description' => $event->getAppointmentNotes(),
-                        'backgroundColor' => $event->getEventType()->getBackgroundColor(),
-                        'allDay' => false
-                    ];
-                } else {
-                    $appointments[] = [
-                        'id' => $event->getId(),
-                        'title' => $event->getEventType()->getDesignation(),
-                        'start' => $event->getStart()->format('Y-m-d H:i:s'),
-                        'end' => $event->getEnd()->format('Y-m-d H:i:s'),
-                        'description' => $event->getAppointmentNotes(),
-                        'backgroundColor' => $event->getEventType()->getBackgroundColor(),
-                        'allDay' => false
-                    ];
-                }
+            if ($event->getClient()) {
+                $appointments[] = [
+                    'id' => $event->getId(),
+                    'client' => $event->getClient()->getFirstName() . " " . $event->getClient()->getLastName(),
+                    'title' => $event->getEventType()->getDesignation(),
+                    'start' => $event->getStart()->format('Y-m-d H:i:s'),
+                    'end' => $event->getEnd()->format('Y-m-d H:i:s'),
+                    'description' => $event->getAppointmentNotes(),
+                    'backgroundColor' => $event->getEventType()->getBackgroundColor(),
+                    'allDay' => false
+                ];
+            } else {
+                $appointments[] = [
+                    'id' => $event->getId(),
+                    'title' => $event->getEventType()->getDesignation(),
+                    'start' => $event->getStart()->format('Y-m-d H:i:s'),
+                    'end' => $event->getEnd()->format('Y-m-d H:i:s'),
+                    'description' => $event->getAppointmentNotes(),
+                    'backgroundColor' => $event->getEventType()->getBackgroundColor(),
+                    'allDay' => false
+                ];
+            }
 
         }
 
@@ -403,64 +403,60 @@ class AppointmentController extends AbstractController
             $appointmentDuration = date_diff($validationEndTime,$validationStartTime);
             if($validationEndTime < $validationStartTime) {
                 $this->flashy->warning("Veuillez revérifier vos entrées! L'heure de début doit être avant l'heure de fin !");
-                /*$this->addFlash(
-                    'appointment_duration_warning',
-                    "Veuillez revérifier vos entrées! L'heure de début doit être avant l'heure de fin!"
-                );*/
                 return $this->redirectToRoute('show_calendar', [
                     'id' => $id,
                 ]);
             }
-
             if($validationEndTime > $validationStartTime) {
                 $startTime = $newAppointment->getStart()->format('Y-m-d H:i:s');
                 $endTime = $newAppointment->getEnd()->format('Y-m-d H:i:s');
-                /*dd($request->request->get("event_type"));*/
                 $busyAppointmentsTime = $this->getDoctrine()->getRepository(Appointment::class)->getAppointmentsBetweenByDate($startTime, $endTime);
-                /*dd($busyAppointmentsTime);*/
+                $availibilityCounter = 0;
                 if($busyAppointmentsTime) {
                     foreach ($busyAppointmentsTime as $appointment) {
                         if($appointment->getUser()->getId() === (int)$id) {
-                            $this->flashy->info("Cet utilisateur n'est pas disponible à l'intervalle de temps choisi, Veuillez sélectionner d'autres dates !");
-                            /*$this->addFlash(
-                                'appointment_busy_commercial_warning',
-                                "Cet utilisateur n'est pas disponible à l'intervalle de temps choisi, Veuillez sélectionner d'autres dates!"
-                            );*/
-                            return $this->redirectToRoute('show_calendar', [
-                                'id' => $id,
-                            ]);
+                            $availibilityCounter++;
+                            break;
                         }
                     }
-                   /* $busyCommercialId = $busyAppointmentsTime[0]->getUser()->getId();*/
-
-                    } else {
-
-                        if($eventTypeId === 4) {
-                            return $this->render('/appointment/free_commercial_client_assignment.html.twig', [
-                                'commercial_user' => $commercialUser,
-                                /*'clients' => $clients,*/
-                                'start' => $startTime,
-                                'end' => $endTime
-                            ]);
-                        } else {
-                            $theEvent = $this->getDoctrine()->getRepository(EventType::class)->find($eventTypeId);
-                            return $this->render('/appointment/event_set_notes.html.twig', [
-                                'eventTypeId' =>  $eventTypeId,
-                                'eventDesignation' =>  $theEvent->getDesignation(),
-                                'commercial_user' => $commercialUser,
-                                'start' => $startTime,
-                                'end' => $endTime
-                            ]);
-                        }
-                    }
-
                 }
-
-               else {
+                if($availibilityCounter !== 0) {
+                    if($loggedUser->getId() === (int)$id) {
+                        $this->flashy->info("L'intervalle de temps choisi n'est pas disponible, Veuillez sélectionner d'autres dates !");
+                    } else {
+                        $this->flashy->info("Cet utilisateur n'est pas disponible à l'intervalle de temps choisi, Veuillez sélectionner d'autres dates !");
+                    }
+                    return $this->redirectToRoute('show_calendar', [
+                        'id' => $id,
+                    ]);
+                } else {
+                    if($eventTypeId === 4) {
+                        return $this->render('/appointment/free_commercial_client_assignment.html.twig', [
+                            'commercial_user' => $commercialUser,
+                            /*'clients' => $clients,*/
+                            'start' => $startTime,
+                            'end' => $endTime
+                        ]);
+                    } else {
+                        $theEvent = $this->getDoctrine()->getRepository(EventType::class)->find($eventTypeId);
+                        return $this->render('/appointment/event_set_notes.html.twig', [
+                            'eventTypeId' =>  $eventTypeId,
+                            'eventDesignation' =>  $theEvent->getDesignation(),
+                            'commercial_user' => $commercialUser,
+                            'start' => $startTime,
+                            'end' => $endTime
+                        ]);
+                    }
+                }
+            } else {
                 if(($appointmentDuration->days === 0) && ($appointmentDuration->h === 0)
                     && ($appointmentDuration->i === 0) && ($appointmentDuration->s === 0)) {
                     /*dd($appointmentDuration);*/
-                    $this->flashy->warning("Veuillez revérifier vos entrées! La durée du RDV ne doit pas être nulle !");
+                    if($eventTypeId === 4) {
+                        $this->flashy->warning("Veuillez revérifier vos entrées! La durée du RDV ne doit pas être nulle !");
+                    } else {
+                        $this->flashy->warning("Veuillez revérifier vos entrées! La durée de l'événement ne doit pas être nulle !");
+                    }
                     /*$this->addFlash(
                         'appointment_duration_warning',
                         "Veuillez revérifier vos entrées! La durée du RDV ne doit pas être nulle!"
@@ -948,9 +944,6 @@ class AppointmentController extends AbstractController
         $manager = $this->getDoctrine()->getManager();
         $eventToEdit = $this->getDoctrine()->getRepository(Appointment::class)->find($id);
         $calendarUserId = $eventToEdit->getUser()->getId();
-        /*$s = '2009-02-15 15:6';
-        $date = \DateTime::createFromFormat('Y-m-d H:i',$s);
-        dd($date);*/
         $startDay = (($request->request->get('edit_form'))["start"])["date"];
         $startHour = ((($request->request->get('edit_form'))["start"])["time"])["hour"];
         $startMinute = ((($request->request->get('edit_form'))["start"])["time"])["minute"];
@@ -968,24 +961,23 @@ class AppointmentController extends AbstractController
         $fullEndtDate = $endDay . " " . $endHour . ":" . $endMinute;
         $fullEndDateFormatted = \DateTime::createFromFormat('Y-m-d H:i',$fullEndtDate);
         $editedNotes = $request->request->get('notes');
-        /*dd($fullStartDateFormatted->format('Y-m-d H:i:s'));*/
-
         //check availability
         $validationStartTime = $fullStartDateFormatted;
         $validationEndTime = $fullEndDateFormatted;
         $appointmentDuration = date_diff($validationEndTime,$validationStartTime);
-        if($validationEndTime < $validationStartTime) {
-            $this->flashy->warning("Veuillez revérifier vos entrées! L'heure de début doit être avant l'heure de fin !");
-            /*$this->addFlash(
-                'event_duration_warning',
-                "Veuillez revérifier vos entrées! L'heure de début doit être avant l'heure de fin!"
-            );*/
+        if(($appointmentDuration->days === 0) && ($appointmentDuration->h === 0)
+            && ($appointmentDuration->i === 0) && ($appointmentDuration->s === 0)) {
+            $this->flashy->warning("Veuillez revérifier vos entrées! La durée de l'événement ne doit pas être nulle !");
             return $this->redirectToRoute('show_calendar', [
                 'id' => $calendarUserId,
             ]);
         }
-
-        if($validationEndTime > $validationStartTime) {
+        if($validationEndTime < $validationStartTime) {
+            $this->flashy->warning("Veuillez revérifier vos entrées! L'heure de début doit être avant l'heure de fin !");
+            return $this->redirectToRoute('show_calendar', [
+                'id' => $calendarUserId,
+            ]);
+        } else {
             $startTime = $fullStartDateFormatted->format('Y-m-d H:i:s');
             $endTime = $fullEndDateFormatted->format('Y-m-d H:i:s');
             $busyAppointmentsTime = $this->getDoctrine()->getRepository(Appointment::class)->getAppointmentsBetweenByDate($startTime, $endTime);
@@ -994,7 +986,7 @@ class AppointmentController extends AbstractController
                 if ($appointment->getId() !== $eventToEdit->getId())
                     $newBusyAppointmentsTime[] = $appointment;
             }
-            if ($newBusyAppointmentsTime) {
+            /*if ($newBusyAppointmentsTime) {
                 foreach ($newBusyAppointmentsTime as $appointment) {
                     if ($appointment->getUser()->getId() === $calendarUserId) {
                         $this->flashy->info("Aucune disponibilité à l'intervalle de temps choisi, Veuillez sélectionner d'autres dates !");
@@ -1003,34 +995,19 @@ class AppointmentController extends AbstractController
                         ]);
                     }
                 }
-            } else {
-                $eventToEdit->setStart($validationStartTime);
-                $eventToEdit->setEnd($validationEndTime);
-                $eventToEdit->setAppointmentNotes($editedNotes);
-                $manager->persist($eventToEdit);
-                $manager->flush();
-                $this->flashy->success("Entrée éditée avec succès !");
-                return $this->redirectToRoute('show_calendar', [
-                    'id' => $calendarUserId,
-                ]);
-            }
+            } else {*/
 
-        }
-        else {
-            if(($appointmentDuration->days === 0) && ($appointmentDuration->h === 0)
-                && ($appointmentDuration->i === 0) && ($appointmentDuration->s === 0)) {
-                $this->flashy->warning("Veuillez revérifier vos entrées! La durée de l'événement ne doit pas être nulle !");
-            } /*else {
-                $this->flashy->warning("Veuillez revérifier vos entrées! La durée de l'événement ne doit pas dépasser trois heures !");
-            }*/
+            $eventToEdit->setStart($validationStartTime);
+            $eventToEdit->setEnd($validationEndTime);
+            $eventToEdit->setAppointmentNotes($editedNotes);
+            $manager->persist($eventToEdit);
+            $manager->flush();
+            $this->flashy->success("Entrée éditée avec succès !");
             return $this->redirectToRoute('show_calendar', [
                 'id' => $calendarUserId,
             ]);
+            /*}*/
         }
-        /*$this->flashy->success('Entrée éditée avec succès !');
-        return $this->redirectToRoute('show_calendar', [
-            "id" => $calendarUserId
-        ]);*/
     }
 
 

@@ -24,6 +24,7 @@ class PaymentScheduleController extends AbstractController
     public function paymentScheduleGenerate(Request $request, $id, ProjectRepository $projectRepository): Response
     {
         $em = $this->getDoctrine()->getManager();
+        $loggedUserRolesArray = $this->getUser()->getRoles();
         $associatedProject = $projectRepository->find($id);
         $client = $associatedProject->getClient();
         $totalHT = $associatedProject->getTotalHT();
@@ -55,6 +56,10 @@ class PaymentScheduleController extends AbstractController
         $em->persist($client);
         $em->flush();
         $this->flashy->success("Échéancier généré avec succès !");
-        return $this->redirectToRoute('payment_schedule_list');
+        if (in_array("ROLE_COMMERCIAL",$loggedUserRolesArray)) {
+            return $this->redirectToRoute('projects_list');
+        } else {
+            return $this->redirectToRoute('payment_schedule_list');
+        }
     }
 }
