@@ -505,6 +505,35 @@
                                         </div>
                                     </li>
 
+                                    {#<li class="nav-item">
+                                        <a class="nav-link" href="#navbar-dashboards110" data-toggle="collapse" role="button" aria-controls="navbar-dashboards110">
+                                            <i class="fas fa-parachute-box text-orange"></i>
+                                            <span class="nav-link-text">Suivi Client/Assistance</span>
+                                        </a>
+                                        <div class="collapse hide" id="navbar-dashboards70">
+                                            <ul class="nav nav-sm flex-column">
+                                                <li class="nav-item">
+                                                    <a href="{{ path('equipments_list') }}" class="nav-link">
+                                                        <i class="ni fas fa-tools text-purple"></i>
+                                                        <span class="sidenav-normal"> Equipements </span>
+                                                    </a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a href="{{ path('clients_categories_list') }}" class="nav-link">
+                                                        <i class="ni fas fa-stethoscope text-purple"></i>
+                                                        <span class="sidenav-normal"> Catégories Clients </span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>#}
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ path('follow_up_clients_list') }}">
+                                            <i class="fas fa-parachute-box text-orange"></i>
+                                            <span class="nav-link-text">Suivi Client & Assistance</span>
+                                        </a>
+                                    </li>
+
                                 {% endif %}
 
 
@@ -839,11 +868,12 @@
                                     <i class="ni ni-single-02"></i>
                                     <span>Mon Espace Personnel</span>
                                 </a>
-                                {#<a href="#!" class="dropdown-item">
-                                    <i class="ni ni-settings-gear-65"></i>
-                                    <span>Settings</span>
-                                </a>
                                 <a href="#!" class="dropdown-item">
+                                    {#<i class="ni ni-settings-gear-65"></i>#}
+                                    <img width="20px" style="margin-bottom:3px; margin-right:12px" alt="Google sign-in" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png" />
+                                    <span>Continuer avec Google</span>
+                                </a>
+                                {#<a href="#!" class="dropdown-item">
                                     <i class="ni ni-calendar-grid-58"></i>
                                     <span>Activity</span>
                                 </a>

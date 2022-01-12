@@ -39,7 +39,7 @@
         <div class="container-fluid">
             <div class="header-body">
                 <div class="row align-items-center py-4">
-                    <div class="col-lg-8 col-7">
+                    <div class="col-lg-6 col-7">
                         <h6 class="h2 text-white d-inline-block mb-0">CRM</h6>
                         <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
                             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
@@ -56,7 +56,15 @@
                             </ol>
                         </nav>
                     </div>
-                    <div class="col-lg-4 col-5 text-right">
+                    <div class="col-lg-6 col-5 text-right">
+
+                        {% if authLink is not empty %}
+                            <a class="btn-sm btn-outline-neutral mr-2" href="{{ authLink }}" style="text-transform:none">
+                                <img width="20px" style="margin-bottom:3px; margin-right:5px" alt="Google sign-in" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png" />
+                                Continuer avec Google Calendar
+                            </a>
+                        {% endif %}
+
                         <button id="add-geo" type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#add-geo-modal-form">Ajout Zones Géographiques</button>
                         <button id="test" type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal-form">Nouvelle Entrée</button>
                         {#<a href="" class="btn btn-sm btn-success">Fixer un RDV à {{ commercial_user.firstName ~ ' ' ~ commercial_user.lastName }}</a>#}
@@ -132,7 +140,7 @@
                     <!-- Light table -->
                     {#<div class="table-responsive">
                         <table class="table align-items-center table-flush">
-                            <thead class="thead-light">
+                            <thead class="thead-light">7
                             <tr>
                             </tr>
                             </thead>
@@ -153,8 +161,8 @@
                             <i class="fas fa-circle fa-xs" style="color: #ffcc66"></i><span class="status"> Formation </span>|
                             <i class="fas fa-circle fa-xs" style="color: #e6e600"></i><span class="status"> Séance Patient </span>|
                             <i class="fas fa-circle fa-xs" style="color: #888844"></i><span class="status"> Atelier Phoning </span>|
-                            {#<i class="fas fa-circle fa-xs" style="color: #993399"></i><span class="status"> Déplacement </span>|
-                            <i class="fas fa-circle fa-xs" style="color: #000000"></i><span class="status"> Perso </span>|#}
+                            <i class="fas fa-circle fa-xs" style="color: #993399"></i><span class="status"> Déplacement </span>|
+                            <i class="fas fa-circle fa-xs" style="color: #000000"></i><span class="status"> Perso </span>|
                             <i class="fas fa-circle fa-xs" style="color: #008000"></i><span class="status"> Zone Géographique </span>
                         </nav>
                     </div>
@@ -194,8 +202,8 @@
                                         <option value="4">RDV</option>
                                         <option value="5">Séance Patient</option>
                                         <option value="6">Atelier Phoning</option>
-                                        {#<option value="8">Déplacement</option>
-                                        <option value="9">Perso</option>#}
+                                        <option value="8">Déplacement</option>
+                                        <option value="9">Perso</option>
                                     </select>
                                 </div>
                             </div>

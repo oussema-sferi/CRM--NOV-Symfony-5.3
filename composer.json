@@ -15,6 +15,7 @@
         "doctrine/doctrine-migrations-bundle": "^3.1",
         "doctrine/orm": "^2.9",
         "dompdf/dompdf": "^1.1",
+        "google/apiclient": "2.12.1",
         "knplabs/knp-paginator-bundle": "^5.6",
         "mercuryseries/flashy-bundle": "^4.0",
         "phpdocumentor/reflection-docblock": "^5.2",

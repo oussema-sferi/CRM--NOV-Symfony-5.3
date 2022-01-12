@@ -127,4 +127,21 @@ class ProjectRepository extends ServiceEntityRepository
             ->orderBy('p.deletedAt', 'DESC');
         return $qb->getQuery()->getResult();
     }
+
+    public function getAllProjects()
+    {
+        $qb = $this->createQueryBuilder('p');
+        $qb->select('p')
+            ->where('p.isDeleted != 0');
+        return $qb->getQuery()->getResult();
+    }
+
+    public function getAllProjectsByUser($Id)
+    {
+        $qb = $this->createQueryBuilder('p');
+        $qb->select('p')
+            ->join('p.projectMakerUser', 'u')
+            ->where("u.id =$Id" );
+        return $qb->getQuery()->getResult();
+    }
 }

@@ -10,6 +10,7 @@ use App\Repository\AppointmentRepository;
 use App\Repository\CallRepository;
 use App\Repository\ClientRepository;
 use App\Repository\ProcessRepository;
+use App\Repository\ProjectRepository;
 use App\Repository\UserRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use MercurySeries\FlashyBundle\FlashyNotifier;
@@ -166,6 +167,8 @@ class CommercialController extends AbstractController
                 $appointmentToProcess->setIsDone(2);
             } elseif ($isDoneStatus === "vente") {
                 $appointmentToProcess->setIsDone(3);
+            } elseif ($isDoneStatus === "r2") {
+                $appointmentToProcess->setIsDone(5);
             }
             $appointmentToProcess->setDoneAt(new \DateTime());
             $appointmentToProcess->setPostAppointmentNotes($request->request->get('notes'));
@@ -234,7 +237,7 @@ class CommercialController extends AbstractController
     /**
      * @Route("/dashboard/commercial/stats", name="commercial_stats_new")
      */
-    public function commercialStatsNew(Request $request, ProcessRepository $processRepository,CallRepository $callRepository, UserRepository $userRepository, ClientRepository $clientRepository, AppointmentRepository $appointmentRepository): Response
+    public function commercialStatsNew(Request $request, ProcessRepository $processRepository,CallRepository $callRepository, UserRepository $userRepository, ClientRepository $clientRepository, AppointmentRepository $appointmentRepository, ProjectRepository $projectRepository): Response
     {
         // new
 
@@ -265,6 +268,14 @@ class CommercialController extends AbstractController
         // Vente RDV count
         $venteAppointments = $appointmentRepository->getVenteAppointments();
         $venteAppointmentsCount = count($venteAppointments);
+
+        //All Projects
+        $allProjects = $projectRepository->findAll();
+        $allProjectsCount = count($allProjects);
+
+        //Deleted Projects
+        $deletedProjects = $projectRepository->getDeletedProjects();
+        $deletedProjectsCount = count($deletedProjects);
 
         //Bloc Statistiques Générales
         $allCommercials = $userRepository->findUsersByCommercialRole("ROLE_COMMERCIAL");
@@ -366,6 +377,21 @@ class CommercialController extends AbstractController
             $venteAppointmentsByMonthArray[] = $venteAppointmentsCounter;
         }
 
+        // Projets
+        $projectsByMonthArray = [];
+        for ($j = 1; $j <13; $j++) {
+            $projectsCounter = 0;
+            foreach ($allProjects as $oneProject) {
+
+                if (((new \DateTime())->format("Y")) === $oneProject->getCreatedAt()->format("Y")) {
+                    if (date("F", mktime(0, 0, 0, (int)($oneProject->getCreatedAt()->format("m")), 1, (int)($oneProject->getCreatedAt())->format("Y"))) === date("F", mktime(0, 0, 0, $j, 1, (int)(new \DateTime())->format("Y")))) {
+                        $projectsCounter += 1;
+                    }
+                }
+            }
+            $projectsByMonthArray[] = $projectsCounter;
+        }
+
 
         return $this->render('commercial/commercial_stats_new.html.twig', [
             //Bloc Statistiques Générales
@@ -383,6 +409,10 @@ class CommercialController extends AbstractController
             'argu_appointments_count' => $arguAppointmentsCount,
             'vente_appointments' => $venteAppointments,
             'vente_appointments_count' => $venteAppointmentsCount,
+            'all_projects' => $allProjects,
+            'all_projects_count' => $allProjectsCount,
+            'deleted_projects' => $deletedProjects,
+            'deleted_projects_count' => $deletedProjectsCount,
             'TX_TRANSFOR' => $TXTRANSFORPercentage,
             //Bloc Statistiques Pour La Période Sélectionnée
             'done_appointments' => $doneAppointments,
@@ -395,6 +425,7 @@ class CommercialController extends AbstractController
             'done_appointments_graph' => json_encode($doneAppointmentsByMonthArray),
             'argu_appointments_graph' => json_encode($arguAppointmentsByMonthArray),
             'vente_appointments_graph' => json_encode($venteAppointmentsByMonthArray),
+            'projects_graph' => json_encode($projectsByMonthArray),
             'actual_year' => (new \DateTime())->format("Y"),
         ]);
     }

@@ -179,6 +179,11 @@ class Client
      */
     private $paymentSchedules;
 
+    /**
+     * @ORM\OneToMany(targetEntity=FollowUpCall::class, mappedBy="client")
+     */
+    private $followUpCalls;
+
 
     public function __construct()
     {
@@ -189,6 +194,7 @@ class Client
         $this->processes = new ArrayCollection();
         $this->projects = new ArrayCollection();
         $this->paymentSchedules = new ArrayCollection();
+        $this->followUpCalls = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -713,6 +719,36 @@ class Client
             // set the owning side to null (unless already changed)
             if ($paymentSchedule->getClient() === $this) {
                 $paymentSchedule->setClient(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|FollowUpCall[]
+     */
+    public function getFollowUpCalls(): Collection
+    {
+        return $this->followUpCalls;
+    }
+
+    public function addFollowUpCall(FollowUpCall $followUpCall): self
+    {
+        if (!$this->followUpCalls->contains($followUpCall)) {
+            $this->followUpCalls[] = $followUpCall;
+            $followUpCall->setClient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFollowUpCall(FollowUpCall $followUpCall): self
+    {
+        if ($this->followUpCalls->removeElement($followUpCall)) {
+            // set the owning side to null (unless already changed)
+            if ($followUpCall->getClient() === $this) {
+                $followUpCall->setClient(null);
             }
         }
 

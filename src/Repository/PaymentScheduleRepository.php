@@ -106,4 +106,14 @@ class PaymentScheduleRepository extends ServiceEntityRepository
         $query->setParameters($filters);
         return $query->getQuery()->getResult();
     }
+
+    public function getPaymentSchedulesForFollowUpClients()
+    {
+        $qb = $this->createQueryBuilder('p');
+        $qb->select('p')
+            ->where('p.isDeleted = 0');
+            /*->andWhere('c.isDeleted != 0');*/
+
+        return $qb->getQuery()->getResult();
+    }
 }

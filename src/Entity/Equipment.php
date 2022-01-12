@@ -44,12 +44,18 @@ class Equipment
      */
     private $updatedAt;
 
+    /**
+     * @ORM\OneToMany(targetEntity=FollowUpCall::class, mappedBy="associatedEquipment")
+     */
+    private $followUpCalls;
+
    
 
     public function __construct()
     {
         $this->clients = new ArrayCollection();
         $this->projects = new ArrayCollection();
+        $this->followUpCalls = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -156,6 +162,36 @@ class Equipment
     public function setUpdatedAt(\DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|FollowUpCall[]
+     */
+    public function getFollowUpCalls(): Collection
+    {
+        return $this->followUpCalls;
+    }
+
+    public function addFollowUpCall(FollowUpCall $followUpCall): self
+    {
+        if (!$this->followUpCalls->contains($followUpCall)) {
+            $this->followUpCalls[] = $followUpCall;
+            $followUpCall->setAssociatedEquipment($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFollowUpCall(FollowUpCall $followUpCall): self
+    {
+        if ($this->followUpCalls->removeElement($followUpCall)) {
+            // set the owning side to null (unless already changed)
+            if ($followUpCall->getAssociatedEquipment() === $this) {
+                $followUpCall->setAssociatedEquipment(null);
+            }
+        }
 
         return $this;
     }

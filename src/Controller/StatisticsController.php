@@ -11,6 +11,7 @@ use App\Repository\AppointmentRepository;
 use App\Repository\CallRepository;
 use App\Repository\ClientRepository;
 use App\Repository\ProcessRepository;
+use App\Repository\ProjectRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping\Driver\DatabaseDriver;
 use MercurySeries\FlashyBundle\FlashyNotifier;
@@ -283,7 +284,7 @@ class StatisticsController extends AbstractController
     /**
      * @Route("/dashboard/allstats", name="all_statistics_new")
      */
-    public function allStatsNew(Request $request, ProcessRepository $processRepository,CallRepository $callRepository, UserRepository $userRepository, ClientRepository $clientRepository, AppointmentRepository $appointmentRepository): Response
+    public function allStatsNew(Request $request, ProcessRepository $processRepository,CallRepository $callRepository, UserRepository $userRepository, ClientRepository $clientRepository, AppointmentRepository $appointmentRepository, ProjectRepository $projectRepository): Response
     {
         // Partie TELEPROSPECTION
 
@@ -458,6 +459,10 @@ class StatisticsController extends AbstractController
         $venteAppointments = $appointmentRepository->getVenteAppointments();
         $venteAppointmentsCount = count($venteAppointments);
 
+        //All Projects
+        $allProjects = $projectRepository->findAll();
+        $allProjectsCount = count($allProjects);
+
         //Bloc Statistiques Générales
         $allCommercials = $userRepository->findUsersByCommercialRole("ROLE_COMMERCIAL");
 
@@ -536,6 +541,21 @@ class StatisticsController extends AbstractController
             $deletedAppointmentsByMonthArray[] = $deletedAppointmentsCounter;
         }
 
+        // Projets
+        $projectsByMonthArray = [];
+        for ($j = 1; $j <13; $j++) {
+            $projectsCounter = 0;
+            foreach ($allProjects as $oneProject) {
+
+                if (((new \DateTime())->format("Y")) === $oneProject->getCreatedAt()->format("Y")) {
+                    if (date("F", mktime(0, 0, 0, (int)($oneProject->getCreatedAt()->format("m")), 1, (int)($oneProject->getCreatedAt())->format("Y"))) === date("F", mktime(0, 0, 0, $j, 1, (int)(new \DateTime())->format("Y")))) {
+                        $projectsCounter += 1;
+                    }
+                }
+            }
+            $projectsByMonthArray[] = $projectsCounter;
+        }
+
         return $this->render('statistics/index_new.html.twig', [
             // Partie TELEPROSPECTION
             //Bloc Statistiques Générales
@@ -573,6 +593,8 @@ class StatisticsController extends AbstractController
             'argu_appointments_count' => $arguAppointmentsCount,
             'vente_appointments' => $venteAppointments,
             'vente_appointments_count' => $venteAppointmentsCount,
+            'all_projects' => $allProjects,
+            'all_projects_count' => $allProjectsCount,
             'TX_TRANSFOR_COMMERCIAL' => $TXTRANSFORPercentageCommercial,
             //Bloc Statistiques Pour La Période Sélectionnée
             'done_appointments' => $doneAppointments,
@@ -583,6 +605,7 @@ class StatisticsController extends AbstractController
             'fixed_appointments_graph' => json_encode($appointmentsByMonthArray),
             'done_appointments_graph' => json_encode($doneAppointmentsByMonthArray),
             'deleted_appointments_graph' => json_encode($deletedAppointmentsByMonthArray),
+            'projects_graph' => json_encode($projectsByMonthArray),
             'actual_year' => (new \DateTime())->format("Y"),
         ]);
     }
@@ -821,7 +844,7 @@ class StatisticsController extends AbstractController
     /**
      * @Route("/dashboard/statisticsperuser/{id}", name="statistics_per_user_new")
      */
-    public function statsPerUserNew($id, ProcessRepository $processRepository, AppointmentRepository $appointmentRepository): Response
+    public function statsPerUserNew($id, ProcessRepository $processRepository, AppointmentRepository $appointmentRepository, ProjectRepository $projectRepository): Response
     {
         $user = $this->getDoctrine()->getRepository(User::class)->find($id);
         $userId = $this->getUser()->getId();
@@ -995,6 +1018,10 @@ class StatisticsController extends AbstractController
         $venteAppointments = $appointmentRepository->getVenteAppointmentsByUser($id);
         $venteAppointmentsCount = count($venteAppointments);
 
+        //All Projects
+        $allProjects = $projectRepository->getAllProjectsByUser($id);
+        $allProjectsCount = count($allProjects);
+
         // TX TRANSFO COMMERCIAL
 
         if($doneAppointmentsCount !== 0) {
@@ -1026,6 +1053,8 @@ class StatisticsController extends AbstractController
             'argu_appointments_count' => $arguAppointmentsCount,
             'vente_appointments' => $venteAppointments,
             'vente_appointments_count' => $venteAppointmentsCount,
+            'all_projects' => $allProjects,
+            'all_projects_count' => $allProjectsCount,
             'TX_TRANSFOR_COMMERCIAL' => $TXTRANSFORPercentageCommercial,
         ]);
     }

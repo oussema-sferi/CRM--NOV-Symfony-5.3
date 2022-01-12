@@ -13,6 +13,7 @@ use App\Entity\User;
 use App\Form\AppointmentFormType;
 use App\Repository\AppointmentRepository;
 use App\Repository\UserRepository;
+use App\Services\GoogleCalendarService;
 use Knp\Component\Pager\PaginatorInterface;
 use MercurySeries\FlashyBundle\FlashyNotifier;
 use phpDocumentor\Reflection\DocBlock\Serializer;
@@ -20,10 +21,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use function mysql_xdevapi\getSession;
+use Google_Service_Calendar_Event;
+use Google_Service_Calendar;
 
 class AppointmentController extends AbstractController
 {
@@ -131,10 +135,8 @@ class AppointmentController extends AbstractController
                         } else {
                             $freeCommercials = $this->getDoctrine()->getRepository(User::class)->findAssignedUsersByCommercialRole($loggedUserId,"ROLE_COMMERCIAL");
                         }
-
                     }
                 }
-
                 return $this->render('/appointment/free_commercials_check.html.twig', [
                     /*'free_appointments' => $freeAppointmentsTime*/
                     'free_commercials' => $freeCommercials,
@@ -160,7 +162,6 @@ class AppointmentController extends AbstractController
                     'appointment_form' => $appointmentForm->createView(),
                 ]);
             }
-
         }
 
         return $this->render('appointment/index.html.twig', [
@@ -179,7 +180,6 @@ class AppointmentController extends AbstractController
         /*$events = $appointment->findBy(['user' => $this->getUser()->getId()]);*/
         $events = $appointment->getAllAppointmentsOfUser($this->getUser()->getId());
         /*$clients = $this->getDoctrine()->getRepository(Client::class)->findBy(["status" => 1]);*/
-
         /*dd($events);*/
         $appointments = [];
         foreach ($events as $event) {
@@ -293,12 +293,145 @@ class AppointmentController extends AbstractController
 
     }
 
+    /**
+     * @Route("/dashboard/appointments/showcalendar", name="show_calendar_from_google_oauth")
+     */
+    public function showCalendarRedirectFromGoogleOauth(Request $request, AppointmentRepository $appointment): Response
+    {
+        $session = new Session();
+        $session->set('authcode', $_GET["code"]);
+        return $this->redirectToRoute('show_calendar', [
+            'id' => (int)$_GET["state"],
+            /*'code' => $_GET["code"]*/
+        ]);
+    }
+
 
     /**
      * @Route("/dashboard/appointments/showcalendar/{id}", name="show_calendar")
      */
-    public function showCalendar(Request $request, $id, AppointmentRepository $appointment): Response
+    public function showCalendar(Request $request, $id, AppointmentRepository $appointment, GoogleCalendarService $googleCalendarService): Response
     {
+        $session = new Session();
+        /*$session = new Session();
+        $client = new \Google_Client();
+        $client->setApplicationName("nov");
+        $client->setAuthConfig('client_secret.json ');
+        $client->addScope(\Google_Service_Calendar::CALENDAR);
+        $client->setAccessType('offline');
+        $client->setState($id);
+        $redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . "/dashboard/appointments/showcalendar";
+        $dynamicRedirect = $redirect_uri . $id;
+        $client->setRedirectUri($redirect_uri);
+        $guzzleClient = new \GuzzleHttp\Client(['curl' => [CURLOPT_SSL_VERIFYPEER => false]]);
+        $client->setHttpClient($guzzleClient);
+        $tokenPath = 'token.json';
+        if (file_exists($tokenPath)) {
+            $accessToken = json_decode(file_get_contents($tokenPath), true);
+            $client->setAccessToken($accessToken);
+        }
+        if ($client->isAccessTokenExpired()) {
+            if ($client->getRefreshToken()) {
+                $client->fetchAccessTokenWithRefreshToken($client->getRefreshToken());
+            } else {
+                $authUrl = $client->createAuthUrl();
+                $authCode = $session->get('authcode');
+                $accessToken = $client->fetchAccessTokenWithAuthCode($authCode);
+                $client->setAccessToken($accessToken);
+                if (array_key_exists('error', $accessToken)) {
+                    throw new \Exception(join(', ', $accessToken));
+                }
+            }
+            if (!file_exists(dirname($tokenPath))) {
+                mkdir(dirname($tokenPath), 0700, true);
+            }
+            file_put_contents($tokenPath, json_encode($client->getAccessToken()));
+        }
+        $service = new \Google_Service_Calendar($client);
+
+        $calendarId = 'primary';
+        $optParams = array(
+            'maxResults' => 10,
+            'orderBy' => 'startTime',
+            'singleEvents' => true,
+
+        );
+        $results = $service->events->listEvents($calendarId, $optParams);
+        $events = $results->getItems();
+        dd($events);*/
+
+
+$authLink = "";
+        /*dd($authCode);*/
+        $code = $session->get('authcode');
+       /* if(!empty($code)) {
+            $authCode = $_GET["code"];
+        }*/
+        $googleEvents = [];
+        $email = $this->getUser()->getEmail();
+        if(!empty($code)) {
+            $session->remove('authcode');
+            $session->remove('authToken');
+            $googleCalendarService->insertGoogleApiToken($email, $id, $code);
+        }
+        if (!empty($session->get('authToken'))) {
+            $googleEvents = $googleCalendarService->getEventsByEmail($email, $id);
+
+            /*$event = new Google_Service_Calendar_Event(array(
+                'summary' => 'My Birthday Oussema',
+                'location' => '800 Howard St., San Francisco, CA 94103',
+                'description' => 'A chance to hear more about Google\'s developer products.',
+                'start' => array(
+                    'dateTime' => '2022-04-19T09:00:00-07:00',
+                    'timeZone' => 'America/Los_Angeles',
+                ),
+                'end' => array(
+                    'dateTime' => '2022-04-19T17:00:00-07:00',
+                    'timeZone' => 'America/Los_Angeles',
+                ),
+                'recurrence' => array(
+                    'RRULE:FREQ=DAILY;COUNT=2'
+                ),
+                'attendees' => array(
+                    array('email' => 'lpage@example.com'),
+                    array('email' => 'sbrin@example.com'),
+                ),
+                'reminders' => array(
+                    'useDefault' => FALSE,
+                    'overrides' => array(
+                        array('method' => 'email', 'minutes' => 24 * 60),
+                        array('method' => 'popup', 'minutes' => 10),
+                    ),
+                ),
+            ));
+
+            $service = new Google_Service_Calendar($googleCalendarService->getClient($email,$id));
+            $calendarId = 'primary';
+
+            $event = $service->events->insert($calendarId, $event);*/
+
+
+
+        } else {
+            $authLink = $googleCalendarService->generateGoogleApiToken($email, $id);
+        }
+
+
+       /* dd($event);
+        printf('Event created: %s\n', $event->htmlLink);*/
+
+
+
+
+
+
+
+        /*$events = $googleCalendarService->getEventsByEmail($email, $id);
+        dd($events);*/
+
+
+
+        //
         $commercialUser = $this->getDoctrine()->getRepository(User::class)->find($id);
         // Check if the commercial exists
         if(!$commercialUser) {
@@ -380,6 +513,19 @@ class AppointmentController extends AbstractController
                 /*'description' => "geo zone obs test",*/
                 'backgroundColor' => "#008000",
                 'allDay' => true,
+            ];
+        }
+        foreach ($googleEvents as $googleEvent) {
+            if($googleEvent->getSummary()) { $googleEventTitle = $googleEvent->getSummary(); } else {$googleEventTitle = "Pas de Titre";}
+
+            $appointments[] = [
+                'id' => $googleEvent->getId(),
+                'title' => $googleEventTitle ,
+                'start' => $googleEvent->getStart()->getDatetime(),
+                'end' => $googleEvent->getEnd()->getDatetime(),
+                'description' => $googleEvent->getDescription(),
+                /*'backgroundColor' => $googleEvent->getEventType()->getBackgroundColor(),*/
+                'allDay' => false
             ];
         }
 
@@ -476,7 +622,8 @@ class AppointmentController extends AbstractController
             'data' => compact('data'),
             'departments' => $geographicAreas,
             'appointment_form' => $appointmentForm->createView(),
-            'commercial_user' => $commercialUser
+            'commercial_user' => $commercialUser,
+            'authLink' =>$authLink
         ]);
     }
 

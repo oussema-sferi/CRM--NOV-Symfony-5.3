@@ -434,4 +434,26 @@ class ClientRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    /*public function getFollowUpClients()
+    {
+        $qb = $this->createQueryBuilder('c');
+        $qb->select('c')
+            ->join('c.paymentSchedules', 'p')
+            ->where('p.id = 13')
+            ->andWhere('c.isDeleted != 0');
+
+        return $qb->getQuery()->getResult();
+    }*/
+
+    /*public function followUpAjaxClientsSearch($keyword)
+    {
+        $qb = $this->createQueryBuilder('c');
+        $qb->select('c')
+            ->where('c.isDeleted = 0')
+            ->andWhere("c.lastName LIKE :keyword")
+            ->orWhere("c.firstName LIKE :keyword")
+            ->setParameter('keyword', '%'.$keyword.'%');
+        return $qb->getQuery()->getResult();
+    }*/
+
 }

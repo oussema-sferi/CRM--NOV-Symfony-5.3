@@ -177,7 +177,7 @@
                     data : { searchKeyword: searchKeyword},
                     success: (e) => {
                         /*location.reload();*/
-                        console.log(e);
+                        /*console.log(e);*/
                         suggestion.html('')
                             e.forEach(function (client) {
                                 suggestion.css({"border-color": "#C1E0FF",
@@ -224,11 +224,11 @@
                                 "height": "",
                                 "overflow-y":""
                             });
-                            console.log(searchInputClientId.val())
+                            /*console.log(searchInputClientId.val())*/
                         })
                     },
                     error : (f) => {
-                        console.log(f);
+                        /*console.log(f);*/
                     }
                 })
 

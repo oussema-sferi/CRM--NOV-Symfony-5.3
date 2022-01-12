@@ -363,6 +363,7 @@
                                     </td>
                                 </tr>
 
+
                                 <tr>
                                     <th scope="row">
                                         TX TRANSFO
@@ -469,6 +470,15 @@
                                 </td>
                             </tr>
 
+                            <tr>
+                                <th scope="row">
+                                    Total Projets
+                                </th>
+                                <td>
+                                    {{ all_projects_count }}
+                                </td>
+                            </tr>
+
                             </tbody>
                         </table>
                     </div>
@@ -559,6 +569,66 @@
                                     {% endif %}
                                 </td>
                             </tr>
+                            <tr>
+                                <th scope="row">
+                                    Total Projets
+                                </th>
+                                <td>
+                                    {% if app.session.get('date_filter_value_commercial_stats') is not null %}
+                                        {% set projects_counter = 0 %}
+                                        {% for project in all_projects %}
+                                            {% set project_creation_date = project.createdAt | date('Y-m-d') %}
+                                            {% if filter == "0" or filter == "1" %}
+                                                {% if project_creation_date == selected_date %}
+                                                    {% set projects_counter = projects_counter + 1 %}
+                                                {% endif %}
+                                            {% elseif filter == "100" %}
+                                                {% if project_creation_date >= start_date and project_creation_date <= end_date %}
+                                                    {% set projects_counter = projects_counter + 1 %}
+                                                {% endif %}
+                                            {% else %}
+                                                {% if project_creation_date >= selected_date %}
+                                                    {% set projects_counter = projects_counter + 1 %}
+                                                {% endif%}
+                                            {% endif %}
+                                        {% endfor %}
+                                        {{ projects_counter }}
+                                    {% else %}
+                                        {{ all_projects_count }}
+                                    {% endif %}
+                                </td>
+                            </tr>
+
+                            {#<tr>
+                                <th scope="row">
+                                    Total Projets Annulés
+                                </th>
+                                <td>
+                                    {% if app.session.get('date_filter_value_commercial_stats') is not null %}
+                                        {% set deleted_projects_counter = 0 %}
+                                        {% for project in deleted_projects %}
+                                            {% set project_deletion_date = project.deletedAt | date('Y-m-d') %}
+                                            {% if filter == "0" or filter == "1" %}
+                                                {% if project_deletion_date == selected_date %}
+                                                    {% set deleted_projects_counter = deleted_projects_counter + 1 %}
+                                                {% endif %}
+                                            {% elseif filter == "100" %}
+                                                {% if project_deletion_date >= start_date and project_deletion_date <= end_date %}
+                                                    {% set deleted_projects_counter = deleted_projects_counter + 1 %}
+                                                {% endif %}
+                                            {% else %}
+                                                {% if project_deletion_date >= selected_date %}
+                                                    {% set deleted_projects_counter = deleted_projects_counter + 1 %}
+                                                {% endif%}
+                                            {% endif %}
+                                        {% endfor %}
+                                        {{ deleted_projects_counter }}
+                                    {% else %}
+                                        {{ deleted_projects_count }}
+                                    {% endif %}
+                                </td>
+                            </tr>#}
+
                             </tbody>
                         </table>
                     </div>
@@ -725,6 +795,7 @@
                                 <th scope="col">Vente</th>
                                 <th scope="col">RDV Reportés</th>
                                 <th scope="col">RDV Annulés</th>
+                                <th scope="col">Projets</th>
                                 {#<th scope="col">A Rappeler</th>
                                 <th scope="col">RDV</th>#}
                                 <th scope="col">Actions</th>
@@ -930,6 +1001,32 @@
                                             {{ DELETED_appointments_by_user_counter_without_filter }}
                                         {% endif %}
                                     </td>
+
+                                    <td>
+                                        {% if app.session.get('date_filter_value_commercial_stats') is not null %}
+                                            {% set projects_by_user_counter = 0 %}
+                                            {% for project_by_user in user.projects %}
+                                                {% set project_by_user_date = project_by_user.createdAt | date('Y-m-d') %}
+                                                {% if filter == "0" or filter == "1" %}
+                                                    {% if project_by_user_date == selected_date %}
+                                                        {% set projects_by_user_counter = projects_by_user_counter + 1 %}
+                                                    {% endif %}
+                                                {% elseif filter == "100" %}
+                                                    {% if project_by_user_date >= start_date and project_by_user_date <= end_date %}
+                                                        {% set projects_by_user_counter = projects_by_user_counter + 1 %}
+                                                    {% endif %}
+                                                {% else %}
+                                                    {% if project_by_user_date >= selected_date %}
+                                                        {% set projects_by_user_counter = projects_by_user_counter + 1 %}
+                                                    {% endif%}
+                                                {% endif %}
+                                            {% endfor %}
+                                            {{ projects_by_user_counter }}
+                                        {% else %}
+                                            {{ user.projects | length }}
+                                        {% endif %}
+                                    </td>
+
                                     <td>
                                         <a href="{{ path('statistics_per_user_new', {'id': user.id}) }}"><i class="fas fa-search-plus text-blue"></i></a>&nbsp;&nbsp;
                                     </td>
@@ -1043,7 +1140,7 @@
                         {label: "Nombre de RDV Effectués", data: {{ done_appointments_graph|raw }}, backgroundColor: "#336600",},
                         {label: "Argu", data: {{ argu_appointments_graph|raw }}, backgroundColor: "#99994d",},
                         {label: "Vente", data: {{ vente_appointments_graph|raw }}, backgroundColor: "#ffc61a",},
-
+                        {label: "Projets", data: {{ projects_graph|raw }}, backgroundColor: "#ffff80",},
                     ]
                 },
                 options: {

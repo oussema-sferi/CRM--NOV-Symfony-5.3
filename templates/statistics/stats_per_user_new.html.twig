@@ -636,6 +636,40 @@
                                     {% endif %}
                                 </td>
                             </tr>
+
+                            <tr>
+                                <th scope="row">
+                                    Total Projets
+                                </th>
+                                <td>
+                                    {% if app.session.get('date_filter_value_stats_per_user') is not null %}
+                                        {% set projects_counter = 0 %}
+                                        {% for project in all_projects %}
+                                            {% set project_creation_date = project.createdAt | date('Y-m-d') %}
+                                            {% if filter == "0" or filter == "1" %}
+                                                {% if project_creation_date == selected_date %}
+                                                    {% set projects_counter = projects_counter + 1 %}
+                                                {% endif %}
+                                            {% elseif filter == "100" %}
+                                                {% if project_creation_date >= start_date and project_creation_date <= end_date %}
+                                                    {% set projects_counter = projects_counter + 1 %}
+                                                {% endif %}
+                                            {% else %}
+                                                {% if project_creation_date >= selected_date %}
+                                                    {% set projects_counter = projects_counter + 1 %}
+                                                {% endif%}
+                                            {% endif %}
+                                        {% endfor %}
+                                        {{ projects_counter }}
+                                    {% else %}
+                                        {{ all_projects_count }}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    N/A
+                                </td>
+                            </tr>
+
                             </tbody>
                         </table>
                     </div>

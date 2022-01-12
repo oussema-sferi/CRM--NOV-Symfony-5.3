@@ -984,6 +984,38 @@
                                     {% endif %}
                                 </td>
                             </tr>
+                            <tr>
+                                <th scope="row">
+                                    Total Projets
+                                </th>
+                                <td>
+                                    {% if app.session.get('date_filter_value_all_stats') is not null %}
+                                        {% set projects_counter = 0 %}
+                                        {% for project in all_projects %}
+                                            {% set project_creation_date = project.createdAt | date('Y-m-d') %}
+                                            {% if filter == "0" or filter == "1" %}
+                                                {% if project_creation_date == selected_date %}
+                                                    {% set projects_counter = projects_counter + 1 %}
+                                                {% endif %}
+                                            {% elseif filter == "100" %}
+                                                {% if project_creation_date >= start_date and project_creation_date <= end_date %}
+                                                    {% set projects_counter = projects_counter + 1 %}
+                                                {% endif %}
+                                            {% else %}
+                                                {% if project_creation_date >= selected_date %}
+                                                    {% set projects_counter = projects_counter + 1 %}
+                                                {% endif%}
+                                            {% endif %}
+                                        {% endfor %}
+                                        {{ projects_counter }}
+                                    {% else %}
+                                        {{ all_projects_count }}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    N/A
+                                </td>
+                            </tr>
                             </tbody>
                         </table>
                     </div>
@@ -1043,6 +1075,15 @@
                                 </td>
                             </tr>
 
+                            <tr>
+                                <th scope="row">
+                                    Total Projets
+                                </th>
+                                <td>
+                                    {{ all_projects_count }}
+                                </td>
+                            </tr>
+
                             </tbody>
                         </table>
                     </div>
@@ -1069,6 +1110,7 @@
                                 <th scope="col">Vente</th>
                                 <th scope="col">RDV Reportés</th>
                                 <th scope="col">RDV Annulés</th>
+                                <th scope="col">Projets</th>
                                 {#<th scope="col">A Rappeler</th>
                                 <th scope="col">RDV</th>#}
                                 <th scope="col">Actions</th>
@@ -1273,6 +1315,30 @@
                                         {% endif %}
                                     </td>
                                     <td>
+                                        {% if app.session.get('date_filter_value_all_stats') is not null %}
+                                            {% set projects_by_user_counter = 0 %}
+                                            {% for project_by_user in user.projects %}
+                                                {% set project_by_user_date = project_by_user.createdAt | date('Y-m-d') %}
+                                                {% if filter == "0" or filter == "1" %}
+                                                    {% if project_by_user_date == selected_date %}
+                                                        {% set projects_by_user_counter = projects_by_user_counter + 1 %}
+                                                    {% endif %}
+                                                {% elseif filter == "100" %}
+                                                    {% if project_by_user_date >= start_date and project_by_user_date <= end_date %}
+                                                        {% set projects_by_user_counter = projects_by_user_counter + 1 %}
+                                                    {% endif %}
+                                                {% else %}
+                                                    {% if project_by_user_date >= selected_date %}
+                                                        {% set projects_by_user_counter = projects_by_user_counter + 1 %}
+                                                    {% endif%}
+                                                {% endif %}
+                                            {% endfor %}
+                                            {{ projects_by_user_counter }}
+                                        {% else %}
+                                            {{ user.projects | length }}
+                                        {% endif %}
+                                    </td>
+                                    <td>
                                         <a href="{{ path('statistics_per_user_new', {'id': user.id}) }}"><i class="fas fa-search-plus text-blue"></i></a>&nbsp;&nbsp;
                                     </td>
                                 </tr>
@@ -1381,6 +1447,7 @@
                         {label: "Nombre de RDV", data: {{ fixed_appointments_graph|raw }}, backgroundColor: "#33ccff",},
                         {label: "Nombre de RDV Effectués", data: {{ done_appointments_graph|raw }}, backgroundColor: "#046e0b",},
                         {label: "Nombre de RDV Annulés", data: {{ deleted_appointments_graph|raw }}, backgroundColor: "#8c0611",},
+                        {label: "Nombre de Projets", data: {{ projects_graph|raw }}, backgroundColor: "#ffff80",},
                     ]
                 },
                 options: {
